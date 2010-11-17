@@ -31,27 +31,21 @@
  */
 package javax.time.calendar
 
-import javax.time.CalendricalException
-
 /**
- * An exception used when an exception is connected to a specified rule.
+ * An exception used when a calendrical field is invalid.
+ * <p>
+ * Some combinations of calendrical fields are not allowed, such as a month-of-year
+ * of April and a day-of-month of 31. This exception is used when an attempt is
+ * made to create such an invalid combination.
  *
  * @author Stephen Colebourne
  */
-
-/**
- * Constructs a new exception with a message and optional rule.
- *
- * @param message the message describing the problem, should not be null
- * @param fieldRule the rule of the field that is not supported, may be null
- */
-@SerialVersionUID(1L)
-class CalendricalRuleException[T](message: String, rule: CalendricalRule[T]) extends CalendricalException(message, null) {
-
   /**
-   * Gets the rule that is connected to the exception.
+   * Constructs a new invalid field exception.
    *
-   * @return the field rule, null if unknown
+   * @param message the message describing the problem, should not be null
+   * @param rule the rule that is invalid, may be null
    */
-  def getRule: CalendricalRule[T] = rule
-}
+@SerialVersionUID(1L)
+class InvalidCalendarFieldException[T](message: String, rule: CalendricalRule[T])
+  extends CalendricalRuleException(message, rule)

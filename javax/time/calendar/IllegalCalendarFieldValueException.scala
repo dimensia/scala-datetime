@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2010, Stephen Colebourne & Michael Nascimento Santos
+ * Copyright (c) 2007-2010, Stephen Colebourne & Michael Nascimento Santos
  *
  * All rights reserved.
  *
@@ -31,27 +31,34 @@
  */
 package javax.time.calendar
 
-import javax.time.CalendricalException
-
 /**
- * An exception used when an exception is connected to a specified rule.
+ * An exception used when a value specified for a calendrical field is out of range.
+ * <p>
+ * Most calendrical fields have a valid range of values. This exception is used
+ * when a value outside that range is passed in.
  *
+ * @author Michael Nascimento Santos
  * @author Stephen Colebourne
  */
 
 /**
- * Constructs a new exception with a message and optional rule.
+ * Constructs a new illegal field value exception with the specified message.
  *
- * @param message the message describing the problem, should not be null
- * @param fieldRule the rule of the field that is not supported, may be null
+ * @param message the message to use for this exception, may be null
+ * @param fieldRule the field rule, not null
  */
 @SerialVersionUID(1L)
-class CalendricalRuleException[T](message: String, rule: CalendricalRule[T]) extends CalendricalException(message, null) {
-
+class IllegalCalendarFieldValueException(message: String, fieldRule: DateTimeFieldRule[_])
+  extends CalendricalRuleException(message, fieldRule) {
   /**
-   * Gets the rule that is connected to the exception.
+   * Constructs a new illegal field value exception with a standard message.
    *
-   * @return the field rule, null if unknown
+   * @param fieldRule the field rule, not null
+   * @param actual the actual invalid value
+   * @param minValue the minimum value allowed
+   * @param maxValue the maximum value allowed
    */
-  def getRule: CalendricalRule[T] = rule
+  def this(fieldRule: DateTimeFieldRule[_], actual: Long, minValue: Int, maxValue: Int) {
+    this ("Illegal value for " + fieldRule.getID + " field, value " + actual + " is not in the range " + minValue + " to " + maxValue, fieldRule)
+  }
 }

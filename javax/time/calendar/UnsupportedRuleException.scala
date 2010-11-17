@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2010, Stephen Colebourne & Michael Nascimento Santos
+ * Copyright (c) 2007-2010, Stephen Colebourne & Michael Nascimento Santos
  *
  * All rights reserved.
  *
@@ -31,27 +31,27 @@
  */
 package javax.time.calendar
 
-import javax.time.CalendricalException
-
 /**
- * An exception used when an exception is connected to a specified rule.
+ * An exception used when the value for a rule cannot be found.
  *
  * @author Stephen Colebourne
  */
 
-/**
- * Constructs a new exception with a message and optional rule.
- *
- * @param message the message describing the problem, should not be null
- * @param fieldRule the rule of the field that is not supported, may be null
- */
+    /**
+     * Constructs a new unsupported field exception using the specified error message.
+     *
+     * @param message the error message, not null
+     * @param rule the rule that is not supported, may be null
+     */
 @SerialVersionUID(1L)
-class CalendricalRuleException[T](message: String, rule: CalendricalRule[T]) extends CalendricalException(message, null) {
-
+class UnsupportedRuleException[T](message: String, rule: CalendricalRule[T])
+  extends CalendricalRuleException(message, rule) {
   /**
-   * Gets the rule that is connected to the exception.
+   * Constructs a new unsupported field exception creating a standard error message.
    *
-   * @return the field rule, null if unknown
+   * @param rule the rule that is not supported, may be null
    */
-  def getRule: CalendricalRule[T] = rule
+  def this(rule: CalendricalRule[T]) {
+    this ("Rule " + (if (rule == null) "null" else rule.getID) + " is not supported", rule)
+  }
 }
