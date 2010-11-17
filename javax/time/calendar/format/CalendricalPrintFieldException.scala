@@ -41,82 +41,59 @@ import javax.time.calendar.UnsupportedRuleException
  * @author Stephen Colebourne
  */
 
+/**
+ * Constructs a new exception using the specified message.
+ *
+ * @param fieldRule the rule of the field that caused the exception, may be null
+ * @param value the value of the field that caused the exception
+ */
 @SerialVersionUID(1L)
-class CalendricalPrintFieldException extends CalendricalPrintException {
+class CalendricalPrintFieldException(msg: String, rule: DateTimeFieldRule[_], value: Int)
+  extends CalendricalPrintException(msg) {
+
   /**
-   * The rule that caused the exception
+   * Constructs a new exception creating a standard error message for
+   * exceeding padding width.
+   *
+   * @param fieldRule the rule of the field that caused the exception, may be null
+   * @param value the value of the field that caused the exception
+   * @param maxWidth the maximum print width
    */
-  private final val rule: CalendricalRule[_] = null
+  def this(rule: DateTimeFieldRule[_], value: Int, maxWidth: Int) {
+    this ("Rule " + (if (fieldRule == null) "null" else fieldRule.getName) + " cannot be printed as the value " + value + " exceeds the maximum print width of " + maxWidth, rule, value)
+  }
+
   /**
-   * Constructs a new exception using the specified message.
+   * Constructs a new exception wrapping the unsupported field exception.
+   *
+   * @param cause the exception cause, may be null
+   */
+  def this(cause: UnsupportedRuleException) {
+    this ("Rule " + (if (cause.getRule == null) "null" else cause.getRule.getName) + " cannot be printed as the value cannot be obtained", cause.getRule, null)
+  }
+
+  /**
+   * Constructs a new exception creating a standard error message for
+   * unable to print a negative value.
    *
    * @param fieldRule the rule of the field that caused the exception, may be null
    * @param value the value of the field that caused the exception
    */
-  def this(msg: String, fieldRule: DateTimeFieldRule[_], value: Int) {
-    this ()
-    `super`(msg)
-    this.rule = fieldRule
-    this.value = value
+  def this(fieldRule: DateTimeFieldRule[_], value: Int) {
+    this ("Rule " + (if (fieldRule == null) "null" else fieldRule.getName) + " cannot be printed as the value " + value + " cannot be negative according to the SignStyle", fieldRule, value)
+  }
 
-    /**
-     * Constructs a new exception creating a standard error message for
-     * exceeding padding width.
-     *
-     * @param fieldRule the rule of the field that caused the exception, may be null
-     * @param value the value of the field that caused the exception
-     * @param maxWidth the maximum print width
-     */
-    def this(fieldRule: DateTimeFieldRule[_], value: Int, maxWidth: Int) {
-      this ()
-      `super`("Rule " + (if (fieldRule == null) "null" else fieldRule.getName) + " cannot be printed as the value " + value + " exceeds the maximum print width of " + maxWidth)
-      this.rule = fieldRule
-      this.value = value
+  /**
+   * Gets the rule that caused the exception.
+   *
+   * @return the field rule, null if unknown
+   */
+  def getRule: CalendricalRule[_] = rule
 
-      /**
-       * Constructs a new exception wrapping the unsupported field exception.
-       *
-       * @param cause the exception cause, may be null
-       */
-      def this(cause: UnsupportedRuleException) {
-        this ()
-        `super`("Rule " + (if (cause.getRule == null) "null" else cause.getRule.getName) + " cannot be printed as the value cannot be obtained")
-        this.rule = cause.getRule
-        this.value = null
-
-        /**
-         * Gets the rule that caused the exception.
-         *
-         * @return the field rule, null if unknown
-         */
-        def getRule: CalendricalRule[_] = {
-          return rule
-        }
-
-        /**
-         * The value of the field that caused the exception
-         */
-        private val value: Int = null
-
-      /**
-       * Constructs a new exception creating a standard error message for
-       * unable to print a negative value.
-       *
-       * @param fieldRule the rule of the field that caused the exception, may be null
-       * @param value the value of the field that caused the exception
-       */
-      def this(fieldRule: DateTimeFieldRule[_], value: Int) {
-        this ()
-        `super`("Rule " + (if (fieldRule == null) "null" else fieldRule.getName) + " cannot be printed as the value " + value + " cannot be negative according to the SignStyle")
-        this.rule = fieldRule
-        this.value = value
-
-        /**
-         * Gets the value of the field that caused the exception.
-         *
-         * @return the field value, null if unknown
-         */
-        def getValue: Integer = {
-          return value
-        }
-      }
+  /**
+   * Gets the value of the field that caused the exception.
+   *
+   * @return the field value, null if unknown
+   */
+  def getValue: Int = value
+}

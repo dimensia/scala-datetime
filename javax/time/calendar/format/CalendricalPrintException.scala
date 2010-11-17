@@ -47,8 +47,7 @@ import javax.time.CalendricalException
  * @param throwable the throwable to store as the cause, may be null
  */
 @SerialVersionUID(1L)
-class CalendricalPrintException(message: String, throwable: Throwable) extends CalendricalException {
-  super(message, throwable)
+class CalendricalPrintException(message: String, throwable: Throwable) extends CalendricalException(message, throwable) {
 
   /**
    * Constructs a new exception with the specified message.
