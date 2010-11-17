@@ -1,0 +1,22 @@
+My Scala Date&Time Experiment
+
+ - Currently nothing works. If you need something useable NOW, this is not the place to look.
+ - The source code is based on the Date&Time library (JSR-310) and was translated to Scala 
+   (mostly automatic, with quite some help from IntelliJ's "Convert Java to Scala" functionality).
+ - Class hierarchy and naming has not been changed.
+ - Most of the Java enumerations, static initializers and classes with multiple constructors are fixed, but a few tricky ones remain.
+ - Usages of BigInteger/BigDecimal are replaced by BigInt/BigDecimal.
+ - Some algorithms could need further cleanup.
+ - Most instances of Java's "constructor arguments + field + getter" pattern are already replaced by class Foo(val bar: ...) or similiar
+ - The code still uses Java collections instead of Scala collections
+ - A few places with "break" and "continue" need investigation to be replaced.
+ - The Scala packages still have the "javax.time" namespace.
+ - The code uses no implicits. These might be added in the future, when things are a bit more stable.
+ - Some methods have a return type of Integer (or null). They need to be replaced by Some[Int]
+ - Java classes which are replaced by Scala classes have been renamed to *._java_
+ - There are some classes which do some "reification" magic. These might be replaced by a simple Manifest.
+
+I did the most of the work in one night and I did it for fun and curiosity.
+I don't know if it will work out and how good it will work.
+
+Comments, criticism and help is welcome!
