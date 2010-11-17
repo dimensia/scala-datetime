@@ -42,16 +42,16 @@ import javax.time.calendar.Calendrical
  * @author Stephen Colebourne
  */
 
-  /**
-   * Constructor.
-   *
-   * @param printer the printer, may be null in which case print() must not be called
-   * @param parser the parser, may be null in which case parse() must not be called
-   * @param padWidth the width to pad to, 1 or greater
-   * @param padChar the pad character
-   */
-final class PadPrinterParserDecorator private[format] (printer: DateTimePrinter, parser: DateTimeParser, padWidth: Int, padChar: Char)
-extends DateTimePrinter with DateTimeParser {
+/**
+ * Constructor.
+ *
+ * @param printer the printer, may be null in which case print() must not be called
+ * @param parser the parser, may be null in which case parse() must not be called
+ * @param padWidth the width to pad to, 1 or greater
+ * @param padChar the pad character
+ */
+final class PadPrinterParserDecorator private[format](printer: DateTimePrinter, parser: DateTimeParser, padWidth: Int, padChar: Char)
+  extends DateTimePrinter with DateTimeParser {
   /** { @inheritDoc }*/
   def parse(context: DateTimeParseContext, _parseText: String, position: Int): Int = {
     var parseText = _parseText
@@ -116,12 +116,8 @@ extends DateTimePrinter with DateTimeParser {
   /** { @inheritDoc }*/
   override def toString: String = {
     var base: String = "Pad("
-    if (printer == parser) {
-      base += printer
-    }
-    else {
-      base += (if (printer == null) "" else printer) + "," + (if (parser == null) "" else parser)
-    }
+    if (printer == parser) base += printer
+    else base += (if (printer == null) "" else printer) + "," + (if (parser == null) "" else parser)
     return base + "," + padWidth + (if (padChar == ' ') ")" else ",'" + padChar + "')")
   }
 }

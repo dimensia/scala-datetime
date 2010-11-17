@@ -39,18 +39,8 @@ import javax.time.calendar.Calendrical
  *
  * @author Stephen Colebourne
  */
-final object StrictLenientPrinterParser {
-  /**
-   * Lenient parsing.
-   */
-  final val LENIENT = null
-  /**
-   * Strict parsing.
-   */
-  final val STRICT = null
-}
 
-final class StrictLenientPrinterParser extends DateTimePrinter with DateTimeParser {
+sealed abstract class StrictLenientPrinterParser extends DateTimePrinter with DateTimeParser {
   /** { @inheritDoc }*/
   def parse(context: DateTimeParseContext, parseText: String, position: Int): Int = {
     context.strict = (this == STRICT)
@@ -66,3 +56,13 @@ final class StrictLenientPrinterParser extends DateTimePrinter with DateTimePars
   /** { @inheritDoc }*/
   override def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = {}
 }
+
+/**
+ * Strict parsing.
+ */
+object STRICT extends StrictLenientPrinterParser
+
+/**
+ * Lenient parsing.
+ */
+object LENIENT extends StrictLenientPrinterParser

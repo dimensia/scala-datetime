@@ -53,8 +53,8 @@ import javax.time.calendar.format.DateTimeFormatterBuilder.SignStyle
  */
 
 final class ReducedPrinterParser private[format](rule: DateTimeFieldRule[_], width: Int, baseValue: Int)
-  extends NumberPrinterParser {
-  super(rule, width, width, SignStyle.NOT_NEGATIVE)
+  extends NumberPrinterParser(rule, width, width, SignStyle.NOT_NEGATIVE, 0) {
+  //super(rule, width, width, SignStyle.NOT_NEGATIVE)
   if (width < 1 || width > 9) {
     throw new IllegalArgumentException("The width must be from 1 to 9 inclusive but was " + width)
   }
@@ -71,17 +71,14 @@ final class ReducedPrinterParser private[format](rule: DateTimeFieldRule[_], wid
   /** { @inheritDoc }*/
   override def toString: String = "ReducedValue(" + rule.getID + "," + minWidth + "," + baseValue + ")"
 
-  /**
-   * The base value.
-   */
-  private val baseValue: Int = 0
   /** { @inheritDoc }*/
   private[format] override def getValue(calendrical: Calendrical): Int = {
     var value: Int = rule.getInt(calendrical)
     return Math.abs(value % range)
   }
 
-  private[format] override def setValue(context: DateTimeParseContext, value: Long): Unit = {
+  private[format] override def setValue(context: DateTimeParseContext, _value: Long): Unit = {
+    var value = _value
     var lastPart: Int = baseValue % range
     if (baseValue > 0) {
       value = baseValue - lastPart + value

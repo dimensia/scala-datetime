@@ -68,14 +68,14 @@ final class TextPrinterParser private[format](rule: DateTimeFieldRule[_], textSt
     if (context.isStrict) {
       var textStore: DateTimeFieldRule.TextStore = rule.getTextStore(context.getLocale, textStyle)
       if (textStore != null) {
-        var `match` : Long = textStore.matchText(!context.isCaseSensitive, parseText.substring(position))
+        var matched : Long = textStore.matchText(!context.isCaseSensitive, parseText.substring(position))
 
-        if (`match` == 0) {
+        if (matched == 0) {
           return ~position
         }
-        else if (`match` > 0) {
-          position += (`match` >>> 32)
-          context.setParsed(rule, `match`.asInstanceOf[Int])
+        else if (matched > 0) {
+          position += (matched >>> 32)
+          context.setParsed(rule, matched.asInstanceOf[Int])
           return position
         }
       }

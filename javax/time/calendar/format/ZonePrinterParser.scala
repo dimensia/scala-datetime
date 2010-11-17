@@ -252,17 +252,12 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
       context.setParsed(TimeZone.rule, zone)
       return pos
     }
-    else {
-      return ~position
-    }
+    else return ~position
   }
-
 
   /** { @inheritDoc }*/
   override def toString: String = {
-    if (textStyle == null) {
-      return "ZoneId()"
-    }
-    return "ZoneText(" + textStyle + ")"
+    if (textStyle == null) "ZoneId()"
+    else "ZoneText(" + textStyle + ")"
   }
 }

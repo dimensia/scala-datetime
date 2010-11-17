@@ -50,24 +50,20 @@ import javax.time.calendar.Calendrical
 final class StringLiteralPrinterParser private[format](private val literal: String)
   extends DateTimePrinter with DateTimeParser {
   /** { @inheritDoc }*/
-  override def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = {
+  override def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit =
     appendable.append(literal)
-  }
 
   /** { @inheritDoc }*/
   override def isPrintDataAvailable(calendrical: Calendrical): Boolean = true
 
   /** { @inheritDoc }*/
   def parse(context: DateTimeParseContext, parseText: String, position: Int): Int = {
-    var length: Int = parseText.length
-    if (position > length || position < 0) {
-      throw new IndexOutOfBoundsException
-    }
-    var ignoreCase: Boolean = !context.isCaseSensitive
-    if (parseText.regionMatches(ignoreCase, position, literal, 0, literal.length) == false) {
-      return ~position
-    }
-    return position + literal.length
+    val length: Int = parseText.length
+    if (position > length || position < 0) throw new IndexOutOfBoundsException
+
+    val ignoreCase: Boolean = !context.isCaseSensitive
+    if (parseText.regionMatches(ignoreCase, position, literal, 0, literal.length) == false) ~position
+    else position + literal.length
   }
 
   /** { @inheritDoc }*/
