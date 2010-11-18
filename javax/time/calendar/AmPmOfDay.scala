@@ -88,12 +88,9 @@ object PM extends AmPmOfDay(1)
 object AmPmOfDay {
   def of(amPmOfDay: Int): AmPmOfDay = {
     amPmOfDay match {
-      case 0 =>
-        return AM
-      case 1 =>
-        return PM
-      case _ =>
-        throw new IllegalCalendarFieldValueException(ISOChronology.amPmOfDayRule, amPmOfDay, 0, 1)
+      case 0 => AM
+      case 1 => PM
+      case _ => throw new IllegalCalendarFieldValueException(ISOChronology.amPmOfDayRule, amPmOfDay, 0, 1)
     }
   }
 }

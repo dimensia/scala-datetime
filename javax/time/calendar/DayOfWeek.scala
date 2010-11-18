@@ -70,13 +70,9 @@ object DayOfWeek {
    * @return the DayOfWeek singleton, never null
    */
   def firstDayOfWeekFor(locale: Locale): DayOfWeek = {
-    if (locale == null) {
-      throw new NullPointerException("Locale must not be null")
-    }
-    if (locale.equals(Locale.US) || (locale.getLanguage.equals("pt") && locale.getCountry.equals("BR"))) {
-      return SUNDAY
-    }
-    return MONDAY
+    if (locale == null) throw new NullPointerException("Locale must not be null")
+    if (locale.equals(Locale.US) || (locale.getLanguage.equals("pt") && locale.getCountry.equals("BR"))) SUNDAY
+    else MONDAY
   }
 
   /**
@@ -95,33 +91,29 @@ object DayOfWeek {
    */
   def of(dayOfWeek: Int): DayOfWeek = {
     dayOfWeek match {
-      case 1 =>
-        return MONDAY
-      case 2 =>
-        return TUESDAY
-      case 3 =>
-        return WEDNESDAY
-      case 4 =>
-        return THURSDAY
-      case 5 =>
-        return FRIDAY
-      case 6 =>
-        return SATURDAY
-      case 7 =>
-        return SUNDAY
-      case _ =>
-        throw new IllegalCalendarFieldValueException(ISOChronology.dayOfWeekRule, dayOfWeek, 1, 7)
+      case 1 => MONDAY
+      case 2 => TUESDAY
+      case 3 => WEDNESDAY
+      case 4 => THURSDAY
+      case 5 => FRIDAY
+      case 6 => SATURDAY
+      case 7 => SUNDAY
+      case _ => throw new IllegalCalendarFieldValueException(ISOChronology.dayOfWeekRule, dayOfWeek, 1, 7)
     }
   }
 }
 
 sealed abstract class DayOfWeek(ordinal: Int) extends Calendrical {
+
   /**
-   * Is this instance representing Saturday.
+   * Gets the next day-of-week.
+   * <p>
+   * This calculates based on the time-line, thus it rolls around the end of
+   * the week. The next day after Sunday is Monday.
    *
-   * @return true if this instance represents Saturday
+   * @return the next day-of-week, never null
    */
-  def isSaturday: Boolean = (this == SATURDAY)
+  def next: DayOfWeek = roll(1)
 
   /**
    * Gets the previous day-of-week.
@@ -132,6 +124,19 @@ sealed abstract class DayOfWeek(ordinal: Int) extends Calendrical {
    * @return the previous day-of-week, never null
    */
   def previous: DayOfWeek = roll(-1)
+
+  /**
+   * Rolls the day-of-week, adding the specified number of days.
+   * <p>
+   * This calculates based on the time-line, thus it rolls around the end of
+   * the week from Sunday to Monday. The days to roll by may be negative.
+   * <p>
+   * This instance is immutable and unaffected by this method call.
+   *
+   * @param days the days to roll by, positive or negative
+   * @return the resulting day-of-week, never null
+   */
+  def roll(days: Int): DayOfWeek = values((ordinal + (days % 7 + 7)) % 7)
 
   /**
    * Gets the full textual representation of this day-of-week, such as 'Monday' or 'Friday'.
@@ -166,13 +171,6 @@ sealed abstract class DayOfWeek(ordinal: Int) extends Calendrical {
   def getShortText(locale: Locale): String = ISOChronology.dayOfWeekRule.getText(getValue, locale, TextStyle.SHORT)
 
   /**
-   * Is this instance representing Sunday.
-   *
-   * @return true if this instance represents Sunday
-   */
-  def isSunday: Boolean = (this == SUNDAY)
-
-  /**
    * Is this instance representing Monday.
    *
    * @return true if this instance represents Monday
@@ -187,13 +185,6 @@ sealed abstract class DayOfWeek(ordinal: Int) extends Calendrical {
   def isTuesday: Boolean = (this == TUESDAY)
 
   /**
-   * Is this instance representing Friday.
-   *
-   * @return true if this instance represents Friday
-   */
-  def isFriday: Boolean = (this == FRIDAY)
-
-  /**
    * Is this instance representing Wednesday.
    *
    * @return true if this instance represents Wednesday
@@ -201,17 +192,32 @@ sealed abstract class DayOfWeek(ordinal: Int) extends Calendrical {
   def isWednesday: Boolean = (this == WEDNESDAY)
 
   /**
-   * Rolls the day-of-week, adding the specified number of days.
-   * <p>
-   * This calculates based on the time-line, thus it rolls around the end of
-   * the week from Sunday to Monday. The days to roll by may be negative.
-   * <p>
-   * This instance is immutable and unaffected by this method call.
+   * Is this instance representing Thursday.
    *
-   * @param days the days to roll by, positive or negative
-   * @return the resulting day-of-week, never null
+   * @return true if this instance represents Thursday
    */
-  def roll(days: Int): DayOfWeek = values((ordinal + (days % 7 + 7)) % 7)
+  def isThursday: Boolean = (this == THURSDAY)
+
+  /**
+   * Is this instance representing Friday.
+   *
+   * @return true if this instance represents Friday
+   */
+  def isFriday: Boolean = (this == FRIDAY)
+
+  /**
+   * Is this instance representing Saturday.
+   *
+   * @return true if this instance represents Saturday
+   */
+  def isSaturday: Boolean = (this == SATURDAY)
+
+  /**
+   * Is this instance representing Sunday.
+   *
+   * @return true if this instance represents Sunday
+   */
+  def isSunday: Boolean = (this == SUNDAY)
 
   /**
    * Gets the value of the specified calendrical rule.
@@ -236,23 +242,6 @@ sealed abstract class DayOfWeek(ordinal: Int) extends Calendrical {
    * @return the day-of-week, from 1 (Monday) to 7 (Sunday)
    */
   def getValue: Int = ordinal
-
-  /**
-   * Is this instance representing Thursday.
-   *
-   * @return true if this instance represents Thursday
-   */
-  def isThursday: Boolean = (this == THURSDAY)
-
-  /**
-   * Gets the next day-of-week.
-   * <p>
-   * This calculates based on the time-line, thus it rolls around the end of
-   * the week. The next day after Sunday is Monday.
-   *
-   * @return the next day-of-week, never null
-   */
-  def next: DayOfWeek = roll(1)
 }
 
 
