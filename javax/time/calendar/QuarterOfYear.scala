@@ -173,7 +173,10 @@ sealed abstract class QuarterOfYear(ordinal: Int) extends Calendrical {
    * @param quarters the quarters to roll by, positive or negative
    * @return the resulting quarter-of-year, never null
    */
-  def roll(quarters: Int): QuarterOfYear = QuarterOfYear.of((ordinal + (quarters % 4 + 4)) % 4)  //FIXME
+  def roll(quarters: Int): QuarterOfYear = {
+    val result = (ordinal + (quarters % 4 + 4)) % 4
+    if (result == 0) QuarterOfYear(4) else QuarterOfYear.of(result)
+  }
 
   /**
    * Gets the first of the three months that this quarter refers to.

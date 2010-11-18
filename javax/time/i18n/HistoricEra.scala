@@ -85,18 +85,19 @@ object HistoricEra {
   }
 
   /**
-   * The singleton instance for the era CE - Common Era.
-   * This has the numeric value of  { @code 1 }.
-   */
-  val CE = null
-  /**
    * The singleton instance for the era BCE - Before Common Era.
    * This has the numeric value of  { @code 0 }.
    */
-  val BCE = null
+  object BCE extends HistoricEra(0)
+
+  /**
+   * The singleton instance for the era CE - Common Era.
+   * This has the numeric value of  { @code 1 }.
+   */
+  object CE extends HistoricEra(1)
 }
 
-final class HistoricEra extends Calendrical {
+sealed abstract class HistoricEra(ordinal: Int) extends Calendrical {
   /**
    * Gets the BCE/CE  { @code int } value.
    * <p>
