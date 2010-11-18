@@ -15,7 +15,7 @@ My Scala Date&Time Experiment
  - Some methods have a return type of Integer (or null). They need to be replaced by Some[Int]
  - Java classes which are replaced by Scala classes have been renamed to *._java_
  - There are some classes which do some "reification" magic. These might be replaced by a simple Manifest.
- - TODO: ResourceZoneRulesDataProvider, StandardZoneRules and TZDBZoneRulesCompiler need additional attention.
+ - TODO: ResourceZoneRulesDataProvider, StandardZoneRules, PeriodUnit and TZDBZoneRulesCompiler need additional attention.
 
 I did the most of the work in one night and I did it for fun and curiosity.
 I don't know if it will work out and how good it will work.
