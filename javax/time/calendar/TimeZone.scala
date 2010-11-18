@@ -210,7 +210,7 @@ object TimeZone {
    * </ul>
    * The map is unmodifiable.
    */
-  val OLD_IDS_PRE_2005: Map[String, String] = null
+  var OLD_IDS_PRE_2005: Map[String, String] = null //FIXME: Should be val
 
   /**
    * A map of zone overrides to enable the older US time-zone names to be used.
@@ -248,7 +248,7 @@ object TimeZone {
    * </ul>
    * The map is unmodifiable.
    */
-  val OLD_IDS_POST_2005: Map[String, String] = null
+  var OLD_IDS_POST_2005: Map[String, String] = null //FIXME: should be val
 
   //FIXME!
   var base: Map[String, String] = new HashMap[String, String]
