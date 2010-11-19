@@ -68,7 +68,7 @@ import javax.time.CalendricalException
  * @param periodRange the period range, may be null
  */
 @SerialVersionUID(1L)
-abstract class CalendricalRule[T] protected(val reified: Class[T], private val chronology: Chronology, val name: String, val periodUnit: PeriodUnit, val periodRange: PeriodUnit)
+abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chronology, name: String, periodUnit: PeriodUnit, periodRange: PeriodUnit)
   extends Comparable[CalendricalRule[T]] with Comparator[Calendrical] with Serializable {
   if (reifiedClass == null) {
     throw new NullPointerException("Reified class must not be null")
@@ -106,7 +106,7 @@ abstract class CalendricalRule[T] protected(val reified: Class[T], private val c
    */
   final def deriveValueFrom[T](calendrical: Calendrical): T = {
     ISOChronology.checkNotNull(calendrical, "Calendrical must not be null")
-    return derive(calendrical)
+    derive(calendrical)
   }
 
   /**
@@ -143,10 +143,8 @@ abstract class CalendricalRule[T] protected(val reified: Class[T], private val c
     ISOChronology.checkNotNull(rule, "CalendricalRule must not be null")
     ISOChronology.checkNotNull(value, "Value must not be null")
     ISOChronology.checkNotNull(calendrical, "Calendrical must not be null")
-    if (rule.equals(this)) {
-      return rule.reify(value)
-    }
-    return rule.derive(calendrical)
+    if (rule.equals(this)) rule.reify(value)
+    else rule.derive(calendrical)
   }
 
   /**
@@ -188,9 +186,7 @@ abstract class CalendricalRule[T] protected(val reified: Class[T], private val c
    * @param calendrical the calendrical to derive from, not null
    * @return the derived value, null if unable to derive
    */
-  protected def derive(calendrical: Calendrical): T = {
-    return null
-  }
+  protected def derive(calendrical: Calendrical): T = null
 
   /**
    * Gets the value of this rule from the specified calendrical returning
@@ -203,7 +199,7 @@ abstract class CalendricalRule[T] protected(val reified: Class[T], private val c
    */
   final def getValue(calendrical: Calendrical): T = {
     ISOChronology.checkNotNull(calendrical, "Calendrical must not be null")
-    return calendrical.get(this)
+    calendrical.get(this)
   }
 
   /**
@@ -217,9 +213,7 @@ abstract class CalendricalRule[T] protected(val reified: Class[T], private val c
    *
    * @return the reified type of values of the rule, never null
    */
-  final def getReifiedType: Class[T] = {
-    return reified
-  }
+  final def getReifiedType: Class[T] = reified
 
   /**
    * Interprets the specified value converting it into an in range value of the
@@ -293,10 +287,8 @@ abstract class CalendricalRule[T] protected(val reified: Class[T], private val c
    * @return true if the rules are the same
    */
   override def equals(obj: AnyRef): Boolean = {
-    if (obj == null || getClass != obj.getClass) {
-      return false
-    }
-    return id.equals((obj.asInstanceOf[CalendricalRule[_]]).id)
+    if (obj == null || getClass != obj.getClass) false
+    else id.equals((obj.asInstanceOf[CalendricalRule[_]]).id)
   }
 
   /**
@@ -314,13 +306,9 @@ abstract class CalendricalRule[T] protected(val reified: Class[T], private val c
    * @throws ClassCastException if the value is not of the reified type
    */
   final def reify(value: AnyRef): T = {
-    if (value == null) {
-      return null
-    }
-    if (reified.isInstance(value)) {
-      return value.asInstanceOf[T]
-    }
-    throw new ClassCastException("Value of type " + value.getClass.getName + " cannot be cast to type " + reified.getName)
+    if (value == null) null
+    else if (reified.isInstance(value)) value.asInstanceOf[T]
+    else throw new ClassCastException("Value of type " + value.getClass.getName + " cannot be cast to type " + reified.getName)
   }
 
   /**
@@ -328,9 +316,7 @@ abstract class CalendricalRule[T] protected(val reified: Class[T], private val c
    *
    * @return the chronology of the rule, never null
    */
-  final def getChronology: Chronology = {
-    return chronology
-  }
+  final def getChronology: Chronology = chronology
 
   /**
    * Returns a string representation of the rule.
@@ -408,8 +394,7 @@ abstract class CalendricalRule[T] protected(val reified: Class[T], private val c
    *
    * @param merger the merger instance controlling the merge process, not null
    */
-  protected def merge(merger: CalendricalMerger): Unit = {
-  }
+  protected def merge(merger: CalendricalMerger): Unit = { }
 
   /**
    * Gets the value of the rule from the specified calendrical throwing
@@ -424,10 +409,8 @@ abstract class CalendricalRule[T] protected(val reified: Class[T], private val c
    */
   final def getValueChecked(calendrical: Calendrical): T = {
     var value: T = getValue(calendrical)
-    if (value == null) {
-      throw new UnsupportedRuleException(this)
-    }
-    return value
+    if (value == null) throw new UnsupportedRuleException(this)
+    else value
   }
 
   /**
@@ -441,7 +424,5 @@ abstract class CalendricalRule[T] protected(val reified: Class[T], private val c
    * @param value the value to interpret, null if unable to interpret the value
    * @return the interpreted value
    */
-  protected def interpret(merger: CalendricalMerger, value: AnyRef): T = {
-    return null
-  }
+  protected def interpret(merger: CalendricalMerger, value: AnyRef): T = null
 }

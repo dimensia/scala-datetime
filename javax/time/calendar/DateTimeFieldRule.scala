@@ -320,11 +320,9 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * @return the int value of the field
    * @throws ClassCastException if the value cannot be converted
    */
-  def convertValueToInt(value: T): Int = {
-    if (value.isInstanceOf[Enum[_]]) {
-      return (value.asInstanceOf[Enum[_]]).ordinal + getMinimumValue
-    }
-    return value.asInstanceOf[Integer]
+  def convertValueToInt(value: T): Int = {   //FIXME
+    if (value.isInstanceOf[Enum[_]]) (value.asInstanceOf[Enum[_]]).ordinal + getMinimumValue
+    else value.asInstanceOf[Integer]
   }
 
   /**
@@ -344,7 +342,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
     if (isValidValue(value) == false) {
       throw new IllegalCalendarFieldValueException(this, value, getMinimumValue, getMaximumValue)
     }
-    return value.asInstanceOf[Int]
+    return value.toInt
   }
 
   /**
@@ -421,9 +419,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    *
    * @return the largest possible minimum value for this field
    */
-  def getLargestMinimumValue: Int = {
-    return getMinimumValue
-  }
+  def getLargestMinimumValue: Int = getMinimumValue
 
   /**
    * Gets the minimum value that the field can take using the specified
@@ -628,7 +624,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * @throws IllegalCalendarFieldValueException if the value is invalid
    * @throws ClassCastException if the value cannot be converted
    */
-  def convertIntToValue(value: Int): T = {
+  def convertIntToValue(value: Int): T = {  //FIXME
     checkValue(value)
     if (classOf[Enum].isAssignableFrom(getReifiedType)) {
       return getReifiedType.getEnumConstants(value - getMinimumValue)
@@ -642,9 +638,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    *
    * @return true if the set of values is fixed
    */
-  def isFixedValueSet: Boolean = {
-    return getMaximumValue == getSmallestMaximumValue && getMinimumValue == getLargestMinimumValue
-  }
+  def isFixedValueSet: Boolean = getMaximumValue == getSmallestMaximumValue && getMinimumValue == getLargestMinimumValue
 
   /**
    * Converts the typed value of the rule to the   { @code Integer } equivalent.
@@ -654,11 +648,9 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * @param value the value to convert, not null
    * @return the int value of the field
    */
-  private def convertValueToInteger(value: T): Integer = {
-    if (getReifiedType == classOf[Integer]) {
-      return value.asInstanceOf[Integer]
-    }
-    return convertValueToInt(value)
+  private def convertValueToInteger(value: T): Int = {
+    if (getReifiedType == classOf[Int]) value.asInstanceOf[Int]
+    else convertValueToInt(value)
   }
 
   /**
