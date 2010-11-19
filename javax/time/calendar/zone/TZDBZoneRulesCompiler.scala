@@ -766,7 +766,7 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
   }
 
   /**The TZDB zones. */
-  private final val zones: Map[String, List[TZDBZoneRulesCompiler#TZDBZone]] = new HashMap[String, List[TZDBZoneRulesCompiler#TZDBZone]]
+  private val zones: Map[String, List[TZDBZoneRulesCompiler#TZDBZone]] = new HashMap[String, List[TZDBZoneRulesCompiler#TZDBZone]]
 
   /**
    * Class representing a linked set of zone lines in the TZDB file.

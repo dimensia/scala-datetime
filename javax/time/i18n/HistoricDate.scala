@@ -126,7 +126,7 @@ object HistoricDate {
   private[i18n] object Rule extends Rule
 
   @SerialVersionUID(1L)
-  private[i18n] final class Rule private
+  private[i18n] sealed class Rule private
     extends CalendricalRule[HistoricDate](classOf[HistoricDate], HistoricChronology.standardCutover, "HistoricDate", HistoricChronology.periodDays, null) with Serializable {
     protected override def derive(calendrical: Calendrical): HistoricDate = {
       var ld: LocalDate = calendrical.get(LocalDate.rule)
@@ -162,8 +162,11 @@ object HistoricDate {
  * @param month the month-of-year to represent, not null
  * @param day the day-of-month to represent, valid
  */
-final class HistoricDate private[i18n](chrono: HistoricChronology, @transient year: Int, @transient month: MonthOfYear, @transient day: Int)
+final class HistoricDate private[i18n](val chrono: HistoricChronology, @transient val year: Int, @transient val month: MonthOfYear, @transient val day: Int)
   extends DateProvider with Calendrical with Comparable[HistoricDate] with Serializable {
+
+  import HistoricDate._
+
   /**
    * Gets the historic month-of-year value.
    *

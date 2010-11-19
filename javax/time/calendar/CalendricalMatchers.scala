@@ -81,7 +81,7 @@ object CalendricalMatchers {
     object LEAP_YEAR extends CalendricalMatcher {
       /** { @inheritDoc }*/
       override def matchesCalendrical(calendrical: Calendrical): Boolean = {
-        var yearVal: Integer = calendrical.get(ISOChronology.yearRule)
+        var yearVal: Int = calendrical.get(ISOChronology.yearRule)
         return yearVal != null && ISOChronology.isLeapYear(yearVal)
       }
     }
@@ -91,7 +91,7 @@ object CalendricalMatchers {
       /** { @inheritDoc }*/
       override def matchesCalendrical(calendrical: Calendrical): Boolean = {
         var moy: MonthOfYear = calendrical.get(ISOChronology.monthOfYearRule)
-        var domVal: Integer = calendrical.get(ISOChronology.dayOfMonthRule)
+        var domVal: Int = calendrical.get(ISOChronology.dayOfMonthRule)
         return domVal != null && domVal == 29 && moy == MonthOfYear.FEBRUARY
       }
     }
@@ -119,7 +119,7 @@ object CalendricalMatchers {
       /** { @inheritDoc }*/
       override def matchesCalendrical(calendrical: Calendrical): Boolean = {
         var moy: MonthOfYear = calendrical.get(ISOChronology.monthOfYearRule)
-        var domVal: Integer = calendrical.get(ISOChronology.dayOfMonthRule)
+        var domVal: Int = calendrical.get(ISOChronology.dayOfMonthRule)
         return domVal != null && domVal == 31 && moy == MonthOfYear.DECEMBER
       }
     }
@@ -128,9 +128,9 @@ object CalendricalMatchers {
     object LAST_DAY_OF_MONTH extends CalendricalMatcher {
       /** { @inheritDoc }*/
       override def matchesCalendrical(calendrical: Calendrical): Boolean = {
-        var yearVal: Integer = calendrical.get(ISOChronology.yearRule)
+        var yearVal: Int = calendrical.get(ISOChronology.yearRule)
         var moy: MonthOfYear = calendrical.get(ISOChronology.monthOfYearRule)
-        var domVal: Integer = calendrical.get(ISOChronology.dayOfMonthRule)
+        var domVal: Int = calendrical.get(ISOChronology.dayOfMonthRule)
         return yearVal != null && moy != null && domVal != null && domVal == moy.getLastDayOfMonth(ISOChronology.isLeapYear(yearVal))
       }
     }
@@ -211,10 +211,10 @@ object CalendricalMatchers {
 
    */
   @SerialVersionUID(1L)
-  private final class DayOfWeekInMonth(ordinal: Int, dayOfWeek: DayOfWeek) extends CalendricalMatcher with Serializable {
+  private final class DayOfWeekInMonth(val ordinal: Int, val dayOfWeek: DayOfWeek) extends CalendricalMatcher with Serializable {
     /** { @inheritDoc }*/
     def matchesCalendrical(calendrical: Calendrical): Boolean = {
-      var domVal: Integer = calendrical.get(ISOChronology.dayOfMonthRule)
+      var domVal: Int = calendrical.get(ISOChronology.dayOfMonthRule)
       var dow: DayOfWeek = calendrical.get(ISOChronology.dayOfWeekRule)
       if (dow != dayOfWeek || domVal == null) {
         return false

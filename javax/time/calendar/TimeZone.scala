@@ -379,7 +379,7 @@ object TimeZone {
    *
    * @return the field rule for the time-zone, never null
    */
-  def rule: CalendricalRule[TimeZone] = Rule.INSTANCE
+  def rule: CalendricalRule[TimeZone] = Rule
 
   /**
    * ID based time-zone.
@@ -496,8 +496,8 @@ object TimeZone {
   private[calendar] object Rule extends Rule
 
   @SerialVersionUID(1L)
-  private[calendar] final class Rule private
-    extends CalendricalRule[TimeZone](classOf[TimeZone], ISOChronology.INSTANCE, "TimeZone", null, null)
+  private[calendar] sealed class Rule
+    extends CalendricalRule[TimeZone](classOf[TimeZone], ISOChronology, "TimeZone", null, null)
     with Serializable {
 
     protected override def derive(calendrical: Calendrical): TimeZone = {
@@ -605,7 +605,7 @@ object TimeZone {
  * Constructor only accessible within the package.
  */
 @SerialVersionUID(1L)
-abstract class TimeZone private[this] extends Calendrical with Serializable {
+abstract class TimeZone private[calendar] extends Calendrical with Serializable {
   /**
    * Gets the unique time-zone ID.
    * <p>

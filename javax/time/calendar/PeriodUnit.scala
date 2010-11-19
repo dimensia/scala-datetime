@@ -75,19 +75,11 @@ object PeriodUnit {
     equivalents.add(equivalentPeriod)
     var multiplier: Long = equivalentPeriod.getAmount
     var baseEquivalents: List[PeriodField] = equivalentPeriod.getUnit.getEquivalentPeriods
-
-    {
       var i: Int = 0
       while (i < baseEquivalents.size) {
-        {
           equivalents.add(baseEquivalents.get(i).multipliedBy(multiplier))
-        }
-        ({
           i += 1;
-          i
-        })
       }
-    }
     return Collections.unmodifiableList(equivalents)
   }
 
@@ -103,9 +95,8 @@ abstract class PeriodUnit extends Comparable[PeriodUnit] with Serializable {
    * @param estimatedDuration the estimated duration of one unit of this period, not null
    * @throws ArithmeticException if the equivalent period calculation overflows
    */
-  private[calendar] def this(name: String, equivalentPeriod: PeriodField, estimatedDuration: Duration) {
-    this ()
-    this.name = name
+  private[calendar] def this(@transient name: String, equivalentPeriod: PeriodField, estimatedDuration: Duration) {
+    this()
     this.estimatedDuration = estimatedDuration
     this.equivalentPeriods = buildEquivalentPeriods(equivalentPeriod)
     this.hashCode = name.hashCode ^ estimatedDuration.hashCode ^ (if (equivalentPeriod != null) equivalentPeriod.hashCode else 0)
@@ -127,13 +118,12 @@ abstract class PeriodUnit extends Comparable[PeriodUnit] with Serializable {
    * @throws ArithmeticException if the equivalent period calculation overflows
    */
   protected def this(name: String, equivalentPeriod: PeriodField) {
-    this ()
+    this()
     ISOChronology.checkNotNull(name, "Name must not be null")
     ISOChronology.checkNotNull(equivalentPeriod, "Equivalent period must not be null")
     if (equivalentPeriod.getAmount <= 0) {
       throw new IllegalArgumentException("Equivalent period must not be negative or zero")
     }
-    this.name = name
     this.estimatedDuration = equivalentPeriod.toEstimatedDuration
     this.equivalentPeriods = buildEquivalentPeriods(equivalentPeriod)
     this.hashCode = name.hashCode ^ estimatedDuration.hashCode ^ equivalentPeriod.hashCode
@@ -152,13 +142,12 @@ abstract class PeriodUnit extends Comparable[PeriodUnit] with Serializable {
    * @throws IllegalArgumentException if the duration is zero or negative
    */
   protected def this(name: String, estimatedDuration: Duration) {
-    this ()
+    this()
     ISOChronology.checkNotNull(name, "Name must not be null")
     ISOChronology.checkNotNull(estimatedDuration, "Estimated duration must not be null")
     if (estimatedDuration.isNegative || estimatedDuration.isZero) {
       throw new IllegalArgumentException("Alternate period must not be negative or zero")
     }
-    this.name = name
     this.estimatedDuration = estimatedDuration
     this.equivalentPeriods = buildEquivalentPeriods(null)
     this.hashCode = name.hashCode ^ estimatedDuration.hashCode ^ 0
@@ -302,12 +291,6 @@ abstract class PeriodUnit extends Comparable[PeriodUnit] with Serializable {
    * @return a suitable hash code
    */
   override def hashCode: Int = hashCode
-
-  /**
-   * The name of the unit, not null.
-   */
-  @transient
-  private val name: String = null
 
   /**
    * The cache of the unit hash code.

@@ -70,7 +70,7 @@ import javax.time.CalendricalException
 @SerialVersionUID(1L)
 abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chronology, name: String, periodUnit: PeriodUnit, periodRange: PeriodUnit)
   extends Comparable[CalendricalRule[T]] with Comparator[Calendrical] with Serializable {
-  if (reifiedClass == null) {
+  if (reified == null) {
     throw new NullPointerException("Reified class must not be null")
   }
   if (chronology == null) {
@@ -155,9 +155,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    *
    * @return the ID of the rule, never null
    */
-  final def getID: String = {
-    return id
-  }
+  final def getID: String = id
 
   /**
    * Derives the value of this rule from a calendrical.
@@ -319,6 +317,51 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
   final def getChronology: Chronology = chronology
 
   /**
+   * Gets the name of the rule.
+   * <p>
+   * Implementations should use the name that best represents themselves.
+   * If the rule represents a field, then the form 'UnitOfRange' should be used.
+   * Otherwise, use the simple class name of the generic type, such as 'ZoneOffset'.
+   *
+   * @return the name of the rule, never null
+   */
+  def getName: String = name
+
+  /**
+   * Gets the unit that the rule is measured in.
+   * <p>
+   * Most rules define a field such as 'hour of day' or 'month of year'.
+   * The unit is the period that varies within the range.
+   * <p>
+   * For example, the rule for hour-of-day will return Hours, while the rule for
+   * month-of-year will return Months. The rule for a date will return Days
+   * as a date could alternately be described as 'days of forever'.
+   * <p>
+   * The {@code null} value is returned if the rule is not defined by a unit and range.
+   *
+   * @return the unit defining the rule unit, null if this rule isn't based on a period
+   */
+  def getPeriodUnit: PeriodUnit = periodUnit
+
+  /**
+   * Gets the range that the rule is bound by.
+   * <p>
+   * Most rules define a field such as 'hour of day' or 'month of year'.
+   * The range is the period that the field varies within.
+   * <p>
+   * For example, the rule for hour-of-day will return Days, while the rule for
+   * month-of-year will return Years.
+   * <p>
+   * When the range is unbounded, such as for a date or the year field, then {@code null}
+   * will be returned.
+   * The {@code null} value is also returned if the rule is not defined by a unit and range.
+   *
+   * @return the unit defining the rule range, null if unbounded,
+   *  or if this rule isn't based on a period
+   */
+  def getPeriodRange: PeriodUnit = periodRange
+
+  /**
    * Returns a string representation of the rule.
    *
    * @return a description of the rule, never null
@@ -394,7 +437,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    *
    * @param merger the merger instance controlling the merge process, not null
    */
-  protected def merge(merger: CalendricalMerger): Unit = { }
+  protected def merge(merger: CalendricalMerger): Unit = {}
 
   /**
    * Gets the value of the rule from the specified calendrical throwing

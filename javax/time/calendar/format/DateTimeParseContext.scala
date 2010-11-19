@@ -197,6 +197,6 @@ final class DateTimeParseContext(val symbols: DateTimeFormatSymbols) {
    */
   def getParsed(rule: CalendricalRule[_]): AnyRef = {
     DateTimeFormatter.checkNotNull(rule, "CalendricalRule must not be null")
-    return currentCalendrical.values.get(rule)
+    currentCalendrical.values.get(rule)
   }
 }

@@ -46,7 +46,7 @@ import javax.time.calendar.format.CalendricalParseException
  *
  * @return the instance of the parser
  */
-object PeriodParser {
+object PeriodParser extends PeriodParser{
 
   /**
    * The standard string representing a zero period.
@@ -61,45 +61,45 @@ object PeriodParser {
    * Parse values container created for each parse
    * @param text Original text.
    */
-  private class ParseValues private[calendar](private var text: String) {
+  private class ParseValues private[calendar](private[calendar] var text: String) {
     /**
      * Whether the seconds were negative.
      */
-    private var negativeSecs: Boolean = false
+    private[calendar] var negativeSecs: Boolean = false
     /**
      * The number of days.
      */
-    private var days: Int = 0
+    private[calendar] var days: Int = 0
     /**
      * The number of hours.
      */
-    private var hours: Int = 0
+    private[calendar] var hours: Int = 0
     /**
      * The number of seconds.
      */
-    private var seconds: Int = 0
+    private[calendar] var seconds: Int = 0
     /**
      * The number of months.
      */
-    private var months: Int = 0
+    private[calendar] var months: Int = 0
 
     /**
      * The number of minutes.
      */
-    private var minutes: Int = 0
+    private[calendar] var minutes: Int = 0
     /**
      * The number of years.
      */
-    private var years: Int = 0
+    private[calendar] var years: Int = 0
     /**
      * The number of nanoseconds.
      */
-    private var nanos: Long = 0L
+    private[calendar] var nanos: Long = 0L
 
     /**
      * Parser position index.
      */
-    private var index: Int = 0
+    private[calendar] var index: Int = 0
 
     private[calendar] def toPeriod: Period =
       Period.of(years, months, days, hours, minutes, seconds, if (negativeSecs || seconds < 0) -nanos else nanos)
@@ -112,7 +112,7 @@ class PeriodParser protected {
     if (s.length > 9) {
       throw new CalendricalParseException("Period could not be parsed, nanosecond range exceeded: " + values.text, values.text, baseIndex + values.index - s.length)
     }
-    return Long.parseLong((s + "000000000").substring(0, 9))
+    return (s + "000000000").substring(0, 9).toLong
   }
 
   private def parseInt(values: PeriodParser.ParseValues, s: String, baseIndex: Int): Int = {
@@ -135,10 +135,7 @@ class PeriodParser protected {
     if (s.contains(".")) {
       var i: Int = s.indexOf(".") + 1
       if (Character.isDigit(s.charAt(i))) {
-        ({
-          i += 1;
-          i
-        })
+        i += 1;
       }
       else {
         throw new CalendricalParseException("Period could not be parsed, invalid decimal number: " + values.text, values.text, baseIndex + values.index)
@@ -146,10 +143,7 @@ class PeriodParser protected {
       while (i < s.length) {
         var c: Char = s.charAt(i)
         if (Character.isDigit(c) || c == 'S') {
-          ({
-            i += 1;
-            i
-          })
+          i += 1;
         }
         else {
           throw new CalendricalParseException("Period could not be parsed, invalid decimal number: " + values.text, values.text, baseIndex + values.index)
@@ -171,10 +165,7 @@ class PeriodParser protected {
       if ((c < '0' || c > '9') && c != '-') {
         break //todo: break is not supported
       }
-      ({
-        values.index += 1;
-        values.index
-      })
+      values.index += 1;
     }
     return s.substring(start, values.index)
   }
@@ -191,10 +182,7 @@ class PeriodParser protected {
           case 'D' => values.days = parseInt(values, value, baseIndex)
           case _ => throw new CalendricalParseException("Period could not be parsed, unrecognized letter '" + c + ": " + values.text, values.text, baseIndex + values.index)
         }
-        ({
-          values.index += 1;
-          values.index
-        })
+        values.index += 1;
       }
     }
   }
@@ -222,8 +210,8 @@ class PeriodParser protected {
    * @throws CalendricalParseException if the text cannot be parsed to a Period
    */
   private[calendar] def parse(text: String): Period = {
-    var s: String = text.toUpperCase.replace(',', '.')
-    if (ZERO.equals(s)) {
+    val s: String = text.toUpperCase.replace(',', '.')
+    if (Period.ZERO == s) {
       return Period.ZERO
     }
     if (s.length < 3 || s.charAt(0) != 'P') {
@@ -246,34 +234,24 @@ class PeriodParser protected {
     var tokenPos: Int = 0
     var lastLetter: Boolean = false
 
-    {
-      var i: Int = 0
-      while (i < chars.length) {
-        {
-          if (tokenPos >= TOKEN_SEQUENCE.length) {
-            throw new CalendricalParseException("Period could not be parsed, characters after last 'S': " + text, text, i)
-          }
-          var c: Char = chars(i)
-          if ((c < '0' || c > '9') && c != '-' && c != '.') {
-            tokenPos = TOKEN_SEQUENCE.indexOf(c, tokenPos)
-            if (tokenPos < 0) {
-              throw new CalendricalParseException("Period could not be parsed, invalid character '" + c + "': " + text, text, i)
-            }
-            ({
-              tokenPos += 1;
-              tokenPos
-            })
-            lastLetter = true
-          }
-          else {
-            lastLetter = false
-          }
-        }
-        ({
-          i += 1;
-          i
-        })
+    var i: Int = 0
+    while (i < chars.length) {
+      if (tokenPos >= PeriodParser.TOKEN_SEQUENCE.length) {
+        throw new CalendricalParseException("Period could not be parsed, characters after last 'S': " + text, text, i)
       }
+      var c: Char = chars(i)
+      if ((c < '0' || c > '9') && c != '-' && c != '.') {
+        tokenPos = PeriodParser.TOKEN_SEQUENCE.indexOf(c, tokenPos)
+        if (tokenPos < 0) {
+          throw new CalendricalParseException("Period could not be parsed, invalid character '" + c + "': " + text, text, i)
+        }
+        tokenPos += 1;
+        lastLetter = true
+      }
+      else {
+        lastLetter = false
+      }
+      i += 1;
     }
     if (lastLetter == false) {
       throw new CalendricalParseException("Period could not be parsed, invalid last character: " + text, text, s.length - 1)
@@ -295,10 +273,7 @@ class PeriodParser protected {
           case 'N' => values.nanos = parseNanos(values, value, baseIndex)
           case _ => throw new CalendricalParseException("Period could not be parsed, unrecognized letter '" + c + "': " + values.text, values.text, baseIndex + values.index)
         }
-        ({
-          values.index += 1;
-          values.index
-        })
+        values.index += 1;
       }
     }
   }

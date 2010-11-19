@@ -47,8 +47,8 @@ import javax.time.CalendricalException
    * @param errorIndex the index in the parsed string that was invalid, should be a valid index
    */
 @SerialVersionUID(1L)
-class CalendricalParseException(message: String, parsedString: String, errorIndex: Int, cause: Throwable) extends CalendricalException {
-  super(message, cause)
+class CalendricalParseException(message: String, parsedString: String, errorIndex: Int, cause: Throwable)
+  extends CalendricalException(message, cause) {
 
   /**
    * Constructs a new exception with the specified message and cause.

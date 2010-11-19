@@ -97,7 +97,7 @@ object ZoneOffsetTransition {
  * @param offsetAfter the offset at and after the transition, not null
  */
 @SerialVersionUID(1L)
-final class ZoneOffsetTransition private[zone](transition: OffsetDateTime, offsetAfter: ZoneOffset)
+final class ZoneOffsetTransition private[zone](val transition: OffsetDateTime, offsetAfter: ZoneOffset)
   extends Comparable[ZoneOffsetTransition] with Serializable {
 
 

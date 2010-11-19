@@ -61,6 +61,41 @@ import javax.time.calendar.format.DateTimeFormatterBuilder.TextStyle
  */
 object DayOfWeek {
   /**
+   * The singleton instance for the day-of-week of Monday.
+   * This has the numeric value of  { @code 1 }.
+   */
+  object MONDAY extends DayOfWeek(1)
+  /**
+   * The singleton instance for the day-of-week of Tuesday.
+   * This has the numeric value of  { @code 2 }.
+   */
+  object TUESDAY extends DayOfWeek(2)
+  /**
+   * The singleton instance for the day-of-week of Wednesday.
+   * This has the numeric value of  { @code 3 }.
+   */
+  object WEDNESDAY extends DayOfWeek(3)
+/**
+   * The singleton instance for the day-of-week of Thursday.
+   * This has the numeric value of  { @code 4 }.
+   */
+  object THURSDAY extends DayOfWeek(4)
+  /**
+   * The singleton instance for the day-of-week of Friday.
+   * This has the numeric value of  { @code 5 }.
+   */
+  object FRIDAY extends DayOfWeek(5)
+  /**
+   * The singleton instance for the day-of-week of Saturday.
+   * This has the numeric value of  { @code 6 }.
+   */
+  object SATURDAY extends DayOfWeek(6)
+/**
+   * The singleton instance for the day-of-week of Sunday.
+   * This has the numeric value of  { @code 7 }.
+   */
+  object SUNDAY extends DayOfWeek(7)
+  /**
    * Returns the  { @code DayOfWeek } instance that corresponds to the first
    * day-of-week for a given  { @code locale }.
    * <p>
@@ -103,7 +138,7 @@ object DayOfWeek {
   }
 }
 
-sealed abstract class DayOfWeek(ordinal: Int) extends Calendrical {
+sealed abstract class DayOfWeek(val ordinal: Int) extends Calendrical {
 
   /**
    * Gets the next day-of-week.
@@ -243,41 +278,4 @@ sealed abstract class DayOfWeek(ordinal: Int) extends Calendrical {
    */
   def getValue: Int = ordinal
 }
-
-
-  /**
-   * The singleton instance for the day-of-week of Monday.
-   * This has the numeric value of  { @code 1 }.
-   */
-  object MONDAY extends DayOfWeek(1)
-  /**
-   * The singleton instance for the day-of-week of Tuesday.
-   * This has the numeric value of  { @code 2 }.
-   */
-  object TUESDAY extends DayOfWeek(2)
-  /**
-   * The singleton instance for the day-of-week of Wednesday.
-   * This has the numeric value of  { @code 3 }.
-   */
-  object WEDNESDAY extends DayOfWeek(3)
-/**
-   * The singleton instance for the day-of-week of Thursday.
-   * This has the numeric value of  { @code 4 }.
-   */
-  object THURSDAY extends DayOfWeek(4)
-  /**
-   * The singleton instance for the day-of-week of Friday.
-   * This has the numeric value of  { @code 5 }.
-   */
-  object FRIDAY extends DayOfWeek(5)
-  /**
-   * The singleton instance for the day-of-week of Saturday.
-   * This has the numeric value of  { @code 6 }.
-   */
-  object SATURDAY extends DayOfWeek(6)
-/**
-   * The singleton instance for the day-of-week of Sunday.
-   * This has the numeric value of  { @code 7 }.
-   */
-  object SUNDAY extends DayOfWeek(7)
 

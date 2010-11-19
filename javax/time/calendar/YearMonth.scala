@@ -73,37 +73,37 @@ object YearMonth {
    * @throws InvalidCalendarFieldException if the value for either field is invalid
    */
   def of(calendrical: Calendrical): YearMonth = {
-    var year: Integer = ISOChronology.yearRule.getValueChecked(calendrical)
-    var month: MonthOfYear = ISOChronology.monthOfYearRule.getValueChecked(calendrical)
-    return of(year, month)
+    val year: Int = ISOChronology.yearRule.getValueChecked(calendrical)
+    val month: MonthOfYear = ISOChronology.monthOfYearRule.getValueChecked(calendrical)
+    of(year, month)
   }
 
   /**
    * Parser.
    */
-  private val PARSER: DateTimeFormatter = new DateTimeFormatterBuilder.appendValue(ISOChronology.yearRule, 4, 10, SignStyle.EXCEEDS_PAD).appendLiteral('-').appendValue(ISOChronology.monthOfYearRule, 2).toFormatter
+  private val PARSER: DateTimeFormatter =
+    (new DateTimeFormatterBuilder)
+      .appendValue(ISOChronology.yearRule, 4, 10, SignStyle.EXCEEDS_PAD)
+      .appendLiteral('-')
+      .appendValue(ISOChronology.monthOfYearRule, 2)
+      .toFormatter
 
   /**
    * Rule implementation.
    */
-  private[calendar] object Rule {
-    private val INSTANCE: CalendricalRule[YearMonth] = new YearMonth.Rule
-  }
+  private[calendar] object Rule extends Rule
 
   @SerialVersionUID(1L)
-  private[calendar] final class Rule
-    extends CalendricalRule[YearMonth]((classOf[YearMonth],
-      ISOChronology.INSTANCE,
-      "YearMonth", ISOChronology.periodMonths,
-      null))
+  private[calendar] sealed class Rule
+    extends CalendricalRule[YearMonth]((classOf[YearMonth], ISOChronology, "YearMonth", ISOChronology.periodMonths, null))
     with Serializable {
     protected override def derive(calendrical: Calendrical): YearMonth = {
-      var year: Integer = calendrical.get(ISOChronology.yearRule)
+      var year: Int = calendrical.get(ISOChronology.yearRule)
       var moy: MonthOfYear = calendrical.get(ISOChronology.monthOfYearRule)
       return if (year != null && moy != null) YearMonth.of(year, moy) else null
     }
 
-    private def readResolve: AnyRef = INSTANCE
+    private def readResolve: AnyRef = Rule
   }
 
   /**
@@ -117,8 +117,8 @@ object YearMonth {
    * @return the current year-month, never null
    */
   def now(clock: Clock): YearMonth = {
-    var date: LocalDate = LocalDate.now(clock)
-    return YearMonth.of(date.getYear, date.getMonthOfYear)
+    val date: LocalDate = LocalDate.now(clock)
+    YearMonth.of(date.getYear, date.getMonthOfYear)
   }
 
   /**
@@ -132,7 +132,7 @@ object YearMonth {
   def of(year: Int, monthOfYear: MonthOfYear): YearMonth = {
     ISOChronology.yearRule.checkValue(year)
     ISOChronology.checkNotNull(monthOfYear, "MonthOfYear must not be null")
-    return new YearMonth(year, monthOfYear)
+    new YearMonth(year, monthOfYear)
   }
 
   /**
@@ -150,7 +150,7 @@ object YearMonth {
    *
    * @return the field rule for the date-time, never null
    */
-  def rule: CalendricalRule[YearMonth] = Rule.INSTANCE
+  def rule: CalendricalRule[YearMonth] = Rule
 
   /**
    * Obtains the current year-month from the system clock in the default time-zone.
@@ -195,7 +195,7 @@ object YearMonth {
    */
   def parse(text: String, formatter: DateTimeFormatter): YearMonth = {
     ISOChronology.checkNotNull(formatter, "DateTimeFormatter must not be null")
-    return formatter.parse(text, rule)
+    formatter.parse(text, rule)
   }
 }
 
@@ -207,7 +207,7 @@ object YearMonth {
  * @param monthOfYear the month-of-year to represent, not null
  */
 @SerialVersionUID(1L)
-final class YearMonth private(year: Int, month: MonthOfYear) extends Calendrical with CalendricalMatcher with DateAdjuster with Comparable[YearMonth] with Serializable {
+final class YearMonth private(val year: Int, val month: MonthOfYear) extends Calendrical with CalendricalMatcher with DateAdjuster with Comparable[YearMonth] with Serializable {
   /**
    * Adjusts a date to have the value of this year-month, using a resolver to
    * handle the case when the day-of-month becomes invalid.
@@ -247,8 +247,8 @@ final class YearMonth private(year: Int, month: MonthOfYear) extends Calendrical
    * @throws ArithmeticException if the result exceeds the supported range
    */
   def minus(periodProvider: PeriodProvider): YearMonth = {
-    var period: Period = Period.of(periodProvider)
-    return minusMonths(period.totalMonths)
+    val period: Period = Period.of(periodProvider)
+    minusMonths(period.totalMonths)
   }
 
   /**
@@ -304,7 +304,7 @@ final class YearMonth private(year: Int, month: MonthOfYear) extends Calendrical
    */
   def minusYears(years: Long): YearMonth = {
     if (years == 0) return this
-    var newYear: Int = ISOChronology.yearRule.checkValue(year - years)
+    val newYear: Int = ISOChronology.yearRule.checkValue(year - years)
     return `with`(newYear, month)
   }
 
@@ -356,9 +356,7 @@ final class YearMonth private(year: Int, month: MonthOfYear) extends Calendrical
    * @param calendrical the calendrical to match, not null
    * @return true if the calendrical matches, false otherwise
    */
-  override def matchesCalendrical(calendrical: Calendrical): Boolean = {
-    return this.equals(calendrical.get(rule))
-  }
+  override def matchesCalendrical(calendrical: Calendrical): Boolean = this.equals(calendrical.get(rule))
 
   /**
    * Outputs this year-month as a   { @code String } using the formatter.
@@ -370,7 +368,7 @@ final class YearMonth private(year: Int, month: MonthOfYear) extends Calendrical
    */
   def toString(formatter: DateTimeFormatter): String = {
     ISOChronology.checkNotNull(formatter, "DateTimeFormatter must not be null")
-    return formatter.print(this)
+    formatter.print(this)
   }
 
   /**
@@ -382,18 +380,14 @@ final class YearMonth private(year: Int, month: MonthOfYear) extends Calendrical
    * @return a { @code YearMonth } based on this year-month with the requested month, never null
    * @throws IllegalCalendarFieldValueException if the month-of-year value is invalid
    */
-  def withMonthOfYear(monthOfYear: Int): YearMonth = {
-    return `with`(MonthOfYear.of(monthOfYear))
-  }
+  def withMonthOfYear(monthOfYear: Int): YearMonth = `with`(MonthOfYear.of(monthOfYear))
 
   /**
    * A hash code for this year-month.
    *
    * @return a suitable hash code
    */
-  override def hashCode: Int = {
-    return year ^ (month.getValue << 27)
-  }
+  override def hashCode: Int = year ^ (month.getValue << 27)
 
   /**
    * Outputs this year-month as a   { @code String }, such as   { @code 2007 -12 }.
@@ -438,8 +432,8 @@ final class YearMonth private(year: Int, month: MonthOfYear) extends Calendrical
    * @throws ArithmeticException if the result exceeds the supported range
    */
   def plus(periodProvider: PeriodProvider): YearMonth = {
-    var period: Period = Period.of(periodProvider)
-    return plusMonths(period.totalMonths)
+    val period: Period = Period.of(periodProvider)
+    plusMonths(period.totalMonths)
   }
 
   /**
@@ -459,9 +453,7 @@ final class YearMonth private(year: Int, month: MonthOfYear) extends Calendrical
    * @throws InvalidCalendarFieldException when the day is invalid for the year-month
    * @see # isValidDay ( int )
    */
-  def atDay(dayOfMonth: Int): LocalDate = {
-    return LocalDate.of(year, month, dayOfMonth)
-  }
+  def atDay(dayOfMonth: Int): LocalDate = LocalDate.of(year, month, dayOfMonth)
 
   /**
    * Returns a copy of this YearMonth with the month-of-year altered.
@@ -483,9 +475,7 @@ final class YearMonth private(year: Int, month: MonthOfYear) extends Calendrical
    * @return true if this is after the specified year-month
    * @throws NullPointerException if   { @code other } is null
    */
-  def isAfter(other: YearMonth): Boolean = {
-    return compareTo(other) > 0
-  }
+  def isAfter(other: YearMonth): Boolean = compareTo(other) > 0
 
   /**
    * Returns a copy of this year-month with the new year and month, checking
@@ -597,9 +587,7 @@ final class YearMonth private(year: Int, month: MonthOfYear) extends Calendrical
    * @param date the date to be adjusted, not null
    * @return the adjusted date, never null
    */
-  override def adjustDate(date: LocalDate): LocalDate = {
-    return adjustDate(date, DateResolvers.previousValid)
-  }
+  override def adjustDate(date: LocalDate): LocalDate = adjustDate(date, DateResolvers.previousValid)
 
   /**
    * Gets the length of this month in days.
@@ -609,18 +597,14 @@ final class YearMonth private(year: Int, month: MonthOfYear) extends Calendrical
    *
    * @return the length of the month in days, from 28 to 31
    */
-  def lengthInDays: Int = {
-    return month.lengthInDays(ISOChronology.isLeapYear(year))
-  }
+  def lengthInDays: Int = month.lengthInDays(ISOChronology.isLeapYear(year))
 
   /**
    * Gets the chronology that this year-month uses, which is the ISO calendar system.
    *
    * @return the ISO chronology, never null
    */
-  def getChronology: ISOChronology = {
-    return ISOChronology.INSTANCE
-  }
+  def getChronology: ISOChronology = ISOChronology
 
   /**
    * Checks if the day-of-month is valid for this year-month.
@@ -631,9 +615,7 @@ final class YearMonth private(year: Int, month: MonthOfYear) extends Calendrical
    * @param dayOfMonth the day-of-month to validate, from 1 to 31, invalid value returns false
    * @return true if the day is valid for this year-month
    */
-  def isValidDay(dayOfMonth: Int): Boolean = {
-    return dayOfMonth >= 1 && dayOfMonth <= lengthInDays
-  }
+  def isValidDay(dayOfMonth: Int): Boolean = dayOfMonth >= 1 && dayOfMonth <= lengthInDays
 
   /**
    * Is this year-month before the specified year-month.
@@ -642,9 +624,7 @@ final class YearMonth private(year: Int, month: MonthOfYear) extends Calendrical
    * @return true if this point is before the specified year-month
    * @throws NullPointerException if   { @code other } is null
    */
-  def isBefore(other: YearMonth): Boolean = {
-    return compareTo(other) < 0
-  }
+  def isBefore(other: YearMonth): Boolean = compareTo(other) < 0
 
   /**
    * Returns a copy of this YearMonth with the specified period in months subtracted.

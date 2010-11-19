@@ -213,7 +213,7 @@ object PeriodFields {
    */
   private[calendar] def create(periodMap: TreeMap[PeriodUnit, PeriodField]): PeriodFields = {
     if (periodMap.isEmpty) ZERO
-    eöse new PeriodFields(periodMap)
+    else new PeriodFields(periodMap)
   }
 }
 

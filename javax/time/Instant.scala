@@ -185,7 +185,7 @@ object Instant {
    * epoch of 1970-01-01T00:00:00Z.
    * <p>
    * The seconds and nanoseconds are extracted from the specified    { @code BigInteger }.
-   * If the resulting seconds value is larger than    { @code Long.MAX_VALUE } then an
+   * If the resulting seconds value is larger than    { @code Long.MaxValue } then an
    * exception is thrown.
    *
    * @param epochNanos the number of nanoseconds, not null
@@ -194,11 +194,11 @@ object Instant {
    */
   def ofEpochNanos(epochNanos: BigInt): Instant = {
     checkNotNull(epochNanos, "Nanos must not be null")
-    var divRem: Array[BigInt] = epochNanos.divideAndRemainder(BILLION)
-    if (divRem(0).bitLength > 63) {
+    var divRem: (BigInt, BigInt) = epochNanos /% BILLION
+    if (divRem._1.bitLength > 63) {
       throw new ArithmeticException("Exceeds capacity of Duration: " + epochNanos)
     }
-    return ofEpochSeconds(divRem(0).longValue, divRem(1).intValue)
+    return ofEpochSeconds(divRem._1.longValue, divRem._2.intValue)
   }
 
   /**
@@ -220,7 +220,7 @@ object Instant {
   /**
    * Constant for the 1970-01-01T00:00:00Z epoch instant.
    */
-  final val EPOCH: Instant = new Instant(0, 0)
+  val EPOCH: Instant = new Instant(0, 0)
   /**
    * Serialization version.
    */
@@ -265,7 +265,7 @@ object Instant {
    * epoch of 1970-01-01T00:00:00Z.
    * <p>
    * The seconds and nanoseconds are extracted from the specified    { @code BigDecimal }.
-   * If the decimal is larger than    { @code Long.MAX_VALUE } or has more than 9 decimal
+   * If the decimal is larger than    { @code Long.MaxValue } or has more than 9 decimal
    * places then an exception is thrown.
    *
    * @param epochSeconds the number of seconds, up to scale 9
@@ -313,6 +313,9 @@ object Instant {
  * @param nanos the nanoseconds within the second, must be positive
  */
 final class Instant private(val seconds: Long, val nanos: Int) extends InstantProvider with Comparable[Instant] with Serializable {
+
+  import Instant._
+
   /**
    * Gets the number of seconds from the Java epoch of 1970-01-01T00:00:00Z.
    * <p>
@@ -492,7 +495,7 @@ final class Instant private(val seconds: Long, val nanos: Int) extends InstantPr
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   def minusSeconds(secondsToSubtract: Long): Instant = {
-    if (secondsToSubtract == Long.MIN_VALUE) plusSeconds(Long.MAX_VALUE).plusSeconds(1)
+    if (secondsToSubtract == Long.MinValue) plusSeconds(Long.MaxValue).plusSeconds(1)
     else plusSeconds(-secondsToSubtract)
   }
 
@@ -506,7 +509,7 @@ final class Instant private(val seconds: Long, val nanos: Int) extends InstantPr
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   def minusMillis(millisToSubtract: Long): Instant = {
-    if (millisToSubtract == Long.MIN_VALUE) plusMillis(Long.MAX_VALUE).plusMillis(1)
+    if (millisToSubtract == Long.MinValue) plusMillis(Long.MaxValue).plusMillis(1)
     else plusMillis(-millisToSubtract)
   }
 
@@ -542,7 +545,7 @@ final class Instant private(val seconds: Long, val nanos: Int) extends InstantPr
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   def minusNanos(nanosToSubtract: Long): Instant = {
-    if (nanosToSubtract == Long.MIN_VALUE) plusNanos(Long.MAX_VALUE).plusNanos(1)
+    if (nanosToSubtract == Long.MinValue) plusNanos(Long.MaxValue).plusNanos(1)
     else plusNanos(-nanosToSubtract)
   }
 

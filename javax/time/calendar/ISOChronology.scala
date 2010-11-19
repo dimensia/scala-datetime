@@ -38,9 +38,8 @@ import java.util.EnumMap
 import java.util.HashMap
 import java.util.Locale
 import java.util.Map
-import javax.time.Duration
-import javax.time.MathUtils
 import javax.time.calendar.format.DateTimeFormatterBuilder.TextStyle
+import javax.time.{MathUtils, Duration}
 
 /**
  * The ISO-8601 calendar system, which follows the rules of the current
@@ -55,7 +54,7 @@ import javax.time.calendar.format.DateTimeFormatterBuilder.TextStyle
  * @author Michael Nascimento Santos
  * @author Stephen Colebourne
  */
-object ISOChronology {
+object ISOChronology extends ISOChronology {
   /**
    * Gets the rule for the nano-of-second field.
    * <p>
@@ -67,7 +66,7 @@ object ISOChronology {
   def nanoOfSecondRule: DateTimeFieldRule[Int] = NANO_OF_SECOND
 
   private val MINUTE_OF_HOUR_ORDINAL: Int = 5 * 16
-  private val MILLI_OF_DAY: ISOChronology.Rule = new ISOChronology.Rule(MILLI_OF_DAY_ORDINAL, "MilliOfDay", MILLIS, DAYS, 0, 86399999, 86399999)
+  private val MILLI_OF_DAY: Rule = new Rule(MILLI_OF_DAY_ORDINAL, "MilliOfDay", MILLIS, DAYS, 0, 86399999, 86399999)
   private val MILLI_OF_SECOND_ORDINAL: Int = 1 * 16
   /**
    * Gets the period unit for months.
@@ -86,7 +85,7 @@ object ISOChronology {
   /**
    * Period unit for seconds.
    */
-  private val SECONDS: ISOChronology.Unit = new ISOChronology.Unit(3 * 16, "Seconds", PeriodField.of(1000, MILLIS), Duration.ofSeconds(1))
+  private val SECONDS: Unit = new Unit(3 * 16, "Seconds", PeriodField.of(1000, MILLIS), Duration.ofSeconds(1))
 
   /**
    * Rule implementation.
@@ -94,9 +93,10 @@ object ISOChronology {
   private[calendar] object EpochDaysRule extends EpochDaysRule
 
   @SerialVersionUID(1L)
-  private[calendar] final class EpochDaysRule private
-    extends CalendricalRule[Long](classOf[Long], ISOChronology.INSTANCE, "EpochDays", DAYS, null)
+  private[calendar] sealed class EpochDaysRule
+    extends CalendricalRule[Long](classOf[Long], ISOChronology, "EpochDays", DAYS, null)
     with Serializable {
+
     protected override def derive(calendrical: Calendrical): Long = {
       var date: LocalDate = calendrical.get(LocalDate.rule)
       return if (date != null) date.toEpochDays else null
@@ -117,12 +117,12 @@ object ISOChronology {
   private[calendar] object MonthOfYearRule extends MonthOfYearRule
 
   @SerialVersionUID(1L)
-  private[calendar] final class MonthOfYearRule
-    extends DateTimeFieldRule[MonthOfYear](classOf[MonthOfYear], ISOChronology.INSTANCE, "MonthOfYear", MONTHS, YEARS, 1, 12, true)
+  private[calendar] sealed class MonthOfYearRule
+    extends DateTimeFieldRule[MonthOfYear](classOf[MonthOfYear], ISOChronology, "MonthOfYear", MONTHS, YEARS, 1, 12, true)
     with Serializable {
     protected def interpret(merger: CalendricalMerger, value: AnyRef): MonthOfYear = {
       if (value.isInstanceOf[Integer]) {
-        var value: Int = value.asInstanceOf[Integer]
+        var value: Int = value.toInt
 
         if (value < 1 || value > 12) {
           merger.addToOverflow(Period.ofMonths(value - 1))
@@ -147,9 +147,7 @@ object ISOChronology {
       return value.getValue
     }
 
-    private def readResolve: AnyRef = {
-      return INSTANCE
-    }
+    private def readResolve: AnyRef = MonthOfYearRule
 
     protected def createTextStores(textStores: EnumMap[TextStyle.type, DateTimeFieldRule.TextStore], locale: Locale): Unit = {
       var oldSymbols: DateFormatSymbols = new DateFormatSymbols(locale)
@@ -227,13 +225,13 @@ object ISOChronology {
    */
   def periodWeeks: PeriodUnit = WEEKS
 
-  private val SECOND_OF_DAY: ISOChronology.Rule = new ISOChronology.Rule(SECOND_OF_DAY_ORDINAL, "SecondOfDay", SECONDS, DAYS, 0, 86399, 86399)
+  private val SECOND_OF_DAY: Rule = new Rule(SECOND_OF_DAY_ORDINAL, "SecondOfDay", SECONDS, DAYS, 0, 86399, 86399)
 
   /**
    * Period unit for microseconds.
    */
-  private val MICROS: ISOChronology.Unit = new ISOChronology.Unit(1 * 16, "Micros", PeriodField.of(1000, NANOS), Duration.ofNanos(1000))
-  private val WEEK_OF_WEEK_BASED_YEAR: ISOChronology.Rule = new ISOChronology.Rule(WEEK_OF_WEEK_BASED_YEAR_ORDINAL, "WeekOfWeekBasedYear", WEEKS, WEEK_BASED_YEARS, 1, 53, 52)
+  private val MICROS: Unit = new Unit(1 * 16, "Micros", PeriodField.of(1000, NANOS), Duration.ofNanos(1000))
+  private val WEEK_OF_WEEK_BASED_YEAR: Rule = new Rule(WEEK_OF_WEEK_BASED_YEAR_ORDINAL, "WeekOfWeekBasedYear", WEEKS, WEEK_BASED_YEARS, 1, 53, 52)
 
   /**
    * Gets the rule for the month-of-quarter field in the ISO chronology.
@@ -259,13 +257,13 @@ object ISOChronology {
   /**
    * Period unit for hours.
    */
-  private val HOURS: ISOChronology.Unit = new ISOChronology.Unit(5 * 16, "Hours", PeriodField.of(60, MINUTES), Duration.ofSeconds(60 * 60))
+  private val HOURS: Unit = new Unit(5 * 16, "Hours", PeriodField.of(60, MINUTES), Duration.ofSeconds(60 * 60))
 
   /**
    * Period unit for weeks.
    */
-  private val WEEKS: ISOChronology.Unit = new ISOChronology.Unit(9 * 16, "Weeks", PeriodField.of(7, DAYS), Duration.ofSeconds(7L * 86400L))
-  private val WEEK_BASED_YEAR: ISOChronology.Rule = new ISOChronology.Rule(WEEK_BASED_YEAR_ORDINAL, "WeekBasedYear", WEEK_BASED_YEARS, null, MIN_WEEK_BASED_YEAR, MAX_WEEK_BASED_YEAR, MAX_WEEK_BASED_YEAR)
+  private val WEEKS: Unit = new Unit(9 * 16, "Weeks", PeriodField.of(7, DAYS), Duration.ofSeconds(7L * 86400L))
+  private val WEEK_BASED_YEAR: Rule = new Rule(WEEK_BASED_YEAR_ORDINAL, "WeekBasedYear", WEEK_BASED_YEARS, null, MIN_WEEK_BASED_YEAR, MAX_WEEK_BASED_YEAR, MAX_WEEK_BASED_YEAR)
 
   /**
    * Gets the rule for the day-of-week field.
@@ -368,12 +366,12 @@ object ISOChronology {
    */
   def periodYears: PeriodUnit = YEARS
 
-  private val NANO_OF_SECOND: ISOChronology.Rule = new ISOChronology.Rule(NANO_OF_SECOND_ORDINAL, "NanoOfSecond", NANOS, SECONDS, 0, 999999999, 999999999)
+  private val NANO_OF_SECOND: Rule = new Rule(NANO_OF_SECOND_ORDINAL, "NanoOfSecond", NANOS, SECONDS, 0, 999999999, 999999999)
 
   /**
    * Period unit for milliseconds.
    */
-  private val MILLIS: ISOChronology.Unit = new ISOChronology.Unit(2 * 16, "Millis", PeriodField.of(1000, MICROS), Duration.ofMillis(1))
+  private val MILLIS: Unit = new Unit(2 * 16, "Millis", PeriodField.of(1000, MICROS), Duration.ofMillis(1))
 
   /**
    * The number of seconds in one day.
@@ -386,8 +384,8 @@ object ISOChronology {
   private[calendar] object DayOfWeekRule extends DayOfWeekRule
 
   @SerialVersionUID(1L)
-  private[calendar] final class DayOfWeekRule private
-    extends DateTimeFieldRule[DayOfWeek](classOf[DayOfWeek], ISOChronology.INSTANCE, "DayOfWeek", DAYS, WEEKS, 1, 7, true)
+  private[calendar] sealed class DayOfWeekRule private
+    extends DateTimeFieldRule[DayOfWeek](classOf[DayOfWeek], ISOChronology, "DayOfWeek", DAYS, WEEKS, 1, 7, true)
     with Serializable {
     override def convertIntToValue(value: Int): DayOfWeek = DayOfWeek.of(value)
 
@@ -424,7 +422,7 @@ object ISOChronology {
 
     protected def interpret(merger: CalendricalMerger, value: AnyRef): DayOfWeek = {
       if (value.isInstanceOf[Int]) {
-        var intVal: Int = value.toInt
+        var intVal: Int = value.asInstanceOf[Int]
         if (intVal < 1 || intVal > 7) {
           merger.addToOverflow(Period.ofDays(intVal - 1))
           intVal = 1
@@ -471,13 +469,13 @@ object ISOChronology {
    * There are 7 leap years from 1970 to 2000.
    */
   private[calendar] val DAYS_0000_TO_1970: Long = (DAYS_PER_CYCLE * 5L) - (30L * 365L + 7L)
-  private val DAY_OF_YEAR: ISOChronology.Rule = new ISOChronology.Rule(DAY_OF_YEAR_ORDINAL, "DayOfYear", DAYS, YEARS, 1, 366, 365)
-  private val DAY_OF_MONTH: ISOChronology.Rule = new ISOChronology.Rule(DAY_OF_MONTH_ORDINAL, "DayOfMonth", DAYS, MONTHS, 1, 31, 28)
+  private val DAY_OF_YEAR: Rule = new Rule(DAY_OF_YEAR_ORDINAL, "DayOfYear", DAYS, YEARS, 1, 366, 365)
+  private val DAY_OF_MONTH: Rule = new Rule(DAY_OF_MONTH_ORDINAL, "DayOfMonth", DAYS, MONTHS, 1, 31, 28)
 
   /**
    * Period unit for days.
    */
-  private val DAYS: ISOChronology.Unit = new ISOChronology.Unit(8 * 16, "Days", null, Duration.ofSeconds(86400))
+  private val DAYS: Unit = new Unit(8 * 16, "Days", null, Duration.ofSeconds(86400))
 
   /**
    * Gets the rule for the day-of-year field in the ISO chronology.
@@ -492,7 +490,7 @@ object ISOChronology {
   /**
    * Period unit for decades.
    */
-  private val DECADES: ISOChronology.Unit = new ISOChronology.Unit(14 * 16, "Decades", PeriodField.of(10, YEARS), Duration.ofSeconds(10L * 31556952L))
+  private val DECADES: Unit = new Unit(14 * 16, "Decades", PeriodField.of(10, YEARS), Duration.ofSeconds(10L * 31556952L))
 
   /**
    * Gets the rule for the day-of-month field in the ISO chronology.
@@ -508,8 +506,8 @@ object ISOChronology {
   /**
    * Period unit for 24 hour fixed length days.
    */
-  private val _24_HOURS: ISOChronology.Unit = new ISOChronology.Unit(7 * 16, "24Hours", PeriodField.of(2, _12_HOURS), Duration.ofSeconds(24 * 60 * 60))
-  private val CLOCK_HOUR_OF_AMPM: ISOChronology.Rule = new ISOChronology.Rule(CLOCK_HOUR_OF_AMPM_ORDINAL, "ClockHourOfAmPm", HOURS, _12_HOURS, 1, 12, 12)
+  private val _24_HOURS: Unit = new Unit(7 * 16, "24Hours", PeriodField.of(2, _12_HOURS), Duration.ofSeconds(24 * 60 * 60))
+  private val CLOCK_HOUR_OF_AMPM: Rule = new Rule(CLOCK_HOUR_OF_AMPM_ORDINAL, "ClockHourOfAmPm", HOURS, _12_HOURS, 1, 12, 12)
 
   /**
    * The start of months in a standard year.
@@ -549,9 +547,9 @@ object ISOChronology {
   /**
    * Period unit for eras.
    */
-  private val ERAS: ISOChronology.Unit = new ISOChronology.Unit(17 * 16, "Eras", null, Duration.ofSeconds(31556952L * 2000000000L))
-  private val MONTH_OF_QUARTER: ISOChronology.Rule = new ISOChronology.Rule(MONTH_OF_QUARTER_ORDINAL, "MonthOfQuarter", MONTHS, QUARTERS, 1, 3, 3)
-  private val YEAR: ISOChronology.Rule = new ISOChronology.Rule(YEAR_ORDINAL, "Year", YEARS, null, Year.MIN_YEAR, Year.MAX_YEAR, Year.MAX_YEAR)
+  private val ERAS: Unit = new Unit(17 * 16, "Eras", null, Duration.ofSeconds(31556952L * 2000000000L))
+  private val MONTH_OF_QUARTER: Rule = new Rule(MONTH_OF_QUARTER_ORDINAL, "MonthOfQuarter", MONTHS, QUARTERS, 1, 3, 3)
+  private val YEAR: Rule = new Rule(YEAR_ORDINAL, "Year", YEARS, null, Year.MIN_YEAR, Year.MAX_YEAR, Year.MAX_YEAR)
 
   /**
    * Gets the period unit for week-based-years.
@@ -569,12 +567,12 @@ object ISOChronology {
   def periodWeekBasedYears: PeriodUnit = WEEK_BASED_YEARS
 
   private val MONTH_OF_QUARTER_ORDINAL: Int = 15 * 16
-  private val WEEK_OF_MONTH: ISOChronology.Rule = new ISOChronology.Rule(WEEK_OF_MONTH_ORDINAL, "WeekOfMonth", WEEKS, MONTHS, 1, 5, 4)
+  private val WEEK_OF_MONTH: Rule = new Rule(WEEK_OF_MONTH_ORDINAL, "WeekOfMonth", WEEKS, MONTHS, 1, 5, 4)
 
   /**
    * Period unit for 12 hours half-days, used by AM/PM.
    */
-  private val _12_HOURS: ISOChronology.Unit = new ISOChronology.Unit(6 * 16, "12Hours", PeriodField.of(12, HOURS), Duration.ofSeconds(12 * 60 * 60))
+  private val _12_HOURS: Unit = new Unit(6 * 16, "12Hours", PeriodField.of(12, HOURS), Duration.ofSeconds(12 * 60 * 60))
 
   /**
    * Gets the period unit for microseconds.
@@ -669,8 +667,8 @@ object ISOChronology {
   /**
    * Period unit for quarters.
    */
-  private val QUARTERS: ISOChronology.Unit = new ISOChronology.Unit(11 * 16, "Quarters", PeriodField.of(3, MONTHS), Duration.ofSeconds(31556952L / 4))
-  private val WEEK_OF_YEAR: ISOChronology.Rule = new ISOChronology.Rule(WEEK_OF_YEAR_ORDINAL, "WeekOfYear", WEEKS, YEARS, 1, 53, 53)
+  private val QUARTERS: Unit = new Unit(11 * 16, "Quarters", PeriodField.of(3, MONTHS), Duration.ofSeconds(31556952L / 4))
+  private val WEEK_OF_YEAR: Rule = new Rule(WEEK_OF_YEAR_ORDINAL, "WeekOfYear", WEEKS, YEARS, 1, 53, 53)
 
   /**
    * Gets the rule for the second-of-day field.
@@ -696,7 +694,7 @@ object ISOChronology {
   private[calendar] def getDayOfYearFromDate(date: LocalDate): Int = {
     var moy0: Int = date.getMonthOfYear.ordinal
     var dom: Int = date.getDayOfMonth
-    if (ISOChronology.isLeapYear(date.getYear)) LEAP_MONTH_START(moy0) + dom
+    if (isLeapYear(date.getYear)) LEAP_MONTH_START(moy0) + dom
     else STANDARD_MONTH_START(moy0) + dom
   }
 
@@ -710,8 +708,8 @@ object ISOChronology {
    */
   def clockHourOfAmPmRule: DateTimeFieldRule[Int] = CLOCK_HOUR_OF_AMPM
 
-  private val HOUR_OF_DAY: ISOChronology.Rule = new ISOChronology.Rule(HOUR_OF_DAY_ORDINAL, "HourOfDay", HOURS, DAYS, 0, 23, 23)
-  private val MILLI_OF_SECOND: ISOChronology.Rule = new ISOChronology.Rule(MILLI_OF_SECOND_ORDINAL, "MilliOfSecond", MILLIS, SECONDS, 0, 999, 999)
+  private val HOUR_OF_DAY: Rule = new Rule(HOUR_OF_DAY_ORDINAL, "HourOfDay", HOURS, DAYS, 0, 23, 23)
+  private val MILLI_OF_SECOND: Rule = new Rule(MILLI_OF_SECOND_ORDINAL, "MilliOfSecond", MILLIS, SECONDS, 0, 999, 999)
 
   /**
    * Constant for the minimum week-based-year.
@@ -735,7 +733,7 @@ object ISOChronology {
   /**
    * Period unit for months.
    */
-  private val MONTHS: ISOChronology.Unit = new ISOChronology.Unit(10 * 16, "Months", null, Duration.ofSeconds(31556952L / 12L))
+  private val MONTHS: Unit = new Unit(10 * 16, "Months", null, Duration.ofSeconds(31556952L / 12L))
   private val DAY_OF_YEAR_ORDINAL: Int = 11 * 16
 
   /**
@@ -794,8 +792,8 @@ object ISOChronology {
   private[calendar] object AmPmOfDayRule extends AmPmOfDayRule
 
   @SerialVersionUID(1L)
-  private[calendar] final class AmPmOfDayRule private
-    extends DateTimeFieldRule[AmPmOfDay](classOf[AmPmOfDay], ISOChronology.INSTANCE, "AmPmOfDay", _12_HOURS, DAYS, 0, 1, true) with Serializable {
+  private[calendar] sealed class AmPmOfDayRule
+    extends DateTimeFieldRule[AmPmOfDay](classOf[AmPmOfDay], ISOChronology, "AmPmOfDay", _12_HOURS, DAYS, 0, 1, true) with Serializable {
     private def readResolve: AnyRef = AmPmOfDayRule
 
     override def convertIntToValue(value: Int): AmPmOfDay = AmPmOfDay.of(value)
@@ -815,7 +813,7 @@ object ISOChronology {
 
     protected def interpret(merger: CalendricalMerger, value: AnyRef): AmPmOfDay = {
       if (value.isInstanceOf[Int]) {
-        var intVal: Int = value.toInt
+        var intVal: Int = value.asInstanceOf[Int]
 
         if (intVal < 0 || intVal > 1) {
           var days: Int = if (intVal > 0) intVal / 2 else ((intVal + 1) / 2) - 1
@@ -829,7 +827,7 @@ object ISOChronology {
     }
 
     protected def derive(calendrical: Calendrical): AmPmOfDay = {
-      var hourVal: Integer = calendrical.get(hourOfDayRule)
+      var hourVal: Int = calendrical.get(hourOfDayRule)
       if (hourVal == null) {
         return null
       }
@@ -839,30 +837,30 @@ object ISOChronology {
     }
   }
 
-  private val CLOCK_HOUR_OF_DAY: ISOChronology.Rule = new ISOChronology.Rule(CLOCK_HOUR_OF_DAY_ORDINAL, "ClockHourOfDay", HOURS, DAYS, 1, 24, 24)
+  private val CLOCK_HOUR_OF_DAY: Rule = new Rule(CLOCK_HOUR_OF_DAY_ORDINAL, "ClockHourOfDay", HOURS, DAYS, 1, 24, 24)
 
   /**
    * Period unit for millennia.
    */
-  private val MILLENNIA: ISOChronology.Unit = new ISOChronology.Unit(16 * 16, "Millennia", PeriodField.of(10, CENTURIES), Duration.ofSeconds(1000L * 31556952L))
-  private val SECOND_OF_MINUTE: ISOChronology.Rule = new ISOChronology.Rule(SECOND_OF_MINUTE_ORDINAL, "SecondOfMinute", SECONDS, MINUTES, 0, 59, 59)
+  private val MILLENNIA: Unit = new Unit(16 * 16, "Millennia", PeriodField.of(10, CENTURIES), Duration.ofSeconds(1000L * 31556952L))
+  private val SECOND_OF_MINUTE: Rule = new Rule(SECOND_OF_MINUTE_ORDINAL, "SecondOfMinute", SECONDS, MINUTES, 0, 59, 59)
 
   /**
    * Single unit subclass, which means fewer classes to load at startup.
    */
   @SerialVersionUID(1L)
-  private[calendar] final class Unit private(ordinal: Int, name: String, equivalentPeriod: PeriodField, estimatedDuration: Duration)
+  private[calendar] sealed class Unit(ordinal: Int, name: String, equivalentPeriod: PeriodField, estimatedDuration: Duration)
     extends PeriodUnit(name, equivalentPeriod, estimatedDuration) {
 
     def compareTo(other: PeriodUnit): Int = {
-      if (other.isInstanceOf[ISOChronology.Unit]) ordinal - (other.asInstanceOf[ISOChronology.Unit]).ordinal
+      if (other.isInstanceOf[Unit]) ordinal - (other.asInstanceOf[Unit]).ordinal
       else super.compareTo(other)
     }
 
     private def readResolve: AnyRef = UNIT_CACHE(ordinal / 16)
 
     override def equals(obj: AnyRef): Boolean = {
-      if (obj.isInstanceOf[ISOChronology.Unit]) ordinal == (obj.asInstanceOf[ISOChronology.Unit]).ordinal
+      if (obj.isInstanceOf[Unit]) ordinal == (obj.asInstanceOf[Unit]).ordinal
       else super.equals(obj)
     }
 
@@ -885,7 +883,7 @@ object ISOChronology {
   /**
    * Period unit for years.
    */
-  private val YEARS: ISOChronology.Unit = new ISOChronology.Unit(13 * 16, "Years", PeriodField.of(4, QUARTERS), Duration.ofSeconds(31556952L))
+  private val YEARS: Unit = new Unit(13 * 16, "Years", PeriodField.of(4, QUARTERS), Duration.ofSeconds(31556952L))
   /**
    * Gets the period unit for minutes of 60 seconds.
    * <p>
@@ -904,7 +902,7 @@ object ISOChronology {
   /**
    * Period unit for week-based-years.
    */
-  private val WEEK_BASED_YEARS: ISOChronology.Unit = new ISOChronology.Unit(12 * 16, "WeekBasedYears", null, Duration.ofSeconds(364L * 86400L + 43200L))
+  private val WEEK_BASED_YEARS: Unit = new Unit(12 * 16, "WeekBasedYears", null, Duration.ofSeconds(364L * 86400L + 43200L))
 
   /**
    * Rule implementation.
@@ -912,8 +910,8 @@ object ISOChronology {
   private[calendar] object NanoOfDayRule extends NanoOfDayRule
 
   @SerialVersionUID(1L)
-  private[calendar] final class NanoOfDayRule private
-    extends CalendricalRule[Long](classOf[Long], ISOChronology.INSTANCE, "NanoOfDay", NANOS, DAYS) with Serializable {
+  private[calendar] sealed class NanoOfDayRule
+    extends CalendricalRule[Long](classOf[Long], ISOChronology, "NanoOfDay", NANOS, DAYS) with Serializable {
     protected override def derive(calendrical: Calendrical): Long = {
       var time: LocalTime = calendrical.get(LocalTime.rule)
       return if (time != null) time.toNanoOfDay else null
@@ -954,7 +952,7 @@ object ISOChronology {
   /**
    * Period unit for nanoseconds.
    */
-  private val NANOS: ISOChronology.Unit = new ISOChronology.Unit(0 * 16, "Nanos", null, Duration.ofNanos(1))
+  private val NANOS: Unit = new Unit(0 * 16, "Nanos", null, Duration.ofNanos(1))
 
   /**
    * Checks if the specified year is a leap year according to the ISO calendar system rules.
@@ -980,12 +978,12 @@ object ISOChronology {
    * Cache of units for deserialization.
    * Indices must match ordinal passed to rule constructor.
    */
-  private val RULE_CACHE: Array[ISOChronology.Rule] = Array[ISOChronology.Rule](NANO_OF_SECOND, MILLI_OF_SECOND, MILLI_OF_DAY, SECOND_OF_MINUTE, SECOND_OF_DAY, MINUTE_OF_HOUR, CLOCK_HOUR_OF_AMPM, HOUR_OF_AMPM, CLOCK_HOUR_OF_DAY, HOUR_OF_DAY, DAY_OF_MONTH, DAY_OF_YEAR, WEEK_OF_MONTH, WEEK_OF_WEEK_BASED_YEAR, WEEK_OF_YEAR, MONTH_OF_QUARTER, WEEK_BASED_YEAR, YEAR)
+  private val RULE_CACHE: Array[Rule] = Array[Rule](NANO_OF_SECOND, MILLI_OF_SECOND, MILLI_OF_DAY, SECOND_OF_MINUTE, SECOND_OF_DAY, MINUTE_OF_HOUR, CLOCK_HOUR_OF_AMPM, HOUR_OF_AMPM, CLOCK_HOUR_OF_DAY, HOUR_OF_DAY, DAY_OF_MONTH, DAY_OF_YEAR, WEEK_OF_MONTH, WEEK_OF_WEEK_BASED_YEAR, WEEK_OF_YEAR, MONTH_OF_QUARTER, WEEK_BASED_YEAR, YEAR)
 
   /**
    * Period unit for minutes.
    */
-  private val MINUTES: ISOChronology.Unit = new ISOChronology.Unit(4 * 16, "Minutes", PeriodField.of(60, SECONDS), Duration.ofSeconds(60))
+  private val MINUTES: Unit = new Unit(4 * 16, "Minutes", PeriodField.of(60, SECONDS), Duration.ofSeconds(60))
 
   /**
    * Gets the rule for the minute-of-hour field.
@@ -1012,7 +1010,7 @@ object ISOChronology {
   /**
    * Period unit for centuries.
    */
-  private val CENTURIES: ISOChronology.Unit = new ISOChronology.Unit(15 * 16, "Centuries", PeriodField.of(10, DECADES), Duration.ofSeconds(100L * 31556952L))
+  private val CENTURIES: Unit = new Unit(15 * 16, "Centuries", PeriodField.of(10, DECADES), Duration.ofSeconds(100L * 31556952L))
 
   /**
    * Gets the rule for the week-of-year field in the ISO chronology.
@@ -1031,15 +1029,15 @@ object ISOChronology {
    * Cache of units for deserialization.
    * Indices must match ordinal passed to unit constructor.
    */
-  private val UNIT_CACHE: Array[ISOChronology.Unit] = Array[ISOChronology.Unit](NANOS, MICROS, MILLIS, SECONDS, MINUTES, HOURS, _12_HOURS, _24_HOURS, DAYS, WEEKS, MONTHS, QUARTERS, WEEK_BASED_YEARS, YEARS, DECADES, CENTURIES, MILLENNIA, ERAS)
+  private val UNIT_CACHE: Array[Unit] = Array[Unit](NANOS, MICROS, MILLIS, SECONDS, MINUTES, HOURS, _12_HOURS, _24_HOURS, DAYS, WEEKS, MONTHS, QUARTERS, WEEK_BASED_YEARS, YEARS, DECADES, CENTURIES, MILLENNIA, ERAS)
 
   /**
    * Rule implementation.
    */
   private[calendar] object QuarterOfYearRule extends QuarterOfYearRule
 
-  private[calendar] final class QuarterOfYearRule private
-    extends DateTimeFieldRule[QuarterOfYear](classOf[QuarterOfYear], ISOChronology.INSTANCE, "QuarterOfYear", QUARTERS, YEARS, 1, 4)
+  private[calendar] sealed class QuarterOfYearRule
+    extends DateTimeFieldRule[QuarterOfYear](classOf[QuarterOfYear], ISOChronology, "QuarterOfYear", QUARTERS, YEARS, 1, 4)
     with Serializable {
 
 
@@ -1065,7 +1063,7 @@ object ISOChronology {
    * @return the date, never null
    */
   private[calendar] def getDateFromDayOfYear(year: Int, dayOfYear: Int): LocalDate = {
-    var leap: Boolean = ISOChronology.isLeapYear(year)
+    var leap: Boolean = isLeapYear(year)
     if (dayOfYear == 366 && leap == false) {
       throw new InvalidCalendarFieldException("DayOfYear 366 is invalid for year " + year, dayOfYearRule)
     }
@@ -1113,13 +1111,10 @@ object ISOChronology {
   /**
    * Single rule subclass, which means fewer classes to load at startup.
    */
-
-  //      this.ordinal = ordinal
-  //      this.smallestMaximum = smallestMaximum
-
   @SerialVersionUID(1L)
-  private[calendar] final class Rule private(ordinal: Int, name: String, periodUnit: PeriodUnit, periodRange: PeriodUnit, minimumValue: Int, maximumValue: Int, @transient smallestMaximum: Int)
-    extends DateTimeFieldRule[Int](classOf[Int], ISOChronology.INSTANCE, name, periodUnit, periodRange, minimumValue, maximumValue) with Serializable {
+  private[calendar] sealed class Rule (private val ordinal: Int, name: String, periodUnit: PeriodUnit, periodRange: PeriodUnit, minimumValue: Int, maximumValue: Int, @transient smallestMaximum: Int)
+    extends DateTimeFieldRule[Int](classOf[Int], ISOChronology, name, periodUnit, periodRange, minimumValue, maximumValue) with Serializable {
+
     override def getSmallestMaximumValue: Int = smallestMaximum
 
     protected def derive(calendrical: Calendrical): Integer = {
@@ -1149,15 +1144,15 @@ object ISOChronology {
           return if (time != null) time.getMinuteOfHour else null
         }
         case CLOCK_HOUR_OF_AMPM_ORDINAL => {
-          var hourVal: Integer = calendrical.get(hourOfAmPmRule)
+          var hourVal: Int = calendrical.get(hourOfAmPmRule)
           return if (hourVal != null) (hourVal + 12) % 13 else null
         }
         case HOUR_OF_AMPM_ORDINAL => {
-          var hourVal: Integer = calendrical.get(hourOfDayRule)
+          var hourVal: Int = calendrical.get(hourOfDayRule)
           return if (hourVal != null) hourVal % 12 else null
         }
         case CLOCK_HOUR_OF_DAY_ORDINAL => {
-          var hourVal: Integer = calendrical.get(hourOfDayRule)
+          var hourVal: Int = calendrical.get(hourOfDayRule)
           return if (hourVal != null) (hourVal + 24) % 25 else null
         }
         case HOUR_OF_DAY_ORDINAL => {
@@ -1177,7 +1172,7 @@ object ISOChronology {
           return if (moy != null) (moy.ordinal % 3 + 1) else null
         }
         case WEEK_OF_MONTH_ORDINAL => {
-          var domVal: Integer = calendrical.get(dayOfMonthRule)
+          var domVal: Int = calendrical.get(dayOfMonthRule)
           return if (domVal != null) (domVal + 6) / 7 else null
         }
         case WEEK_OF_WEEK_BASED_YEAR_ORDINAL => {
@@ -1185,7 +1180,7 @@ object ISOChronology {
           return if (date != null) getWeekOfWeekBasedYearFromDate(date) else null
         }
         case WEEK_OF_YEAR_ORDINAL => {
-          var doyVal: Integer = calendrical.get(dayOfYearRule)
+          var doyVal: Int = calendrical.get(dayOfYearRule)
           return if (doyVal != null) (doyVal + 6) / 7 else null
         }
         case WEEK_BASED_YEAR_ORDINAL => {
@@ -1203,7 +1198,7 @@ object ISOChronology {
     private def readResolve: AnyRef = RULE_CACHE(ordinal / 16)
 
     def compareTo(other: CalendricalRule[Int]): Int = {
-      if (other.isInstanceOf[ISOChronology.Rule]) ordinal - (other.asInstanceOf[ISOChronology.Rule]).ordinal
+      if (other.isInstanceOf[Rule]) ordinal - (other.asInstanceOf[Rule]).ordinal
       else super.compareTo(other)
     }
 
@@ -1214,15 +1209,15 @@ object ISOChronology {
           if (moy == null) {
             return 31
           }
-          var year: Integer = calendrical.get(yearRule)
+          var year: Int = calendrical.get(yearRule)
           return if (year != null) moy.lengthInDays(isLeapYear(year)) else moy.maxLengthInDays
         }
         case DAY_OF_YEAR_ORDINAL => {
-          var year: Integer = calendrical.get(yearRule)
+          var year: Int = calendrical.get(yearRule)
           return (if (year != null && isLeapYear(year) == false) 365 else 366)
         }
         case WEEK_OF_MONTH_ORDINAL => {
-          var year: Integer = calendrical.get(yearRule)
+          var year: Int = calendrical.get(yearRule)
           var moy: MonthOfYear = calendrical.get(monthOfYearRule)
           if (year != null && moy == MonthOfYear.FEBRUARY) {
             return if (isLeapYear(year)) 5 else 4
@@ -1245,7 +1240,7 @@ object ISOChronology {
     }
 
     override def equals(obj: AnyRef): Boolean = {
-      if (obj.isInstanceOf[ISOChronology.Rule]) ordinal == (obj.asInstanceOf[ISOChronology.Rule]).ordinal
+      if (obj.isInstanceOf[Rule]) ordinal == (obj.asInstanceOf[Rule]).ordinal
       else super.equals(obj)
     }
   }
@@ -1278,15 +1273,11 @@ object ISOChronology {
     def nanoOfDayRule: CalendricalRule[Long] = NanoOfDayRule
 
     /**
-     * A serialization identifier for this class.
-     */
-    private val serialVersionUID: Long = 1L
-    /**
      * The number of days in a 400 year cycle.
      */
     private[calendar] val DAYS_PER_CYCLE: Int = 146097
-    private val MINUTE_OF_HOUR: ISOChronology.Rule = new ISOChronology.Rule(MINUTE_OF_HOUR_ORDINAL, "MinuteOfHour", MINUTES, HOURS, 0, 59, 59)
-    private val HOUR_OF_AMPM: ISOChronology.Rule = new ISOChronology.Rule(HOUR_OF_AMPM_ORDINAL, "HourOfAmPm", HOURS, _12_HOURS, 0, 11, 11)
+    private val MINUTE_OF_HOUR: Rule = new Rule(MINUTE_OF_HOUR_ORDINAL, "MinuteOfHour", MINUTES, HOURS, 0, 59, 59)
+    private val HOUR_OF_AMPM: Rule = new Rule(HOUR_OF_AMPM_ORDINAL, "HourOfAmPm", HOURS, _12_HOURS, 0, 11, 11)
     /**
      * Gets the rule for the epoch-days field.
      * <p>
@@ -1330,7 +1321,8 @@ object ISOChronology {
     def milliOfSecondRule: DateTimeFieldRule[Int] = MILLI_OF_SECOND
   }
 
-  final class ISOChronology private
+@SerialVersionUID(1L)
+  sealed class ISOChronology private
     extends Chronology with Serializable {
 
     /**
@@ -1338,7 +1330,7 @@ object ISOChronology {
      *
      * @return the singleton instance
      */
-    private def readResolve: AnyRef = return INSTANCE
+    private def readResolve: AnyRef = ISOChronology
 
     /**
      * Merges the set of fields known by this chronology.
@@ -1346,20 +1338,20 @@ object ISOChronology {
      * @param merger the merger to use, not null
      */
     private[calendar] def merge(merger: CalendricalMerger): Unit = {
-      var modVal: Integer = merger.getValue(ISOChronology.milliOfDayRule)
+      var modVal: Int = merger.getValue(ISOChronology.milliOfDayRule)
       if (modVal != null) {
         merger.storeMerged(LocalTime.rule, LocalTime.ofNanoOfDay(modVal * 1000000L))
         merger.removeProcessed(ISOChronology.milliOfDayRule)
       }
-      var sodVal: Integer = merger.getValue(ISOChronology.secondOfDayRule)
+      var sodVal: Int = merger.getValue(ISOChronology.secondOfDayRule)
       if (modVal != null) {
-        var nosVal: Integer = merger.getValue(ISOChronology.nanoOfSecondRule)
+        var nosVal: Int = merger.getValue(ISOChronology.nanoOfSecondRule)
         if (nosVal != null) {
           merger.storeMerged(LocalTime.rule, LocalTime.ofSecondOfDay(sodVal, nosVal))
           merger.removeProcessed(ISOChronology.nanoOfSecondRule)
         }
         else {
-          var mosVal: Integer = merger.getValue(ISOChronology.milliOfSecondRule)
+          var mosVal: Int = merger.getValue(ISOChronology.milliOfSecondRule)
           if (mosVal != null) {
             merger.storeMerged(LocalTime.rule, LocalTime.ofSecondOfDay(sodVal, mosVal * 1000000))
             merger.removeProcessed(ISOChronology.milliOfSecondRule)
@@ -1372,14 +1364,14 @@ object ISOChronology {
       }
       var amPm: AmPmOfDay = merger.getValue(ISOChronology.amPmOfDayRule)
       if (amPm != null) {
-        var hapVal: Integer = merger.getValue(ISOChronology.hourOfAmPmRule)
+        var hapVal: Int = merger.getValue(ISOChronology.hourOfAmPmRule)
         if (hapVal != null) {
           var hourOfDay: Int = amPm.getValue * 12 + hapVal
           merger.storeMerged(ISOChronology.hourOfDayRule, hourOfDay)
           merger.removeProcessed(ISOChronology.amPmOfDayRule)
           merger.removeProcessed(ISOChronology.hourOfAmPmRule)
         }
-        var chapVal: Integer = merger.getValue(ISOChronology.hourOfAmPmRule)
+        var chapVal: Int = merger.getValue(ISOChronology.hourOfAmPmRule)
         if (chapVal != null) {
           var hourOfDay: Int = amPm.getValue * 12 + chapVal
           if (hourOfDay == 24) {
@@ -1391,12 +1383,12 @@ object ISOChronology {
           merger.removeProcessed(ISOChronology.clockHourOfAmPmRule)
         }
       }
-      var hourVal: Integer = merger.getValue(ISOChronology.hourOfDayRule)
+      var hourVal: Int = merger.getValue(ISOChronology.hourOfDayRule)
       if (hourVal != null) {
-        var minuteVal: Integer = merger.getValue(ISOChronology.minuteOfHourRule)
-        var secondVal: Integer = merger.getValue(ISOChronology.secondOfMinuteRule)
-        var mosVal: Integer = merger.getValue(ISOChronology.milliOfSecondRule)
-        var nanoVal: Integer = merger.getValue(ISOChronology.nanoOfSecondRule)
+        var minuteVal: Int = merger.getValue(ISOChronology.minuteOfHourRule)
+        var secondVal: Int = merger.getValue(ISOChronology.secondOfMinuteRule)
+        var mosVal: Int = merger.getValue(ISOChronology.milliOfSecondRule)
+        var nanoVal: Int = merger.getValue(ISOChronology.nanoOfSecondRule)
         if (minuteVal != null && secondVal != null && nanoVal != null) {
           merger.storeMerged(LocalTime.rule, LocalTime.of(hourVal, minuteVal, secondVal, nanoVal))
           merger.removeProcessed(ISOChronology.hourOfDayRule)
@@ -1428,17 +1420,17 @@ object ISOChronology {
         }
       }
       var qoy: QuarterOfYear = merger.getValue(ISOChronology.quarterOfYearRule)
-      var moqVal: Integer = merger.getValue(ISOChronology.monthOfQuarterRule)
+      var moqVal: Int = merger.getValue(ISOChronology.monthOfQuarterRule)
       if (qoy != null && moqVal != null) {
         var moy: MonthOfYear = MonthOfYear.of(qoy.getFirstMonthOfQuarter.ordinal + moqVal)
         merger.storeMerged(ISOChronology.monthOfYearRule, moy)
         merger.removeProcessed(ISOChronology.quarterOfYearRule)
         merger.removeProcessed(ISOChronology.monthOfQuarterRule)
       }
-      var yearVal: Integer = merger.getValue(ISOChronology.yearRule)
+      var yearVal: Int = merger.getValue(ISOChronology.yearRule)
       if (yearVal != null) {
         var moy: MonthOfYear = merger.getValue(ISOChronology.monthOfYearRule)
-        var domVal: Integer = merger.getValue(ISOChronology.dayOfMonthRule)
+        var domVal: Int = merger.getValue(ISOChronology.dayOfMonthRule)
         if (moy != null && domVal != null) {
           var date: LocalDate = merger.getContext.resolveDate(yearVal, moy.getValue, domVal)
           merger.storeMerged(LocalDate.rule, date)
@@ -1446,13 +1438,13 @@ object ISOChronology {
           merger.removeProcessed(ISOChronology.monthOfYearRule)
           merger.removeProcessed(ISOChronology.dayOfMonthRule)
         }
-        var doyVal: Integer = merger.getValue(ISOChronology.dayOfYearRule)
+        var doyVal: Int = merger.getValue(ISOChronology.dayOfYearRule)
         if (doyVal != null) {
           merger.storeMerged(LocalDate.rule, getDateFromDayOfYear(yearVal, doyVal))
           merger.removeProcessed(ISOChronology.yearRule)
           merger.removeProcessed(ISOChronology.dayOfYearRule)
         }
-        var woyVal: Integer = merger.getValue(ISOChronology.weekOfYearRule)
+        var woyVal: Int = merger.getValue(ISOChronology.weekOfYearRule)
         var dow: DayOfWeek = merger.getValue(ISOChronology.dayOfWeekRule)
         if (woyVal != null && dow != null) {
           var date: LocalDate = LocalDate.of(yearVal, 1, 1).plusWeeks(woyVal - 1)
@@ -1462,7 +1454,7 @@ object ISOChronology {
           merger.removeProcessed(ISOChronology.weekOfYearRule)
           merger.removeProcessed(ISOChronology.dayOfWeekRule)
         }
-        var womVal: Integer = merger.getValue(ISOChronology.weekOfMonthRule)
+        var womVal: Int = merger.getValue(ISOChronology.weekOfMonthRule)
         if (moy != null && womVal != null && dow != null) {
           var date: LocalDate = LocalDate.of(yearVal, moy, 1).plusWeeks(womVal - 1)
           date = date.`with`(DateAdjusters.nextOrCurrent(dow))
@@ -1473,9 +1465,9 @@ object ISOChronology {
           merger.removeProcessed(ISOChronology.dayOfWeekRule)
         }
       }
-      var wbyVal: Integer = merger.getValue(ISOChronology.weekBasedYearRule)
+      var wbyVal: Int = merger.getValue(ISOChronology.weekBasedYearRule)
       if (wbyVal != null) {
-        var woy: Integer = merger.getValue(ISOChronology.weekOfWeekBasedYearRule)
+        var woy: Int = merger.getValue(ISOChronology.weekOfWeekBasedYearRule)
         var dow: DayOfWeek = merger.getValue(ISOChronology.dayOfWeekRule)
         if (woy != null && dow != null) {
           merger.removeProcessed(ISOChronology.weekBasedYearRule)

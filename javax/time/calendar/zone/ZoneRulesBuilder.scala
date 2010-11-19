@@ -530,7 +530,7 @@ class ZoneRulesBuilder {
    * @throws IllegalStateException if the window has reached the maximum capacity of 2000 rules
    */
   def addRuleToWindow(year: Int, month: MonthOfYear, dayOfMonthIndicator: Int, time: LocalTime, timeEndOfDay: Boolean, timeDefinition: ZoneRulesBuilder.TimeDefinition, savingAmount: Period): ZoneRulesBuilder = {
-    return addRuleToWindow(year, year, month, dayOfMonthIndicator, null, time, timeEndOfDay, timeDefinition, savingAmount)
+    addRuleToWindow(year, year, month, dayOfMonthIndicator, null, time, timeEndOfDay, timeDefinition, savingAmount)
   }
 
   /**
@@ -541,10 +541,8 @@ class ZoneRulesBuilder {
    * @return the deduplicated object
    */
   private[zone] def deduplicate[T](obj: T): T = {
-    if (deduplicateMap.containsKey(obj) == false) {
-      deduplicateMap.put(obj, obj)
-    }
-    return deduplicateMap.get(obj).asInstanceOf[T]
+    if (deduplicateMap.containsKey(obj) == false) deduplicateMap.put(obj, obj)
+    else deduplicateMap.get(obj).asInstanceOf[T]
   }
 
   /**

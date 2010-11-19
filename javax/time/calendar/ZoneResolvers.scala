@@ -57,18 +57,18 @@ object ZoneResolvers {
    */
   def strict: ZoneResolver = Strict
 
-  private object Strict
+  private object Strict extends Strict
 
   /**
    * Class implementing strict resolver.
    */
   private class Strict extends ZoneResolver {
-    /** { @inheritDoc }*/
+    /**{ @inheritDoc }*/
     protected def handleGap(zone: TimeZone, rules: ZoneRules, discontinuity: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime = {
       throw new CalendricalException("Local time " + newDateTime + " does not exist in time-zone " + zone + " due to a gap in the local time-line")
     }
 
-    /** { @inheritDoc }*/
+    /**{ @inheritDoc }*/
     protected def handleOverlap(zone: TimeZone, rules: ZoneRules, discontinuity: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime = {
       throw new CalendricalException("Local time " + newDateTime + " has two matching offsets, " + discontinuity.getOffsetBefore + " and " + discontinuity.getOffsetAfter + ", in time-zone " + zone)
     }
@@ -83,19 +83,19 @@ object ZoneResolvers {
    */
   def preTransition: ZoneResolver = PreTransition
 
-  private object PreTransition
+  private object PreTransition extends PreTransition
 
   /**
    * Class implementing preTransition resolver.
    */
   private class PreTransition extends ZoneResolver {
-    /** { @inheritDoc }*/
+    /**{ @inheritDoc }*/
     protected def handleGap(zone: TimeZone, rules: ZoneRules, discontinuity: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime = {
       val instantBefore: Instant = discontinuity.getInstant.minusNanos(1)
       OffsetDateTime.ofInstant(instantBefore, discontinuity.getOffsetBefore)
     }
 
-    /** { @inheritDoc }*/
+    /**{ @inheritDoc }*/
     protected def handleOverlap(zone: TimeZone, rules: ZoneRules, discontinuity: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime = {
       OffsetDateTime.of(newDateTime, discontinuity.getOffsetBefore)
     }
@@ -109,18 +109,18 @@ object ZoneResolvers {
    */
   def postTransition: ZoneResolver = PostTransition
 
-  private object PostTransition
+  private object PostTransition extends PostTransition
 
   /**
    * Class implementing postTransition resolver.
    */
   private class PostTransition extends ZoneResolver {
-    /** { @inheritDoc }*/
+    /**{ @inheritDoc }*/
     protected def handleGap(zone: TimeZone, rules: ZoneRules, discontinuity: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime = {
       return discontinuity.getDateTimeAfter
     }
 
-    /** { @inheritDoc }*/
+    /**{ @inheritDoc }*/
     protected def handleOverlap(zone: TimeZone, rules: ZoneRules, discontinuity: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime = {
       return OffsetDateTime.of(newDateTime, discontinuity.getOffsetAfter)
     }
@@ -134,18 +134,18 @@ object ZoneResolvers {
    */
   def postGapPreOverlap: ZoneResolver = PostGapPreOverlap
 
-  private object PostGapPreOverlap
+  private object PostGapPreOverlap extends PostGapPreOverlap
 
   /**
    * Class implementing postGapPreOverlap resolver.
    */
   private class PostGapPreOverlap extends ZoneResolver {
-    /** { @inheritDoc }*/
+    /**{ @inheritDoc }*/
     protected def handleGap(zone: TimeZone, rules: ZoneRules, discontinuity: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime = {
       return discontinuity.getDateTimeAfter
     }
 
-    /** { @inheritDoc }*/
+    /**{ @inheritDoc }*/
     protected def handleOverlap(zone: TimeZone, rules: ZoneRules, discontinuity: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime = {
       return OffsetDateTime.of(newDateTime, discontinuity.getOffsetBefore)
     }
@@ -167,18 +167,18 @@ object ZoneResolvers {
    */
   def retainOffset: ZoneResolver = RetainOffset
 
-  private object RetainOffset
+  private object RetainOffset extends RetainOffset
 
   /**
    * Class implementing retain offset resolver.
    */
   private class RetainOffset extends ZoneResolver {
-    /** { @inheritDoc }*/
+    /**{ @inheritDoc }*/
     protected def handleGap(zone: TimeZone, rules: ZoneRules, discontinuity: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime = {
       return discontinuity.getDateTimeAfter
     }
 
-    /** { @inheritDoc }*/
+    /**{ @inheritDoc }*/
     protected def handleOverlap(zone: TimeZone, rules: ZoneRules, discontinuity: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime = {
       if (oldDateTime != null && discontinuity.isValidOffset(oldDateTime.getOffset)) {
         return OffsetDateTime.of(newDateTime, oldDateTime.getOffset)
@@ -203,19 +203,19 @@ object ZoneResolvers {
    */
   def pushForward: ZoneResolver = PushForward
 
-  private object PushForward
+  private object PushForward extends PushForward
 
   /**
    * Class implementing push forward resolver.
    */
   private class PushForward extends ZoneResolver {
-    /** { @inheritDoc }*/
+    /**{ @inheritDoc }*/
     protected def handleGap(zone: TimeZone, rules: ZoneRules, discontinuity: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime = {
       val result: LocalDateTime = newDateTime.plus(discontinuity.getTransitionSize)
       return OffsetDateTime.of(result, discontinuity.getOffsetAfter)
     }
 
-    /** { @inheritDoc }*/
+    /**{ @inheritDoc }*/
     protected def handleOverlap(zone: TimeZone, rules: ZoneRules, discontinuity: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime = {
       return OffsetDateTime.of(newDateTime, discontinuity.getOffsetAfter)
     }
@@ -224,7 +224,7 @@ object ZoneResolvers {
   /**
    * Creates a combined resolver, using two different strategies for gap and overlap.
    * <p>
-   * If either argument is     { @code null } then the     { @link # strict ( ) } resolver is used.
+   * If either argument is {@code null} then the  {@link #strict()} resolver is used.
    *
    * @param gapResolver the resolver to use for a gap, null means strict
    * @param overlapResolver the resolver to use for an overlap, null means strict
@@ -247,14 +247,15 @@ object ZoneResolvers {
    * @param overlapResolver the resolver to use for an overlap, not null
    */
   private class Combination(gapResolver: ZoneResolver, overlapResolver: ZoneResolver) extends ZoneResolver {
-    /** { @inheritDoc }*/
+    /**{@inheritDoc}*/
     protected def handleGap(zone: TimeZone, rules: ZoneRules, discontinuity: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime = {
-      return gapResolver.handleGap(zone, rules, discontinuity, newDateTime, oldDateTime)
+      gapResolver.handleGap(zone, rules, discontinuity, newDateTime, oldDateTime)
     }
 
-    /** { @inheritDoc }*/
+    /**{@inheritDoc}*/
     protected def handleOverlap(zone: TimeZone, rules: ZoneRules, discontinuity: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime = {
-      return overlapResolver.handleOverlap(zone, rules, discontinuity, newDateTime, oldDateTime)
+      overlapResolver.handleOverlap(zone, rules, discontinuity, newDateTime, oldDateTime)
     }
   }
+
 }

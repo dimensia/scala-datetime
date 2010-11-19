@@ -49,19 +49,19 @@ import java.util.ConcurrentModificationException
  *
  * @author Stephen Colebourne
  */
-object UTCRules {
+object UTCRules extends UTCRules{
   /**
    * Constant for nanos per standard second: 1,000,000,000.
    */
-  protected val NANOS_PER_SECOND: Long = 1000000000
+  protected[time] val NANOS_PER_SECOND: Long = 1000000000
   /**
    * Constant for the offset from MJD day 0 to the Java Epoch of 1970-01-01: 40587.
    */
-  protected val OFFSET_MJD_EPOCH: Int = 40587
+  protected[time] val OFFSET_MJD_EPOCH: Int = 40587
   /**
    * Constant for number of seconds per standard day: 86,400.
    */
-  protected val SECS_PER_DAY: Long = 24 * 60 * 60
+  protected[time] val SECS_PER_DAY: Long = 24 * 60 * 60
   /**
    * Gets the system default leap second rules.
    * <p>
@@ -98,10 +98,13 @@ object UTCRules {
   /**
    * Constant for the offset from MJD day 0 to TAI day 0 of 1958-01-01: 36204.
    */
-  protected val OFFSET_MJD_TAI: Int = 36204
+  protected[time] val OFFSET_MJD_TAI: Int = 36204
 }
 
-abstract class UTCRules protected() {
+abstract class UTCRules protected {
+
+  import UTCRules._
+
   /**
    * Converts an   { @code Instant } to a   { @code UTCInstant }.
    * <p>

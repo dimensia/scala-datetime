@@ -126,8 +126,8 @@ object OffsetDateTime {
   private[calendar] object Rule extends Rule
 
   @SerialVersionUID(1L)
-  private[calendar] final class Rule private
-    extends CalendricalRule[OffsetDateTime](classOf[OffsetDateTime], ISOChronology.INSTANCE, "OffsetDateTime", ISOChronology.periodNanos, null)
+  private[calendar] sealed class Rule
+    extends CalendricalRule[OffsetDateTime](classOf[OffsetDateTime], ISOChronology, "OffsetDateTime", ISOChronology.periodNanos, null)
     with Serializable {
 
     protected override def derive(calendrical: Calendrical): OffsetDateTime = {
@@ -156,7 +156,7 @@ object OffsetDateTime {
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
   def of(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, offset: ZoneOffset): OffsetDateTime = {
-    val dl: LocalDateTime = LocalDateTime.of(year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour, secondOfMinute)
+    val dt: LocalDateTime = LocalDateTime.of(year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour, secondOfMinute)
     new OffsetDateTime(dt, offset)
   }
 
@@ -404,7 +404,7 @@ object OffsetDateTime {
  * @param offset the zone offset, not null
  */
 @SerialVersionUID(-456761901L)
-final class OffsetDateTime private(dateTime: LocalDateTime, offset: ZoneOffset)
+final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: ZoneOffset)
   extends Calendrical with InstantProvider with DateTimeProvider with CalendricalMatcher
   with DateAdjuster with TimeAdjuster with Comparable[OffsetDateTime] with Serializable {
   if (dateTime == null) throw new NullPointerException("The date-time must not be null")

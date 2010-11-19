@@ -52,7 +52,7 @@ import javax.time.calendar.PeriodUnit
  *
  * @author Stephen Colebourne
  */
-object JulianChronology {
+object JulianChronology extends JulianChronology {
   /**
    * Validates that the input value is not null.
    *
@@ -64,10 +64,12 @@ object JulianChronology {
     if (obj == null) throw new NullPointerException(errorMessage)
   }
 
-  @SerialVersionUID(1L)
-  private final class Years private extends PeriodUnit("JulianYears", Duration.ofSeconds(31557600L)) {
+  object Years extends Years
 
-    private def readResolve: AnyRef = YEARS
+  @SerialVersionUID(1L)
+  private[time] sealed class Years extends PeriodUnit("JulianYears", Duration.ofSeconds(31557600L)) {
+
+    private def readResolve: AnyRef = Years
 
   }
 
@@ -122,24 +124,26 @@ object JulianChronology {
    */
   def periodDays: PeriodUnit = ISOChronology.periodDays
 
+  object Months extends Months
+
   /**
    * Unit class for months.
    */
   @SerialVersionUID(1L)
-  private final class Months private extends PeriodUnit("JulianMonths", Duration.ofStandardHours(31557600L / 12L)) {
+  private[time] sealed class Months private extends PeriodUnit("JulianMonths", Duration.ofStandardHours(31557600L / 12L)) {
 
-    private def readResolve: AnyRef = MONTHS
+    private def readResolve: AnyRef = Months
   }
 
   /**
    * Period unit for years.
    */
-  private val YEARS: PeriodUnit = new JulianChronology.Years
+  private val YEARS: PeriodUnit = Years
 
   /**
    * Period unit for months.
    */
-  private val MONTHS: PeriodUnit = new JulianChronology.Months
+  private val MONTHS: PeriodUnit = Months
 
   /**
    * Checks if the specified year is a leap year.
@@ -156,14 +160,14 @@ object JulianChronology {
 }
 
 @SerialVersionUID(1L)
-final class JulianChronology private extends Chronology with Serializable {
+sealed class JulianChronology private extends Chronology with Serializable {
 
   /**
    * Resolves singleton.
    *
    * @return the singleton instance
    */
-  private def readResolve: AnyRef = INSTANCE
+  private def readResolve: AnyRef = JulianChronology
 
   /**
    * Gets the name of the chronology.

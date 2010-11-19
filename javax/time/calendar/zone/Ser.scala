@@ -164,10 +164,6 @@ object Ser {
  * @param object the object
  */
 final class Ser private[zone](tpe: Byte, obj: AnyRef) extends Externalizable {
-  /**
-   * Constructor for serialization.
-   */
-  def this() {}
 
   /**
    * Returns the object that will replace this one.
@@ -176,9 +172,7 @@ final class Ser private[zone](tpe: Byte, obj: AnyRef) extends Externalizable {
    */
   private def readResolve: AnyRef = obj
 
-  def writeExternal(out: ObjectOutput): Unit = {
-    writeInternal(tpe, obj, out)
-  }
+  def writeExternal(out: ObjectOutput): Unit = writeInternal(tpe, obj, out)
 
   def readExternal(in: ObjectInput): Unit = {
     tpe = in.readByte

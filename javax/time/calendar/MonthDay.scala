@@ -74,8 +74,8 @@ object MonthDay {
    * Parser.
    */
   private val PARSER: DateTimeFormatter =
-    new DateTimeFormatterBuilder
-    .appendLiteral("--")
+    (new DateTimeFormatterBuilder)
+      .appendLiteral("--")
       .appendValue(ISOChronology.monthOfYearRule, 2)
       .appendLiteral('-')
       .appendValue(ISOChronology.dayOfMonthRule, 2)
@@ -119,7 +119,7 @@ object MonthDay {
    */
   def of(calendrical: Calendrical): MonthDay = {
     val month: MonthOfYear = ISOChronology.monthOfYearRule.getValueChecked(calendrical)
-    val dom: Integer = ISOChronology.dayOfMonthRule.getValueChecked(calendrical)
+    val dom: Int = ISOChronology.dayOfMonthRule.getValueChecked(calendrical)
     of(month, dom)
   }
 
@@ -188,19 +188,15 @@ object MonthDay {
   private[calendar] object Rule extends Rule
 
   @SerialVersionUID(1L)
-  private[calendar] final class Rule private
-    extends CalendricalRule[MonthDay](
-      classOf[MonthDay],
-      ISOChronology.INSTANCE, "MonthDay",
-      ISOChronology.periodDays,
-      ISOChronology.periodYears)
+  private[calendar] sealed class Rule
+    extends CalendricalRule[MonthDay](classOf[MonthDay], ISOChronology, "MonthDay", ISOChronology.periodDays, ISOChronology.periodYears)
     with Serializable {
 
     private def readResolve: AnyRef = Rule
 
     protected override def derive(calendrical: Calendrical): MonthDay = {
       val moy: MonthOfYear = calendrical.get(ISOChronology.monthOfYearRule)
-      val dom: Integer = calendrical.get(ISOChronology.dayOfMonthRule)
+      val dom: Int = calendrical.get(ISOChronology.dayOfMonthRule)
       if (moy != null && dom != null) MonthDay.of(moy, dom) else null
     }
   }
@@ -231,7 +227,7 @@ object MonthDay {
  * @param dayOfMonth the day-of-month to represent, validated from 1 to 29-31
  */
 @SerialVersionUID(-254395108L)
-final class MonthDay(month: MonthOfYear, day: Int) extends Calendrical with CalendricalMatcher with DateAdjuster with Comparable[MonthDay] with Serializable {
+final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical with CalendricalMatcher with DateAdjuster with Comparable[MonthDay] with Serializable {
 
   /**
    * Checks if the month-day extracted from the calendrical matches this.
@@ -538,7 +534,7 @@ final class MonthDay(month: MonthOfYear, day: Int) extends Calendrical with Cale
    *
    * @return the ISO chronology, never null
    */
-  def getChronology: ISOChronology = ISOChronology.INSTANCE
+  def getChronology: ISOChronology = ISOChronology
 
   /**
    * Returns a copy of this    { @code MonthDay } with the month-of-year altered.

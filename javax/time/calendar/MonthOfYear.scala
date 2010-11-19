@@ -155,7 +155,9 @@ object MonthOfYear {
 
 }
 
-sealed abstract class MonthOfYear(ordinal: Int) extends Calendrical {
+sealed abstract class MonthOfYear(val ordinal: Int) extends Calendrical {
+
+  import MonthOfYear._
 
   /**
    * Is this instance representing January.
@@ -310,7 +312,7 @@ sealed abstract class MonthOfYear(ordinal: Int) extends Calendrical {
   def minLengthInDays: Int = {
     this match {
       case FEBRUARY => 28
-      case APRIL || JUNE || SEPTEMBER || NOVEMBER => 30
+      case APRIL | JUNE | SEPTEMBER | NOVEMBER => 30
       case _ => 31
     }
   }
@@ -327,7 +329,7 @@ sealed abstract class MonthOfYear(ordinal: Int) extends Calendrical {
   def maxLengthInDays: Int = {
     this match {
       case FEBRUARY => 29
-      case APRIL || JUNE || SEPTEMBER || NOVEMBER => 30
+      case APRIL | JUNE | SEPTEMBER | NOVEMBER => 30
       case _ => 31
     }
   }
@@ -347,7 +349,7 @@ sealed abstract class MonthOfYear(ordinal: Int) extends Calendrical {
   def lengthInDays(leapYear: Boolean): Int = {
     this match {
       case FEBRUARY => if (leapYear) 29 else 28
-      case APRIL || JUNE || SEPTEMBER || NOVEMBER => 30
+      case APRIL | JUNE | SEPTEMBER | NOVEMBER => 30
       case _ => 31
     }
   }

@@ -63,8 +63,8 @@ object OffsetDate {
   private[calendar] object Rule extends Rule
 
   @SerialVersionUID(1L)
-  private[calendar] final class Rule
-    extends CalendricalRule[OffsetDate](classOf[OffsetDate], ISOChronology.INSTANCE, "OffsetDate", ISOChronology.periodDays, null)
+  private[calendar] sealed class Rule
+    extends CalendricalRule[OffsetDate](classOf[OffsetDate], ISOChronology, "OffsetDate", ISOChronology.periodDays, null)
     with Serializable {
 
     protected override def derive(calendrical: Calendrical): OffsetDate = {
@@ -225,7 +225,7 @@ object OffsetDate {
  * @param offset the zone offset, validated as not null
  */
 @SerialVersionUID(-3618963189L)
-final class OffsetDate(date: LocalDate, offset: ZoneOffset) extends Calendrical with DateProvider with CalendricalMatcher with DateAdjuster with Comparable[OffsetDate] with Serializable {
+final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Calendrical with DateProvider with CalendricalMatcher with DateAdjuster with Comparable[OffsetDate] with Serializable {
   if (date == null) throw new NullPointerException("The date must not be null")
   if (offset == null) throw new NullPointerException("The zone offset must not be null")
 

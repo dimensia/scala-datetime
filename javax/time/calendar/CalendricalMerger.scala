@@ -203,9 +203,7 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
    */
-  def getValue[T](rule: CalendricalRule[T]): T = {
-    return rule.reify(processingMap.get(rule))
-  }
+  def getValue[T](rule: CalendricalRule[T]): T = rule.reify(processingMap.get(rule))
 
   /**
    * Gets the underlying rule-value map that is being merged.
@@ -310,7 +308,7 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
     if (inputMap.size > 0) {
       interpret
       mergeLoop
-      ISOChronology.INSTANCE.merge(this)
+      ISOChronology.merge(this)
       if (processingMap.size > 1) {
         removeDerivable
       }

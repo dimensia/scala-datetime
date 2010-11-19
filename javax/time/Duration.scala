@@ -33,6 +33,7 @@ package javax.time
 
 import java.io.Serializable
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeUnit._
 import javax.time.calendar.format.CalendricalParseException
 
 /**
@@ -70,6 +71,7 @@ import javax.time.calendar.format.CalendricalParseException
  * @author Stephen Colebourne
  */
 object Duration {
+
   /**
    * Constant for maximum long.
    */
@@ -160,7 +162,7 @@ object Duration {
   }
 
   /**
-   * Obtains an instance of     { @code Duration } from a number of standard length minutes.
+   * Obtains an instance of {@code Duration} from a number of standard length minutes.
    * <p>
    * The seconds are calculated based on the standard definition of a minute,
    * where each minute is 60 seconds.
@@ -175,7 +177,7 @@ object Duration {
   }
 
   /**
-   * Obtains an instance of     { @code Duration } from a number of standard length hours.
+   * Obtains an instance of {@code Duration} from a number of standard length hours.
    * <p>
    * The seconds are calculated based on the standard definition of an hour,
    * where each hour is 3600 seconds.
@@ -349,19 +351,19 @@ object Duration {
         if (numberText.startsWith("-0")) {
           throw new CalendricalParseException("Duration could not be parsed: " + text, text, 2)
         }
-        return create(Long.parseLong(numberText), 0)
+        return create(numberText.toLong, 0)
       }
       var negative: Boolean = false
       if (numberText.charAt(0) == '-') {
         negative = true
       }
-      val secs: Long = Long.parseLong(numberText.substring(0, dot))
+      val secs: Long = numberText.substring(0, dot).toLong
       numberText = numberText.substring(dot + 1)
       len = numberText.length
       if (len == 0 || len > 9 || numberText.charAt(0) == '-') {
         throw new CalendricalParseException("Duration could not be parsed: " + text, text, 2)
       }
-      var nanos: Int = Integer.parseInt(numberText)
+      var nanos: Int = numberText.toInt
       len match {
         case 1 => nanos *= 100000000
         case 2 => nanos *= 10000000
@@ -422,6 +424,9 @@ object Duration {
  */
 @SerialVersionUID(1L)
 final class Duration private(val seconds: Long, val nanos: Int) extends Comparable[Duration] with Serializable {
+
+  import Duration._
+
   /**
    * Gets the number of seconds in this duration.
    * <p>
@@ -527,12 +532,12 @@ final class Duration private(val seconds: Long, val nanos: Int) extends Comparab
     var nanos: BigInt = toNanos
     unit match {
       case NANOSECONDS =>
-      case MICROSECONDS => nanos = nanos.divide(BI_NANOS_PER_MICRO)
-      case MILLISECONDS => nanos = nanos.divide(BI_NANOS_PER_MILLI)
-      case SECONDS => nanos = nanos.divide(BI_NANOS_PER_SECOND)
-      case MINUTES => nanos = nanos.divide(BI_NANOS_PER_MINUTE)
-      case HOURS => nanos = nanos.divide(BI_NANOS_PER_HOUR)
-      case DAYS => nanos = nanos.divide(BI_NANOS_PER_DAY)
+      case MICROSECONDS => nanos = nanos / BI_NANOS_PER_MICRO
+      case MILLISECONDS => nanos = nanos / BI_NANOS_PER_MILLI
+      case SECONDS => nanos = nanos / BI_NANOS_PER_SECOND
+      case MINUTES => nanos = nanos / BI_NANOS_PER_MINUTE
+      case HOURS => nanos = nanos / BI_NANOS_PER_HOUR
+      case DAYS => nanos = nanos / BI_NANOS_PER_DAY
       case _ => throw new InternalError("Unreachable")
     }
     return nanos.min(BI_MAX_LONG).max(BI_MIN_LONG).longValue
@@ -575,7 +580,7 @@ final class Duration private(val seconds: Long, val nanos: Int) extends Comparab
     if (multiplicand == 0) return ZERO
     if (multiplicand == 1) return this
     var nanos: BigInt = toNanos
-    nanos = nanos.multiply(BigInt(multiplicand))
+    nanos = nanos * BigInt(multiplicand)
     val divRem = nanos /% BI_NANOS_PER_SECOND
     if (divRem._1.bitLength > 63) throw new ArithmeticException("Multiplication result exceeds capacity of Duration: " + this + " * " + multiplicand)
     return ofSeconds(divRem._1.longValue, divRem._2.intValue)

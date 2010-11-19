@@ -115,16 +115,11 @@ object DateTimeFieldRule {
       insensitiveTextValueMap = Collections.unmodifiableMap(insensitive)
       this.lengths = new Array[Int](lengthSet.size)
       var i: Int = 0
-
-      {
-        var it: Iterator[Int] = lengthSet.iterator
-        while (it.hasNext) {
-          lengths
-          (({
-            i += 1;
-            i
-          })) = it.next
-        }
+      var it: Iterator[Int] = lengthSet.iterator
+      while (it.hasNext) {
+        //lengths[i++] = it.next();
+        lengths(i) = it.next
+        i += 1
       }
 
       Arrays.sort(lengths)
@@ -320,7 +315,8 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * @return the int value of the field
    * @throws ClassCastException if the value cannot be converted
    */
-  def convertValueToInt(value: T): Int = {   //FIXME
+  def convertValueToInt(value: T): Int = {
+    //FIXME
     if (value.isInstanceOf[Enum[_]]) (value.asInstanceOf[Enum[_]]).ordinal + getMinimumValue
     else value.asInstanceOf[Integer]
   }
@@ -624,7 +620,8 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * @throws IllegalCalendarFieldValueException if the value is invalid
    * @throws ClassCastException if the value cannot be converted
    */
-  def convertIntToValue(value: Int): T = {  //FIXME
+  def convertIntToValue(value: Int): T = {
+    //FIXME
     checkValue(value)
     if (classOf[Enum].isAssignableFrom(getReifiedType)) {
       return getReifiedType.getEnumConstants(value - getMinimumValue)

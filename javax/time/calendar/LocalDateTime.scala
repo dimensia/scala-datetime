@@ -312,8 +312,8 @@ object LocalDateTime {
   private[calendar] object Rule extends Rule
 
   @SerialVersionUID(1L)
-  private[calendar] final class Rule
-    extends CalendricalRule[LocalDateTime](classOf[LocalDateTime], ISOChronology.INSTANCE, "LocalDateTime", ISOChronology.periodNanos, null) with Serializable {
+  private[calendar] sealed class Rule
+    extends CalendricalRule[LocalDateTime](classOf[LocalDateTime], ISOChronology, "LocalDateTime", ISOChronology.periodNanos, null) with Serializable {
     private def readResolve: AnyRef = Rule
 
     protected override def merge(merger: CalendricalMerger): Unit = {
@@ -415,7 +415,7 @@ object LocalDateTime {
  * @param date the date part of the date-time, not null
  * @param time the time part of the date-time, not null
  */
-final class LocalDateTime private(date: LocalDate, time: LocalTime) extends Calendrical with DateTimeProvider with Comparable[LocalDateTime] with CalendricalMatcher with DateAdjuster with TimeAdjuster with Serializable {
+final class LocalDateTime private(val date: LocalDate, val time: LocalTime) extends Calendrical with DateTimeProvider with Comparable[LocalDateTime] with CalendricalMatcher with DateAdjuster with TimeAdjuster with Serializable {
   /**
    * Gets the second-of-minute field.
    *

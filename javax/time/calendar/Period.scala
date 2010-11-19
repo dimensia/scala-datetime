@@ -63,6 +63,7 @@ import javax.time.calendar.format.CalendricalParseException
  * @author Stephen Colebourne
  */
 object Period {
+
   /**
    * Obtains a   { @code Period } from time-based fields.
    * <p>
@@ -259,7 +260,7 @@ object Period {
    */
   def parse(text: String): Period = {
     PeriodFields.checkNotNull(text, "Text to parse must not be null")
-    PeriodParser.getInstance.parse(text)
+    PeriodParser.parse(text)
   }
 
   /**
@@ -506,8 +507,11 @@ object Period {
  * @param nanos the amount
  */
 @SerialVersionUID(1L)
-final class Period private(years: Int, months: Int, days: Int, hours: Int, minutes: Int, seconds: Int, nanos: Long)
+sealed class Period private(val years: Int, val months: Int, val days: Int, val hours: Int, val minutes: Int, val seconds: Int, val nanos: Long)
   extends PeriodProvider with Serializable {
+
+  import Period._
+
   /**
    * Gets the amount of years of this period, if any.
    *

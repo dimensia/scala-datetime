@@ -45,7 +45,4 @@ import javax.time.CalendricalException
  * @param message the message to use for this exception, may be null
  */
 @SerialVersionUID(1L)
-class CalendarConversionException(message: String) extends CalendricalException {
-  super(message)
-}
-
+class CalendarConversionException(message: String) extends CalendricalException(message)

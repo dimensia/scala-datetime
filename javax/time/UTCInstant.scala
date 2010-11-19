@@ -33,6 +33,7 @@ package javax.time
 
 import java.io.Serializable
 import javax.time.calendar.LocalDate
+import javax.time.UTCRules._
 
 /**
  * An instantaneous point on the time-line measured in the UTC time-scale,
@@ -218,6 +219,7 @@ object UTCInstant {
 
 @SerialVersionUID(1L)
 final class UTCInstant(val mjDay: Long, val nanos: Long, val rules: UTCRules) extends Comparable[UTCInstant] with Serializable {
+
   /**
    * Compares this instant to another based on the time-line, then the name
    * of the rules.
@@ -395,4 +397,16 @@ final class UTCInstant(val mjDay: Long, val nanos: Long, val rules: UTCRules) ex
      * @throws ArithmeticException if the calculation exceeds the supported range
      */
     def toTAIInstant: TAIInstant = rules.convertToTAI(this)
+
+      /**
+     * Gets the number of nanoseconds, later along the time-line, from the start
+     * of the Modified Julian Day.
+     * <p>
+     * The nanosecond-of-day value measures the total number of nanoseconds from
+     * the Modified Julian Day returned by {@code getModifiedJulianDay}.
+     * This value will include any additional leap seconds.
+     *
+     * @return the nanoseconds within the day, including leap seconds
+     */
+    def getNanoOfDay: Long = nanos
   }

@@ -90,37 +90,38 @@ object DateTimeFormatterBuilder {
      * In strict parsing, the sign will be rejected unless the pad width is exceeded.
      * In lenient parsing, any sign will be accepted.
      */
-    object EXCEEDS_PAD
+    object EXCEEDS_PAD extends SignStyle
 
     /**
      * Style to output the sign only if the value is negative.
      * In strict parsing, the negative sign will be accepted and the positive sign rejected.
      * In lenient parsing, any sign will be accepted.
      */
-    object NORMAL
+    object NORMAL extends SignStyle
 
     /**
      * Style to always output the sign, where zero will output '+'.
      * In strict parsing, the absence of a sign will be rejected.
      * In lenient parsing, the absence of a sign will be treated as a positive number.
      */
-    object ALWAYS
+    object ALWAYS extends SignStyle
 
     /**
      * Style to never output sign, only outputting the absolute value.
      * In strict parsing, any sign will be rejected.
      * In lenient parsing, any sign will be accepted unless the width is fixed.
      */
-    object NEVER
+    object NEVER extends SignStyle
 
     /**
      * Style to block negative values, throwing an exception on printing.
      * In strict parsing, any sign will be rejected.
      * In lenient parsing, any sign will be accepted unless the width is fixed.
      */
-    object NOT_NEGATIVE
-
+    object NOT_NEGATIVE extends SignStyle
   }
+
+  abstract sealed class SignStyle
 
   /**
    * Enumeration of the style of a localized date, time or date-time formatter.
@@ -133,27 +134,29 @@ object DateTimeFormatterBuilder {
      * Full text style, with the most detail.
      * An example might be 'Tuesday, April 12, 1952 AD' or '3:30:42pm PST'.
      */
-    object FULL
+    object FULL extends FormatStyle
 
     /**
      * Long text style, with lots of detail.
      * An example might be 'January 12, 1952'.
      */
-    object LONG
+    object LONG extends FormatStyle
 
     /**
      * Short text style, typically numeric.
      * An example might be '12.13.52' or '3:30pm'.
      */
-    object SHORT
+    object SHORT extends FormatStyle
 
     /**
      * Medium text style, with some detail.
      * An example might be 'Jan 12, 1952'.
      */
-    object MEDIUM
+    object MEDIUM extends FormatStyle
 
   }
+
+  abstract sealed class FormatStyle
 
   /**
    * Validates that the input value is not null.
@@ -176,19 +179,21 @@ object DateTimeFormatterBuilder {
     /**
      * Full text, typically the full description.
      */
-    object FULL
+    object FULL extends TextStyle
 
     /**
      * Narrow text, typically a single letter.
      */
-    object NARROW
+    object NARROW extends TextStyle
 
     /**
      * Short text, typically an abbreviation.
      */
-    object SHORT
+    object SHORT extends TextStyle
 
   }
+
+  abstract sealed class TextStyle
 
 }
 
@@ -198,7 +203,7 @@ object DateTimeFormatterBuilder {
  * @param parent the parent builder, not null
  * @param optional whether the formatter is optional, not null
  */
-final class DateTimeFormatterBuilder private(parent: DateTimeFormatterBuilder, optional: Boolean) {
+final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatterBuilder, optional: Boolean) {
   /**
    * Constructs a new instance of the builder.
    */
@@ -810,7 +815,7 @@ final class DateTimeFormatterBuilder private(parent: DateTimeFormatterBuilder, o
       throw new NullPointerException("One of DateTimePrinter or DateTimeParser must be non-null")
     }
     appendInternal(printer, parser)
-    return this
+    this
   }
 
   /**
@@ -866,8 +871,8 @@ final class DateTimeFormatterBuilder private(parent: DateTimeFormatterBuilder, o
     if (width < 1 || width > 10) {
       throw new IllegalArgumentException("The width must be from 1 to 10 inclusive but was " + width)
     }
-    var pp: NumberPrinterParser = new NumberPrinterParser(rule, width, width, SignStyle.NOT_NEGATIVE)
-    return appendFixedWidth(width, pp)
+    val pp: NumberPrinterParser = new NumberPrinterParser(rule, width, width, SignStyle.NOT_NEGATIVE)
+    appendFixedWidth(width, pp)
   }
 
   /**
@@ -879,9 +884,9 @@ final class DateTimeFormatterBuilder private(parent: DateTimeFormatterBuilder, o
    * @return this, for chaining, never null
    */
   def appendZoneId: DateTimeFormatterBuilder = {
-    var pp: ZonePrinterParser = new ZonePrinterParser
+    val pp: ZonePrinterParser = new ZonePrinterParser
     appendInternal(pp, pp)
-    return this
+    this
   }
 
   /**
@@ -997,7 +1002,7 @@ final class DateTimeFormatterBuilder private(parent: DateTimeFormatterBuilder, o
   def appendPattern(pattern: String): DateTimeFormatterBuilder = {
     checkNotNull(pattern, "Pattern must not be null")
     parsePattern(pattern)
-    return this
+    this
   }
 
   /**
@@ -1015,7 +1020,7 @@ final class DateTimeFormatterBuilder private(parent: DateTimeFormatterBuilder, o
    */
   def parseLenient: DateTimeFormatterBuilder = {
     appendInternal(StrictLenientPrinterParser.LENIENT, StrictLenientPrinterParser.LENIENT)
-    return this
+    this
   }
 
   /**
@@ -1033,7 +1038,7 @@ final class DateTimeFormatterBuilder private(parent: DateTimeFormatterBuilder, o
    */
   def parseStrict: DateTimeFormatterBuilder = {
     appendInternal(StrictLenientPrinterParser.STRICT, StrictLenientPrinterParser.STRICT)
-    return this
+    this
   }
 
   /**
@@ -1061,15 +1066,15 @@ final class DateTimeFormatterBuilder private(parent: DateTimeFormatterBuilder, o
     checkNotNull(literal, "Literal text must not be null")
     if (literal.length > 0) {
       if (literal.length == 1) {
-        var pp: CharLiteralPrinterParser = new CharLiteralPrinterParser(literal.charAt(0))
+        val pp: CharLiteralPrinterParser = new CharLiteralPrinterParser(literal.charAt(0))
         appendInternal(pp, pp)
       }
       else {
-        var pp: StringLiteralPrinterParser = new StringLiteralPrinterParser(literal)
+        val pp: StringLiteralPrinterParser = new StringLiteralPrinterParser(literal)
         appendInternal(pp, pp)
       }
     }
-    return this
+    this
   }
 
   /**
@@ -1084,9 +1089,7 @@ final class DateTimeFormatterBuilder private(parent: DateTimeFormatterBuilder, o
    * @return this, for chaining, never null
    * @throws IllegalArgumentException if pad width is too small
    */
-  def padNext(padWidth: Int): DateTimeFormatterBuilder = {
-    return padNext(padWidth, ' ')
-  }
+  def padNext(padWidth: Int): DateTimeFormatterBuilder = padNext(padWidth, ' ')
 
   /**
    * Appends the reduced value of a date-time field to the formatter.
@@ -1121,7 +1124,7 @@ final class DateTimeFormatterBuilder private(parent: DateTimeFormatterBuilder, o
     checkNotNull(rule, "DateTimeFieldRule must not be null")
     var pp: ReducedPrinterParser = new ReducedPrinterParser(rule, width, baseValue)
     appendFixedWidth(width, pp)
-    return this
+    this
   }
 
   /**
@@ -1178,7 +1181,7 @@ final class DateTimeFormatterBuilder private(parent: DateTimeFormatterBuilder, o
     checkNotNull(rule, "DateTimeFieldRule must not be null")
     var pp: NumberPrinterParser = new NumberPrinterParser(rule, 1, 10, SignStyle.NORMAL)
     active.valueParserIndex = appendInternal(pp, pp)
-    return this
+    this
   }
 
   /**
@@ -1205,7 +1208,7 @@ final class DateTimeFormatterBuilder private(parent: DateTimeFormatterBuilder, o
     else {
       appendInternal(pp, pp)
     }
-    return this
+    this
   }
 
   /**
@@ -1249,7 +1252,7 @@ final class DateTimeFormatterBuilder private(parent: DateTimeFormatterBuilder, o
     checkNotNull(formatter, "DateTimeFormatter must not be null")
     var cpp: CompositePrinterParser = formatter.toPrinterParser(true)
     appendInternal(cpp, cpp)
-    return this
+    this
   }
 
   /**
@@ -1273,6 +1276,6 @@ final class DateTimeFormatterBuilder private(parent: DateTimeFormatterBuilder, o
       var pp: LocalizedPrinterParser = new LocalizedPrinterParser(dateStyle, timeStyle, chronology)
       appendInternal(pp, pp)
     }
-    return this
+    this
   }
 }

@@ -93,7 +93,7 @@ object HistoricChronology {
 
     protected def merge(merger: CalendricalMerger): Unit = {
       val moy: MonthOfYear = merger.getValue(chrono.monthOfYearRule)
-      val domVal: Integer = merger.getValue(chrono.dayOfMonthRule)
+      val domVal: Int = merger.getValue(chrono.dayOfMonthRule)
       if (moy != null && domVal != null) {
         val year: Int = merger.getValue(this)
         var date: HistoricDate = null
@@ -143,7 +143,7 @@ object HistoricChronology {
     override def getSmallestMaximumValue: Int = 28
 
     override def getMaximumValue(calendrical: Calendrical): Int = {
-      val year: Integer = calendrical.get(chrono.yearRule)
+      val year: Int = calendrical.get(chrono.yearRule)
       val moy: MonthOfYear = calendrical.get(chrono.monthOfYearRule)
       if (moy != null) {
         if (year != null) {
@@ -179,7 +179,7 @@ object HistoricChronology {
    * Unit class for years.
    */
   @SerialVersionUID(1L)
-  private final class Years private
+  private final class Years
     extends PeriodUnit("JulianYears", Duration.ofSeconds(31557600L)) {
 
     private def readResolve: AnyRef = YEARS
@@ -237,7 +237,7 @@ object HistoricChronology {
   private final class DayOfYearRule private(chrono: HistoricChronology)
     extends DateTimeFieldRule[Int](classOf[Int], chrono, "DayOfYear", periodDays, YEARS, 1, 366) with Serializable {
     override def getMaximumValue(calendrical: Calendrical): Int = {
-      val year: Integer = calendrical.get(chrono.yearRule)
+      val year: Int = calendrical.get(chrono.yearRule)
       if (year != null) if (chrono.isLeapYear(year)) 366 else 365
       else getMaximumValue
     }
@@ -250,7 +250,7 @@ object HistoricChronology {
     }
 
     protected def merge(merger: CalendricalMerger): Unit = {
-      val yearVal: Integer = merger.getValue(chrono.yearRule)
+      val yearVal: Int = merger.getValue(chrono.yearRule)
       if (yearVal != null) {
         val doy: Int = merger.getValue(this)
         var date: HistoricDate = null
@@ -337,6 +337,9 @@ object HistoricChronology {
  * @param cutover The cutover from Julian to Gregorian.
  */
 final class HistoricChronology private(cutover: LocalDate) extends Chronology with Serializable {
+
+  import HistoricChronology._
+
   /**
    * Gets the name of the chronology.
    *

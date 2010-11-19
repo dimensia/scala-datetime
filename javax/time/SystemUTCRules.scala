@@ -37,6 +37,7 @@ import collection.immutable.TreeMap
 import java.io._
 import java.util.ConcurrentModificationException
 import java.util.Arrays
+import java.util.concurrent.atomic.AtomicReference
 
 /**
  * System default UTC rules.
@@ -47,13 +48,22 @@ import java.util.Arrays
  */
 
 @SerialVersionUID(1L)
-final class SystemUTCRules private() extends UTCRules with Serializable {
+final class SystemUTCRules private extends UTCRules with Serializable {
+
+  import SystemUTCRules._
+  import UTCRules._
+
   /**
    * Resolves singleton.
    *
    * @return the resolved instance, never null
    */
   private def readResolve: AnyRef = SystemUTCRules
+
+  /**
+   * The table of leap second dates.
+   */
+  private def dataRef: AtomicReference[Data] = new AtomicReference[Data](loadLeapSeconds);
 
   //-----------------------------------------------------------------------
   /**
@@ -92,9 +102,7 @@ final class SystemUTCRules private() extends UTCRules with Serializable {
     }
   }
 
-  def getName: String = {
-    return "System"
-  }
+  def getName: String = "System"
 
   def getLeapSecondAdjustment(mjDay: Long): Int = {
     var data: SystemUTCRules.Data = dataRef.get
@@ -124,7 +132,7 @@ final class SystemUTCRules private() extends UTCRules with Serializable {
     var adjustedTaiSecs: Long = taiInstant.getTAISeconds - taiOffset
     var mjd: Long = MathUtils.floorDiv(adjustedTaiSecs, SECS_PER_DAY) + OFFSET_MJD_TAI
     var nod: Long = MathUtils.floorMod(adjustedTaiSecs, SECS_PER_DAY) * NANOS_PER_SECOND + taiInstant.getNanoOfSecond
-    var mjdNextRegionStart: Long = (if (pos + 1 < mjds.length) mjds(pos + 1) + 1 else Long.MAX_VALUE)
+    var mjdNextRegionStart: Long = (if (pos + 1 < mjds.length) mjds(pos + 1) + 1 else Long.MaxValue)
     if (mjd == mjdNextRegionStart) {
       ({
         mjd -= 1;
@@ -134,8 +142,6 @@ final class SystemUTCRules private() extends UTCRules with Serializable {
     }
     return UTCInstant.ofModifiedJulianDays(mjd, nod, this)
   }
-
-  //-------------------------------------------------------------------------
 }
 
 object SystemUTCRules {
@@ -143,7 +149,6 @@ object SystemUTCRules {
   @SerialVersionUID(1L)
   private class Data(val dates: Array[Long], val offsets: Array[Int], val taiSeconds: Array[Long]) extends Serializable
 
-  //-------------------------------------------------------------------------
   /**
    * Loads the leap seconds from file.
    * @return an array of two arrays - leap seconds dates and amounts
@@ -155,7 +160,7 @@ object SystemUTCRules {
     }
     try {
       var reader: BufferedReader = new BufferedReader(new InputStreamReader(in, "UTF-8"))
-      var leaps: Map[Long, Integer] = new TreeMap[Long, Integer]
+      var leaps: java.util.Map[Long, Int] = new java.util.TreeMap[Long, Int]
       while (true) {
         var line: String = reader.readLine
         if (line != null) {

@@ -48,7 +48,7 @@ import javax.time.CalendricalException
  * @param checkUnusedFields whether to check unused fields
  */
 @SerialVersionUID(1L)
-final class CalendricalContext(val strict: Boolean, val checkUnusedFields: Boolean) extends Serializable {
+final class CalendricalContext(val isStrict: Boolean, val checkUnusedFields: Boolean) extends Serializable {
 
   /**
    * A hashcode for this context.
@@ -56,7 +56,7 @@ final class CalendricalContext(val strict: Boolean, val checkUnusedFields: Boole
    * @return a suitable hashcode
    */
   override def hashCode: Int =
-    (if (strict) 1 else 0) + (if (dateResolver == null) 0
+    (if (isStrict) 1 else 0) + (if (dateResolver == null) 0
     else dateResolver.hashCode) + (if (checkUnusedFields) 1 else 0)
 
   /**
@@ -66,14 +66,12 @@ final class CalendricalContext(val strict: Boolean, val checkUnusedFields: Boole
    * @return true if this instance is equal to the specified context
    */
   override def equals(obj: AnyRef): Boolean = {
-    if (obj == this) {
-      return true
-    }
-    if (obj.isInstanceOf[CalendricalContext]) {
+    if (obj == this) true
+    else if (obj.isInstanceOf[CalendricalContext]) {
       var other: CalendricalContext = obj.asInstanceOf[CalendricalContext]
-      return strict == other.strict && (dateResolver == other.dateResolver || (dateResolver != null && dateResolver.equals(other.dateResolver))) && checkUnusedFields == other.checkUnusedFields
+      isStrict == other.isStrict && (dateResolver == other.dateResolver || (dateResolver != null && dateResolver.equals(other.dateResolver))) && checkUnusedFields == other.checkUnusedFields
     }
-    return false
+    else false
   }
 
   /**
@@ -101,7 +99,7 @@ final class CalendricalContext(val strict: Boolean, val checkUnusedFields: Boole
       ISOChronology.dayOfMonthRule.checkValue(dayOfMonth)
       return dateResolver.resolveDate(year, MonthOfYear.of(month), dayOfMonth)
     }
-    if (strict) {
+    if (isStrict) {
       return LocalDate.of(year, month, dayOfMonth)
     }
     if (month >= 1 && month <= 12) {

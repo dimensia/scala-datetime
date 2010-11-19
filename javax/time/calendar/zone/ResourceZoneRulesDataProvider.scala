@@ -69,7 +69,7 @@ object ResourceZoneRulesDataProvider {
                                                              ruleIndices: Array[Short])
     extends ZoneRulesVersion {
     def getZoneRules(regionID: String): ZoneRules = {
-      var index: Int = Arrays.binarySearch(regionArray, regionID)
+      var index: Int = Arrays.binarySearch(regionArray.asInstanceOf[Array[Object]], regionID)
       if (index < 0) {
         return null
       }
@@ -156,73 +156,45 @@ final class ResourceZoneRulesDataProvider private(url: URL) extends ZoneRulesDat
     var versionArray: Array[String] = new Array[String](versionCount) {
       var i: Int = 0
       while (i < versionCount) {
-        {
-          versionArray(i) = dis.readUTF
-        }
-        ({
-          i += 1;
-          i
-        })
+        versionArray(i) = dis.readUTF
+        i += 1;
       }
     }
     var regionCount: Int = dis.readShort
     var regionArray: Array[String] = new Array[String](regionCount) {
       var i: Int = 0
       while (i < regionCount) {
-        {
-          regionArray(i) = dis.readUTF
-        }
-        ({
-          i += 1;
-          i
-        })
+        regionArray(i) = dis.readUTF
+        i += 1;
       }
     }
     this.regions = new HashSet[String](Arrays.asList(regionArray))
     var versionSet: Set[ZoneRulesVersion] = new HashSet[ZoneRulesVersion](versionCount) {
       var i: Int = 0
       while (i < versionCount) {
-        {
-          var versionRegionCount: Int = dis.readShort
-          var versionRegionArray: Array[String] = new Array[String](versionRegionCount)
-          var versionRulesArray: Array[Short] = new Array[Short](versionRegionCount) {
-            var j: Int = 0
-            while (j < versionRegionCount) {
-              {
-                versionRegionArray(j) = regionArray(dis.readShort)
-                versionRulesArray(j) = dis.readShort
-              }
-              ({
-                j += 1;
-                j
-              })
-            }
+        var versionRegionCount: Int = dis.readShort
+        var versionRegionArray: Array[String] = new Array[String](versionRegionCount)
+        var versionRulesArray: Array[Short] = new Array[Short](versionRegionCount) {
+          var j: Int = 0
+          while (j < versionRegionCount) {
+            versionRegionArray(j) = regionArray(dis.readShort)
+            versionRulesArray(j) = dis.readShort
+            j += 1;
           }
-          versionSet.add(new ResourceZoneRulesDataProvider.ResourceZoneRulesVersion(this, versionArray(i), versionRegionArray, versionRulesArray))
         }
-        ({
-          i += 1;
-          i
-        })
+        versionSet.add(new ResourceZoneRulesDataProvider.ResourceZoneRulesVersion(this, versionArray(i), versionRegionArray, versionRulesArray))
+        i += 1;
       }
     }
     this.versions = versionSet
     var ruleCount: Int = dis.readShort
     this.rules = new AtomicReferenceArray[AnyRef](ruleCount)
-
-    {
-      var i: Int = 0
-      while (i < ruleCount) {
-        {
-          var bytes: Array[Byte] = new Array[Byte](dis.readShort)
-          dis.readFully(bytes)
-          rules.set(i, bytes)
-        }
-        ({
-          i += 1;
-          i
-        })
-      }
+    var i: Int = 0
+    while (i < ruleCount) {
+      var bytes: Array[Byte] = new Array[Byte](dis.readShort)
+      dis.readFully(bytes)
+      rules.set(i, bytes)
+      i += 1;
     }
   }
   catch {
@@ -248,30 +220,25 @@ final class ResourceZoneRulesDataProvider private(url: URL) extends ZoneRulesDat
   /**
    * The rules.
    */
-  private final val rules: AtomicReferenceArray[AnyRef] = null
-  /** { @inheritDoc }*/
-  def getVersions: Set[ZoneRulesVersion] = {
-    return versions
-  }
+  private var rules: AtomicReferenceArray[AnyRef] = null
+  //FIXME? val
+  /**{ @inheritDoc }*/
+  def getVersions: Set[ZoneRulesVersion] = versions
 
-  /** { @inheritDoc }*/
-  def getGroupID: String = {
-    return groupID
-  }
+  /**{ @inheritDoc }*/
+  def getGroupID: String = groupID
 
-  /** { @inheritDoc }*/
-  def getRegionIDs: Set[String] = {
-    return regions
-  }
+  /**{ @inheritDoc }*/
+  def getRegionIDs: Set[String] = regions
 
-  override def toString: String = {
-    return groupID + ":#" + versions
-  }
+  override def toString: String = groupID + ":#" + versions
+
 
   /**
    * All the regions in the provider.
    */
-  private final val regions: Set[String] = null
+  private var regions: Set[String] = null
+  //FIXME? val
 
   /**
    * Loads the rule.
@@ -292,9 +259,11 @@ final class ResourceZoneRulesDataProvider private(url: URL) extends ZoneRulesDat
   /**
    * The group ID.
    */
-  private final val groupID: String = null
+  private var groupID: String = null
+  //FIXME? val
   /**
    * All the versions in the provider.
    */
-  private final val versions: Set[ZoneRulesVersion] = null
+  private var versions: Set[ZoneRulesVersion] = null
+  //FIXME? val
 }

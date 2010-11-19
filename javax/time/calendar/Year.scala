@@ -94,7 +94,7 @@ object Year {
    *
    * @return the year rule, never null
    */
-  def rule: DateTimeFieldRule[Integer] = ISOChronology.yearRule
+  def rule: DateTimeFieldRule[Int] = ISOChronology.yearRule
 
   /**
    * Obtains an instance of   { @code Year }.
@@ -146,7 +146,10 @@ object Year {
  * @param year the year to represent
  */
 @SerialVersionUID(1L)
-final class Year private(year: Int) extends Calendrical with Comparable[Year] with Serializable with DateAdjuster with CalendricalMatcher {
+final class Year private(val year: Int) extends Calendrical with Comparable[Year] with Serializable with DateAdjuster with CalendricalMatcher {
+
+  import Year._
+
   /**
    * Returns a copy of this Year with the specified number of years added.
    * <p>
@@ -184,7 +187,7 @@ final class Year private(year: Int) extends Calendrical with Comparable[Year] wi
    * @return true if the calendrical matches, false otherwise
    */
   override def matchesCalendrical(calendrical: Calendrical): Boolean = {
-    var calValue: Integer = calendrical.get(rule)
+    var calValue: Int = calendrical.get(rule)
     calValue != null && calValue == getValue
   }
 

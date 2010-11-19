@@ -44,22 +44,26 @@ import java.io.Serializable
  */
 object DateResolvers {
 
+  /**
+   * Returns the strict resolver which does not manipulate the state
+   * in any way, resulting in an exception for all invalid values.
+   *
+   * @return the strict resolver, never null
+   */
+  def strict: DateResolver = Strict
 
-  private object Strict {
-    /**The singleton instance. */
-    private val INSTANCE: DateResolver = new DateResolvers.Strict
-  }
+  private object Strict extends Strict
 
     /**
    * Class implementing strict resolver.
    */
   @SerialVersionUID(1L)
   private class Strict extends DateResolver with Serializable {
-    private def readResolve: AnyRef = INSTANCE
+    private def readResolve: AnyRef = Strict
 
     /** { @inheritDoc }*/
     override def resolveDate(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int): LocalDate = {
-      return LocalDate.of(year, monthOfYear, dayOfMonth)
+      LocalDate.of(year, monthOfYear, dayOfMonth)
     }
   }
 
@@ -69,35 +73,9 @@ object DateResolvers {
    *
    * @return the previous valid day resolver, never null
    */
-  def previousValid: DateResolver = PreviousValid.INSTANCE
+  def previousValid: DateResolver = PreviousValid
 
-
-  private object NextValid {
-    /**The singleton instance. */
-    private val INSTANCE: DateResolver = new DateResolvers.NextValid
-  }
-
-    /**
-   * Class implementing nextValid resolver.
-   */
-  @SerialVersionUID(1L)
-  private class NextValid extends DateResolver with Serializable {
-    private def readResolve: AnyRef =  INSTANCE
-
-    /** { @inheritDoc }*/
-    override def resolveDate(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int): LocalDate = {
-      var len: Int = monthOfYear.lengthInDays(ISOChronology.isLeapYear(year))
-      if (dayOfMonth > len) {
-        return LocalDate.of(year, monthOfYear.next, 1)
-      }
-      return LocalDate.of(year, monthOfYear, dayOfMonth)
-    }
-  }
-
-  private object PreviousValid {
-    /**The singleton instance. */
-    private final val INSTANCE: DateResolver = new DateResolvers.PreviousValid
-  }
+  private object PreviousValid extends PreviousValid
 
   /**
    * Class implementing previousValid resolver.
@@ -113,7 +91,34 @@ object DateResolvers {
       return LocalDate.of(year, monthOfYear, dayOfMonth)
     }
 
-    private def readResolve: AnyRef =  INSTANCE
+    private def readResolve: AnyRef =  PreviousValid
+  }
+
+  /**
+   * Returns the next valid day resolver, which adjusts the date to be
+   * valid by moving to the first of the next month.
+   *
+   * @return the next valid day resolver, never null
+   */
+  def nextValid: DateResolver = NextValid
+
+  private object NextValid extends NextValid
+
+    /**
+   * Class implementing nextValid resolver.
+   */
+  @SerialVersionUID(1L)
+  private class NextValid extends DateResolver with Serializable {
+    private def readResolve: AnyRef = NextValid
+
+    /** { @inheritDoc }*/
+    override def resolveDate(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int): LocalDate = {
+      var len: Int = monthOfYear.lengthInDays(ISOChronology.isLeapYear(year))
+      if (dayOfMonth > len) {
+        return LocalDate.of(year, monthOfYear.next, 1)
+      }
+      return LocalDate.of(year, monthOfYear, dayOfMonth)
+    }
   }
 
   /**
@@ -123,19 +128,16 @@ object DateResolvers {
    *
    * @return the part lenient resolver, never null
    */
-  def partLenient: DateResolver = PartLenient.INSTANCE
+  def partLenient: DateResolver = PartLenient
 
-  private object PartLenient {
-    /**The singleton instance. */
-    private val INSTANCE: DateResolver = new DateResolvers.PartLenient
-  }
+  private object PartLenient extends PartLenient
 
   /**
    * Class implementing partLenient resolver.
    */
   @SerialVersionUID(1L)
   private class PartLenient extends DateResolver with Serializable {
-    private def readResolve: AnyRef =INSTANCE
+    private def readResolve: AnyRef = PartLenient
 
     /** { @inheritDoc }*/
     override def resolveDate(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int): LocalDate = {
@@ -146,20 +148,4 @@ object DateResolvers {
       return LocalDate.of(year, monthOfYear, dayOfMonth)
     }
   }
-
-  /**
-   * Returns the next valid day resolver, which adjusts the date to be
-   * valid by moving to the first of the next month.
-   *
-   * @return the next valid day resolver, never null
-   */
-  def nextValid: DateResolver = NextValid.INSTANCE
-
-  /**
-   * Returns the strict resolver which does not manipulate the state
-   * in any way, resulting in an exception for all invalid values.
-   *
-   * @return the strict resolver, never null
-   */
-  def strict: DateResolver = Strict.INSTANCE
 }

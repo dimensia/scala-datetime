@@ -105,11 +105,11 @@ object TimeSource {
    * Implementation of a time-source that always returns the latest time from
    * { @link System # currentTimeMillis ( ) }.
    */
-  private[time] object SystemTimeSource
+  private[time] object SystemTimeSource extends SystemTimeSource
 
   /**Restricted constructor. */
   @SerialVersionUID(1L)
-  private[time] final class SystemTimeSource private() extends TimeSource with Serializable {
+  private[time] sealed class SystemTimeSource extends TimeSource with Serializable {
 
     /** { @inheritDoc }*/
     def instant: Instant = Instant.ofEpochMillis(System.currentTimeMillis)
@@ -123,9 +123,7 @@ object TimeSource {
     }
 
     /**Resolve singletons. */
-    private def readResolve: AnyRef = {
-      return INSTANCE
-    }
+    private def readResolve: AnyRef = SystemTimeSource
   }
 
   /**
@@ -163,7 +161,7 @@ object TimeSource {
    * This is typically used for testing.
    * Restricted constructor. */
   @SerialVersionUID(1L)
-  private[time] final class FixedTimeSource private(instant: Instant) extends TimeSource with Serializable {
+  private[time] final class FixedTimeSource(instant: Instant) extends TimeSource with Serializable {
     /** { @inheritDoc }*/
     override def equals(obj: AnyRef): Boolean = {
       if (obj.isInstanceOf[TimeSource.FixedTimeSource]) instant.equals((obj.asInstanceOf[TimeSource.FixedTimeSource]).instant)
@@ -204,7 +202,7 @@ object TimeSource {
    * { @link System # currentTimeMillis ( ) } plus an offset.
    * Restricted constructor. */
   @SerialVersionUID(1L)
-  private[time] final class OffsetSystemTimeSource private (offset: Duration) extends TimeSource with Serializable {
+  private[time] final class OffsetSystemTimeSource(val offset: Duration) extends TimeSource with Serializable {
 
     /** { @inheritDoc }*/
     def instant: Instant = Instant.ofEpochMillis(System.currentTimeMillis).plus(offset)

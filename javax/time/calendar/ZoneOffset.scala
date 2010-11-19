@@ -121,7 +121,7 @@ object ZoneOffset {
       throw new IllegalArgumentException("Zone offset not in valid range: -18:00 to +18:00")
     }
     if (totalSeconds % (15 * SECONDS_PER_MINUTE) == 0) {
-      var totalSecs: Integer = totalSeconds
+      var totalSecs: Int = totalSeconds
       CACHE_LOCK.readLock.lock
       try {
         var result: ZoneOffset = SECONDS_CACHE.get(totalSecs)
@@ -156,7 +156,7 @@ object ZoneOffset {
    *
    * @return the field rule for the zone-offset, never null
    */
-  def rule: CalendricalRule[ZoneOffset] = Rule.INSTANCE
+  def rule: CalendricalRule[ZoneOffset] = Rule
 
   /**
    * The number of minutes per hour.
@@ -225,8 +225,8 @@ object ZoneOffset {
   private[calendar] object Rule extends Rule
 
   @SerialVersionUID(1L)
-  private[calendar] final class Rule private
-    extends CalendricalRule[ZoneOffset](classOf[ZoneOffset], ISOChronology.INSTANCE, "ZoneOffset", null, null)
+  private[calendar] sealed class Rule
+    extends CalendricalRule[ZoneOffset](classOf[ZoneOffset], ISOChronology, "ZoneOffset", null, null)
     with Serializable {
     private def readResolve: AnyRef = Rule
 
@@ -245,7 +245,7 @@ object ZoneOffset {
       }
       return null
     }
-
+  }
     /**
      * Obtains an instance of    { @code ZoneOffset } using an offset in
      * hours, minutes and seconds.
@@ -387,7 +387,6 @@ object ZoneOffset {
 
     /**Cache of time-zone offset by offset in seconds. */
     private val CACHE_LOCK: ReadWriteLock = new ReentrantReadWriteLock
-  }
 
 }
 
@@ -397,7 +396,9 @@ object ZoneOffset {
  * @param amountSeconds the total time-zone offset in seconds, from -64800 to +64800
  */
 @SerialVersionUID(1L)
-final class ZoneOffset private(amountSeconds: Int) extends Calendrical with Comparable[ZoneOffset] with Serializable {
+final class ZoneOffset private(val amountSeconds: Int) extends Calendrical with Comparable[ZoneOffset] with Serializable {
+
+  import ZoneOffset._
 
   /**
    * The string form of the time-zone offset.
@@ -596,9 +597,9 @@ final class ZoneOffset private(amountSeconds: Int) extends Calendrical with Comp
    * @throws IllegalArgumentException if the offset is not in the required range
    */
   def plus(periodProvider: PeriodProvider): ZoneOffset = {
-    var otherPeriod: Period = Period.of(periodProvider).withTimeFieldsOnly.withNanos(0)
-    var thisPeriod: Period = toPeriod
-    var combined: Period = thisPeriod.plus(otherPeriod).normalized
-    return of(combined)
+    val otherPeriod: Period = Period.of(periodProvider).withTimeFieldsOnly.withNanos(0)
+    val thisPeriod: Period = toPeriod
+    val combined: Period = thisPeriod.plus(otherPeriod).normalized
+    of(combined)
   }
 }
