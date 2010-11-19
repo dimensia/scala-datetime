@@ -45,10 +45,8 @@ import java.util.Iterator
 import java.util.Locale
 import java.util.Map
 import java.util.Set
-import java.util.Map.Entry
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
-import javax.time.calendar.format.DateTimeFormatterBuilder.TextStyle
 
 /**
  * The rule defining how a measurable field of time operates.
@@ -91,13 +89,13 @@ object DateTimeFieldRule {
       throw new IllegalArgumentException("The map must not contain null or empty text")
     }
     this.locale = locale
-    var copy: Map[Integer, String] = new HashMap[Integer, String](valueTextMap)
-    var reverse: Map[String, Integer] = new HashMap[String, Integer]
-    var insensitive: Map[String, Integer] = new HashMap[String, Integer]
-    var lengthSet: Set[Integer] = new HashSet[Integer]
+    var copy: Map[Int, String] = new HashMap[Int, String](valueTextMap)
+    var reverse: Map[String, Int] = new HashMap[String, Int]
+    var insensitive: Map[String, Int] = new HashMap[String, Int]
+    var lengthSet: Set[Int] = new HashSet[Int]
     for (entry <- copy.entrySet) {
       var text: String = entry.getValue
-      var value: Integer = entry.getKey
+      var value: Int = entry.getKey
       reverse.put(text, value)
       lengthSet.add(text.length)
       var lower: String = text.toLowerCase(locale)
@@ -289,8 +287,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
                                               minimumValue: Int,
                                               maximumValue: Int,
                                               hasText: Boolean)
-  extends CalendricalRule[T] {
-  super(reifiedClass, chronology, name, periodUnit, periodRange)
+  extends CalendricalRule[T](reifiedClass, chronology, name, periodUnit, periodRange) {
 
   /**
    * Constructor.
