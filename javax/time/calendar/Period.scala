@@ -36,7 +36,6 @@ import java.util.TreeMap
 import javax.time.CalendricalException
 import javax.time.Duration
 import javax.time.MathUtils
-import javax.time.calendar.format.CalendricalParseException
 
 /**
  * An immutable period consisting of the ISO-8601 year, month, day, hour,
@@ -98,23 +97,17 @@ object Period {
    * @throws ArithmeticException if the period exceeds the supported range
    */
   def yearsBetween(startDateProvider: DateProvider, endDateProvider: DateProvider): Period = {
-    var startDate: LocalDate = LocalDate.of(startDateProvider)
-    var endDate: LocalDate = LocalDate.of(endDateProvider)
-    var startMonth: Long = startDate.getYear * 12L + startDate.getMonthOfYear.ordinal
-    var endMonth: Long = endDate.getYear * 12L + endDate.getMonthOfYear.ordinal
+    val startDate: LocalDate = LocalDate.of(startDateProvider)
+    val endDate: LocalDate = LocalDate.of(endDateProvider)
+    val startMonth: Long = startDate.getYear * 12L + startDate.getMonthOfYear.ordinal
+    val endMonth: Long = endDate.getYear * 12L + endDate.getMonthOfYear.ordinal
     var years: Long = (endMonth - startMonth) / 12
     if (endDate.getMonthOfYear == startDate.getMonthOfYear) {
       if (years > 0 && endDate.getDayOfMonth < startDate.getDayOfMonth) {
-        ({
           years -= 1;
-          years
-        })
       }
       else if (years < 0 && endDate.getDayOfMonth > startDate.getDayOfMonth) {
-        ({
           years += 1;
-          years
-        })
       }
     }
     return ofYears(MathUtils.safeToInt(years))
@@ -204,13 +197,13 @@ object Period {
     }
     var periodFields: PeriodFields = PeriodFields.of(periodProvider)
     periodFields = periodFields.toEquivalent(UNITS)
-    var years: Int = periodFields.getAmountInt(ISOChronology.periodYears)
-    var months: Int = periodFields.getAmountInt(ISOChronology.periodMonths)
-    var days: Int = periodFields.getAmountInt(ISOChronology.periodDays)
-    var hours: Int = periodFields.getAmountInt(ISOChronology.periodHours)
-    var minutes: Int = periodFields.getAmountInt(ISOChronology.periodMinutes)
-    var seconds: Int = periodFields.getAmountInt(ISOChronology.periodSeconds)
-    var nanos: Long = periodFields.getAmount(ISOChronology.periodNanos)
+    val years: Int = periodFields.getAmountInt(ISOChronology.periodYears)
+    val months: Int = periodFields.getAmountInt(ISOChronology.periodMonths)
+    val days: Int = periodFields.getAmountInt(ISOChronology.periodDays)
+    val hours: Int = periodFields.getAmountInt(ISOChronology.periodHours)
+    val minutes: Int = periodFields.getAmountInt(ISOChronology.periodMinutes)
+    val seconds: Int = periodFields.getAmountInt(ISOChronology.periodSeconds)
+    val nanos: Long = periodFields.getAmount(ISOChronology.periodNanos)
     return of(years, months, days, hours, minutes, seconds, nanos)
   }
 
@@ -231,8 +224,8 @@ object Period {
     if (duration.isZero) {
       return ZERO
     }
-    var hours: Int = MathUtils.safeToInt(duration.getSeconds / 3600)
-    var amount: Int = (duration.getSeconds.asInstanceOf[Int] % 3600)
+    val hours: Int = MathUtils.safeToInt(duration.getSeconds / 3600)
+    val amount: Int = (duration.getSeconds.asInstanceOf[Int] % 3600)
     return new Period(0, 0, 0, hours, amount / 60, amount % 60, duration.getNanoOfSecond)
   }
 
@@ -333,30 +326,24 @@ object Period {
    * @throws ArithmeticException if the period exceeds the supported range
    */
   def between(startDateProvider: DateProvider, endDateProvider: DateProvider): Period = {
-    var startDate: LocalDate = LocalDate.of(startDateProvider)
-    var endDate: LocalDate = LocalDate.of(endDateProvider)
-    var startMonth: Long = startDate.getYear * 12L + startDate.getMonthOfYear.ordinal
-    var endMonth: Long = endDate.getYear * 12L + endDate.getMonthOfYear.ordinal
+    val startDate: LocalDate = LocalDate.of(startDateProvider)
+    val endDate: LocalDate = LocalDate.of(endDateProvider)
+    val startMonth: Long = startDate.getYear * 12L + startDate.getMonthOfYear.ordinal
+    val endMonth: Long = endDate.getYear * 12L + endDate.getMonthOfYear.ordinal
     var totalMonths: Long = endMonth - startMonth
     var days: Int = endDate.getDayOfMonth - startDate.getDayOfMonth
     if (totalMonths > 0 && days < 0) {
-      ({
-        totalMonths -= 1;
-        totalMonths
-      })
-      var calcDate: LocalDate = startDate.plusMonths(totalMonths)
+        totalMonths -= 1
+      val calcDate: LocalDate = startDate.plusMonths(totalMonths)
       days = (endDate.toEpochDays - calcDate.toEpochDays).asInstanceOf[Int]
     }
     else if (totalMonths < 0 && days > 0) {
-      ({
-        totalMonths += 1;
-        totalMonths
-      })
+        totalMonths += 1
       days -= endDate.getMonthOfYear.lengthInDays(endDate.isLeapYear)
     }
-    var years: Long = totalMonths / 12
-    var months: Int = (totalMonths % 12).asInstanceOf[Int]
-    return ofDateFields(MathUtils.safeToInt(years), months, days)
+    val years: Long = totalMonths / 12
+    val months: Int = (totalMonths % 12).asInstanceOf[Int]
+    ofDateFields(MathUtils.safeToInt(years), months, days)
   }
 
   /**
@@ -404,10 +391,10 @@ object Period {
    * @throws ArithmeticException if the period exceeds the supported range
    */
   def daysBetween(startDateProvider: DateProvider, endDateProvider: DateProvider): Period = {
-    var startDate: LocalDate = LocalDate.of(startDateProvider)
-    var endDate: LocalDate = LocalDate.of(endDateProvider)
-    var days: Long = MathUtils.safeSubtract(endDate.toModifiedJulianDays, startDate.toModifiedJulianDays)
-    return ofDays(MathUtils.safeToInt(days))
+    val startDate: LocalDate = LocalDate.of(startDateProvider)
+    val endDate: LocalDate = LocalDate.of(endDateProvider)
+    val days: Long = MathUtils.safeSubtract(endDate.toModifiedJulianDays, startDate.toModifiedJulianDays)
+    ofDays(MathUtils.safeToInt(days))
   }
 
   /**
@@ -430,24 +417,18 @@ object Period {
    * @throws ArithmeticException if the period exceeds the supported range
    */
   def monthsBetween(startDateProvider: DateProvider, endDateProvider: DateProvider): Period = {
-    var startDate: LocalDate = LocalDate.of(startDateProvider)
-    var endDate: LocalDate = LocalDate.of(endDateProvider)
-    var startMonth: Long = startDate.getYear * 12L + startDate.getMonthOfYear.ordinal
-    var endMonth: Long = endDate.getYear * 12L + endDate.getMonthOfYear.ordinal
-    var months: Long = endMonth - startMonth
+    val startDate: LocalDate = LocalDate.of(startDateProvider)
+    val endDate: LocalDate = LocalDate.of(endDateProvider)
+    val startMonth: Long = startDate.getYear * 12L + startDate.getMonthOfYear.ordinal
+    val endMonth: Long = endDate.getYear * 12L + endDate.getMonthOfYear.ordinal
+    val months: Long = endMonth - startMonth
     if (months > 0 && endDate.getDayOfMonth < startDate.getDayOfMonth) {
-      ({
-        months -= 1;
-        months
-      })
+        months -= 1
     }
     else if (months < 0 && endDate.getDayOfMonth > startDate.getDayOfMonth) {
-      ({
-        months += 1;
-        months
-      })
+        months += 1
     }
-    return ofMonths(MathUtils.safeToInt(months))
+    ofMonths(MathUtils.safeToInt(months))
   }
 
   /**
@@ -654,7 +635,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
     if ((years | months | days) > 0) {
       throw new CalendricalException("Unable to convert period to duration as years/months/days are present: " + this)
     }
-    var secs: Long = (hours * 60L + minutes) * 60L + seconds
+    val secs: Long = (hours * 60L + minutes) * 60L + seconds
     return Duration.ofSeconds(secs, nanos)
   }
 
@@ -891,8 +872,8 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    */
   def totalNanos: Long = {
     if (this == ZERO) return 0
-    var secs: Long = ((hours * 60L + minutes) * 60L + seconds)
-    var otherNanos: Long = MathUtils.safeMultiply(secs, 1000000000L)
+    val secs: Long = ((hours * 60L + minutes) * 60L + seconds)
+    val otherNanos: Long = MathUtils.safeMultiply(secs, 1000000000L)
     return MathUtils.safeAdd(otherNanos, nanos)
   }
 
@@ -939,14 +920,14 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
     }
     var total: Long = (days * 24L * 60L * 60L) + (hours * 60L * 60L) + (minutes * 60L) + seconds
     total = MathUtils.safeAdd(total, MathUtils.floorDiv(this.nanos, 1000000000))
-    var nanos: Int = MathUtils.floorMod(this.nanos, 1000000000)
-    var seconds: Int = (total % 60).asInstanceOf[Int]
+    val nanos: Int = MathUtils.floorMod(this.nanos, 1000000000)
+    val seconds: Int = (total % 60).toInt
     total /= 60
-    var minutes: Int = (total % 60).asInstanceOf[Int]
+    val minutes: Int = (total % 60).toInt
     total /= 60
-    var hours: Int = (total % 24).asInstanceOf[Int]
+    val hours: Int = (total % 24).toInt
     total /= 24
-    var days: Int = MathUtils.safeToInt(total)
+    val days: Int = MathUtils.safeToInt(total)
     return of(years, months, days, hours, minutes, seconds, nanos)
   }
 
@@ -1054,8 +1035,8 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    */
   def totalNanosWith24HourDays: Long = {
     if (this == ZERO) return 0
-    var secs: Long = (((days * 24L + hours) * 60L + minutes) * 60L + seconds)
-    var otherNanos: Long = MathUtils.safeMultiply(secs, 1000000000L)
+    val secs: Long = (((days * 24L + hours) * 60L + minutes) * 60L + seconds)
+    val otherNanos: Long = MathUtils.safeMultiply(secs, 1000000000L)
     return MathUtils.safeAdd(otherNanos, nanos)
   }
 
@@ -1071,7 +1052,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
         str = "PT0S"
       }
       else {
-        var buf: StringBuilder = new StringBuilder
+        val buf: StringBuilder = new StringBuilder
         buf.append('P')
         if (years != 0) {
           buf.append(years).append('Y')
@@ -1099,17 +1080,11 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
               var n: Long = nanos % 1000000000
               if (s < 0 && n > 0) {
                 n -= 1000000000
-                ({
                   s += 1;
-                  s
-                })
               }
               else if (s > 0 && n < 0) {
                 n += 1000000000
-                ({
                   s -= 1;
-                  s
-                })
               }
               if (n < 0) {
                 n = -n
@@ -1118,7 +1093,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
                 }
               }
               buf.append(s)
-              var dotPos: Int = buf.length
+              val dotPos: Int = buf.length
               n += 1000000000
               while (n % 10 == 0) {
                 n /= 10
@@ -1188,7 +1163,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
     if ((years | months) > 0) {
       throw new CalendricalException("Unable to convert period to duration as years/months are present: " + this)
     }
-    var secs: Long = ((days * 24L + hours) * 60L + minutes) * 60L + seconds
+    val secs: Long = ((days * 24L + hours) * 60L + minutes) * 60L + seconds
     return Duration.ofSeconds(secs, nanos)
   }
 
@@ -1216,8 +1191,8 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * @throws ArithmeticException if the capacity of any field is exceeded
    */
   def minus(periodProvider: PeriodProvider): Period = {
-    var other: Period = of(periodProvider)
-    return of(MathUtils.safeSubtract(years, other.years), MathUtils.safeSubtract(months, other.months), MathUtils.safeSubtract(days, other.days), MathUtils.safeSubtract(hours, other.hours), MathUtils.safeSubtract(minutes, other.minutes), MathUtils.safeSubtract(seconds, other.seconds), MathUtils.safeSubtract(nanos, other.nanos))
+    val other: Period = of(periodProvider)
+    of(MathUtils.safeSubtract(years, other.years), MathUtils.safeSubtract(months, other.months), MathUtils.safeSubtract(days, other.days), MathUtils.safeSubtract(hours, other.hours), MathUtils.safeSubtract(minutes, other.minutes), MathUtils.safeSubtract(seconds, other.seconds), MathUtils.safeSubtract(nanos, other.nanos))
   }
 
   /**
@@ -1250,7 +1225,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
   override def equals(obj: AnyRef): Boolean = {
     if (this == obj) true
     else if (obj.isInstanceOf[Period]) {
-      var other: Period = obj.asInstanceOf[Period]
+      val other: Period = obj.asInstanceOf[Period]
       years == other.years && months == other.months && days == other.days & hours == other.hours && minutes == other.minutes && seconds == other.seconds && nanos == other.nanos
     }
     else return false
@@ -1346,13 +1321,13 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
     var total: Long = (hours * 60L * 60L) + (minutes * 60L) + seconds
     total = MathUtils.safeMultiply(total, 1000000000)
     total = MathUtils.safeAdd(total, nanos)
-    var nanos: Long = total % 1000000000L
+    val nanos: Long = total % 1000000000L
     total /= 1000000000L
-    var seconds: Int = (total % 60).asInstanceOf[Int]
+    val seconds: Int = (total % 60).asInstanceOf[Int]
     total /= 60
-    var minutes: Int = (total % 60).asInstanceOf[Int]
+    val minutes: Int = (total % 60).asInstanceOf[Int]
     total /= 60
-    var hours: Int = MathUtils.safeToInt(total)
+    val hours: Int = MathUtils.safeToInt(total)
     return of(years, months, days, hours, minutes, seconds, nanos)
   }
 
@@ -1383,7 +1358,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
   override def toPeriodFields: PeriodFields = {
     var fields: PeriodFields = periodFields
     if (fields == null) {
-      var map: TreeMap[PeriodUnit, PeriodField] = new TreeMap[PeriodUnit, PeriodField]
+      val map: TreeMap[PeriodUnit, PeriodField] = new TreeMap[PeriodUnit, PeriodField]
       if (years != 0) {
         map.put(ISOChronology.periodYears, PeriodField.of(years, ISOChronology.periodYears))
       }
@@ -1546,7 +1521,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * @throws ArithmeticException if the capacity of any field is exceeded
    */
   def plus(periodProvider: PeriodProvider): Period = {
-    var other: Period = of(periodProvider)
+    val other: Period = of(periodProvider)
     of(MathUtils.safeAdd(years, other.years), MathUtils.safeAdd(months, other.months), MathUtils.safeAdd(days, other.days), MathUtils.safeAdd(hours, other.hours), MathUtils.safeAdd(minutes, other.minutes), MathUtils.safeAdd(seconds, other.seconds), MathUtils.safeAdd(nanos, other.nanos))
   }
 }

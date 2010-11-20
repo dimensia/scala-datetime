@@ -1317,7 +1317,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @param calendrical the calendrical to match, not null
    * @return true if the calendrical matches, false otherwise
    */
-  override def matchesCalendrical(calendrical: Calendrical): Boolean = this.equals(calendrical.get(rule))
+  override def matchesCalendrical(calendrical: Calendrical): Boolean = this.equals(calendrical.get(OffsetDateTime.rule))
 
   /**
    * Returns a copy of this OffsetDateTime with the time values altered.

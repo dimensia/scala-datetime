@@ -66,7 +66,7 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
    *
    * @param context the context to use, not null
    */
-  def this(context: CalendricalContext, inputMap: Map[CalendricalRule[_], AnyRef]) {
+  def this(context: CalendricalContext, inputMap: Map[CalendricalRule[_], Any]) {
     this (context)
     ISOChronology.checkNotNull(inputMap, null)
     this.inputMap.putAll(inputMap)
@@ -252,7 +252,7 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
    * The map of in range data to be merged, never null.
    * This is a concurrent hash map mainly to gain the no-nulls implementation.
    */
-  private val processingMap: Map[CalendricalRule[_], AnyRef] = new ConcurrentHashMap[CalendricalRule[_], AnyRef]
+  private val processingMap: Map[CalendricalRule[_], Any] = new ConcurrentHashMap[CalendricalRule[_], Any]
 
   /**
    * Gets the value of the specified calendrical rule from the merged result.

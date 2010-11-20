@@ -204,6 +204,9 @@ object DateTimeFormatterBuilder {
  * @param optional whether the formatter is optional, not null
  */
 final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatterBuilder, optional: Boolean) {
+
+  import DateTimeFormatterBuilder._
+
   /**
    * Constructs a new instance of the builder.
    */
@@ -226,7 +229,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    */
   def parseCaseSensitive: DateTimeFormatterBuilder = {
     appendInternal(CaseSensitivePrinterParser.SENSITIVE, CaseSensitivePrinterParser.SENSITIVE)
-    return this
+    this
   }
 
   /**
@@ -242,9 +245,9 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    * @return this, for chaining, never null
    */
   def appendLiteral(literal: Char): DateTimeFormatterBuilder = {
-    var pp: CharLiteralPrinterParser = new CharLiteralPrinterParser(literal)
+    val pp: CharLiteralPrinterParser = new CharLiteralPrinterParser(literal)
     appendInternal(pp, pp)
-    return this
+    this
   }
 
   /**
@@ -287,7 +290,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
   def optionalStart: DateTimeFormatterBuilder = {
     active.valueParserIndex = -1
     active = new DateTimeFormatterBuilder(active, true)
-    return this
+    this
   }
 
   /**
@@ -377,7 +380,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
     checkNotNull(utcText, "UTC text must not be null")
     var pp: ZoneOffsetPrinterParser = new ZoneOffsetPrinterParser(utcText, includeColon, allowSeconds)
     appendInternal(pp, pp)
-    return this
+    this
   }
 
   /**
@@ -394,7 +397,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
     checkNotNull(formatter, "DateTimeFormatter must not be null")
     var cpp: CompositePrinterParser = formatter.toPrinterParser(false)
     appendInternal(cpp, cpp)
-    return this
+    this
   }
 
   /**
@@ -412,7 +415,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    * @throws NullPointerException if the text style is null
    */
   def appendLocalized(dateStyle: DateTimeFormatterBuilder.FormatStyle, timeStyle: DateTimeFormatterBuilder.FormatStyle): DateTimeFormatterBuilder = {
-    return appendLocalized(dateStyle, timeStyle, ISOChronology.INSTANCE)
+    appendLocalized(dateStyle, timeStyle, ISOChronology)
   }
 
   /**
@@ -434,9 +437,9 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    */
   def appendZoneText(textStyle: DateTimeFormatterBuilder.TextStyle): DateTimeFormatterBuilder = {
     checkNotNull(textStyle, "TextStyle must not be null")
-    var pp: ZonePrinterParser = new ZonePrinterParser(textStyle)
+    val pp: ZonePrinterParser = new ZonePrinterParser(textStyle)
     appendInternal(pp, pp)
-    return this
+    this
   }
 
   /**
@@ -455,9 +458,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    *
    * @return this, for chaining, never null
    */
-  def appendOffsetId: DateTimeFormatterBuilder = {
-    return appendOffset("Z", true, true)
-  }
+  def appendOffsetId: DateTimeFormatterBuilder = appendOffset("Z", true, true)
 
 
   /**
@@ -471,9 +472,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    *
    * @return the created formatter, never null
    */
-  def toFormatter: DateTimeFormatter = {
-    return toFormatter(Locale.getDefault)
-  }
+  def toFormatter: DateTimeFormatter = toFormatter(Locale.getDefault)
 
   /**
    * Changes the parse style to be case insensitive for the remainder of the formatter.
@@ -489,14 +488,12 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    */
   def parseCaseInsensitive: DateTimeFormatterBuilder = {
     appendInternal(CaseSensitivePrinterParser.INSENSITIVE, CaseSensitivePrinterParser.INSENSITIVE)
-    return this
+    this
   }
 
   private def parsePattern(pattern: String): Unit = {
-    {
       var pos: Int = 0
       while (pos < pattern.length) {
-        {
           var cur: Char = pattern.charAt(pos)
           if ((cur >= 'A' && cur <= 'Z') || (cur >= 'a' && cur <= 'z')) {
             var start: Int = ({
@@ -504,10 +501,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
               pos
             })
             while (pos < pattern.length && pattern.charAt(pos) == cur) {
-              ({
                 pos += 1;
-                pos
-              })
             }
             var count: Int = pos - start
             if (cur == 'p') {
@@ -521,10 +515,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
                     pos
                   })
                   while (pos < pattern.length && pattern.charAt(pos) == cur) {
-                    ({
                       pos += 1;
-                      pos
-                    })
                   }
                   count = pos - start
                 }
@@ -545,10 +536,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
                     pos
                   })
                   while (pos < pattern.length && pattern.charAt(pos) == cur) {
-                    ({
                       pos += 1;
-                      pos
-                    })
                   }
                   count = pos - start
                 }
@@ -581,10 +569,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
               parseRule(cur, count, rule, fraction)
             }
             fraction = 0
-            ({
               pos -= 1;
-              pos
-            })
           }
           else if (cur == '\'') {
             var start: Int = ({
@@ -592,7 +577,6 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
               pos
             })
             while (pos < pattern.length) {
-              {
                 if (pattern.charAt(pos) == '\'') {
                   if (pos + 1 < pattern.length && pattern.charAt(pos + 1) == '\'') {
                     ({
@@ -604,22 +588,14 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
                     break //todo: break is not supported
                   }
                 }
-              }
-              ({
                 pos += 1;
-                pos
-              })
             }
             if (pos >= pattern.length) {
               throw new IllegalArgumentException("Pattern ends with an incomplete string literal: " + pattern)
             }
             var str: String = pattern.substring(start + 1, pos)
-            if (str.length == 0) {
-              appendLiteral('\'')
-            }
-            else {
-              appendLiteral(str.replace("''", "'"))
-            }
+            if (str.length == 0) appendLiteral('\'')
+            else appendLiteral(str.replace("''", "'"))
           }
           else if (cur == '[') {
             optionalStart
@@ -633,13 +609,8 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
           else {
             appendLiteral(cur)
           }
-        }
-        ({
           pos += 1;
-          pos
-        })
       }
-    }
   }
 
   /**
@@ -719,28 +690,18 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
 
   private def parseRule(cur: Char, count: Int, rule: DateTimeFieldRule[_], fraction: Int): Unit = {
     cur match {
-      case 'x' || 'y' =>
-        if (count == 2) {
-          appendValueReduced(rule, 2, 2000)
-        }
-        else if (count < 4) {
-          appendValue(rule, count, 10, SignStyle.NORMAL)
-        }
-        else {
-          appendValue(rule, count, 10, SignStyle.EXCEEDS_PAD)
-        }
+      case 'x' | 'y' =>
+        if (count == 2) appendValueReduced(rule, 2, 2000)
+        else if (count < 4) appendValue(rule, count, 10, SignStyle.NORMAL)
+        else appendValue(rule, count, 10, SignStyle.EXCEEDS_PAD)
       case 'M' =>
         count match {
-          case 1 =>
-            appendValue(rule)
-          case 2 =>
-            appendValue(rule, 2)
-          case 3 =>
-            appendText(rule, TextStyle.SHORT)
-          case _ =>
-            appendText(rule, TextStyle.FULL)
+          case 1 =>              appendValue(rule)
+          case 2 =>              appendValue(rule, 2)
+          case 3 =>              appendText(rule, TextStyle.SHORT)
+          case _ =>              appendText(rule, TextStyle.FULL)
         }
-      case 'a' || 'E' =>
+      case 'a' | 'E' =>
         if (count < 4) appendText(rule, TextStyle.SHORT)
         else appendText(rule, TextStyle.FULL)
       case _ =>
@@ -1229,9 +1190,9 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
   def appendText(rule: DateTimeFieldRule[_], textStyle: DateTimeFormatterBuilder.TextStyle): DateTimeFormatterBuilder = {
     checkNotNull(rule, "DateTimeFieldRule must not be null")
     checkNotNull(textStyle, "TextStyle must not be null")
-    var pp: TextPrinterParser = new TextPrinterParser(rule, textStyle)
+    val pp: TextPrinterParser = new TextPrinterParser(rule, textStyle)
     appendInternal(pp, pp)
-    return this
+    this
   }
 
   /**
@@ -1250,9 +1211,8 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    */
   def appendOptional(formatter: DateTimeFormatter): DateTimeFormatterBuilder = {
     checkNotNull(formatter, "DateTimeFormatter must not be null")
-    var cpp: CompositePrinterParser = formatter.toPrinterParser(true)
+    val cpp: CompositePrinterParser = formatter.toPrinterParser(true)
     appendInternal(cpp, cpp)
-    this
   }
 
   /**
@@ -1273,7 +1233,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
   def appendLocalized(dateStyle: DateTimeFormatterBuilder.FormatStyle, timeStyle: DateTimeFormatterBuilder.FormatStyle, chronology: Chronology): DateTimeFormatterBuilder = {
     checkNotNull(chronology, "Chronology must not be null")
     if (dateStyle != null || timeStyle != null) {
-      var pp: LocalizedPrinterParser = new LocalizedPrinterParser(dateStyle, timeStyle, chronology)
+      val pp: LocalizedPrinterParser = new LocalizedPrinterParser(dateStyle, timeStyle, chronology)
       appendInternal(pp, pp)
     }
     this

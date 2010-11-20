@@ -350,9 +350,7 @@ final class DateTimeFormatter private[format] (symbols: DateTimeFormatSymbols, p
    *
    * @return true if the formatter supports printing
    */
-  def isPrintSupported: Boolean = {
-    return printerParser.isPrintSupported
-  }
+  def isPrintSupported: Boolean = printerParser.isPrintSupported
 
     /**
      * Prints the calendrical using this formatter.
@@ -366,8 +364,8 @@ final class DateTimeFormatter private[format] (symbols: DateTimeFormatSymbols, p
      * @throws CalendricalPrintException if an error occurs during printing
      */
     def print(calendrical: Calendrical): String = {
-      var buf: StringBuilder = new StringBuilder(32)
-      print(calendrical, buf)
+      var buf: java.lang.StringBuilder = new java.lang.StringBuilder(32)
+      this.print(calendrical, buf)
       return buf.toString
     }
   }

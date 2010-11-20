@@ -39,7 +39,6 @@ import java.util.Map
 import javax.time.calendar.DateAdjusters
 import javax.time.calendar.DayOfWeek
 import javax.time.calendar.ISOChronology
-import javax.time.calendar.IllegalCalendarFieldValueException
 import javax.time.calendar.LocalDate
 import javax.time.calendar.LocalDateTime
 import javax.time.calendar.LocalTime
@@ -48,7 +47,6 @@ import javax.time.calendar.OffsetDateTime
 import javax.time.calendar.Period
 import javax.time.calendar.Year
 import javax.time.calendar.ZoneOffset
-import javax.time.calendar.zone.ZoneRulesBuilder.TimeDefinition
 
 /**
  * A mutable builder used to create all the rules for a historic time-zone.
@@ -99,24 +97,28 @@ object ZoneRulesBuilder {
      */
     def createDateTime(dateTime: LocalDateTime, standardOffset: ZoneOffset, wallOffset: ZoneOffset): OffsetDateTime = {
       this match {
-        case UTC =>
-          return OffsetDateTime.of(dateTime, ZoneOffset.UTC).withOffsetSameInstant(wallOffset)
-        case STANDARD =>
-          return OffsetDateTime.of(dateTime, standardOffset).withOffsetSameInstant(wallOffset)
-        case WALL =>
-          return OffsetDateTime.of(dateTime, wallOffset)
+        case TimeDefinition.UTC =>
+          OffsetDateTime.of(dateTime, ZoneOffset.UTC).withOffsetSameInstant(wallOffset)
+        case TimeDefinition.STANDARD =>
+          OffsetDateTime.of(dateTime, standardOffset).withOffsetSameInstant(wallOffset)
+        case TimeDefinition.WALL =>
+          OffsetDateTime.of(dateTime, wallOffset)
       }
     }
   }
 
-  /**The local date-time is expressed in terms of the standard offset. */
-  object STANDARD extends TimeDefinition
+  object TimeDefinition {
 
-  /**The local date-time is expressed in terms of the UTC offset. */
-  object UTC extends TimeDefinition
+    /**The local date-time is expressed in terms of the standard offset. */
+    object STANDARD extends TimeDefinition
 
-  /**The local date-time is expressed in terms of the wall offset. */
-  object WALL extends TimeDefinition
+    /**The local date-time is expressed in terms of the UTC offset. */
+    object UTC extends TimeDefinition
+
+    /**The local date-time is expressed in terms of the wall offset. */
+    object WALL extends TimeDefinition
+
+  }
 
   /**
    * The maximum date-time.
@@ -147,6 +149,9 @@ object ZoneRulesBuilder {
  */
 @SerialVersionUID(1L)
 class ZoneRulesBuilder {
+
+  import ZoneRulesBuilder._
+
   /**
    * Adds a multi-year transition rule to the current window.
    * <p>
@@ -255,14 +260,14 @@ class ZoneRulesBuilder {
    * @param timeDefinition the time definition, not null
    * @param savingAfter the savings amount, not null
    */
-  private[zone] class TZRule private[zone](private var year: Int,
-                                           private var month: MonthOfYear,
-                                           private var dayOfMonthIndicator: Int,
-                                           private var dayOfWeek: DayOfWeek,
-                                           private var time: LocalTime,
-                                           private var timeEndOfDay: Boolean,
-                                           private var timeDefinition: ZoneRulesBuilder.TimeDefinition,
-                                           private var savingAmount: Period)
+  private[zone] class TZRule(private var year: Int,
+                             private var month: MonthOfYear,
+                             private var dayOfMonthIndicator: Int,
+                             private var dayOfWeek: DayOfWeek,
+                             private var time: LocalTime,
+                             private var timeEndOfDay: Boolean,
+                             private var timeDefinition: ZoneRulesBuilder.TimeDefinition,
+                             private var savingAmount: Period)
     extends Comparable[ZoneRulesBuilder#TZRule] {
     /**
      * Converts this to a transition rule.
@@ -322,7 +327,7 @@ class ZoneRulesBuilder {
       return new ZoneOffsetTransition(dt, offsetAfter)
     }
 
-    /** { @inheritDoc }. */
+    /**{ @inheritDoc }. */
     def compareTo(other: ZoneRulesBuilder#TZRule): Int = {
       var cmp: Int = year - other.year
       cmp = (if (cmp == 0) month.compareTo(other.month) else cmp)

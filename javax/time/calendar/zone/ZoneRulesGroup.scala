@@ -205,6 +205,9 @@ object ZoneRulesGroup {
  * @throws CalendricalException if the group ID is invalid
  */
 final class ZoneRulesGroup(groupID: String) {
+
+  import ZoneRulesGroup._
+
   ZoneRules.checkNotNull(groupID, "Group ID must not be null")
   if (PATTERN_GROUP.matcher(groupID).matches == false) {
     throw new CalendricalException("Invalid group ID '" + groupID + "', must match regex [A-Za-z0-9._-]+")

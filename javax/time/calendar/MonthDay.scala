@@ -229,6 +229,8 @@ object MonthDay {
 @SerialVersionUID(-254395108L)
 final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical with CalendricalMatcher with DateAdjuster with Comparable[MonthDay] with Serializable {
 
+  import MonthDay._
+
   /**
    * Checks if the month-day extracted from the calendrical matches this.
    *

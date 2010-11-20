@@ -143,19 +143,13 @@ final class DateTimeFormatSymbols private(locale: Locale) {
     if (getZeroChar == '0') {
       return numericText
     }
-    var diff: Int = getZeroChar - '0'
-    var array: Array[Char] = numericText.toCharArray{
+    val diff: Int = getZeroChar - '0'
+    val array: Array[Char] = numericText.toCharArray
       var i: Int = 0
       while (i < array.length) {
-        {
           array(i) = (array(i) + diff).toChar
-        }
-        ({
           i += 1;
-          i
-        })
       }
-    }
     return new String(array)
   }
 
@@ -166,9 +160,7 @@ final class DateTimeFormatSymbols private(locale: Locale) {
    *
    * @return the character for zero
    */
-  def getZeroChar: Char = {
-    return zeroChar
-  }
+  def getZeroChar: Char = zeroChar
 
   /**
    * Gets the locale to use for printing and parsing text.
@@ -178,9 +170,7 @@ final class DateTimeFormatSymbols private(locale: Locale) {
    *
    * @return the character for zero
    */
-  def getLocale: Locale = {
-    return locale
-  }
+  def getLocale: Locale = locale
 
   /**
    * Gets the character that represents the specified digit.
@@ -191,9 +181,7 @@ final class DateTimeFormatSymbols private(locale: Locale) {
    * @param digit the single digit to convert to a character, from 0 to 9
    * @return the character for the digit
    */
-  def getDigitChar(digit: Int): Char = {
-    return (digit + zeroChar).asInstanceOf[Char]
-  }
+  def getDigitChar(digit: Int): Char = (digit + zeroChar).toChar
 
   /**
    * The decimal point character.
@@ -212,9 +200,7 @@ final class DateTimeFormatSymbols private(locale: Locale) {
    *
    * @return the character for the negative sign
    */
-  def getNegativeSignChar: Char = {
-    return negativeSignChar
-  }
+  def getNegativeSignChar: Char = negativeSignChar
 
   /**
    * Gets the character that represents the positive sign.
@@ -223,7 +209,5 @@ final class DateTimeFormatSymbols private(locale: Locale) {
    *
    * @return the character for the positive sign
    */
-  def getPositiveSignChar: Char = {
-    return positiveSignChar
-  }
+  def getPositiveSignChar: Char = positiveSignChar
 }

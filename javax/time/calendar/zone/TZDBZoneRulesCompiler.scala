@@ -133,7 +133,7 @@ object TZDBZoneRulesCompiler {
       for (version <- allBuiltZones.keySet) {
         out.writeShort(allBuiltZones.get(version).size)
         for (entry <- allBuiltZones.get(version).entrySet) {
-          var regionIndex: Int = Arrays.binarySearch(regionArray, entry.getKey)
+          var regionIndex: Int = Arrays.binarySearch(regionArray.asInstanceOf[Array[AnyRef]], entry.getKey)
           var rulesIndex: Int = rulesList.indexOf(entry.getValue)
           out.writeShort(regionIndex)
           out.writeShort(rulesIndex)
@@ -296,7 +296,7 @@ object TZDBZoneRulesCompiler {
         }
       }
       if (srcFiles.isEmpty) {
-        continue //todo: continue is not supported
+        //continue //todo: continue is not supported
       }
       var loopVersion: String = srcDir.getName
       var compiler: TZDBZoneRulesCompiler = new TZDBZoneRulesCompiler(loopVersion, srcFiles, verbose)
@@ -489,13 +489,13 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
       pos = 1
     }
     var pp: ParsePosition = new ParsePosition(pos)
-    var cal: DateTimeParseContext = TIME_PARSER.parse(str, pp)
+    var cal: DateTimeParseContext = TZDBZoneRulesCompiler.TIME_PARSER.parse(str, pp)
     if (pp.getErrorIndex >= 0) {
       throw new IllegalArgumentException(str)
     }
-    var hour: Int = cal.getParsed(ISOChronology.hourOfDayRule).asInstanceOf[Integer]
-    var min: Integer = cal.getParsed(ISOChronology.minuteOfHourRule).asInstanceOf[Integer]
-    var sec: Integer = cal.getParsed(ISOChronology.secondOfMinuteRule).asInstanceOf[Integer]
+    var hour: Int = cal.getParsed(ISOChronology.hourOfDayRule).asInstanceOf[Int]
+    var min: Int = cal.getParsed(ISOChronology.minuteOfHourRule).asInstanceOf[Int]
+    var sec: Int = cal.getParsed(ISOChronology.secondOfMinuteRule).asInstanceOf[Int]
     var secs: Int = hour * 60 * 60 + (if (min != null) min else 0) * 60 + (if (sec != null) sec else 0)
     if (pos == 1) {
       secs = -secs
@@ -578,7 +578,7 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
             line = line.substring(0, index)
           }
           if (line.trim.length == 0) {
-            continue //todo: continue is not supported
+            //continue //todo: continue is not supported
           }
           var st: StringTokenizer = new StringTokenizer(line, " \t")
           if (openZone != null && Character.isWhitespace(line.charAt(0)) && st.hasMoreTokens) {
@@ -729,9 +729,9 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
 
   private def parseTimeDefinition(c: Char): ZoneRulesBuilder.TimeDefinition = {
     c match {
-      case 's' || 'S' => return TimeDefinition.STANDARD
-      case 'u' || 'U' || 'g' || 'G' || 'z' || 'Z' => return TimeDefinition.UTC
-      case 'w' || 'W' || _ => return TimeDefinition.WALL
+      case 's' | 'S' => return TimeDefinition.STANDARD
+      case 'u' | 'U' | 'g' | 'G' | 'z' | 'Z' => return TimeDefinition.UTC
+      case 'w' | 'W' | _ => return TimeDefinition.WALL
     }
   }
 

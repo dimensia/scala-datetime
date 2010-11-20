@@ -126,6 +126,7 @@ object DayOfWeek {
    */
   def of(dayOfWeek: Int): DayOfWeek = {
     dayOfWeek match {
+      case 0 => SUNDAY //Is that a good solution or should we better fix roll to return 7 instead of 0?
       case 1 => MONDAY
       case 2 => TUESDAY
       case 3 => WEDNESDAY
@@ -139,6 +140,8 @@ object DayOfWeek {
 }
 
 sealed abstract class DayOfWeek(val ordinal: Int) extends Calendrical {
+
+  import DayOfWeek._
 
   /**
    * Gets the next day-of-week.
@@ -171,7 +174,7 @@ sealed abstract class DayOfWeek(val ordinal: Int) extends Calendrical {
    * @param days the days to roll by, positive or negative
    * @return the resulting day-of-week, never null
    */
-  def roll(days: Int): DayOfWeek = values((ordinal + (days % 7 + 7)) % 7)
+  def roll(days: Int): DayOfWeek = of((ordinal + (days % 7 + 7)) % 7)
 
   /**
    * Gets the full textual representation of this day-of-week, such as 'Monday' or 'Friday'.
@@ -264,7 +267,7 @@ sealed abstract class DayOfWeek(val ordinal: Int) extends Calendrical {
    * @return the value for the rule, null if the value cannot be returned
    */
   def get[T](rule: CalendricalRule[T]): T = {
-    if (rule.getReifiedType != classOf[DayOfWeek]) null
+    if (rule.getReifiedType != classOf[DayOfWeek]) _ //null
     else rule.reify(this)
   }
 

@@ -66,14 +66,14 @@ object OffsetTime {
    * @return the offset time, never null
    */
   def ofInstant(instantProvider: InstantProvider, offset: ZoneOffset): OffsetTime = {
-    var instant: Instant = Instant.of(instantProvider)
+    val instant: Instant = Instant.of(instantProvider)
     ISOChronology.checkNotNull(offset, "ZoneOffset must not be null")
     var secsOfDay: Long = instant.getEpochSeconds % ISOChronology.SECONDS_PER_DAY
     secsOfDay = (secsOfDay + offset.getAmountSeconds) % ISOChronology.SECONDS_PER_DAY
     if (secsOfDay < 0) {
       secsOfDay += ISOChronology.SECONDS_PER_DAY
     }
-    var time: LocalTime = LocalTime.ofSecondOfDay(secsOfDay, instant.getNanoOfSecond)
+    val time: LocalTime = LocalTime.ofSecondOfDay(secsOfDay, instant.getNanoOfSecond)
     new OffsetTime(time, offset)
   }
 
@@ -89,7 +89,7 @@ object OffsetTime {
    * @throws IllegalCalendarFieldValueException if the value of any field is out of range
    */
   def of(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int, offset: ZoneOffset): OffsetTime = {
-    var time: LocalTime = LocalTime.of(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
+    val time: LocalTime = LocalTime.of(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
     new OffsetTime(time, offset)
   }
 
@@ -101,7 +101,7 @@ object OffsetTime {
    * @return the offset time, never null
    */
   def of(timeProvider: TimeProvider, offset: ZoneOffset): OffsetTime = {
-    var time: LocalTime = LocalTime.of(timeProvider)
+    val time: LocalTime = LocalTime.of(timeProvider)
     new OffsetTime(time, offset)
   }
 
@@ -119,11 +119,11 @@ object OffsetTime {
 
   @SerialVersionUID(1L)
   private[calendar] final class Rule private
-    extends CalendricalRule[OffsetTime](classOf[OffsetTime], ISOChronology.INSTANCE, "OffsetTime", ISOChronology.periodNanos, ISOChronology.periodDays)
+    extends CalendricalRule[OffsetTime](classOf[OffsetTime], ISOChronology, "OffsetTime", ISOChronology.periodNanos, ISOChronology.periodDays)
     with Serializable {
 
     protected override def derive(calendrical: Calendrical): OffsetTime = {
-      var odt: OffsetDateTime = calendrical.get(OffsetDateTime.rule)
+      val odt: OffsetDateTime = calendrical.get(OffsetDateTime.rule)
       return if (odt != null) odt.toOffsetTime else null
     }
 
@@ -159,7 +159,7 @@ object OffsetTime {
    * @throws IllegalCalendarFieldValueException if the value of any field is out of range
    */
   def of(hourOfDay: Int, minuteOfHour: Int, offset: ZoneOffset): OffsetTime = {
-    var time: LocalTime = LocalTime.of(hourOfDay, minuteOfHour)
+    val time: LocalTime = LocalTime.of(hourOfDay, minuteOfHour)
     new OffsetTime(time, offset)
   }
 
@@ -228,7 +228,7 @@ object OffsetTime {
    * @throws IllegalCalendarFieldValueException if the value of any field is out of range
    */
   def of(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, offset: ZoneOffset): OffsetTime = {
-    var time: LocalTime = LocalTime.of(hourOfDay, minuteOfHour, secondOfMinute)
+    val time: LocalTime = LocalTime.of(hourOfDay, minuteOfHour, secondOfMinute)
     new OffsetTime(time, offset)
   }
 }
@@ -267,8 +267,8 @@ final class OffsetTime private(time: LocalTime, offset: ZoneOffset)
    * @throws IllegalCalendarFieldValueException if the second value is invalid
    */
   def withSecondOfMinute(secondOfMinute: Int): OffsetTime = {
-    var newTime: LocalTime = time.withSecondOfMinute(secondOfMinute)
-    return if (newTime == this.time) this else new OffsetTime(newTime, offset)
+    val newTime: LocalTime = time.withSecondOfMinute(secondOfMinute)
+    if (newTime == this.time) this else new OffsetTime(newTime, offset)
   }
 
   /**
@@ -287,8 +287,8 @@ final class OffsetTime private(time: LocalTime, offset: ZoneOffset)
    * @throws CalendricalException if the specified period cannot be converted to a   { @code Period }
    */
   def plus(periodProvider: PeriodProvider): OffsetTime = {
-    var newTime: LocalTime = time.plus(periodProvider)
-    return if (newTime == this.time) this else new OffsetTime(newTime, offset)
+    val newTime: LocalTime = time.plus(periodProvider)
+    if (newTime == this.time) this else new OffsetTime(newTime, offset)
   }
 
   /**
@@ -300,8 +300,8 @@ final class OffsetTime private(time: LocalTime, offset: ZoneOffset)
    * @return an { @code OffsetTime } based on this time with the hours subtracted, never null
    */
   def minusHours(hours: Int): OffsetTime = {
-    var newTime: LocalTime = time.minusHours(hours)
-    return if (newTime == this.time) this else new OffsetTime(newTime, offset)
+    val newTime: LocalTime = time.minusHours(hours)
+    if (newTime == this.time) this else new OffsetTime(newTime, offset)
   }
 
   /**
@@ -325,8 +325,8 @@ final class OffsetTime private(time: LocalTime, offset: ZoneOffset)
    * @throws IllegalArgumentException if the adjuster returned null
    */
   def `with` (adjuster: TimeAdjuster): OffsetTime = {
-    var newTime: LocalTime = time.`with`(adjuster)
-    return if (newTime == this.time) this else new OffsetTime(newTime, offset)
+    val newTime: LocalTime = time.`with`(adjuster)
+    if (newTime == this.time) this else new OffsetTime(newTime, offset)
   }
 
   /**
@@ -340,8 +340,8 @@ final class OffsetTime private(time: LocalTime, offset: ZoneOffset)
    * @return a new updated OffsetTime, never null
    */
   def withTime(timeProvider: TimeProvider): OffsetTime = {
-    var localTime: LocalTime = LocalTime.of(timeProvider)
-    return if (localTime.equals(this.time)) this else new OffsetTime(localTime, offset)
+    val localTime: LocalTime = LocalTime.of(timeProvider)
+    if (localTime.equals(this.time)) this else new OffsetTime(localTime, offset)
   }
 
   /**
@@ -368,8 +368,8 @@ final class OffsetTime private(time: LocalTime, offset: ZoneOffset)
     if (offset.equals(this.offset)) {
       return this
     }
-    var difference: Int = offset.getAmountSeconds - this.offset.getAmountSeconds
-    var adjusted: LocalTime = time.plusSeconds(difference)
+    val difference: Int = offset.getAmountSeconds - this.offset.getAmountSeconds
+    val adjusted: LocalTime = time.plusSeconds(difference)
     return new OffsetTime(adjusted, offset)
   }
 
@@ -389,8 +389,8 @@ final class OffsetTime private(time: LocalTime, offset: ZoneOffset)
    * @return an { @code OffsetTime } based on this time with the seconds added, never null
    */
   def plusSeconds(seconds: Int): OffsetTime = {
-    var newTime: LocalTime = time.plusSeconds(seconds)
-    return if (newTime == this.time) this else new OffsetTime(newTime, offset)
+    val newTime: LocalTime = time.plusSeconds(seconds)
+    if (newTime == this.time) this else new OffsetTime(newTime, offset)
   }
 
   /**
@@ -410,8 +410,8 @@ final class OffsetTime private(time: LocalTime, offset: ZoneOffset)
    * @throws IllegalCalendarFieldValueException if the nanos value is invalid
    */
   def withNanoOfSecond(nanoOfSecond: Int): OffsetTime = {
-    var newTime: LocalTime = time.withNanoOfSecond(nanoOfSecond)
-    return if (newTime == this.time) this else new OffsetTime(newTime, offset)
+    val newTime: LocalTime = time.withNanoOfSecond(nanoOfSecond)
+    if (newTime == this.time) this else new OffsetTime(newTime, offset)
   }
 
   /**
@@ -423,8 +423,8 @@ final class OffsetTime private(time: LocalTime, offset: ZoneOffset)
    * @return an { @code OffsetTime } based on this time with the minutes added, never null
    */
   def plusMinutes(minutes: Int): OffsetTime = {
-    var newTime: LocalTime = time.plusMinutes(minutes)
-    return if (newTime == this.time) this else new OffsetTime(newTime, offset)
+    val newTime: LocalTime = time.plusMinutes(minutes)
+    if (newTime == this.time) this else new OffsetTime(newTime, offset)
   }
 
   /**
@@ -432,9 +432,7 @@ final class OffsetTime private(time: LocalTime, offset: ZoneOffset)
    *
    * @return the ISO chronology, never null
    */
-  def getChronology: ISOChronology = {
-    return ISOChronology.INSTANCE
-  }
+  def getChronology: ISOChronology = ISOChronology
 
   /**
    * Is this time equal to the specified time.
@@ -447,7 +445,7 @@ final class OffsetTime private(time: LocalTime, offset: ZoneOffset)
   override def equals(other: AnyRef): Boolean = {
     if (this == other) true
     else if (other.isInstanceOf[OffsetTime]) {
-      var zonedTime: OffsetTime = other.asInstanceOf[OffsetTime]
+      val zonedTime: OffsetTime = other.asInstanceOf[OffsetTime]
       time.equals(zonedTime.time) && offset.equals(zonedTime.offset)
     }
     else false
@@ -500,8 +498,8 @@ final class OffsetTime private(time: LocalTime, offset: ZoneOffset)
     if (offset.equals(other.offset)) {
       return time.compareTo(other.time)
     }
-    var thisUTC: LocalTime = time.plusSeconds(-offset.getAmountSeconds)
-    var otherUTC: LocalTime = other.time.plusSeconds(-other.offset.getAmountSeconds)
+    val thisUTC: LocalTime = time.plusSeconds(-offset.getAmountSeconds)
+    val otherUTC: LocalTime = other.time.plusSeconds(-other.offset.getAmountSeconds)
     var compare: Int = thisUTC.compareTo(otherUTC)
     if (compare == 0) {
       compare = time.compareTo(other.time)
@@ -522,7 +520,7 @@ final class OffsetTime private(time: LocalTime, offset: ZoneOffset)
    * @param calendrical the calendrical to match, not null
    * @return true if the calendrical matches, false otherwise
    */
-  override def matchesCalendrical(calendrical: Calendrical): Boolean = this.equals(calendrical.get(rule))
+  override def matchesCalendrical(calendrical: Calendrical): Boolean = this.equals(calendrical.get(OffsetTime.rule))
 
   /**
    * Is this time before the specified time.
@@ -542,7 +540,7 @@ final class OffsetTime private(time: LocalTime, offset: ZoneOffset)
    * @return an { @code OffsetTime } based on this time with the nanoseconds added, never null
    */
   def plusNanos(nanos: Int): OffsetTime = {
-    var newTime: LocalTime = time.plusNanos(nanos)
+    val newTime: LocalTime = time.plusNanos(nanos)
     if (newTime == this.time) this else new OffsetTime(newTime, offset)
   }
 
@@ -555,7 +553,7 @@ final class OffsetTime private(time: LocalTime, offset: ZoneOffset)
    * @return an { @code OffsetTime } based on this time with the seconds subtracted, never null
    */
   def minusSeconds(seconds: Int): OffsetTime = {
-    var newTime: LocalTime = time.minusSeconds(seconds)
+    val newTime: LocalTime = time.minusSeconds(seconds)
     if (newTime == this.time) this else new OffsetTime(newTime, offset)
   }
 
@@ -577,7 +575,7 @@ final class OffsetTime private(time: LocalTime, offset: ZoneOffset)
    * @return an { @code OffsetTime } based on this time with the nanoseconds subtracted, never null
    */
   def minusNanos(nanos: Int): OffsetTime = {
-    var newTime: LocalTime = time.minusNanos(nanos)
+    val newTime: LocalTime = time.minusNanos(nanos)
     if (newTime == this.time) this else new OffsetTime(newTime, offset)
   }
 
@@ -608,7 +606,7 @@ final class OffsetTime private(time: LocalTime, offset: ZoneOffset)
    * @return an { @code OffsetTime } based on this time with the hours added, never null
    */
   def plusHours(hours: Int): OffsetTime = {
-    var newTime: LocalTime = time.plusHours(hours)
+    val newTime: LocalTime = time.plusHours(hours)
     if (newTime == this.time) this else new OffsetTime(newTime, offset)
   }
 
@@ -622,7 +620,7 @@ final class OffsetTime private(time: LocalTime, offset: ZoneOffset)
    * @throws IllegalCalendarFieldValueException if the minute value is invalid
    */
   def withMinuteOfHour(minuteOfHour: Int): OffsetTime = {
-    var newTime: LocalTime = time.withMinuteOfHour(minuteOfHour)
+    val newTime: LocalTime = time.withMinuteOfHour(minuteOfHour)
     if (newTime == this.time) this else new OffsetTime(newTime, offset)
   }
 
@@ -636,7 +634,7 @@ final class OffsetTime private(time: LocalTime, offset: ZoneOffset)
    * @throws IllegalCalendarFieldValueException if the hour value is invalid
    */
   def withHourOfDay(hourOfDay: Int): OffsetTime = {
-    var newTime: LocalTime = time.withHourOfDay(hourOfDay)
+    val newTime: LocalTime = time.withHourOfDay(hourOfDay)
     if (newTime == this.time) this else new OffsetTime(newTime, offset)
   }
 
@@ -673,7 +671,7 @@ final class OffsetTime private(time: LocalTime, offset: ZoneOffset)
    * @throws CalendricalException if the specified period cannot be converted to a   { @code Period }
    */
   def minus(periodProvider: PeriodProvider): OffsetTime = {
-    var newTime: LocalTime = time.minus(periodProvider)
+    val newTime: LocalTime = time.minus(periodProvider)
     if (newTime == this.time) this else new OffsetTime(newTime, offset)
   }
 
@@ -713,7 +711,7 @@ final class OffsetTime private(time: LocalTime, offset: ZoneOffset)
    * @return an { @code OffsetTime } based on this time with the minutes subtracted, never null
    */
   def minusMinutes(minutes: Int): OffsetTime = {
-    var newTime: LocalTime = time.minusMinutes(minutes)
+    val newTime: LocalTime = time.minusMinutes(minutes)
     if (newTime == this.time) this else new OffsetTime(newTime, offset)
   }
 }

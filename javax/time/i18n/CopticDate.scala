@@ -172,8 +172,8 @@ object CopticDate {
   private[i18n] object Rule extends Rule
 
   @SerialVersionUID(1L)
-  private[i18n] final class Rule private
-    extends CalendricalRule[CopticDate](classOf[CopticDate], CopticChronology.INSTANCE, "CopticDate", CopticChronology.periodDays, null)
+  private[i18n] sealed class Rule
+    extends CalendricalRule[CopticDate](classOf[CopticDate], CopticChronology, "CopticDate", CopticChronology.periodDays, null)
     with Serializable {
     protected override def merge(merger: CalendricalMerger): Unit = {
       val cd: CopticDate = merger.getValue(this)
@@ -204,8 +204,11 @@ object CopticDate {
  * @param day the day-of-month to represent, caller calculated
  */
 @SerialVersionUID(1L)
-final class CopticDate private(epochDays: Int, @transient year: Int, @transient month: Int, @transient day: Int)
+final class CopticDate private(val epochDays: Int, @transient year: Int, @transient month: Int, @transient day: Int)
   extends DateProvider with Calendrical with Comparable[CopticDate] with Serializable {
+
+  import CopticDate._
+
   /**
    * Is this instance before the specified one.
    *

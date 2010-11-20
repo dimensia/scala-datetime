@@ -63,10 +63,10 @@ object ResourceZoneRulesDataProvider {
    * ResourceZoneRulesVersion is thread-safe and immutable.
    */
   /**Constructor. */
-  private[zone] class ResourceZoneRulesVersion private[zone](provider: ResourceZoneRulesDataProvider,
-                                                             versionID: String,
-                                                             regions: Array[String],
-                                                             ruleIndices: Array[Short])
+  private[zone] class ResourceZoneRulesVersion (val provider: ResourceZoneRulesDataProvider,
+                                                            val versionID: String,
+                                                            val regionArray: Array[String],
+                                                            val ruleIndices: Array[Short])
     extends ZoneRulesVersion {
     def getZoneRules(regionID: String): ZoneRules = {
       var index: Int = Arrays.binarySearch(regionArray.asInstanceOf[Array[Object]], regionID)
@@ -83,14 +83,11 @@ object ResourceZoneRulesDataProvider {
       }
     }
 
-    def isRegionID(regionID: String): Boolean = Arrays.binarySearch(regionArray, regionID) >= 0
+    def isRegionID(regionID: String): Boolean = Arrays.binarySearch(regionArray.asInstanceOf[Array[AnyRef]], regionID) >= 0
 
     def getRegionIDs: Set[String] = Collections.unmodifiableSet(new HashSet[String](Arrays.asList(regionArray)))
 
     def getVersionID: String = versionID
-
-    /**Region IDs. */
-    private final val regionArray: Array[String] = null
 
     override def toString: String = versionID
 

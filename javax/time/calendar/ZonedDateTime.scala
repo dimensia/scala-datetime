@@ -80,8 +80,8 @@ object ZonedDateTime {
     ISOChronology.checkNotNull(dateTime, "LocalDateTime must not be null")
     ISOChronology.checkNotNull(zone, "TimeZone must not be null")
     ISOChronology.checkNotNull(resolver, "ZoneResolver must not be null")
-    var offsetDT: OffsetDateTime = resolver.resolve(zone, dateTime, oldDateTime)
-    return new ZonedDateTime(offsetDT, zone)
+    val offsetDT: OffsetDateTime = resolver.resolve(zone, dateTime, oldDateTime)
+    new ZonedDateTime(offsetDT, zone)
   }
 
   /**
@@ -89,7 +89,7 @@ object ZonedDateTime {
    *
    * @return the rule for the date-time, never null
    */
-  def rule: CalendricalRule[ZoneOffset] = Rule.INSTANCE
+  def rule: CalendricalRule[ZoneOffset] = Rule
 
   /**
    * Obtains the current date-time from the specified clock.
@@ -482,7 +482,7 @@ object ZonedDateTime {
 
   @SerialVersionUID(1L)
   private[calendar] final class Rule private
-    extends CalendricalRule[ZonedDateTime](classOf[ZonedDateTime], ISOChronology.INSTANCE, "ZonedDateTime", ISOChronology.periodNanos, null)
+    extends CalendricalRule[ZonedDateTime](classOf[ZonedDateTime], ISOChronology, "ZonedDateTime", ISOChronology.periodNanos, null)
     with Serializable {
     private def readResolve: AnyRef = Rule
   }
@@ -499,6 +499,9 @@ object ZonedDateTime {
 @SerialVersionUID(-456761901L)
 final class ZonedDateTime private(dateTime: OffsetDateTime, zone: TimeZone)
   extends InstantProvider with DateTimeProvider with Calendrical with CalendricalMatcher with Comparable[ZonedDateTime] with Serializable {
+
+  import ZonedDateTime._
+
   /**
    * Converts this   { @code ZonedDateTime } to a   { @code LocalTime }.
    *
@@ -882,7 +885,7 @@ final class ZonedDateTime private(dateTime: OffsetDateTime, zone: TimeZone)
    *
    * @return the ISO chronology, never null
    */
-  def getChronology: ISOChronology = ISOChronology.INSTANCE
+  def getChronology: ISOChronology = ISOChronology
 
   /**
    * Checks if the instant of this date-time is equal to that of the specified date-time.

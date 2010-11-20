@@ -168,16 +168,11 @@ object DateTimeFieldRule {
         {
           var i: Int = lengthsStart
           while (i >= 0) {
-            {
-              var value: Integer = insensitiveTextValueMap.get(parseText.substring(0, lengths(i)))
+              var value: Int = insensitiveTextValueMap.get(parseText.substring(0, lengths(i)))
               if (value != null) {
-                return ((lengths(i).asInstanceOf[Long]) << 32) + value
+                return ((lengths(i).toLong) << 32) + value
               }
-            }
-            ({
               i -= 1;
-              i
-            })
           }
         }
         parseText = parseText.toLowerCase(locale)
@@ -185,16 +180,11 @@ object DateTimeFieldRule {
         {
           var i: Int = lengthsStart
           while (i >= 0) {
-            {
-              var value: Integer = insensitiveTextValueMap.get(parseText.substring(0, lengths(i)))
+              var value: Int = insensitiveTextValueMap.get(parseText.substring(0, lengths(i)))
               if (value != null) {
-                return ((lengths(i).asInstanceOf[Long]) << 32) + value
+                return ((lengths(i).toLong) << 32) + value
               }
-            }
-            ({
               i -= 1;
-              i
-            })
           }
         }
       }
@@ -202,16 +192,11 @@ object DateTimeFieldRule {
         {
           var i: Int = lengthsStart
           while (i >= 0) {
-            {
-              var value: Integer = textValueMap.get(parseText.substring(0, lengths(i)))
+              var value: Int = textValueMap.get(parseText.substring(0, lengths(i)))
               if (value != null) {
-                return ((lengths(i).asInstanceOf[Long]) << 32) + value
+                return ((lengths(i).toLong) << 32) + value
               }
-            }
-            ({
               i -= 1;
-              i
-            })
           }
         }
       }
@@ -284,6 +269,8 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
                                               hasText: Boolean)
   extends CalendricalRule[T](reifiedClass, chronology, name, periodUnit, periodRange) {
 
+  import DateTimeFieldRule._
+
   /**
    * Constructor.
    *
@@ -318,7 +305,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
   def convertValueToInt(value: T): Int = {
     //FIXME
     if (value.isInstanceOf[Enum[_]]) (value.asInstanceOf[Enum[_]]).ordinal + getMinimumValue
-    else value.asInstanceOf[Integer]
+    else value.asInstanceOf[Int]
   }
 
   /**
@@ -512,7 +499,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
     var textStoreByStyle: EnumMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore] = new EnumMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore](classOf[DateTimeFormatterBuilder.TextStyle])
     createTextStores(textStoreByStyle, locale)
     textStoreByStyle = new EnumMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore](textStoreByStyle)
-    textStores.put(locale, new SoftReference[EnumMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore]](textStoreByStyle))
+    textStores.put(locale, new SoftReference[Map[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore]](textStoreByStyle))
     return textStoreByStyle.get(textStyle)
   }
 
@@ -603,8 +590,8 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
 
   /**The cached text for this rule. */
   @transient
-  private lazy val textStores: ConcurrentMap[Locale, SoftReference[EnumMap[Any, Any]]] =
-    (if (hasText) new ConcurrentHashMap[Locale, SoftReference[EnumMap[Any, Any]]] else null)
+  private lazy val textStores: ConcurrentMap[Locale, SoftReference[Map[Any, Any]]] =
+    (if (hasText) new ConcurrentHashMap[Locale, SoftReference[Map[Any, Any]]] else null)
 
   /**
    * Converts the   { @code int } to a typed value of the rule.
@@ -623,9 +610,9 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
   def convertIntToValue(value: Int): T = {
     //FIXME
     checkValue(value)
-    if (classOf[Enum].isAssignableFrom(getReifiedType)) {
-      return getReifiedType.getEnumConstants(value - getMinimumValue)
-    }
+//    if (classOf[Enum].isAssignableFrom(getReifiedType)) {        //We don't have Enums anymore...
+//      return getReifiedType.getEnumConstants(value - getMinimumValue)
+//    }
     return reify(value)
   }
 

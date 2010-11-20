@@ -34,27 +34,34 @@ package javax.time.calendar.format
 import java.io.IOException
 import javax.time.calendar.Calendrical
 
-sealed class CaseSensitivePrinterParser extends DateTimePrinter with DateTimeParser {
-  /** { @inheritDoc }*/
-  override def parse(context: DateTimeParseContext, parseText: String, position: Int): Int = {
-    context.setCaseSensitive(this == SENSITIVE)
-    return position
-  }
+object CaseSensitivePrinterParser {
+  /**
+   * Enumeration to set the case sensitivity parse style.
+   *
+   * @author Stephen Colebourne
+   */
+  object SENSITIVE extends CaseSensitivePrinterParser
 
-  /** { @inheritDoc }*/
-  override def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = { }
+  object INSENSITIVE extends CaseSensitivePrinterParser
 
-  /** { @inheritDoc }*/
-  override def toString: String = "ParseCaseSensitive(" + (this == SENSITIVE) + ")"
-
-  /** { @inheritDoc }*/
-  override def isPrintDataAvailable(calendrical: Calendrical): Boolean = true
 }
 
-/**
- * Enumeration to set the case sensitivity parse style.
- *
- * @author Stephen Colebourne
- */
-object SENSITIVE extends CaseSensitivePrinterParser
-object INSENSITIVE extends CaseSensitivePrinterParser
+sealed class CaseSensitivePrinterParser extends DateTimePrinter with DateTimeParser {
+
+  import CaseSensitivePrinterParser._
+
+  /**{ @inheritDoc }*/
+  override def parse(context: DateTimeParseContext, parseText: String, position: Int): Int = {
+    context.setCaseSensitive(this == SENSITIVE)
+    position
+  }
+
+  /**{ @inheritDoc }*/
+  override def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = {}
+
+  /**{ @inheritDoc }*/
+  override def toString: String = "ParseCaseSensitive(" + (this == SENSITIVE) + ")"
+
+  /**{ @inheritDoc }*/
+  override def isPrintDataAvailable(calendrical: Calendrical): Boolean = true
+}

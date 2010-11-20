@@ -328,7 +328,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    * <p>
    * This method queries the value of the specified calendrical rule.
    * If the value cannot be returned for the rule from this year-month then
-   * { @code null } will be returned.
+   * {@code null} will be returned.
    *
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
@@ -356,7 +356,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    * @param calendrical the calendrical to match, not null
    * @return true if the calendrical matches, false otherwise
    */
-  override def matchesCalendrical(calendrical: Calendrical): Boolean = this.equals(calendrical.get(rule))
+  override def matchesCalendrical(calendrical: Calendrical): Boolean = this.equals(calendrical.get(YearMonth.rule))
 
   /**
    * Outputs this year-month as a   { @code String } using the formatter.
@@ -528,7 +528,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
       return true
     }
     if (other.isInstanceOf[YearMonth]) {
-      var otherYM: YearMonth = other.asInstanceOf[YearMonth]
+      val otherYM: YearMonth = other.asInstanceOf[YearMonth]
       return year == otherYM.year && month == otherYM.month
     }
     return false
@@ -545,7 +545,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    */
   def plusYears(years: Long): YearMonth = {
     if (years == 0) return this
-    var newYear: Int = ISOChronology.yearRule.checkValue(year + years)
+    val newYear: Int = ISOChronology.yearRule.checkValue(year + years)
     return `with`(newYear, month)
   }
 
@@ -562,10 +562,10 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
     if (months == 0) {
       return this
     }
-    var monthCount: Long = year * 12L + (month.getValue - 1)
-    var calcMonths: Long = monthCount + months
-    var newYear: Int = ISOChronology.yearRule.checkValue(MathUtils.floorDiv(calcMonths, 12))
-    var newMonth: MonthOfYear = MonthOfYear.of(MathUtils.floorMod(calcMonths, 12) + 1)
+    val monthCount: Long = year * 12L + (month.getValue - 1)
+    val calcMonths: Long = monthCount + months
+    val newYear: Int = ISOChronology.yearRule.checkValue(MathUtils.floorDiv(calcMonths, 12))
+    val newMonth: MonthOfYear = MonthOfYear.of(MathUtils.floorMod(calcMonths, 12) + 1)
     return `with`(newYear, newMonth)
   }
 
@@ -639,10 +639,10 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
     if (months == 0) {
       return this
     }
-    var monthCount: Long = year * 12L + (month.getValue - 1)
-    var calcMonths: Long = monthCount - months
-    var newYear: Int = ISOChronology.yearRule.checkValue(MathUtils.floorDiv(calcMonths, 12))
-    var newMonth: MonthOfYear = MonthOfYear.of(MathUtils.floorMod(calcMonths, 12) + 1)
+    val monthCount: Long = year * 12L + (month.getValue - 1)
+    val calcMonths: Long = monthCount - months
+    val newYear: Int = ISOChronology.yearRule.checkValue(MathUtils.floorDiv(calcMonths, 12))
+    val newMonth: MonthOfYear = MonthOfYear.of(MathUtils.floorMod(calcMonths, 12) + 1)
     return `with`(newYear, newMonth)
   }
 }

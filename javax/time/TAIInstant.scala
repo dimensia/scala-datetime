@@ -72,7 +72,7 @@ object TAIInstant {
   /**
    * Constant for nanos per second.
    */
-  private final val NANOS_PER_SECOND: Int = 1000000000
+  private val NANOS_PER_SECOND: Int = 1000000000
   /**
    * Obtains an instance of  { @code TAIInstant } from an  { @code Instant }
    * using the system default leap second rules.

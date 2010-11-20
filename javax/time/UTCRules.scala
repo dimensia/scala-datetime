@@ -31,8 +31,6 @@
  */
 package javax.time
 
-import java.util.ConcurrentModificationException
-
 /**
  * Rules defining the UTC time-scale, notably when leap seconds occur.
  * <p>
@@ -101,7 +99,7 @@ object UTCRules extends UTCRules{
   protected[time] val OFFSET_MJD_TAI: Int = 36204
 }
 
-abstract class UTCRules protected {
+abstract class UTCRules protected[time] {
 
   import UTCRules._
 
@@ -194,7 +192,7 @@ abstract class UTCRules protected {
    * @return the converted UTC instant, not null
    * @throws ArithmeticException if the capacity is exceeded
    */
-  protected def convertToUTC(taiInstant: TAIInstant): UTCInstant
+  protected[time] def convertToUTC(taiInstant: TAIInstant): UTCInstant
 
   /**
    * Converts a   { @code UTCInstant } to an   { @code Instant }.
@@ -216,7 +214,7 @@ abstract class UTCRules protected {
    * @return the converted instant, not null
    * @throws ArithmeticException if the capacity is exceeded
    */
-  protected def convertToInstant(utcInstant: UTCInstant): Instant = {
+  protected[time] def convertToInstant(utcInstant: UTCInstant): Instant = {
     var mjd: Long = utcInstant.getModifiedJulianDays
     var utcNanos: Long = utcInstant.getNanoOfDay
     var epochDay: Long = MathUtils.safeSubtract(mjd, OFFSET_MJD_EPOCH)
@@ -249,7 +247,7 @@ abstract class UTCRules protected {
    * @return the converted TAI instant, not null
    * @throws ArithmeticException if the capacity is exceeded
    */
-  protected def convertToTAI(utcInstant: UTCInstant): TAIInstant = {
+  protected[time] def convertToTAI(utcInstant: UTCInstant): TAIInstant = {
     var mjd: Long = utcInstant.getModifiedJulianDays
     var nod: Long = utcInstant.getNanoOfDay
     var taiUtcDaySeconds: Long = MathUtils.safeMultiply(mjd - OFFSET_MJD_TAI, SECS_PER_DAY)

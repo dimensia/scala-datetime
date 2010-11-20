@@ -122,9 +122,7 @@ object TimeZone {
    * @return the time-zone, never null
    * @throws CalendricalException if the time-zone cannot be found
    */
-  def ofUnchecked(zoneID: String): TimeZone = {
-    return ofID(zoneID, false)
-  }
+  def ofUnchecked(zoneID: String): TimeZone = ofID(zoneID, false)
 
   /**
    * Obtains an instance of     { @code TimeZone } using its ID using a map
@@ -146,7 +144,7 @@ object TimeZone {
     ISOChronology.checkNotNull(aliasMap, "Alias map must not be null")
     var zoneId: String = aliasMap.get(timeZoneIdentifier)
     zoneId = (if (zoneId != null) zoneId else timeZoneIdentifier)
-    return of(zoneId)
+    of(zoneId)
   }
 
   /**
@@ -163,10 +161,8 @@ object TimeZone {
    */
   def of(offset: ZoneOffset): TimeZone = {
     ISOChronology.checkNotNull(offset, "ZoneOffset must not be null")
-    if (offset == ZoneOffset.UTC) {
-      return UTC
-    }
-    return new TimeZone.Fixed(offset)
+    if (offset == ZoneOffset.UTC) UTC
+    else new TimeZone.Fixed(offset)
   }
 
   /**

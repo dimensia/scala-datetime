@@ -155,9 +155,9 @@ object DateAdjusters {
       override def adjustDate(date: LocalDate): LocalDate = {
         val dow: DayOfWeek = date.getDayOfWeek
         dow match {
-          case SATURDAY =>
+          case DayOfWeek.SATURDAY =>
             return date.plusDays(2)
-          case FRIDAY =>
+          case DayOfWeek.FRIDAY =>
             return date.plusDays(3)
           case _ =>
             return date.plusDays(1)
@@ -257,7 +257,7 @@ object DateAdjusters {
       }
       return false
     }
-
+  }
     /**
      * Returns the first in month adjuster, which returns a new date
      * in the same month with the first matching day-of-week. This is used for
@@ -325,6 +325,4 @@ object DateAdjusters {
       if (dow == null) throw new NullPointerException("dow must not be null")
       else new DateAdjusters.RelativeDayOfWeek(1, dow)
     }
-  }
-
 }

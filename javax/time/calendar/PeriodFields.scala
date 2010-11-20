@@ -225,8 +225,11 @@ object PeriodFields {
    * @param periodMap the map of periods to represent, not null and safe to assign
    */
 @SerialVersionUID(1L)
-final class PeriodFields private(unitFieldMap: TreeMap[PeriodUnit, PeriodField])
+final class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodField])
   extends PeriodProvider with Iterable[PeriodField] with Serializable {
+
+  import PeriodFields._
+
   /**
    * Converts this period to a   { @code PeriodFields }, trivially
    * returning   { @code this }.
@@ -550,8 +553,8 @@ final class PeriodFields private(unitFieldMap: TreeMap[PeriodUnit, PeriodField])
    * @throws ArithmeticException if the calculation overflows
    */
   def toDuration: Duration = {
-    var period: PeriodFields = toEquivalent(ISOChronology.periodSeconds, ISOChronology.periodNanos)
-    return Duration.ofSeconds(period.getAmount(ISOChronology.periodSeconds), period.getAmount(ISOChronology.periodNanos))
+    val period: PeriodFields = toEquivalent(ISOChronology.periodSeconds, ISOChronology.periodNanos)
+    Duration.ofSeconds(period.getAmount(ISOChronology.periodSeconds), period.getAmount(ISOChronology.periodNanos))
   }
 
   /**
@@ -607,7 +610,7 @@ final class PeriodFields private(unitFieldMap: TreeMap[PeriodUnit, PeriodField])
    *
    * @return the cloned map, never null
    */
-  private def clonedMap: TreeMap[PeriodUnit, PeriodField] = unitFieldMap.clone.asInstanceOf[TreeMap[_, _]]
+  private def clonedMap: TreeMap[PeriodUnit, PeriodField] = unitFieldMap.clone.asInstanceOf[TreeMap[PeriodUnit, PeriodField]]
 
   /**
    * Resolves singletons.
@@ -615,10 +618,8 @@ final class PeriodFields private(unitFieldMap: TreeMap[PeriodUnit, PeriodField])
    * @return the resolved instance
    */
   private def readResolve: AnyRef = {
-    if (unitFieldMap.size == 0) {
-      return ZERO
-    }
-    return this
+    if (unitFieldMap.size == 0) ZERO
+    else this
   }
 
   /**
@@ -820,7 +821,7 @@ final class PeriodFields private(unitFieldMap: TreeMap[PeriodUnit, PeriodField])
     checkNotNull(units, "PeriodUnit array must not be null")
     var result: PeriodFields = this
     var targetUnits: TreeSet[PeriodUnit] = new TreeSet[PeriodUnit](Collections.reverseOrder)
-    targetUnits.addAll(Arrays.asList(units))
+    targetUnits.addAll(Arrays.asList(units).asInstanceOf[List[PeriodUnit]])
     for (loopUnit <- unitFieldMap.keySet) {
       for (targetUnit <- targetUnits) {
         if (targetUnits.contains(loopUnit) == false) {

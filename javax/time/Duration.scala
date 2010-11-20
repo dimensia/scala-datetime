@@ -172,9 +172,7 @@ object Duration {
    * @return a { @code Duration }, never null
    * @throws ArithmeticException if the input minutes exceeds the capacity of     { @code Duration }
    */
-  def ofStandardMinutes(minutes: Long): Duration = {
-    return create(MathUtils.safeMultiply(minutes, 60), 0)
-  }
+  def ofStandardMinutes(minutes: Long): Duration = create(MathUtils.safeMultiply(minutes, 60), 0)
 
   /**
    * Obtains an instance of {@code Duration} from a number of standard length hours.
@@ -187,9 +185,7 @@ object Duration {
    * @return a { @code Duration }, never null
    * @throws ArithmeticException if the input hours exceeds the capacity of     { @code Duration }
    */
-  def ofStandardHours(hours: Long): Duration = {
-    return create(MathUtils.safeMultiply(hours, 3600), 0)
-  }
+  def ofStandardHours(hours: Long): Duration = create(MathUtils.safeMultiply(hours, 3600), 0)
 
   /**
    * Constant for nanos per day.
@@ -312,10 +308,7 @@ object Duration {
     var nos: Int = (nanos % NANOS_PER_SECOND).toInt
     if (nos < 0) {
       nos += NANOS_PER_SECOND
-      ({
-        secs -= 1;
-        secs
-      })
+      secs -= 1;
     }
     return create(secs, nos)
   }

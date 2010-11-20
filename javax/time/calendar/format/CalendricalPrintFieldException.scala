@@ -60,7 +60,7 @@ class CalendricalPrintFieldException(msg: String, rule: DateTimeFieldRule[_], va
    * @param maxWidth the maximum print width
    */
   def this(rule: DateTimeFieldRule[_], value: Int, maxWidth: Int) {
-    this ("Rule " + (if (fieldRule == null) "null" else fieldRule.getName) + " cannot be printed as the value " + value + " exceeds the maximum print width of " + maxWidth, rule, value)
+    this ("Rule " + (if (rule == null) "null" else rule.getName) + " cannot be printed as the value " + value + " exceeds the maximum print width of " + maxWidth, rule, value)
   }
 
   /**
@@ -69,7 +69,7 @@ class CalendricalPrintFieldException(msg: String, rule: DateTimeFieldRule[_], va
    * @param cause the exception cause, may be null
    */
   def this(cause: UnsupportedRuleException) {
-    this ("Rule " + (if (cause.getRule == null) "null" else cause.getRule.getName) + " cannot be printed as the value cannot be obtained", cause.getRule, null)
+    this ("Rule " + (if (cause.getRule == null) "null" else cause.getRule.getName) + " cannot be printed as the value cannot be obtained", cause.getRule, Int.MinValue)
   }
 
   /**

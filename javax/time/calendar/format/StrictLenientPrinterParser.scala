@@ -34,35 +34,41 @@ package javax.time.calendar.format
 import java.io.IOException
 import javax.time.calendar.Calendrical
 
+object StrictLenientPrinterParser {
+
+  /**
+   * Strict parsing.
+   */
+  object STRICT extends StrictLenientPrinterParser
+
+  /**
+   * Lenient parsing.
+   */
+  object LENIENT extends StrictLenientPrinterParser
+
+}
+
 /**
  * Enumeration printer/parser to set the strict/lenient parse style.
  *
  * @author Stephen Colebourne
  */
-
 sealed abstract class StrictLenientPrinterParser extends DateTimePrinter with DateTimeParser {
-  /** { @inheritDoc }*/
+
+  import StrictLenientPrinterParser._
+
+  /**{ @inheritDoc }*/
   def parse(context: DateTimeParseContext, parseText: String, position: Int): Int = {
     context.strict = (this == STRICT)
-    return position
+    position
   }
 
-  /** { @inheritDoc }*/
+  /**{ @inheritDoc }*/
   override def toString: String = "ParseStrict(" + (this == STRICT) + ")"
 
-  /** { @inheritDoc }*/
+  /**{ @inheritDoc }*/
   override def isPrintDataAvailable(calendrical: Calendrical): Boolean = true
 
-  /** { @inheritDoc }*/
+  /**{ @inheritDoc }*/
   override def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = {}
 }
-
-/**
- * Strict parsing.
- */
-object STRICT extends StrictLenientPrinterParser
-
-/**
- * Lenient parsing.
- */
-object LENIENT extends StrictLenientPrinterParser

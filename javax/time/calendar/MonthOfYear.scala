@@ -137,6 +137,7 @@ object MonthOfYear {
    */
   def of(monthOfYear: Int): MonthOfYear = {
     monthOfYear match {
+      case 0 => DECEMBER //Is that a good solution or should we better fix roll to return 12 instead of 0?
       case 1 => JANUARY
       case 2 => FEBRUARY
       case 3 => MARCH
@@ -284,7 +285,7 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Calendrical {
    * @param months the months to roll by, positive or negative
    * @return the resulting month-of-year, never null
    */
-  def roll(months: Int): MonthOfYear = values((ordinal + (months % 12 + 12)) % 12)
+  def roll(months: Int): MonthOfYear = of((ordinal + (months % 12 + 12)) % 12)
 
   /**
    * Gets the value of the specified calendrical rule.
@@ -296,7 +297,7 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Calendrical {
    * @return the value for the rule, null if the value cannot be returned
    */
   def get[T](rule: CalendricalRule[T]): T = {
-    if (rule.getReifiedType != classOf[MonthOfYear]) null
+    if (rule.getReifiedType != classOf[MonthOfYear]) _ //null
     else rule.reify(this)
   }
 
@@ -425,4 +426,8 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Calendrical {
    * @return the last day of this month, from 28 to 31
    */
   def getLastDayOfMonth(leapYear: Boolean): Int = lengthInDays(leapYear)
+
+  val name = this.getClass.getName
+
+  def compareTo(other: MonthOfYear): Int = this.ordinal - other.ordinal
 }

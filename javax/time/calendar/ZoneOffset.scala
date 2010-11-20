@@ -36,7 +36,6 @@ import java.util.HashMap
 import java.util.Map
 import java.util.concurrent.locks.ReadWriteLock
 import java.util.concurrent.locks.ReentrantReadWriteLock
-import javax.time.CalendricalException
 
 /**
  * A time-zone offset from UTC, such as '+02:00'.

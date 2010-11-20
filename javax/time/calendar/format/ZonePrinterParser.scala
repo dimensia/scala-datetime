@@ -87,7 +87,7 @@ object ZonePrinterParser {
    * @param length the length of this tree (The length of the substring this node of the tree contains.
    * Subtrees will have a longer length.)
    */
-  private class SubstringTree private(length: Int) {
+  private[format] class SubstringTree(length: Int) {
     private def get(substring2: String): ZonePrinterParser.SubstringTree = substringMap.get(substring2)
 
     /**

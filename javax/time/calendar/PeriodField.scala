@@ -189,7 +189,7 @@ final class PeriodField private(amount: Long, unit: PeriodUnit) extends PeriodPr
    * @return the comparator value, negative if less, positive if greater
    */
   def compareTo(otherPeriod: PeriodField): Int = {
-    var cmp: Int = unit.compareTo(otherPeriod.unit)
+    val cmp: Int = unit.compareTo(otherPeriod.unit)
     if (cmp != 0) cmp
     else MathUtils.safeCompare(amount, otherPeriod.amount)
   }
@@ -211,7 +211,7 @@ final class PeriodField private(amount: Long, unit: PeriodUnit) extends PeriodPr
    * @throws ArithmeticException if the calculation overflows
    */
   def toEquivalent(requiredUnit: PeriodUnit): PeriodField = {
-    var equivalent: PeriodField = unit.getEquivalentPeriod(requiredUnit)
+    val equivalent: PeriodField = unit.getEquivalentPeriod(requiredUnit)
     if (equivalent != null) {
       return equivalent.multipliedBy(amount)
     }
@@ -273,7 +273,7 @@ final class PeriodField private(amount: Long, unit: PeriodUnit) extends PeriodPr
   override def equals(obj: AnyRef): Boolean = {
     if (this == obj) true
     else if (obj.isInstanceOf[PeriodField]) {
-      var other: PeriodField = obj.asInstanceOf[PeriodField]
+      val other: PeriodField = obj.asInstanceOf[PeriodField]
       this.amount == other.amount && this.unit.equals(other.unit)
     }
     else false
@@ -311,12 +311,13 @@ final class PeriodField private(amount: Long, unit: PeriodUnit) extends PeriodPr
    */
   def toEquivalent(requiredUnits: Array[PeriodUnit]): PeriodField = {
     for (requiredUnit <- requiredUnits) {
-      var equivalent: PeriodField = unit.getEquivalentPeriod(requiredUnit)
+      val equivalent: PeriodField = unit.getEquivalentPeriod(requiredUnit)
       if (equivalent != null) {
         return equivalent.multipliedBy(amount)
       }
     }
-    throw new CalendricalException("Unable to convert " + getUnit + " to any requested unit: " + Arrays.toString(requiredUnits))
+    throw new CalendricalException( //FIXME
+      "Unable to convert " + getUnit + " to any requested unit: " + Arrays.toString(requiredUnits.asInstanceOf[Array[AnyRef]]))
   }
 
   /**

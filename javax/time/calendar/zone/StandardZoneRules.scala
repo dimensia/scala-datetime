@@ -33,7 +33,6 @@ package javax.time.calendar.zone
 
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 import java.io.Serializable
 import java.util.ArrayList
 import java.util.Arrays
@@ -221,11 +220,7 @@ final class StandardZoneRules private(standardTransitions: Array[Long],
    * @return the hash code
    */
   override def hashCode: Int = {
-    Arrays.hashCode(standardTransitions) ^
-      Arrays.hashCode(standardOffsets) ^
-      Arrays.hashCode(savingsInstantTransitions) ^
-      Arrays.hashCode(wallOffsets) ^
-      Arrays.hashCode(lastRules)
+    Arrays.hashCode(standardTransitions) ^ Arrays.hashCode(standardOffsets.asInstanceOf[Array[AnyRef]]) ^ Arrays.hashCode(savingsInstantTransitions) ^ Arrays.hashCode(wallOffsets.asInstanceOf[Array[AnyRef]]) ^ Arrays.hashCode(lastRules.asInstanceOf[Array[AnyRef]])
   }
 
   /**
@@ -384,14 +379,12 @@ final class StandardZoneRules private(standardTransitions: Array[Long],
    * @return true if equal
    */
   override def equals(otherRules: AnyRef): Boolean = {
-    if (this == otherRules) {
-      return true
+    if (this == otherRules) true
+    else if (otherRules.isInstanceOf[StandardZoneRules]) {
+      val other: StandardZoneRules = otherRules.asInstanceOf[StandardZoneRules]
+      Arrays.equals(standardTransitions, other.standardTransitions) && Arrays.equals(standardOffsets.asInstanceOf[Array[AnyRef]], other.standardOffsets.asInstanceOf[Array[AnyRef]]) && Arrays.equals(savingsInstantTransitions, other.savingsInstantTransitions) && Arrays.equals(wallOffsets.asInstanceOf[Array[AnyRef]], other.wallOffsets.asInstanceOf[Array[AnyRef]]) && Arrays.equals(lastRules.asInstanceOf[Array[AnyRef]], other.lastRules.asInstanceOf[Array[AnyRef]])
     }
-    if (otherRules.isInstanceOf[StandardZoneRules]) {
-      var other: StandardZoneRules = otherRules.asInstanceOf[StandardZoneRules]
-      return Arrays.equals(standardTransitions, other.standardTransitions) && Arrays.equals(standardOffsets, other.standardOffsets) && Arrays.equals(savingsInstantTransitions, other.savingsInstantTransitions) && Arrays.equals(wallOffsets, other.wallOffsets) && Arrays.equals(lastRules, other.lastRules)
-    }
-    return false
+    else false
   }
 
   /**
@@ -417,7 +410,7 @@ final class StandardZoneRules private(standardTransitions: Array[Long],
   def previousTransition(instantProvider: InstantProvider): ZoneOffsetTransition = {
     var instant: Instant = Instant.of(instantProvider)
     var epochSecs: Long = instant.getEpochSeconds
-    if (instant.getNanoOfSecond > 0 && epochSecs < Long.MAX_VALUE) {
+    if (instant.getNanoOfSecond > 0 && epochSecs < Long.MaxValue) {
       epochSecs += 1
     }
     var lastHistoric: Long = savingsInstantTransitions(savingsInstantTransitions.length - 1)
@@ -474,7 +467,7 @@ final class StandardZoneRules private(standardTransitions: Array[Long],
           i += 1;
       }
     }
-    if (year.isBefore(LAST_CACHED_YEAR)) {
+    if (year.isBefore(StandardZoneRules.LAST_CACHED_YEAR)) {
       lastRulesCache.putIfAbsent(year, transArray)
     }
     return transArray
@@ -493,7 +486,7 @@ final class StandardZoneRules private(standardTransitions: Array[Long],
       }
       return info
     }
-    var index: Int = Arrays.binarySearch(savingsLocalTransitions, dt)
+    var index: Int = Arrays.binarySearch(savingsLocalTransitions.asInstanceOf[Array[AnyRef]], dt)
     if (index == -1) {
       return new ZoneOffsetInfo(dt, wallOffsets(0), null)
     }

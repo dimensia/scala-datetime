@@ -98,7 +98,7 @@ abstract class PeriodUnit extends Comparable[PeriodUnit] with Serializable {
   private[calendar] def this(@transient name: String, equivalentPeriod: PeriodField, estimatedDuration: Duration) {
     this()
     this.estimatedDuration = estimatedDuration
-    this.equivalentPeriods = buildEquivalentPeriods(equivalentPeriod)
+    this.equivalentPeriods = PeriodUnit.buildEquivalentPeriods(equivalentPeriod)
     this.hashCode = name.hashCode ^ estimatedDuration.hashCode ^ (if (equivalentPeriod != null) equivalentPeriod.hashCode else 0)
   }
 

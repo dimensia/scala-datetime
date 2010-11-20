@@ -221,14 +221,11 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * @param value the value to interpret, not null
    */
   private[calendar] final def interpretValue(merger: CalendricalMerger, value: AnyRef): T = {
-    if (reified.isInstance(value)) {
-      return reify(value)
-    }
+    if (reified.isInstance(value)) return reify(value)
     val result: T = interpret(merger, value)
-    if (result != null) {
-      return result
-    }
-    throw new CalendricalException("Unable to complete merge as input contains an unknown type " + " for rule '" + getName + "': " + value.getClass.getName)
+    if (result != null) return result
+    throw new CalendricalException(
+      "Unable to complete merge as input contains an unknown type " + " for rule '" + getName + "': " + value.getClass.getName)
   }
 
   /**
@@ -303,10 +300,10 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * @return the type-cast input value, may be null
    * @throws ClassCastException if the value is not of the reified type
    */
-  final def reify(value: AnyRef): T = {
+  final def reify(value: Any): T = {
     if (value == null) null
     else if (reified.isInstance(value)) value.asInstanceOf[T]
-    else throw new ClassCastException("Value of type " + value.getClass.getName + " cannot be cast to type " + reified.getName)
+    else throw new ClassCastException("Value of type " + value.asInstanceOf[AnyRef].getClass.getName + " cannot be cast to type " + reified.getName)
   }
 
   /**

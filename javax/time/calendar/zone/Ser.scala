@@ -34,7 +34,6 @@ package javax.time.calendar.zone
 import java.io.DataInput
 import java.io.DataOutput
 import java.io.Externalizable
-import java.io.IOException
 import java.io.InvalidClassException
 import java.io.ObjectInput
 import java.io.ObjectOutput
@@ -68,7 +67,7 @@ object Ser {
 
   private[zone] def read(in: DataInput): AnyRef = {
     var _type: Byte = in.readByte
-    return readInternal(`type`, in)
+    return readInternal(_type, in)
   }
 
   /**
@@ -117,7 +116,7 @@ object Ser {
   }
 
   private[zone] def write(obj: AnyRef, out: DataOutput): Unit = {
-    if (`object`.isInstanceOf[StandardZoneRules]) {
+    if (obj.isInstanceOf[StandardZoneRules]) {
       writeInternal(SZR, obj, out)
     }
     else {
@@ -172,10 +171,10 @@ final class Ser private[zone](tpe: Byte, obj: AnyRef) extends Externalizable {
    */
   private def readResolve: AnyRef = obj
 
-  def writeExternal(out: ObjectOutput): Unit = writeInternal(tpe, obj, out)
+  def writeExternal(out: ObjectOutput): Unit = Ser.writeInternal(tpe, obj, out)
 
   def readExternal(in: ObjectInput): Unit = {
     tpe = in.readByte
-    obj = readInternal(tpe, in)
+    obj = Ser.readInternal(tpe, in)
   }
 }

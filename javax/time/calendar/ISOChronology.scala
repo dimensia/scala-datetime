@@ -120,9 +120,20 @@ object ISOChronology extends ISOChronology {
   private[calendar] sealed class MonthOfYearRule
     extends DateTimeFieldRule[MonthOfYear](classOf[MonthOfYear], ISOChronology, "MonthOfYear", MONTHS, YEARS, 1, 12, true)
     with Serializable {
-    protected def interpret(merger: CalendricalMerger, value: AnyRef): MonthOfYear = {
-      if (value.isInstanceOf[Integer]) {
-        var value: Int = value.toInt
+    protected def interpret(merger: CalendricalMerger, value: AnyRef): MonthOfYear = { //FIXME
+      //      value match {
+      //        case value: Int =>
+      //          if (value < 1 || value > 12) {
+      //            merger.addToOverflow(Period.ofMonths(value - 1))
+      //            MonthOfYear.of(1)
+      //          }
+      //          else MonthOfYear.of(value)
+      //        case _ => null
+      //      }
+
+
+      if (value.isInstanceOf[Int]) {
+        var value: Int = value.asInstanceOf[Int]
 
         if (value < 1 || value > 12) {
           merger.addToOverflow(Period.ofMonths(value - 1))
@@ -149,7 +160,7 @@ object ISOChronology extends ISOChronology {
 
     private def readResolve: AnyRef = MonthOfYearRule
 
-    protected def createTextStores(textStores: EnumMap[TextStyle.type, DateTimeFieldRule.TextStore], locale: Locale): Unit = {
+    protected def createTextStores(textStores: Map[TextStyle.type, DateTimeFieldRule.TextStore], locale: Locale): Unit = {
       var oldSymbols: DateFormatSymbols = new DateFormatSymbols(locale)
       var array: Array[String] = oldSymbols.getMonths
       var map: Map[Integer, String] = new HashMap[Integer, String]
@@ -754,7 +765,7 @@ object ISOChronology extends ISOChronology {
    * @param errorMessage the error to throw
    * @throws NullPointerException if the object is null
    */
-  private[calendar] def checkNotNull(obj: AnyRef, errorMessage: String): Unit = {
+  private[calendar] def checkNotNull(obj: Any, errorMessage: String): Unit = {
     if (obj == null) throw new NullPointerException(errorMessage)
   }
 
@@ -798,7 +809,7 @@ object ISOChronology extends ISOChronology {
 
     override def convertIntToValue(value: Int): AmPmOfDay = AmPmOfDay.of(value)
 
-    protected def createTextStores(textStores: EnumMap[TextStyle.type, DateTimeFieldRule.TextStore], locale: Locale): Unit = {
+    protected def createTextStores(textStores: Map[TextStyle.type, DateTimeFieldRule.TextStore], locale: Locale): Unit = {
       var oldSymbols: DateFormatSymbols = new DateFormatSymbols(locale)
       var array: Array[String] = oldSymbols.getAmPmStrings
       var map: Map[Int, String] = new HashMap[Int, String]
@@ -1112,7 +1123,7 @@ object ISOChronology extends ISOChronology {
    * Single rule subclass, which means fewer classes to load at startup.
    */
   @SerialVersionUID(1L)
-  private[calendar] sealed class Rule (private val ordinal: Int, name: String, periodUnit: PeriodUnit, periodRange: PeriodUnit, minimumValue: Int, maximumValue: Int, @transient smallestMaximum: Int)
+  private[calendar] sealed class Rule(private val ordinal: Int, name: String, periodUnit: PeriodUnit, periodRange: PeriodUnit, minimumValue: Int, maximumValue: Int, @transient smallestMaximum: Int)
     extends DateTimeFieldRule[Int](classOf[Int], ISOChronology, name, periodUnit, periodRange, minimumValue, maximumValue) with Serializable {
 
     override def getSmallestMaximumValue: Int = smallestMaximum
@@ -1245,295 +1256,295 @@ object ISOChronology extends ISOChronology {
     }
   }
 
-    /**
-     * Gets the period unit for hours of 60 minutes.
-     * <p>
-     * The period unit defines the concept of a period of a hour.
-     * <p>
-     * The equivalent period and estimated duration are equal to 60 minutes.
-     * <p>
-     * See      { @link # hourOfDayRule ( ) } for the main date-time field.
-     *
-     * @return the period unit for hours, never null
-     */
-    def periodHours: PeriodUnit = HOURS
+  /**
+   * Gets the period unit for hours of 60 minutes.
+   * <p>
+   * The period unit defines the concept of a period of a hour.
+   * <p>
+   * The equivalent period and estimated duration are equal to 60 minutes.
+   * <p>
+   * See      { @link # hourOfDayRule ( ) } for the main date-time field.
+   *
+   * @return the period unit for hours, never null
+   */
+  def periodHours: PeriodUnit = HOURS
 
-    /**
-     * The start of months in a leap year.
-     */
-    private val LEAP_MONTH_START: Array[Int] = Array[Int](0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335)
-    /**
-     * Gets the rule for the nano-of-day field.
-     * <p>
-     * This field counts seconds sequentially from the start of the day.
-     * The values run from 0 to 86,399,999,999,999.
-     *
-     * @return the rule for the nano-of-day field, never null
-     */
-    def nanoOfDayRule: CalendricalRule[Long] = NanoOfDayRule
+  /**
+   * The start of months in a leap year.
+   */
+  private val LEAP_MONTH_START: Array[Int] = Array[Int](0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335)
+  /**
+   * Gets the rule for the nano-of-day field.
+   * <p>
+   * This field counts seconds sequentially from the start of the day.
+   * The values run from 0 to 86,399,999,999,999.
+   *
+   * @return the rule for the nano-of-day field, never null
+   */
+  def nanoOfDayRule: CalendricalRule[Long] = NanoOfDayRule
 
-    /**
-     * The number of days in a 400 year cycle.
-     */
-    private[calendar] val DAYS_PER_CYCLE: Int = 146097
-    private val MINUTE_OF_HOUR: Rule = new Rule(MINUTE_OF_HOUR_ORDINAL, "MinuteOfHour", MINUTES, HOURS, 0, 59, 59)
-    private val HOUR_OF_AMPM: Rule = new Rule(HOUR_OF_AMPM_ORDINAL, "HourOfAmPm", HOURS, _12_HOURS, 0, 11, 11)
-    /**
-     * Gets the rule for the epoch-days field.
-     * <p>
-     * This field counts seconds sequentially from the Java epoch of 1970-01-01.
-     *
-     * @return the rule for the epoch-days field, never null
-     */
-    def epochDays: CalendricalRule[Long] = EpochDaysRule
+  /**
+   * The number of days in a 400 year cycle.
+   */
+  private[calendar] val DAYS_PER_CYCLE: Int = 146097
+  private val MINUTE_OF_HOUR: Rule = new Rule(MINUTE_OF_HOUR_ORDINAL, "MinuteOfHour", MINUTES, HOURS, 0, 59, 59)
+  private val HOUR_OF_AMPM: Rule = new Rule(HOUR_OF_AMPM_ORDINAL, "HourOfAmPm", HOURS, _12_HOURS, 0, 11, 11)
+  /**
+   * Gets the rule for the epoch-days field.
+   * <p>
+   * This field counts seconds sequentially from the Java epoch of 1970-01-01.
+   *
+   * @return the rule for the epoch-days field, never null
+   */
+  def epochDays: CalendricalRule[Long] = EpochDaysRule
 
-    /**
-     * Gets the period unit for days.
-     * <p>
-     * The period unit defines the concept of a period of a day.
-     * This is typically equal to 24 hours, but may vary due to time-zone changes.
-     * <p>
-     * This chronology defines two units that could represent a day.
-     * This unit,      { @code Days }, represents a day that varies in length based on
-     * time-zone (daylight savings time) changes. It is a basic unit that cannot
-     * be converted to seconds, nanoseconds or      { @link Duration }.
-     * By contrast, the      { @link # period24Hours ( ) 24Hours } unit has a fixed length of
-     * exactly 24 hours allowing it to be converted to seconds, nanoseconds and      { @code Duration }.
-     * <p>
-     * This is a basic unit and has no equivalent period.
-     * The estimated duration is equal to 24 hours.
-     * <p>
-     * See      { @link # dayOfMonthRule ( ) } for the main date-time field.
-     *
-     * @return the period unit for accurate, variable length, days, never null
-     */
-    def periodDays: PeriodUnit = DAYS
+  /**
+   * Gets the period unit for days.
+   * <p>
+   * The period unit defines the concept of a period of a day.
+   * This is typically equal to 24 hours, but may vary due to time-zone changes.
+   * <p>
+   * This chronology defines two units that could represent a day.
+   * This unit,      { @code Days }, represents a day that varies in length based on
+   * time-zone (daylight savings time) changes. It is a basic unit that cannot
+   * be converted to seconds, nanoseconds or      { @link Duration }.
+   * By contrast, the      { @link # period24Hours ( ) 24Hours } unit has a fixed length of
+   * exactly 24 hours allowing it to be converted to seconds, nanoseconds and      { @code Duration }.
+   * <p>
+   * This is a basic unit and has no equivalent period.
+   * The estimated duration is equal to 24 hours.
+   * <p>
+   * See      { @link # dayOfMonthRule ( ) } for the main date-time field.
+   *
+   * @return the period unit for accurate, variable length, days, never null
+   */
+  def periodDays: PeriodUnit = DAYS
 
-    private val WEEK_BASED_YEAR_ORDINAL: Int = 16 * 16
-    /**
-     * Gets the rule for the milli-of-second field.
-     * <p>
-     * This field counts milliseconds sequentially from the start of the second.
-     * The values run from 0 to 999.
-     *
-     * @return the rule for the milli-of-second field, never null
-     */
-    def milliOfSecondRule: DateTimeFieldRule[Int] = MILLI_OF_SECOND
-  }
+  private val WEEK_BASED_YEAR_ORDINAL: Int = 16 * 16
+  /**
+   * Gets the rule for the milli-of-second field.
+   * <p>
+   * This field counts milliseconds sequentially from the start of the second.
+   * The values run from 0 to 999.
+   *
+   * @return the rule for the milli-of-second field, never null
+   */
+  def milliOfSecondRule: DateTimeFieldRule[Int] = MILLI_OF_SECOND
+}
 
 @SerialVersionUID(1L)
-  sealed class ISOChronology private
-    extends Chronology with Serializable {
+sealed class ISOChronology private
+  extends Chronology with Serializable {
 
-    /**
-     * Resolves singleton.
-     *
-     * @return the singleton instance
-     */
-    private def readResolve: AnyRef = ISOChronology
+  /**
+   * Resolves singleton.
+   *
+   * @return the singleton instance
+   */
+  private def readResolve: AnyRef = ISOChronology
 
-    /**
-     * Merges the set of fields known by this chronology.
-     *
-     * @param merger the merger to use, not null
-     */
-    private[calendar] def merge(merger: CalendricalMerger): Unit = {
-      var modVal: Int = merger.getValue(ISOChronology.milliOfDayRule)
-      if (modVal != null) {
-        merger.storeMerged(LocalTime.rule, LocalTime.ofNanoOfDay(modVal * 1000000L))
-        merger.removeProcessed(ISOChronology.milliOfDayRule)
-      }
-      var sodVal: Int = merger.getValue(ISOChronology.secondOfDayRule)
-      if (modVal != null) {
-        var nosVal: Int = merger.getValue(ISOChronology.nanoOfSecondRule)
-        if (nosVal != null) {
-          merger.storeMerged(LocalTime.rule, LocalTime.ofSecondOfDay(sodVal, nosVal))
-          merger.removeProcessed(ISOChronology.nanoOfSecondRule)
-        }
-        else {
-          var mosVal: Int = merger.getValue(ISOChronology.milliOfSecondRule)
-          if (mosVal != null) {
-            merger.storeMerged(LocalTime.rule, LocalTime.ofSecondOfDay(sodVal, mosVal * 1000000))
-            merger.removeProcessed(ISOChronology.milliOfSecondRule)
-          }
-          else {
-            merger.storeMerged(LocalTime.rule, LocalTime.ofSecondOfDay(sodVal))
-          }
-        }
-        merger.removeProcessed(ISOChronology.secondOfDayRule)
-      }
-      var amPm: AmPmOfDay = merger.getValue(ISOChronology.amPmOfDayRule)
-      if (amPm != null) {
-        var hapVal: Int = merger.getValue(ISOChronology.hourOfAmPmRule)
-        if (hapVal != null) {
-          var hourOfDay: Int = amPm.getValue * 12 + hapVal
-          merger.storeMerged(ISOChronology.hourOfDayRule, hourOfDay)
-          merger.removeProcessed(ISOChronology.amPmOfDayRule)
-          merger.removeProcessed(ISOChronology.hourOfAmPmRule)
-        }
-        var chapVal: Int = merger.getValue(ISOChronology.hourOfAmPmRule)
-        if (chapVal != null) {
-          var hourOfDay: Int = amPm.getValue * 12 + chapVal
-          if (hourOfDay == 24) {
-            merger.addToOverflow(Period.ofDays(1))
-            hourOfDay = 0
-          }
-          merger.storeMerged(ISOChronology.hourOfDayRule, hourOfDay)
-          merger.removeProcessed(ISOChronology.amPmOfDayRule)
-          merger.removeProcessed(ISOChronology.clockHourOfAmPmRule)
-        }
-      }
-      var hourVal: Int = merger.getValue(ISOChronology.hourOfDayRule)
-      if (hourVal != null) {
-        var minuteVal: Int = merger.getValue(ISOChronology.minuteOfHourRule)
-        var secondVal: Int = merger.getValue(ISOChronology.secondOfMinuteRule)
-        var mosVal: Int = merger.getValue(ISOChronology.milliOfSecondRule)
-        var nanoVal: Int = merger.getValue(ISOChronology.nanoOfSecondRule)
-        if (minuteVal != null && secondVal != null && nanoVal != null) {
-          merger.storeMerged(LocalTime.rule, LocalTime.of(hourVal, minuteVal, secondVal, nanoVal))
-          merger.removeProcessed(ISOChronology.hourOfDayRule)
-          merger.removeProcessed(ISOChronology.minuteOfHourRule)
-          merger.removeProcessed(ISOChronology.secondOfMinuteRule)
-          merger.removeProcessed(ISOChronology.nanoOfSecondRule)
-        }
-        else if (minuteVal != null && secondVal != null && mosVal != null) {
-          merger.storeMerged(LocalTime.rule, LocalTime.of(hourVal, minuteVal, secondVal, mosVal * 1000000))
-          merger.removeProcessed(ISOChronology.hourOfDayRule)
-          merger.removeProcessed(ISOChronology.minuteOfHourRule)
-          merger.removeProcessed(ISOChronology.secondOfMinuteRule)
-          merger.removeProcessed(ISOChronology.milliOfSecondRule)
-        }
-        else if (minuteVal != null && secondVal != null) {
-          merger.storeMerged(LocalTime.rule, LocalTime.of(hourVal, minuteVal, secondVal, 0))
-          merger.removeProcessed(ISOChronology.hourOfDayRule)
-          merger.removeProcessed(ISOChronology.minuteOfHourRule)
-          merger.removeProcessed(ISOChronology.secondOfMinuteRule)
-        }
-        else if (minuteVal != null) {
-          merger.storeMerged(LocalTime.rule, LocalTime.of(hourVal, minuteVal, 0, 0))
-          merger.removeProcessed(ISOChronology.hourOfDayRule)
-          merger.removeProcessed(ISOChronology.minuteOfHourRule)
-        }
-        else {
-          merger.storeMerged(LocalTime.rule, LocalTime.of(hourVal, 0))
-          merger.removeProcessed(ISOChronology.hourOfDayRule)
-        }
-      }
-      var qoy: QuarterOfYear = merger.getValue(ISOChronology.quarterOfYearRule)
-      var moqVal: Int = merger.getValue(ISOChronology.monthOfQuarterRule)
-      if (qoy != null && moqVal != null) {
-        var moy: MonthOfYear = MonthOfYear.of(qoy.getFirstMonthOfQuarter.ordinal + moqVal)
-        merger.storeMerged(ISOChronology.monthOfYearRule, moy)
-        merger.removeProcessed(ISOChronology.quarterOfYearRule)
-        merger.removeProcessed(ISOChronology.monthOfQuarterRule)
-      }
-      var yearVal: Int = merger.getValue(ISOChronology.yearRule)
-      if (yearVal != null) {
-        var moy: MonthOfYear = merger.getValue(ISOChronology.monthOfYearRule)
-        var domVal: Int = merger.getValue(ISOChronology.dayOfMonthRule)
-        if (moy != null && domVal != null) {
-          var date: LocalDate = merger.getContext.resolveDate(yearVal, moy.getValue, domVal)
-          merger.storeMerged(LocalDate.rule, date)
-          merger.removeProcessed(ISOChronology.yearRule)
-          merger.removeProcessed(ISOChronology.monthOfYearRule)
-          merger.removeProcessed(ISOChronology.dayOfMonthRule)
-        }
-        var doyVal: Int = merger.getValue(ISOChronology.dayOfYearRule)
-        if (doyVal != null) {
-          merger.storeMerged(LocalDate.rule, getDateFromDayOfYear(yearVal, doyVal))
-          merger.removeProcessed(ISOChronology.yearRule)
-          merger.removeProcessed(ISOChronology.dayOfYearRule)
-        }
-        var woyVal: Int = merger.getValue(ISOChronology.weekOfYearRule)
-        var dow: DayOfWeek = merger.getValue(ISOChronology.dayOfWeekRule)
-        if (woyVal != null && dow != null) {
-          var date: LocalDate = LocalDate.of(yearVal, 1, 1).plusWeeks(woyVal - 1)
-          date = date.`with`(DateAdjusters.nextOrCurrent(dow))
-          merger.storeMerged(LocalDate.rule, date)
-          merger.removeProcessed(ISOChronology.yearRule)
-          merger.removeProcessed(ISOChronology.weekOfYearRule)
-          merger.removeProcessed(ISOChronology.dayOfWeekRule)
-        }
-        var womVal: Int = merger.getValue(ISOChronology.weekOfMonthRule)
-        if (moy != null && womVal != null && dow != null) {
-          var date: LocalDate = LocalDate.of(yearVal, moy, 1).plusWeeks(womVal - 1)
-          date = date.`with`(DateAdjusters.nextOrCurrent(dow))
-          merger.storeMerged(LocalDate.rule, date)
-          merger.removeProcessed(ISOChronology.yearRule)
-          merger.removeProcessed(ISOChronology.monthOfYearRule)
-          merger.removeProcessed(ISOChronology.weekOfMonthRule)
-          merger.removeProcessed(ISOChronology.dayOfWeekRule)
-        }
-      }
-      var wbyVal: Int = merger.getValue(ISOChronology.weekBasedYearRule)
-      if (wbyVal != null) {
-        var woy: Int = merger.getValue(ISOChronology.weekOfWeekBasedYearRule)
-        var dow: DayOfWeek = merger.getValue(ISOChronology.dayOfWeekRule)
-        if (woy != null && dow != null) {
-          merger.removeProcessed(ISOChronology.weekBasedYearRule)
-          merger.removeProcessed(ISOChronology.weekOfWeekBasedYearRule)
-          merger.removeProcessed(ISOChronology.dayOfWeekRule)
-        }
-      }
-      var date: LocalDate = merger.getValue(LocalDate.rule)
-      var time: LocalTime = merger.getValue(LocalTime.rule)
-      var offset: ZoneOffset = merger.getValue(ZoneOffset.rule)
-      var zone: TimeZone = merger.getValue(TimeZone.rule)
-      if (date != null && time != null) {
-        merger.storeMerged(LocalDateTime.rule, LocalDateTime.of(date, time))
-        merger.removeProcessed(LocalDate.rule)
-        merger.removeProcessed(LocalTime.rule)
-      }
-      if (date != null && offset != null) {
-        merger.storeMerged(OffsetDate.rule, OffsetDate.of(date, offset))
-        merger.removeProcessed(LocalDate.rule)
-        merger.removeProcessed(ZoneOffset.rule)
-      }
-      if (time != null && offset != null) {
-        merger.storeMerged(OffsetTime.rule, OffsetTime.of(time, offset))
-        merger.removeProcessed(LocalTime.rule)
-        merger.removeProcessed(ZoneOffset.rule)
-      }
-      var ldt: LocalDateTime = merger.getValue(LocalDateTime.rule)
-      if (ldt != null && offset != null) {
-        merger.storeMerged(OffsetDateTime.rule, OffsetDateTime.of(ldt, offset))
-        merger.removeProcessed(LocalDateTime.rule)
-        merger.removeProcessed(ZoneOffset.rule)
+  /**
+   * Merges the set of fields known by this chronology.
+   *
+   * @param merger the merger to use, not null
+   */
+  private[calendar] def merge(merger: CalendricalMerger): Unit = {
+    var modVal: Int = merger.getValue(ISOChronology.milliOfDayRule)
+    if (modVal != null) {
+      merger.storeMerged(LocalTime.rule, LocalTime.ofNanoOfDay(modVal * 1000000L))
+      merger.removeProcessed(ISOChronology.milliOfDayRule)
+    }
+    var sodVal: Int = merger.getValue(ISOChronology.secondOfDayRule)
+    if (modVal != null) {
+      var nosVal: Int = merger.getValue(ISOChronology.nanoOfSecondRule)
+      if (nosVal != null) {
+        merger.storeMerged(LocalTime.rule, LocalTime.ofSecondOfDay(sodVal, nosVal))
+        merger.removeProcessed(ISOChronology.nanoOfSecondRule)
       }
       else {
-        var od: OffsetDate = merger.getValue(OffsetDate.rule)
-        var ot: OffsetTime = merger.getValue(OffsetTime.rule)
-        if (od != null && ot != null) {
-          if (od.getOffset.equals(ot.getOffset) == false) {
-            if (merger.getContext.isStrict) {
-              throw new CalendricalRuleException("Unable to merge OffsetDate and OffsetTime as offsets differ", OffsetTime.rule)
-            }
-            else {
-              ot = ot.adjustLocalTime(od.getOffset)
-            }
-          }
-          merger.storeMerged(OffsetDateTime.rule, OffsetDateTime.of(od, ot, od.getOffset))
-          merger.removeProcessed(OffsetDate.rule)
-          merger.removeProcessed(OffsetTime.rule)
-        }
-      }
-      var odt: OffsetDateTime = merger.getValue(OffsetDateTime.rule)
-      if (odt != null && zone != null) {
-        if (merger.getContext.isStrict) {
-          merger.storeMerged(ZonedDateTime.rule, ZonedDateTime.of(odt, zone))
+        var mosVal: Int = merger.getValue(ISOChronology.milliOfSecondRule)
+        if (mosVal != null) {
+          merger.storeMerged(LocalTime.rule, LocalTime.ofSecondOfDay(sodVal, mosVal * 1000000))
+          merger.removeProcessed(ISOChronology.milliOfSecondRule)
         }
         else {
-          merger.storeMerged(ZonedDateTime.rule, ZonedDateTime.ofInstant(odt, zone))
+          merger.storeMerged(LocalTime.rule, LocalTime.ofSecondOfDay(sodVal))
         }
-        merger.removeProcessed(OffsetDateTime.rule)
-        merger.removeProcessed(TimeZone.rule)
+      }
+      merger.removeProcessed(ISOChronology.secondOfDayRule)
+    }
+    var amPm: AmPmOfDay = merger.getValue(ISOChronology.amPmOfDayRule)
+    if (amPm != null) {
+      var hapVal: Int = merger.getValue(ISOChronology.hourOfAmPmRule)
+      if (hapVal != null) {
+        var hourOfDay: Int = amPm.getValue * 12 + hapVal
+        merger.storeMerged(ISOChronology.hourOfDayRule, hourOfDay)
+        merger.removeProcessed(ISOChronology.amPmOfDayRule)
+        merger.removeProcessed(ISOChronology.hourOfAmPmRule)
+      }
+      var chapVal: Int = merger.getValue(ISOChronology.hourOfAmPmRule)
+      if (chapVal != null) {
+        var hourOfDay: Int = amPm.getValue * 12 + chapVal
+        if (hourOfDay == 24) {
+          merger.addToOverflow(Period.ofDays(1))
+          hourOfDay = 0
+        }
+        merger.storeMerged(ISOChronology.hourOfDayRule, hourOfDay)
+        merger.removeProcessed(ISOChronology.amPmOfDayRule)
+        merger.removeProcessed(ISOChronology.clockHourOfAmPmRule)
       }
     }
-
-    /**
-     * Gets the name of the chronology.
-     *
-     * @return the name of the chronology, never null
-     */
-    override def getName: String = "ISO"
+    var hourVal: Int = merger.getValue(ISOChronology.hourOfDayRule)
+    if (hourVal != null) {
+      var minuteVal: Int = merger.getValue(ISOChronology.minuteOfHourRule)
+      var secondVal: Int = merger.getValue(ISOChronology.secondOfMinuteRule)
+      var mosVal: Int = merger.getValue(ISOChronology.milliOfSecondRule)
+      var nanoVal: Int = merger.getValue(ISOChronology.nanoOfSecondRule)
+      if (minuteVal != null && secondVal != null && nanoVal != null) {
+        merger.storeMerged(LocalTime.rule, LocalTime.of(hourVal, minuteVal, secondVal, nanoVal))
+        merger.removeProcessed(ISOChronology.hourOfDayRule)
+        merger.removeProcessed(ISOChronology.minuteOfHourRule)
+        merger.removeProcessed(ISOChronology.secondOfMinuteRule)
+        merger.removeProcessed(ISOChronology.nanoOfSecondRule)
+      }
+      else if (minuteVal != null && secondVal != null && mosVal != null) {
+        merger.storeMerged(LocalTime.rule, LocalTime.of(hourVal, minuteVal, secondVal, mosVal * 1000000))
+        merger.removeProcessed(ISOChronology.hourOfDayRule)
+        merger.removeProcessed(ISOChronology.minuteOfHourRule)
+        merger.removeProcessed(ISOChronology.secondOfMinuteRule)
+        merger.removeProcessed(ISOChronology.milliOfSecondRule)
+      }
+      else if (minuteVal != null && secondVal != null) {
+        merger.storeMerged(LocalTime.rule, LocalTime.of(hourVal, minuteVal, secondVal, 0))
+        merger.removeProcessed(ISOChronology.hourOfDayRule)
+        merger.removeProcessed(ISOChronology.minuteOfHourRule)
+        merger.removeProcessed(ISOChronology.secondOfMinuteRule)
+      }
+      else if (minuteVal != null) {
+        merger.storeMerged(LocalTime.rule, LocalTime.of(hourVal, minuteVal, 0, 0))
+        merger.removeProcessed(ISOChronology.hourOfDayRule)
+        merger.removeProcessed(ISOChronology.minuteOfHourRule)
+      }
+      else {
+        merger.storeMerged(LocalTime.rule, LocalTime.of(hourVal, 0))
+        merger.removeProcessed(ISOChronology.hourOfDayRule)
+      }
+    }
+    var qoy: QuarterOfYear = merger.getValue(ISOChronology.quarterOfYearRule)
+    var moqVal: Int = merger.getValue(ISOChronology.monthOfQuarterRule)
+    if (qoy != null && moqVal != null) {
+      var moy: MonthOfYear = MonthOfYear.of(qoy.getFirstMonthOfQuarter.ordinal + moqVal)
+      merger.storeMerged(ISOChronology.monthOfYearRule, moy)
+      merger.removeProcessed(ISOChronology.quarterOfYearRule)
+      merger.removeProcessed(ISOChronology.monthOfQuarterRule)
+    }
+    var yearVal: Int = merger.getValue(ISOChronology.yearRule)
+    if (yearVal != null) {
+      var moy: MonthOfYear = merger.getValue(ISOChronology.monthOfYearRule)
+      var domVal: Int = merger.getValue(ISOChronology.dayOfMonthRule)
+      if (moy != null && domVal != null) {
+        var date: LocalDate = merger.getContext.resolveDate(yearVal, moy.getValue, domVal)
+        merger.storeMerged(LocalDate.rule, date)
+        merger.removeProcessed(ISOChronology.yearRule)
+        merger.removeProcessed(ISOChronology.monthOfYearRule)
+        merger.removeProcessed(ISOChronology.dayOfMonthRule)
+      }
+      var doyVal: Int = merger.getValue(ISOChronology.dayOfYearRule)
+      if (doyVal != null) {
+        merger.storeMerged(LocalDate.rule, ISOChronology.getDateFromDayOfYear(yearVal, doyVal))
+        merger.removeProcessed(ISOChronology.yearRule)
+        merger.removeProcessed(ISOChronology.dayOfYearRule)
+      }
+      var woyVal: Int = merger.getValue(ISOChronology.weekOfYearRule)
+      var dow: DayOfWeek = merger.getValue(ISOChronology.dayOfWeekRule)
+      if (woyVal != null && dow != null) {
+        var date: LocalDate = LocalDate.of(yearVal, 1, 1).plusWeeks(woyVal - 1)
+        date = date.`with`(DateAdjusters.nextOrCurrent(dow))
+        merger.storeMerged(LocalDate.rule, date)
+        merger.removeProcessed(ISOChronology.yearRule)
+        merger.removeProcessed(ISOChronology.weekOfYearRule)
+        merger.removeProcessed(ISOChronology.dayOfWeekRule)
+      }
+      var womVal: Int = merger.getValue(ISOChronology.weekOfMonthRule)
+      if (moy != null && womVal != null && dow != null) {
+        var date: LocalDate = LocalDate.of(yearVal, moy, 1).plusWeeks(womVal - 1)
+        date = date.`with`(DateAdjusters.nextOrCurrent(dow))
+        merger.storeMerged(LocalDate.rule, date)
+        merger.removeProcessed(ISOChronology.yearRule)
+        merger.removeProcessed(ISOChronology.monthOfYearRule)
+        merger.removeProcessed(ISOChronology.weekOfMonthRule)
+        merger.removeProcessed(ISOChronology.dayOfWeekRule)
+      }
+    }
+    var wbyVal: Int = merger.getValue(ISOChronology.weekBasedYearRule)
+    if (wbyVal != null) {
+      var woy: Int = merger.getValue(ISOChronology.weekOfWeekBasedYearRule)
+      var dow: DayOfWeek = merger.getValue(ISOChronology.dayOfWeekRule)
+      if (woy != null && dow != null) {
+        merger.removeProcessed(ISOChronology.weekBasedYearRule)
+        merger.removeProcessed(ISOChronology.weekOfWeekBasedYearRule)
+        merger.removeProcessed(ISOChronology.dayOfWeekRule)
+      }
+    }
+    var date: LocalDate = merger.getValue(LocalDate.rule)
+    var time: LocalTime = merger.getValue(LocalTime.rule)
+    var offset: ZoneOffset = merger.getValue(ZoneOffset.rule)
+    var zone: TimeZone = merger.getValue(TimeZone.rule)
+    if (date != null && time != null) {
+      merger.storeMerged(LocalDateTime.rule, LocalDateTime.of(date, time))
+      merger.removeProcessed(LocalDate.rule)
+      merger.removeProcessed(LocalTime.rule)
+    }
+    if (date != null && offset != null) {
+      merger.storeMerged(OffsetDate.rule, OffsetDate.of(date, offset))
+      merger.removeProcessed(LocalDate.rule)
+      merger.removeProcessed(ZoneOffset.rule)
+    }
+    if (time != null && offset != null) {
+      merger.storeMerged(OffsetTime.rule, OffsetTime.of(time, offset))
+      merger.removeProcessed(LocalTime.rule)
+      merger.removeProcessed(ZoneOffset.rule)
+    }
+    var ldt: LocalDateTime = merger.getValue(LocalDateTime.rule)
+    if (ldt != null && offset != null) {
+      merger.storeMerged(OffsetDateTime.rule, OffsetDateTime.of(ldt, offset))
+      merger.removeProcessed(LocalDateTime.rule)
+      merger.removeProcessed(ZoneOffset.rule)
+    }
+    else {
+      var od: OffsetDate = merger.getValue(OffsetDate.rule)
+      var ot: OffsetTime = merger.getValue(OffsetTime.rule)
+      if (od != null && ot != null) {
+        if (od.getOffset.equals(ot.getOffset) == false) {
+          if (merger.getContext.isStrict) {
+            throw new CalendricalRuleException("Unable to merge OffsetDate and OffsetTime as offsets differ", OffsetTime.rule)
+          }
+          else {
+            ot = ot.adjustLocalTime(od.getOffset)
+          }
+        }
+        merger.storeMerged(OffsetDateTime.rule, OffsetDateTime.of(od, ot, od.getOffset))
+        merger.removeProcessed(OffsetDate.rule)
+        merger.removeProcessed(OffsetTime.rule)
+      }
+    }
+    var odt: OffsetDateTime = merger.getValue(OffsetDateTime.rule)
+    if (odt != null && zone != null) {
+      if (merger.getContext.isStrict) {
+        merger.storeMerged(ZonedDateTime.rule, ZonedDateTime.of(odt, zone))
+      }
+      else {
+        merger.storeMerged(ZonedDateTime.rule, ZonedDateTime.ofInstant(odt, zone))
+      }
+      merger.removeProcessed(OffsetDateTime.rule)
+      merger.removeProcessed(TimeZone.rule)
+    }
   }
+
+  /**
+   * Gets the name of the chronology.
+   *
+   * @return the name of the chronology, never null
+   */
+  override def getName: String = "ISO"
+}

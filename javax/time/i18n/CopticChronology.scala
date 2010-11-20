@@ -57,18 +57,13 @@ import javax.time.calendar.PeriodUnit
  *
  * @author Stephen Colebourne
  */
-object CopticChronology {
+object CopticChronology extends CopticChronology {
   /**
    * Gets the rule for the day-of-month field in the Coptic chronology.
    *
    * @return the rule for the day-of-month field, never null
    */
   def dayOfMonthRule: DateTimeFieldRule[Int] = DayOfMonthRule
-
-  /**
-   * The singleton instance of   { @code CopticChronology }.
-   */
-  val INSTANCE: CopticChronology = new CopticChronology
   /**
    * Gets the rule for the day-of-week field in the Coptic chronology.
    *
@@ -90,7 +85,7 @@ object CopticChronology {
 
   @SerialVersionUID(1L)
   private sealed class YearRule private
-    extends DateTimeFieldRule[Int](classOf[Int], CopticChronology.INSTANCE, "Year", YEARS, null, CopticDate.MIN_YEAR, CopticDate.MAX_YEAR) with Serializable {
+    extends DateTimeFieldRule[Int](classOf[Int], CopticChronology, "Year", YEARS, null, CopticDate.MIN_YEAR, CopticDate.MAX_YEAR) with Serializable {
 
     private def readResolve: AnyRef = YearRule
 
@@ -154,7 +149,7 @@ object CopticChronology {
 
   @SerialVersionUID(1L)
   private sealed class DayOfYearRule private
-    extends DateTimeFieldRule[Int](classOf[Int], CopticChronology.INSTANCE, "DayOfYear", periodDays, YEARS, 1, 366) with Serializable {
+    extends DateTimeFieldRule[Int](classOf[Int], CopticChronology, "DayOfYear", periodDays, YEARS, 1, 366) with Serializable {
     override def getMaximumValue(calendrical: Calendrical): Int = {
       val year: Int = calendrical.get(CopticChronology.yearRule)
       if (year != null) {
@@ -198,7 +193,7 @@ object CopticChronology {
 
   @SerialVersionUID(1L)
   private sealed class MonthOfYearRule private
-    extends DateTimeFieldRule[Int](classOf[Int], CopticChronology.INSTANCE, "MonthOfYear", MONTHS, YEARS, 1, 13)
+    extends DateTimeFieldRule[Int](classOf[Int], CopticChronology, "MonthOfYear", MONTHS, YEARS, 1, 13)
     with Serializable {
     private def readResolve: AnyRef = MonthOfYearRule
 
@@ -245,7 +240,7 @@ object CopticChronology {
 
   @SerialVersionUID(1L)
   private sealed class DayOfWeekRule private
-    extends DateTimeFieldRule[DayOfWeek](classOf[DayOfWeek], CopticChronology.INSTANCE, "DayOfWeek", periodDays, periodWeeks, 1, 7) with Serializable {
+    extends DateTimeFieldRule[DayOfWeek](classOf[DayOfWeek], CopticChronology, "DayOfWeek", periodDays, periodWeeks, 1, 7) with Serializable {
 
     private def readResolve: AnyRef = DayOfWeekRule
 
@@ -262,7 +257,7 @@ object CopticChronology {
 
   @SerialVersionUID(1L)
   private sealed class DayOfMonthRule private
-    extends DateTimeFieldRule[Int](classOf[Int], CopticChronology.INSTANCE, "DayOfMonth", periodDays, MONTHS, 1, 30) with Serializable {
+    extends DateTimeFieldRule[Int](classOf[Int], CopticChronology, "DayOfMonth", periodDays, MONTHS, 1, 30) with Serializable {
     private def readResolve: AnyRef = DayOfMonthRule
 
     override def getMaximumValue(calendrical: Calendrical): Int = {
@@ -336,7 +331,7 @@ object CopticChronology {
  * Restrictive constructor.
  */
 @SerialVersionUID(1L)
-final class CopticChronology private extends Chronology with Serializable {
+sealed class CopticChronology private extends Chronology with Serializable {
   /**
    * Gets the name of the chronology.
    *

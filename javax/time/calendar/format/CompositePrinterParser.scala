@@ -31,7 +31,6 @@
  */
 package javax.time.calendar.format
 
-import java.io.IOException
 import java.util.Arrays
 import java.util.List
 import javax.time.calendar.Calendrical
@@ -101,7 +100,7 @@ final class CompositePrinterParser private[format](_printers: List[DateTimePrint
       for (parser <- parsers) {
         position = parser.parse(context, parseText, position)
         if (position < 0) {
-          break //todo: break is not supported
+          //break //todo: break is not supported
         }
       }
       return position

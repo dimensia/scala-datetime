@@ -31,8 +31,6 @@
  */
 package javax.time.calendar
 
-import javax.time.CalendricalException
-
 /**
  * Provides access to a time in the ISO-8601 calendar system.
  * <p>

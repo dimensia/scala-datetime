@@ -31,7 +31,6 @@
  */
 package javax.time.calendar.format
 
-import java.io.IOException
 import javax.time.calendar.Calendrical
 
 /**

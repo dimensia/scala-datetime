@@ -33,7 +33,6 @@
 package javax.time
 
 import calendar.LocalDate
-import collection.immutable.TreeMap
 import java.io._
 import java.util.ConcurrentModificationException
 import java.util.Arrays
@@ -48,7 +47,7 @@ import java.util.concurrent.atomic.AtomicReference
  */
 
 @SerialVersionUID(1L)
-final class SystemUTCRules private extends UTCRules with Serializable {
+sealed class SystemUTCRules private extends UTCRules with Serializable {
 
   import SystemUTCRules._
   import UTCRules._
@@ -144,7 +143,7 @@ final class SystemUTCRules private extends UTCRules with Serializable {
   }
 }
 
-object SystemUTCRules {
+object SystemUTCRules extends SystemUTCRules{
 
   @SerialVersionUID(1L)
   private class Data(val dates: Array[Long], val offsets: Array[Int], val taiSeconds: Array[Long]) extends Serializable

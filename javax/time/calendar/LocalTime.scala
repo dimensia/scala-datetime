@@ -123,7 +123,7 @@ object LocalTime {
 
   @SerialVersionUID(1L)
   private[calendar] final class Rule private
-    extends CalendricalRule[LocalTime](classOf[LocalTime], ISOChronology.INSTANCE, "LocalTime", ISOChronology.periodNanos, ISOChronology.periodDays)
+    extends CalendricalRule[LocalTime](classOf[LocalTime], ISOChronology, "LocalTime", ISOChronology.periodNanos, ISOChronology.periodDays)
     with Serializable {
     protected override def derive(calendrical: Calendrical): LocalTime = {
       val ldt: LocalDateTime = calendrical.get(LocalDateTime.rule)
@@ -446,6 +446,9 @@ object LocalTime {
 final class LocalTime private(hour: Byte, minute: Byte, second: Byte, nano: Int)
   extends Calendrical with TimeProvider with CalendricalMatcher
   with TimeAdjuster with Comparable[LocalTime] with Serializable {
+
+  import LocalTime._
+
   /**
    * Checks if this    { @code LocalTime } is before the specified time.
    * <p>
@@ -466,7 +469,7 @@ final class LocalTime private(hour: Byte, minute: Byte, second: Byte, nano: Int)
    * @param nano the nano-of-second to represent, validated from 0 to 999,999,999
    */
   private def this(hour: Int, minute: Int, second: Int, nano: Int) {
-    this (hourOfDay.toByte, minuteOfHour.toByte, secondOfMinute.toByte, nanoOfSecond)
+    this (hour.toByte, minute.toByte, second.toByte, nano)
   }
 
   /**

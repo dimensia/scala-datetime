@@ -206,9 +206,7 @@ object OffsetDate {
    * @return the parsed offset date, never null
    * @throws CalendricalException if the text cannot be parsed
    */
-  def parse(text: String): OffsetDate = {
-    return DateTimeFormatters.isoOffsetDate.parse(text, rule)
-  }
+  def parse(text: String): OffsetDate = DateTimeFormatters.isoOffsetDate.parse(text, rule)
 
   /**
    * Gets the field rule for    { @code OffsetDate }.
@@ -234,9 +232,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    *
    * @return a suitable hash code
    */
-  override def hashCode: Int = {
-    return date.hashCode ^ offset.hashCode
-  }
+  override def hashCode: Int = date.hashCode ^ offset.hashCode
 
   /**
    * Returns a copy of this OffsetDate with the date altered using the adjuster.
@@ -270,9 +266,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * @return an { @code OffsetDate } based on this date with the weeks added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def plusWeeks(weeks: Int): OffsetDate = {
-    return `with`(date.plusWeeks(weeks), offset)
-  }
+  def plusWeeks(weeks: Int): OffsetDate = `with`(date.plusWeeks(weeks), offset)
 
   /**
    * Is this date before the specified date.
@@ -281,9 +275,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * @return true if this point is before the specified date
    * @throws NullPointerException if    { @code other } is null
    */
-  def isBefore(other: OffsetDate): Boolean = {
-    return compareTo(other) < 0
-  }
+  def isBefore(other: OffsetDate): Boolean = compareTo(other) < 0
 
   /**
    * Returns a copy of this OffsetDate with the specified period in years added.
@@ -308,9 +300,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * @throws CalendricalException if the result exceeds the supported date range
    * @see # plusYears ( int, javax.time.calendar.DateResolver )
    */
-  def plusYears(years: Int): OffsetDate = {
-    return `with`(date.plusYears(years), offset)
-  }
+  def plusYears(years: Int): OffsetDate = `with`(date.plusYears(years), offset)
 
   /**
    * Checks if the date extracted from the calendrical matches this.
@@ -318,9 +308,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * @param calendrical the calendrical to match, not null
    * @return true if the calendrical matches, false otherwise
    */
-  override def matchesCalendrical(calendrical: Calendrical): Boolean = {
-    return this.equals(calendrical.get(rule))
-  }
+  override def matchesCalendrical(calendrical: Calendrical): Boolean = this.equals(calendrical.get(OffsetDate.rule))
 
   /**
    * Converts this date to a    { @code LocalDate }.

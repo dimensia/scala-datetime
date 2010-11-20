@@ -65,7 +65,7 @@ object HistoricChronology {
    * Unit class for months.
    */
   @SerialVersionUID(1L)
-  private final class Months private
+  private[time] final class Months
     extends PeriodUnit("JulianMonths", Duration.ofStandardHours(31557600L / 12L)) {
 
     private def readResolve: AnyRef = MONTHS
@@ -88,7 +88,7 @@ object HistoricChronology {
    * @param chrono The chronology.
    **/
   @SerialVersionUID(1L)
-  private final class YearRule private(chrono: HistoricChronology)
+  private[time] final class YearRule(chrono: HistoricChronology)
     extends DateTimeFieldRule[Int](classOf[Int], chrono, "Year", YEARS, null, -(HistoricDate.MAX_YEAR - 1), HistoricDate.MAX_YEAR) with Serializable {
 
     protected def merge(merger: CalendricalMerger): Unit = {
@@ -120,7 +120,7 @@ object HistoricChronology {
    * @param chrono The chronology.
    **/
   @SerialVersionUID(1L)
-  private final class MonthOfYearRule private(chrono: HistoricChronology)
+  private[time] final class MonthOfYearRule(chrono: HistoricChronology)
     extends DateTimeFieldRule[MonthOfYear](classOf[MonthOfYear], chrono, "MonthOfYear", MONTHS, YEARS, 1, 13) with Serializable {
 
     protected def derive(calendrical: Calendrical): MonthOfYear = {
@@ -133,7 +133,7 @@ object HistoricChronology {
    * @param chrono The chronology.
    **/
   @SerialVersionUID(1L)
-  private final class DayOfMonthRule private(chrono: HistoricChronology)
+  private[time] final class DayOfMonthRule(chrono: HistoricChronology)
     extends DateTimeFieldRule[Int](classOf[Int], chrono, "DayOfMonth", periodDays, MONTHS, 1, 30) with Serializable {
     protected def derive(calendrical: Calendrical): Integer = {
       val cd: HistoricDate = calendrical.get(HistoricDate.rule)
@@ -207,7 +207,7 @@ object HistoricChronology {
    * @param chrono The chronology.
    **/
   @SerialVersionUID(1L)
-  private final class EraRule private(chrono: HistoricChronology)
+  private[time] final class EraRule(chrono: HistoricChronology)
     extends DateTimeFieldRule[HistoricEra](classOf[HistoricEra], chrono, "Era", periodEras, null, 0, 1)
     with Serializable {
     protected def derive(calendrical: Calendrical): HistoricEra = {
@@ -234,7 +234,7 @@ object HistoricChronology {
    * @param chrono The chronology.
    **/
   @SerialVersionUID(1L)
-  private final class DayOfYearRule private(chrono: HistoricChronology)
+  private[time] final class DayOfYearRule(chrono: HistoricChronology)
     extends DateTimeFieldRule[Int](classOf[Int], chrono, "DayOfYear", periodDays, YEARS, 1, 366) with Serializable {
     override def getMaximumValue(calendrical: Calendrical): Int = {
       val year: Int = calendrical.get(chrono.yearRule)
@@ -291,7 +291,7 @@ object HistoricChronology {
   def periodWeeks: PeriodUnit = ISOChronology.periodWeeks
 
   @SerialVersionUID(1L)
-  private final class DayOfWeekRule private(chrono: HistoricChronology)
+  private[time] final class DayOfWeekRule(chrono: HistoricChronology)
     extends DateTimeFieldRule[DayOfWeek](classOf[DayOfWeek], chrono, "DayOfWeek", periodDays, periodWeeks, 1, 7)
     with Serializable {
 
@@ -452,7 +452,7 @@ final class HistoricChronology private(cutover: LocalDate) extends Chronology wi
     while (month < 12) {
       {
         if (doy0 < array(month)) {
-          break //todo: break is not supported
+          //break //todo: break is not supported
         }
       }
       ({

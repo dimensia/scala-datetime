@@ -31,7 +31,6 @@
  */
 package javax.time.calendar
 
-import java.util.Calendar
 import java.util.Locale
 import javax.time.calendar.format.DateTimeFormatterBuilder.TextStyle
 
@@ -106,7 +105,7 @@ sealed abstract class AmPmOfDay(ordinal: Int) extends Calendrical {
    * @return the value for the rule, null if the value cannot be returned
    */
   def get[T](rule: CalendricalRule[T]): T = {
-    if (rule.getReifiedType != classOf[AmPmOfDay]) null
+    if (rule.getReifiedType != classOf[AmPmOfDay]) _ //null
     else rule.reify(this)
   }
 

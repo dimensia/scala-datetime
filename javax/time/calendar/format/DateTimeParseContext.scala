@@ -67,10 +67,10 @@ object DateTimeParseContext {
     protected override def clone: DateTimeParseContext.Parsed = {
       val cloned: DateTimeParseContext.Parsed = new DateTimeParseContext.Parsed
       cloned.values.putAll(this.values)
-      return cloned
+      cloned
     }
 
-    private[format] val values: Map[CalendricalRule[_], AnyRef] = new HashMap[CalendricalRule[_], AnyRef]
+    private[format] val values: Map[CalendricalRule[_], Any] = new HashMap[CalendricalRule[_], Any]
   }
 
 }
@@ -133,6 +133,20 @@ final class DateTimeParseContext(val symbols: DateTimeFormatSymbols) {
    * Whether to parse using case sensitively.
    */
   var caseSensitive: Boolean = true
+
+      /**
+     * Checks if parsing is case sensitive.
+     *
+     * @return true if parsing is case sensitive, false if case insensitive
+     */
+    def isCaseSensitive: Boolean = caseSensitive
+
+    /**
+     * Sets whether the parsing is case sensitive or not.
+     *
+     * @param caseSensitive  changes the parsing to be case sensitive or not from now on
+     */
+    def setCaseSensitive(caseSensitive: Boolean) = this.caseSensitive = caseSensitive
 
   /**
    * Returns a   { @code CalendricalMerger } that can be used to interpret
