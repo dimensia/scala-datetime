@@ -164,7 +164,7 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
     }
   }
 
-  /** { @inheritDoc }*/
+  /**{@inheritDoc}*/
   override def toString: String = {
     var str: String = null
     if (processingMap.isEmpty && inputMap.size > 0) {
@@ -198,7 +198,7 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
    * This method queries the value of the specified calendrical rule using
    * the merged rule-value map.
    * If the value cannot be returned for the rule from this date then
-   * { @code null } will be returned.
+   * {@code null} will be returned.
    *
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
@@ -260,7 +260,7 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
    * This method queries the value of the specified calendrical rule using
    * the merged rule-value map.
    * If the value cannot be returned for the rule from this date then
-   * { @code null } will be returned.
+   * {@code null} will be returned.
    *
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
@@ -326,10 +326,7 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
     var protect: Int = 0
     while (iterator.hasNext && protect < 100) {
       iterator.next.merge(this)
-      ({
-        protect += 1;
-        protect
-      })
+      protect += 1;
     }
     if (iterator.hasNext) {
       throw new CalendricalException("Merge fields failed, infinite loop blocked, " + "probably caused by an incorrectly implemented field rule")

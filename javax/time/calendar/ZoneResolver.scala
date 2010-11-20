@@ -120,7 +120,7 @@ abstract class ZoneResolver protected {
    * @return the resolved offset date-time, never null
    * @throws IllegalCalendarFieldValueException if the offset cannot be calculated
    */
-  protected def handleGap(zone: TimeZone, rules: ZoneRules, gapInfo: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime
+  protected[calendar] def handleGap(zone: TimeZone, rules: ZoneRules, gapInfo: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime
 
   /**
    * Defines the strategy for selecting an offset to use for a local date-time
@@ -161,5 +161,5 @@ abstract class ZoneResolver protected {
    * @return the resolved offset date-time, never null
    * @throws IllegalCalendarFieldValueException if the offset cannot be calculated
    */
-  protected def handleOverlap(zone: TimeZone, rules: ZoneRules, overlapInfo: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime
+  protected[calendar] def handleOverlap(zone: TimeZone, rules: ZoneRules, overlapInfo: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime
 }

@@ -421,7 +421,7 @@ object Period {
     val endDate: LocalDate = LocalDate.of(endDateProvider)
     val startMonth: Long = startDate.getYear * 12L + startDate.getMonthOfYear.ordinal
     val endMonth: Long = endDate.getYear * 12L + endDate.getMonthOfYear.ordinal
-    val months: Long = endMonth - startMonth
+    var months: Long = endMonth - startMonth
     if (months > 0 && endDate.getDayOfMonth < startDate.getDayOfMonth) {
         months -= 1
     }

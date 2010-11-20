@@ -31,7 +31,6 @@
  */
 package javax.time.calendar.format
 
-import java.io.IOException
 import java.util.ArrayList
 import java.util.Collections
 import java.util.Comparator
@@ -87,15 +86,15 @@ object ZonePrinterParser {
    * @param length the length of this tree (The length of the substring this node of the tree contains.
    * Subtrees will have a longer length.)
    */
-  private[format] class SubstringTree(length: Int) {
-    private def get(substring2: String): ZonePrinterParser.SubstringTree = substringMap.get(substring2)
+  private[format] class SubstringTree(val length: Int) {
+    private[format] def get(substring2: String): ZonePrinterParser.SubstringTree = substringMap.get(substring2)
 
     /**
      * Values must be added from shortest to longest.
      *
      * @param newSubstring the substring to add, not null
      */
-    private def add(newSubstring: String): Unit = {
+    private[format] def add(newSubstring: String): Unit = {
       var idLen: Int = newSubstring.length
       if (idLen == length) {
         substringMap.put(newSubstring, null)
@@ -151,6 +150,8 @@ object ZonePrinterParser {
 final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilder.TextStyle)
   extends DateTimePrinter with DateTimeParser {
 
+  import ZonePrinterParser._
+
   /**
    * Constructor.
    */
@@ -202,7 +203,7 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
       return ~position
     }
     var tree: ZonePrinterParser.SubstringTree = null
-    classOf[ZonePrinterParser] synchronyzed {
+    classOf[ZonePrinterParser].synchronized {
       if (preparedTree == null || preparedIDs.size < ids.size) {
         ids = new HashSet[String](ids)
         preparedTree = prepareParser(ids)
@@ -227,14 +228,11 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
     while (tree != null) {
       var nodeLength: Int = tree.length
       if (position + nodeLength > length) {
-        break //todo: break is not supported
+        //break //todo: break is not supported
       }
       parsedZoneId = parseText.substring(position, position + nodeLength)
       tree = tree.get(parsedZoneId)
-      ({
         count += 1;
-        count - 1
-      })
     }
     if (parsedZoneId != null && preparedIDs.contains(parsedZoneId)) {
       var zone: TimeZone = TimeZone.of(parsedZoneId)
@@ -245,7 +243,7 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
           if (parseText.regionMatches(pos + 1, version, 0, version.length)) {
             zone = zone.withVersion(version)
             pos += version.length + 1
-            break //todo: break is not supported
+            //break //todo: break is not supported
           }
         }
       }

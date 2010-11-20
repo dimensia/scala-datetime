@@ -124,7 +124,7 @@ abstract class UTCRules protected[time] {
    * @return the converted UTC instant, not null
    * @throws ArithmeticException if the capacity is exceeded
    */
-  protected def convertToUTC(instant: Instant): UTCInstant = {
+  protected[time] def convertToUTC(instant: Instant): UTCInstant = {
     var epochDay: Long = MathUtils.floorDiv(instant.seconds, SECS_PER_DAY)
     var mjd: Long = epochDay + OFFSET_MJD_EPOCH
     var slsNanos: Long = MathUtils.floorMod(instant.seconds, SECS_PER_DAY) * NANOS_PER_SECOND + instant.nanos
