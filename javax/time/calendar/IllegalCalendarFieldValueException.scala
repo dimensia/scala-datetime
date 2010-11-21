@@ -49,7 +49,7 @@ package javax.time.calendar
  */
 @SerialVersionUID(1L)
 class IllegalCalendarFieldValueException(message: String, fieldRule: DateTimeFieldRule[_])
-  extends CalendricalRuleException(message, fieldRule) {
+  extends CalendricalRuleException[_](message, fieldRule) {
   /**
    * Constructs a new illegal field value exception with a standard message.
    *

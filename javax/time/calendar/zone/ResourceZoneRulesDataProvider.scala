@@ -150,7 +150,9 @@ final class ResourceZoneRulesDataProvider private(url: URL) extends ZoneRulesDat
     }
     this.groupID = dis.readUTF
     var versionCount: Int = dis.readShort
-    var versionArray: Array[String] = new Array[String](versionCount) {
+    var versionArray: Array[String] = new Array[String](versionCount)
+
+    {
       var i: Int = 0
       while (i < versionCount) {
         versionArray(i) = dis.readUTF
@@ -158,7 +160,9 @@ final class ResourceZoneRulesDataProvider private(url: URL) extends ZoneRulesDat
       }
     }
     var regionCount: Int = dis.readShort
-    var regionArray: Array[String] = new Array[String](regionCount) {
+    var regionArray: Array[String] = new Array[String](regionCount)
+
+    {
       var i: Int = 0
       while (i < regionCount) {
         regionArray(i) = dis.readUTF
@@ -171,7 +175,9 @@ final class ResourceZoneRulesDataProvider private(url: URL) extends ZoneRulesDat
       while (i < versionCount) {
         var versionRegionCount: Int = dis.readShort
         var versionRegionArray: Array[String] = new Array[String](versionRegionCount)
-        var versionRulesArray: Array[Short] = new Array[Short](versionRegionCount) {
+        var versionRulesArray: Array[Short] = new Array[Short](versionRegionCount)
+
+        {
           var j: Int = 0
           while (j < versionRegionCount) {
             versionRegionArray(j) = regionArray(dis.readShort)

@@ -61,9 +61,8 @@ final class ReducedPrinterParser private[format](rule: DateTimeFieldRule[_], wid
   if (baseValue > rule.getMaximumValue) {
     throw new IllegalArgumentException("The base value must be within the range of the field")
   }
-  this.baseValue = baseValue
-  this.range = EXCEED_POINTS(width)
-  if (((baseValue.asInstanceOf[Long]) + range) > Integer.MAX_VALUE) {
+  this.range = NumberPrinterParser.EXCEED_POINTS(width)
+  if (((baseValue.toLong) + range) > Int.MaxValue) {
     throw new CalendricalException("Unable to add printer-parser as the range exceeds the capacity of an int")
   }
 
@@ -73,13 +72,13 @@ final class ReducedPrinterParser private[format](rule: DateTimeFieldRule[_], wid
 
   /** { @inheritDoc }*/
   private[format] override def getValue(calendrical: Calendrical): Int = {
-    var value: Int = rule.getInt(calendrical)
+    val value: Int = rule.getInt(calendrical)
     return Math.abs(value % range)
   }
 
   private[format] override def setValue(context: DateTimeParseContext, _value: Long): Unit = {
     var value = _value
-    var lastPart: Int = baseValue % range
+    val lastPart: Int = baseValue % range
     if (baseValue > 0) {
       value = baseValue - lastPart + value
     }

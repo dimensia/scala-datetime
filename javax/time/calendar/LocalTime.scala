@@ -122,7 +122,7 @@ object LocalTime {
   private[calendar] object Rule extends Rule
 
   @SerialVersionUID(1L)
-  private[calendar] final class Rule private
+  private[calendar] sealed class Rule
     extends CalendricalRule[LocalTime](classOf[LocalTime], ISOChronology, "LocalTime", ISOChronology.periodNanos, ISOChronology.periodDays)
     with Serializable {
     protected override def derive(calendrical: Calendrical): LocalTime = {
@@ -235,7 +235,8 @@ object LocalTime {
    * @return the local time, never null
    * @throws IllegalCalendarFieldValueException if the second-of-day value is invalid
    */
-  def ofSecondOfDay(secondOfDay: Long): LocalTime = {
+  def ofSecondOfDay(_secondOfDay: Long): LocalTime = {
+    var secondOfDay = _secondOfDay
     ISOChronology.secondOfDayRule.checkValue(secondOfDay)
     val hours: Int = (secondOfDay / SECONDS_PER_HOUR).toInt
     secondOfDay -= hours * SECONDS_PER_HOUR
@@ -288,20 +289,21 @@ object LocalTime {
    * @return the local time, never null
    * @throws CalendricalException if the nanos of day value is invalid
    */
-  def ofNanoOfDay(nanoOfDay: Long): LocalTime = {
+  def ofNanoOfDay(_nanoOfDay: Long): LocalTime = {
+    var nanoOfDay = _nanoOfDay
     if (nanoOfDay < 0) {
       throw new CalendricalException("Cannot create LocalTime from nanos of day as value " + nanoOfDay + " must not be negative")
     }
     if (nanoOfDay >= NANOS_PER_DAY) {
       throw new CalendricalException("Cannot create LocalTime from nanos of day as value " + nanoOfDay + " must be less than " + NANOS_PER_DAY)
     }
-    val hours: Int = (nanoOfDay / NANOS_PER_HOUR).asInstanceOf[Int]
+    val hours: Int = (nanoOfDay / NANOS_PER_HOUR).toInt
     nanoOfDay -= hours * NANOS_PER_HOUR
-    val minutes: Int = (nanoOfDay / NANOS_PER_MINUTE).asInstanceOf[Int]
+    val minutes: Int = (nanoOfDay / NANOS_PER_MINUTE).toInt
     nanoOfDay -= minutes * NANOS_PER_MINUTE
-    val seconds: Int = (nanoOfDay / NANOS_PER_SECOND).asInstanceOf[Int]
+    val seconds: Int = (nanoOfDay / NANOS_PER_SECOND).toInt
     nanoOfDay -= seconds * NANOS_PER_SECOND
-    create(hours, minutes, seconds, nanoOfDay.asInstanceOf[Int])
+    create(hours, minutes, seconds, nanoOfDay.toInt)
   }
 
   /**Minutes per hour. */
@@ -319,14 +321,15 @@ object LocalTime {
    * @return the local time, never null
    * @throws IllegalCalendarFieldValueException if the either input value is invalid
    */
-  def ofSecondOfDay(secondOfDay: Long, nanoOfSecond: Int): LocalTime = {
+  def ofSecondOfDay(_secondOfDay: Long, nanoOfSecond: Int): LocalTime = {
+    var secondOfDay = _secondOfDay
     ISOChronology.secondOfDayRule.checkValue(secondOfDay)
     ISOChronology.nanoOfSecondRule.checkValue(nanoOfSecond)
-    val hours: Int = (secondOfDay / SECONDS_PER_HOUR).asInstanceOf[Int]
+    val hours: Int = (secondOfDay / SECONDS_PER_HOUR).toInt
     secondOfDay -= hours * SECONDS_PER_HOUR
-    val minutes: Int = (secondOfDay / SECONDS_PER_MINUTE).asInstanceOf[Int]
+    val minutes: Int = (secondOfDay / SECONDS_PER_MINUTE).toInt
     secondOfDay -= minutes * SECONDS_PER_MINUTE
-    return create(hours, minutes, secondOfDay.asInstanceOf[Int], nanoOfSecond)
+    return create(hours, minutes, secondOfDay.toInt, nanoOfSecond)
   }
 
   /**
@@ -379,7 +382,7 @@ object LocalTime {
    * @param time the    { @code LocalTime } after the addition, not null
    * @param days the overflow in days
    */
-  final class Overflow private(time: LocalTime, days: Int) {
+  final class Overflow private[LocalTime](val time: LocalTime, val days: Int) {
     /**
      * Returns a string description of this instance.
      *
@@ -443,7 +446,7 @@ object LocalTime {
 }
 
 @SerialVersionUID(1L)
-final class LocalTime private(hour: Byte, minute: Byte, second: Byte, nano: Int)
+final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte, val nano: Int)
   extends Calendrical with TimeProvider with CalendricalMatcher
   with TimeAdjuster with Comparable[LocalTime] with Serializable {
 
@@ -936,7 +939,7 @@ final class LocalTime private(hour: Byte, minute: Byte, second: Byte, nano: Int)
   def minusMinutes(minutes: Long): LocalTime = {
     if (minutes == 0) return this
     var mofd: Int = hour * MINUTES_PER_HOUR + minute
-    var newMofd: Int = (-(minutes % MINUTES_PER_DAY).asInstanceOf[Int] + mofd + MINUTES_PER_DAY) % MINUTES_PER_DAY
+    var newMofd: Int = (-(minutes % MINUTES_PER_DAY).toInt + mofd + MINUTES_PER_DAY) % MINUTES_PER_DAY
     if (mofd == newMofd) return this
     val newHour: Int = newMofd / MINUTES_PER_HOUR
     val newMinute: Int = newMofd % MINUTES_PER_HOUR

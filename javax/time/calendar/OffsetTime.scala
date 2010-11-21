@@ -118,7 +118,7 @@ object OffsetTime {
   private[calendar] object Rule extends Rule
 
   @SerialVersionUID(1L)
-  private[calendar] final class Rule private
+  private[calendar] sealed class Rule private
     extends CalendricalRule[OffsetTime](classOf[OffsetTime], ISOChronology, "OffsetTime", ISOChronology.periodNanos, ISOChronology.periodDays)
     with Serializable {
 
@@ -240,7 +240,7 @@ object OffsetTime {
    * @param offset the zone offset, validated as not null
    */
 @SerialVersionUID(-1751032571L)
-final class OffsetTime private(time: LocalTime, offset: ZoneOffset)
+final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
   extends TimeProvider with Calendrical with Comparable[OffsetTime] with Serializable with CalendricalMatcher with TimeAdjuster {
       if (time == null) throw new NullPointerException("The time must not be null")
       if (offset == null)throw new NullPointerException("The zone offset must not be null")

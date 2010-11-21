@@ -225,7 +225,7 @@ object PeriodFields {
    * @param periodMap the map of periods to represent, not null and safe to assign
    */
 @SerialVersionUID(1L)
-final class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodField])
+sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodField])
   extends PeriodProvider with Iterable[PeriodField] with Serializable {
 
   import PeriodFields._
@@ -692,7 +692,7 @@ final class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFie
         for (unit <- units) {
           checkNotNull(unit, "PeriodUnit array must not contain null")
           if (loopUnit.isConvertibleTo(unit)) {
-            continue //todo: continue is not supported
+            //continue //todo: continue is not supported
           }
         }
         it.remove
@@ -787,7 +787,7 @@ final class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFie
   def retain(units: Array[PeriodUnit]): PeriodFields = {
     checkNotNull(units, "PeriodUnit array must not be null")
     var copy: TreeMap[PeriodUnit, PeriodField] = clonedMap
-    var unitList: List[PeriodUnit] = Arrays.asList(units)
+    var unitList: List[PeriodUnit] = Arrays.asList(units: _*)
     if (unitList.contains(null)) {
       throw new NullPointerException("PeriodUnit array must not contain null")
     }

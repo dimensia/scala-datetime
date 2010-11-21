@@ -60,7 +60,7 @@ object NumberPrinterParser {
  * @param signStyle the positive/negative sign style, not null
  * @param subsequentWidth the width of subsequent non-negative numbers, 0 or greater
  */
-class NumberPrinterParser private(rule: DateTimeFieldRule[_], minWidth: Int, maxWidth: Int, signStyle: SignStyle, subsequentWidth: Int)
+class NumberPrinterParser private[format](rule: DateTimeFieldRule[_], val minWidth: Int, maxWidth: Int, signStyle: SignStyle, subsequentWidth: Int)
   extends DateTimePrinter with DateTimeParser {
 
   /**

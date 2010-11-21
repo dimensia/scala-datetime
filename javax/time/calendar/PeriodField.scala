@@ -80,7 +80,7 @@ object PeriodField {
  * @param unit the unit that the period is measured in, validated not null
  */
 @SerialVersionUID(1L)
-final class PeriodField private(amount: Long, unit: PeriodUnit) extends PeriodProvider with Comparable[PeriodField] with Serializable {
+final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends PeriodProvider with Comparable[PeriodField] with Serializable {
   /**
    * Gets the amount of this period, converted to an   { @code int }.
    * <p>

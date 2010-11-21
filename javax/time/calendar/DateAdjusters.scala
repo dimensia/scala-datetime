@@ -62,7 +62,7 @@ object DateAdjusters {
    * @param dow The day-of-week to find.
    */
   @SerialVersionUID(1L)
-  private final class RelativeDayOfWeek private(relative: Int, dow: DayOfWeek) extends DateAdjuster with Serializable {
+  private[DateAdjusters] final class RelativeDayOfWeek(val relative: Int, val dow: DayOfWeek) extends DateAdjuster with Serializable {
     override def hashCode: Int = {
       var hash: Int = 13
       hash = 19 * hash + relative
@@ -223,7 +223,7 @@ object DateAdjusters {
     if (dayOfWeek == null) {
       throw new NullPointerException("DayOfWeek must not be null")
     }
-    return new DateAdjusters.DayOfWeekInMonth(ordinal, dayOfWeek)
+    new DateAdjusters.DayOfWeekInMonth(ordinal, dayOfWeek)
   }
 
   /**
@@ -235,7 +235,7 @@ object DateAdjusters {
    * @param dayOfWeek the day-of-week, not null
    */
   @SerialVersionUID(1L)
-  private final class DayOfWeekInMonth private(ordinal: Int, dayOfWeek: DayOfWeek) extends DateAdjuster with Serializable {
+  private[DateAdjusters] final class DayOfWeekInMonth (val ordinal: Int, val dayOfWeek: DayOfWeek) extends DateAdjuster with Serializable {
     /** { @inheritDoc }*/
     override def hashCode: Int = ordinal + 8 * dayOfWeek.ordinal
 
@@ -273,7 +273,7 @@ object DateAdjusters {
       if (dayOfWeek == null) {
         throw new NullPointerException("DayOfWeek must not be null")
       }
-      return new DateAdjusters.DayOfWeekInMonth(1, dayOfWeek)
+      new DateAdjusters.DayOfWeekInMonth(1, dayOfWeek)
     }
 
     /**

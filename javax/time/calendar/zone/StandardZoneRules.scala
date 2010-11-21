@@ -68,44 +68,54 @@ object StandardZoneRules {
    */
   private[zone] def readExternal(in: DataInput): StandardZoneRules = {
     var stdSize: Int = in.readInt
-    var stdTrans: Array[Long] = new Array[Long](stdSize) {
+    var stdTrans: Array[Long] = new Array[Long](stdSize)
+
+    {
       var i: Int = 0
       while (i < stdSize) {
-          stdTrans(i) = Ser.readEpochSecs(in)
-          i += 1;
+        stdTrans(i) = Ser.readEpochSecs(in)
+        i += 1;
       }
     }
-    var stdOffsets: Array[ZoneOffset] = new Array[ZoneOffset](stdSize + 1) {
+    var stdOffsets: Array[ZoneOffset] = new Array[ZoneOffset](stdSize + 1)
+
+    {
       var i: Int = 0
       while (i < stdOffsets.length) {
-          stdOffsets(i) = Ser.readOffset(in)
-          i += 1;
+        stdOffsets(i) = Ser.readOffset(in)
+        i += 1;
       }
     }
     var savSize: Int = in.readInt
-    var savTrans: Array[Long] = new Array[Long](savSize) {
+    var savTrans: Array[Long] = new Array[Long](savSize)
+
+    {
       var i: Int = 0
       while (i < savSize) {
-          savTrans(i) = Ser.readEpochSecs(in)
-          i += 1;
+        savTrans(i) = Ser.readEpochSecs(in)
+        i += 1;
       }
     }
-    var savOffsets: Array[ZoneOffset] = new Array[ZoneOffset](savSize + 1) {
+    var savOffsets: Array[ZoneOffset] = new Array[ZoneOffset](savSize + 1)
+
+    {
       var i: Int = 0
       while (i < savOffsets.length) {
-          savOffsets(i) = Ser.readOffset(in)
-          i += 1;
+        savOffsets(i) = Ser.readOffset(in)
+        i += 1;
       }
     }
     var ruleSize: Int = in.readByte
-    var rules: Array[ZoneOffsetTransitionRule] = new Array[ZoneOffsetTransitionRule](ruleSize) {
+    var rules: Array[ZoneOffsetTransitionRule] = new Array[ZoneOffsetTransitionRule](ruleSize)
+
+    {
       var i: Int = 0
       while (i < ruleSize) {
-          rules(i) = ZoneOffsetTransitionRule.readExternal(in)
-          i += 1;
+        rules(i) = ZoneOffsetTransitionRule.readExternal(in)
+        i += 1;
       }
     }
-    return new StandardZoneRules(stdTrans, stdOffsets, savTrans, savOffsets, rules)
+    new StandardZoneRules(stdTrans, stdOffsets, savTrans, savOffsets, rules)
   }
 }
 
@@ -121,10 +131,10 @@ object StandardZoneRules {
  */
 @SerialVersionUID(1L)
 final class StandardZoneRules private[zone](val standardTransitions: Array[Long],
-                                      val standardOffsets: Array[ZoneOffset],
-                                      val savingsInstantTransitions: Array[Long],
-                                      val wallOffsets: Array[ZoneOffset],
-                                      val lastRules: Array[ZoneOffsetTransitionRule])
+                                            val standardOffsets: Array[ZoneOffset],
+                                            val savingsInstantTransitions: Array[Long],
+                                            val wallOffsets: Array[ZoneOffset],
+                                            val lastRules: Array[ZoneOffsetTransitionRule])
   extends ZoneRules with Serializable {
 
   var localTransitionList: List[LocalDateTime] = new ArrayList[LocalDateTime] {
@@ -243,14 +253,14 @@ final class StandardZoneRules private[zone](val standardTransitions: Array[Long]
       var dt: OffsetDateTime = OffsetDateTime.ofInstant(instant, wallOffsets(wallOffsets.length - 1))
       var transArray: Array[ZoneOffsetTransition] = findTransitionArray(dt.toYear)
       var trans: ZoneOffsetTransition = null
-        var i: Int = 0
-        while (i < transArray.length) {
-            trans = transArray(i)
-            if (instant.isBefore(trans.getInstant)) {
-              return trans.getOffsetBefore
-            }
-            i += 1;
+      var i: Int = 0
+      while (i < transArray.length) {
+        trans = transArray(i)
+        if (instant.isBefore(trans.getInstant)) {
+          return trans.getOffsetBefore
         }
+        i += 1;
+      }
       return trans.getOffsetAfter
     }
     var index: Int = Arrays.binarySearch(savingsInstantTransitions, epochSecs)
@@ -422,15 +432,15 @@ final class StandardZoneRules private[zone](val standardTransitions: Array[Long]
       {
         var year: Year = dt.toYear
         while (year.getValue > lastHistoricDT.getYear) {
-            var transArray: Array[ZoneOffsetTransition] = findTransitionArray(year)
+          var transArray: Array[ZoneOffsetTransition] = findTransitionArray(year)
 
-              var i: Int = transArray.length - 1
-              while (i >= 0) {
-                  if (instant.isAfter(transArray(i).getInstant)) {
-                    return transArray(i)
-                  }
-                  i -= 1;
-              }
+          var i: Int = transArray.length - 1
+          while (i >= 0) {
+            if (instant.isAfter(transArray(i).getInstant)) {
+              return transArray(i)
+            }
+            i -= 1;
+          }
           year = year.previous
         }
       }
@@ -460,13 +470,14 @@ final class StandardZoneRules private[zone](val standardTransitions: Array[Long]
       return transArray
     }
     var ruleArray: Array[ZoneOffsetTransitionRule] = lastRules
-    transArray = new Array[ZoneOffsetTransition](ruleArray.length) {
-      var i: Int = 0
-      while (i < ruleArray.length) {
-          transArray(i) = ruleArray(i).createTransition(year.getValue)
-          i += 1;
-      }
+    transArray = new Array[ZoneOffsetTransition](ruleArray.length)
+
+    var i: Int = 0
+    while (i < ruleArray.length) {
+      transArray(i) = ruleArray(i).createTransition(year.getValue)
+      i += 1;
     }
+
     if (year.isBefore(StandardZoneRules.LAST_CACHED_YEAR)) {
       lastRulesCache.putIfAbsent(year, transArray)
     }
@@ -494,7 +505,7 @@ final class StandardZoneRules private[zone](val standardTransitions: Array[Long]
       index = -index - 2
     }
     else if (index < savingsLocalTransitions.length - 1 && savingsLocalTransitions(index).equals(savingsLocalTransitions(index + 1))) {
-        index += 1;
+      index += 1;
     }
     if ((index & 1) == 0) {
       var dtBefore: LocalDateTime = savingsLocalTransitions(index)
@@ -546,10 +557,10 @@ final class StandardZoneRules private[zone](val standardTransitions: Array[Long]
     var list: List[ZoneOffsetTransition] = new ArrayList[ZoneOffsetTransition] {
       var i: Int = 0
       while (i < savingsInstantTransitions.length) {
-          var instant: Instant = Instant.ofEpochSeconds(savingsInstantTransitions(i))
-          var trans: OffsetDateTime = OffsetDateTime.ofInstant(instant, wallOffsets(i))
-          list.add(new ZoneOffsetTransition(trans, wallOffsets(i + 1)))
-          i += 1;
+        var instant: Instant = Instant.ofEpochSeconds(savingsInstantTransitions(i))
+        var trans: OffsetDateTime = OffsetDateTime.ofInstant(instant, wallOffsets(i))
+        list.add(new ZoneOffsetTransition(trans, wallOffsets(i + 1)))
+        i += 1;
       }
     }
     return list

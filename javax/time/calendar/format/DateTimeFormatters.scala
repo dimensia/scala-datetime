@@ -508,7 +508,7 @@ object DateTimeFormatters {
    * @param locale the locale to use, not null
    * @return the date-time formatter, never null
    */
-  def dateTime(dateTimeStyle: FormatStyle.type, locale: Locale): DateTimeFormatter = {
+  def dateTime(dateTimeStyle: FormatStyle, locale: Locale): DateTimeFormatter = {
     DateTimeFormatter.checkNotNull(dateTimeStyle, "Date-time style must not be null")
     (new DateTimeFormatterBuilder).appendLocalized(dateTimeStyle, dateTimeStyle).toFormatter(locale)
   }

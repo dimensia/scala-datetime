@@ -95,7 +95,7 @@ object YearMonth {
 
   @SerialVersionUID(1L)
   private[calendar] sealed class Rule
-    extends CalendricalRule[YearMonth]((classOf[YearMonth], ISOChronology, "YearMonth", ISOChronology.periodMonths, null))
+    extends CalendricalRule[YearMonth](classOf[YearMonth], ISOChronology, "YearMonth", ISOChronology.periodMonths, null)
     with Serializable {
     protected override def derive(calendrical: Calendrical): YearMonth = {
       var year: Int = calendrical.get(ISOChronology.yearRule)

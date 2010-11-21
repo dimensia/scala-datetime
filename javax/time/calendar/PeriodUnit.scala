@@ -99,6 +99,19 @@ abstract class PeriodUnit private[calendar](@transient val name: String, @transi
 
   import PeriodUnit._
 
+      /**
+     * Constructor used by ISOChronology.
+     *
+     * @param name  the name of the type, not null
+     * @param equivalentPeriod  the period this is derived from, null if no equivalent
+     * @param estimatedDuration  the estimated duration of one unit of this period, not null
+     * @throws ArithmeticException if the equivalent period calculation overflows
+     */
+    def this(name: String, equivalentPeriod: PeriodField, estimatedDuration: Duration) {
+        // input known to be valid
+        this(name, buildEquivalentPeriods(equivalentPeriod), estimatedDuration, name.hashCode ^ estimatedDuration.hashCode ^ (if(equivalentPeriod == null) 0 else equivalentPeriod.hashCode))
+    }
+
   /**
    * Constructor to create a unit that is derived from another smaller unit.
    * <p>

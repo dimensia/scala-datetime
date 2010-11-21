@@ -1254,7 +1254,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @return true if the calendrical matches, false otherwise
    */
   override def matchesCalendrical(calendrical: Calendrical): Boolean = {
-    this.equals(calendrical.get(rule))
+    this.equals(calendrical.get(LocalDateTime.rule))
   }
 
   /**

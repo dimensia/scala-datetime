@@ -88,19 +88,19 @@ object DateTimeFieldRule {
     if (valueTextMap.containsKey(null) || valueTextMap.containsValue(null) || valueTextMap.containsValue("")) {
       throw new IllegalArgumentException("The map must not contain null or empty text")
     }
-    var copy: Map[Int, String] = new HashMap[Int, String](valueTextMap)
+    val copy: Map[Int, String] = new HashMap[Int, String](valueTextMap)
     var reverse: Map[String, Int] = new HashMap[String, Int]
     var insensitive: Map[String, Int] = new HashMap[String, Int]
-    var lengthSet: Set[Int] = new HashSet[Int]
+    val lengthSet: Set[Int] = new HashSet[Int]
     for (entry <- copy.entrySet) {
-      var text: String = entry.getValue
-      var value: Int = entry.getKey
+      val text: String = entry.getValue
+      val value: Int = entry.getKey
       reverse.put(text, value)
       lengthSet.add(text.length)
-      var lower: String = text.toLowerCase(locale)
+      val lower: String = text.toLowerCase(locale)
       insensitive.put(lower, value)
       lengthSet.add(lower.length)
-      var upper: String = text.toUpperCase(locale)
+      val upper: String = text.toUpperCase(locale)
       insensitive.put(upper, value)
       lengthSet.add(upper.length)
     }
@@ -114,7 +114,7 @@ object DateTimeFieldRule {
       insensitiveTextValueMap = Collections.unmodifiableMap(insensitive)
       this.lengths = new Array[Int](lengthSet.size)
       var i: Int = 0
-      var it: Iterator[Int] = lengthSet.iterator
+      val it: Iterator[Int] = lengthSet.iterator
       while (it.hasNext) {
         //lengths[i++] = it.next();
         lengths(i) = it.next
@@ -167,7 +167,7 @@ object DateTimeFieldRule {
         {
           var i: Int = lengthsStart
           while (i >= 0) {
-            var value: Int = insensitiveTextValueMap.get(parseText.substring(0, lengths(i)))
+            val value: Int = insensitiveTextValueMap.get(parseText.substring(0, lengths(i)))
             if (value != null) {
               return ((lengths(i).toLong) << 32) + value
             }
@@ -179,7 +179,7 @@ object DateTimeFieldRule {
         {
           var i: Int = lengthsStart
           while (i >= 0) {
-            var value: Int = insensitiveTextValueMap.get(parseText.substring(0, lengths(i)))
+            val value: Int = insensitiveTextValueMap.get(parseText.substring(0, lengths(i)))
             if (value != null) {
               return ((lengths(i).toLong) << 32) + value
             }
@@ -191,7 +191,7 @@ object DateTimeFieldRule {
         {
           var i: Int = lengthsStart
           while (i >= 0) {
-            var value: Int = textValueMap.get(parseText.substring(0, lengths(i)))
+            val value: Int = textValueMap.get(parseText.substring(0, lengths(i)))
             if (value != null) {
               return ((lengths(i).toLong) << 32) + value
             }
@@ -346,9 +346,9 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * @return the text of the field, never null
    */
   def getText(value: Int, locale: Locale, textStyle: DateTimeFormatterBuilder.TextStyle): String = {
-    var textStore: DateTimeFieldRule.TextStore = getTextStore(locale, textStyle)
-    var text: String = (if (textStore != null) textStore.getValueText(value) else null)
-    return if (text == null) Integer.toString(value) else text
+    val textStore: DateTimeFieldRule.TextStore = getTextStore(locale, textStyle)
+    val text: String = (if (textStore != null) textStore.getValueText(value) else null)
+    return if (text == null) value.toString else text
   }
 
   /**
@@ -377,9 +377,9 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
     }
     var range: Long = getMaximumValue
     range += 1;
-    var decimal: BigDecimal = fraction.multiply(new BigDecimal(range), VALUE_CONTEXT)
+    val decimal: BigDecimal = fraction.multiply(new BigDecimal(range), VALUE_CONTEXT)
     try {
-      var value: Int = decimal.intValueExact
+      val value: Int = decimal.intValueExact
       checkValue(value)
       return value
     }
@@ -485,9 +485,9 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
     if (textStores == null) {
       return null
     }
-    var ref: SoftReference[EnumMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore]] = textStores.get(locale)
+    val ref: SoftReference[EnumMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore]] = textStores.get(locale)
     if (ref != null) {
-      var textMapByStyle: EnumMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore] = ref.get
+      val textMapByStyle: EnumMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore] = ref.get
       if (textMapByStyle != null) {
         return textMapByStyle.get(textStyle)
       }
@@ -569,7 +569,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
       range += 1;
       range
     })
-    var decimal: BigDecimal = new BigDecimal(value)
+    val decimal: BigDecimal = new BigDecimal(value)
     return decimal.divide(new BigDecimal(range), FRACTION_CONTEXT)
   }
 
