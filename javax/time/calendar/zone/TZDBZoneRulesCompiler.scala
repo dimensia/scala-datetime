@@ -184,7 +184,7 @@ object TZDBZoneRulesCompiler {
         {
           var arg: String = args(i)
           if (arg.startsWith("-") == false) {
-            break //todo: break is not supported
+            //break //todo: break is not supported
           }
           if ("-srcdir".equals(arg)) {
             if (baseSrcDir == null && ({
@@ -192,7 +192,7 @@ object TZDBZoneRulesCompiler {
               i - 1
             }) < args.length) {
               baseSrcDir = new File(args(i))
-              continue //todo: continue is not supported
+              //continue //todo: continue is not supported
             }
           }
           else if ("-dstdir".equals(arg)) {
@@ -201,7 +201,7 @@ object TZDBZoneRulesCompiler {
               i - 1
             }) < args.length) {
               dstDir = new File(args(i))
-              continue //todo: continue is not supported
+              //continue //todo: continue is not supported
             }
           }
           else if ("-version".equals(arg)) {
@@ -210,13 +210,13 @@ object TZDBZoneRulesCompiler {
               i - 1
             }) < args.length) {
               version = args(i)
-              continue //todo: continue is not supported
+              //continue //todo: continue is not supported
             }
           }
           else if ("-verbose".equals(arg)) {
             if (verbose == false) {
               verbose = true
-              continue //todo: continue is not supported
+              //continue //todo: continue is not supported
             }
           }
           else if ("-help".equals(arg) == false) {
@@ -380,8 +380,6 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
     return if (str.equals("-")) null else str
   }
 
-  /**The version to produce. */
-  private val version: String = null
   /**
    * Parses a Rule line.
    * @param st the tokenizer, not null
@@ -427,7 +425,7 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
   }
 
   /**A map to deduplicate object instances. */
-  private var deduplicateMap: Map[AnyRef, AnyRef] = new HashMap[AnyRef, AnyRef]
+  private var deduplicateMap: Map[Any, Any] = new HashMap[Any, Any]
   /**
    * Parses the source files.
    * @throws Exception if an error occurs
@@ -463,7 +461,7 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
    * @param st the tokenizer, not null
    */
   private def parseRuleLine(st: StringTokenizer): Unit = {
-    var rule: TZDBZoneRulesCompiler#TZDBRule = new TZDBZoneRulesCompiler#TZDBRule
+    var rule: TZDBZoneRulesCompiler#TZDBRule = new TZDBRule
     var name: String = st.nextToken
     if (rules.containsKey(name) == false) {
       rules.put(name, new ArrayList[TZDBZoneRulesCompiler#TZDBRule])
@@ -506,7 +504,7 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
   /**
    * Sets the deduplication map.
    */
-  private[zone] def setDeduplicateMap(deduplicateMap: Map[AnyRef, AnyRef]): Unit = {
+  private[zone] def setDeduplicateMap(deduplicateMap: Map[Any, Any]): Unit = {
     this.deduplicateMap = deduplicateMap
   }
 
@@ -545,15 +543,15 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
     builtZones.remove("GMT")
   }
 
-  private def parseDayOfWeek(_str: String): DayOfWeek = {
-    var str = _str
-    str = str.toLowerCase
-    for (dow <- DayOfWeek.values) {
-      if (matches(str, dow.name.toLowerCase)) {
-        return dow
-      }
-    }
-    throw new IllegalArgumentException("Unknown day-of-week: " + str)
+  private def parseDayOfWeek(str: String): DayOfWeek = {
+    DayOfWeek.values.find(_.name.equalsIgnoreCase(str)).getOrElse(throw new IllegalArgumentException("Unknown day-of-week: " + str))
+    //    str = str.toLowerCase
+    //    for (dow <- DayOfWeek.values) {
+    //      if (matches(str, dow.name.toLowerCase)) {
+    //        return dow
+    //      }
+    //    }
+    //    throw new IllegalArgumentException("Unknown day-of-week: " + str)
   }
 
   /**
@@ -647,8 +645,6 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
     }
   }
 
-  /**The version to produce. */
-  private val verbose: Boolean = false
   /**
    * Prints a verbose message.
    * @param message the message, not null
@@ -685,7 +681,7 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
    * @return true if the zone is complete
    */
   private def parseZoneLine(st: StringTokenizer, zoneList: List[TZDBZoneRulesCompiler#TZDBZone]): Boolean = {
-    var zone: TZDBZoneRulesCompiler#TZDBZone = new TZDBZoneRulesCompiler#TZDBZone
+    var zone: TZDBZoneRulesCompiler#TZDBZone = new TZDBZone
     zoneList.add(zone)
     zone.standardOffset = parseOffset(st.nextToken)
     var savingsRule: String = parseOptional(st.nextToken)
@@ -840,7 +836,4 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
 
   /**The TZDB rules. */
   private val rules: Map[String, List[TZDBZoneRulesCompiler#TZDBRule]] = new HashMap[String, List[TZDBZoneRulesCompiler#TZDBRule]]
-
-  /**The source files. */
-  private val sourceFiles: List[File] = null
 }

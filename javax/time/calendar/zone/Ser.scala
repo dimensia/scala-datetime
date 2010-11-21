@@ -162,7 +162,7 @@ object Ser {
  * @param type the type
  * @param object the object
  */
-final class Ser private[zone](tpe: Byte, obj: AnyRef) extends Externalizable {
+final class Ser private[zone](private var tpe: Byte, private var obj: AnyRef) extends Externalizable {
 
   /**
    * Returns the object that will replace this one.

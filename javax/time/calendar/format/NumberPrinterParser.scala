@@ -31,10 +31,10 @@
  */
 package javax.time.calendar.format
 
-import java.io.IOException
 import javax.time.calendar.Calendrical
 import javax.time.calendar.DateTimeFieldRule
 import javax.time.calendar.format.DateTimeFormatterBuilder.SignStyle
+import javax.time.calendar.format.DateTimeFormatterBuilder.SignStyle._
 
 /**
  * Prints and parses a numeric date-time field with optional padding.
@@ -71,14 +71,14 @@ class NumberPrinterParser private(rule: DateTimeFieldRule[_], minWidth: Int, max
    * @param maxWidth the maximum field width, from minWidth to 10
    * @param signStyle the positive/negative sign style, not null
    */
-  private[format] def this(rule: DateTimeFieldRule[_], minWidth: Int, maxWidth: Int, signStyle: SignStyle.type) {
+  private[format] def this(rule: DateTimeFieldRule[_], minWidth: Int, maxWidth: Int, signStyle: SignStyle) {
     this (rule, minWidth, maxWidth, signStyle, 0)
   }
 
   /** { @inheritDoc }*/
   def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = {
     var value: Int = getValue(calendrical)
-    var str: String = (if (value == Integer.MIN_VALUE) "2147483648" else Integer.toString(Math.abs(value)))
+    var str: String = (if (value == Int.MinValue) "2147483648" else Integer.toString(Math.abs(value)))
     if (str.length > maxWidth) {
       throw new CalendricalPrintFieldException(rule, value, maxWidth)
     }
@@ -86,7 +86,7 @@ class NumberPrinterParser private(rule: DateTimeFieldRule[_], minWidth: Int, max
     if (value >= 0) {
       signStyle match {
         case EXCEEDS_PAD =>
-          if (minWidth < 10 && value >= EXCEED_POINTS(minWidth)) {
+          if (minWidth < 10 && value >= NumberPrinterParser.EXCEED_POINTS(minWidth)) {
             appendable.append(symbols.getPositiveSignChar)
           }
         case ALWAYS =>
@@ -95,7 +95,7 @@ class NumberPrinterParser private(rule: DateTimeFieldRule[_], minWidth: Int, max
     }
     else {
       signStyle match {
-        case NORMAL || EXCEEDS_PAD || ALWAYS =>
+        case NORMAL | EXCEEDS_PAD | ALWAYS =>
           appendable.append(symbols.getNegativeSignChar)
         case NOT_NEGATIVE =>
           throw new CalendricalPrintFieldException(rule, value)
@@ -133,7 +133,8 @@ class NumberPrinterParser private(rule: DateTimeFieldRule[_], minWidth: Int, max
   }
 
   /** { @inheritDoc }*/
-  def parse(context: DateTimeParseContext, parseText: String, position: Int): Int = {
+  def parse(context: DateTimeParseContext, parseText: String, _position: Int): Int = {
+    var position = _position
     var length: Int = parseText.length
     if (position == length) {
       return ~position
@@ -144,44 +145,19 @@ class NumberPrinterParser private(rule: DateTimeFieldRule[_], minWidth: Int, max
     if (sign == context.getSymbols.getPositiveSignChar) {
       positive = true
       signStyle match {
-        case ALWAYS =>
-        case EXCEEDS_PAD =>
-          ({
-            position += 1;
-            position
-          })
-          break //todo: break is not supported
+        case ALWAYS | EXCEEDS_PAD => position += 1
         case _ =>
-          if (context.isStrict || (signStyle != SignStyle.NORMAL && minWidth == maxWidth)) {
-            return ~position
-          }
-          ({
-            position += 1;
-            position
-          })
-          break //todo: break is not supported
+          if (context.isStrict || (signStyle != SignStyle.NORMAL && minWidth == maxWidth)) return ~position
+            position += 1
       }
     }
     else if (sign == context.getSymbols.getNegativeSignChar) {
       negative = true
       signStyle match {
-        case ALWAYS =>
-        case EXCEEDS_PAD =>
-        case NORMAL =>
-          ({
-            position += 1;
-            position
-          })
-          break //todo: break is not supported
+        case ALWAYS | EXCEEDS_PAD | NORMAL=> position += 1
         case _ =>
-          if (context.isStrict || minWidth == maxWidth) {
-            return ~position
-          }
-          ({
+          if (context.isStrict || minWidth == maxWidth) return ~position
             position += 1;
-            position
-          })
-          break //todo: break is not supported
       }
     }
     else {
@@ -216,7 +192,7 @@ class NumberPrinterParser private(rule: DateTimeFieldRule[_], minWidth: Int, max
               if (pos < minEndPos) {
                 return ~position
               }
-              break //todo: break is not supported
+              //break //todo: break is not supported
             }
             total = total * 10 + digit
           }
@@ -227,7 +203,7 @@ class NumberPrinterParser private(rule: DateTimeFieldRule[_], minWidth: Int, max
             total = 0
           }
           else {
-            break //todo: break is not supported
+            //break //todo: break is not supported
           }
         }
         ({
@@ -255,12 +231,9 @@ class NumberPrinterParser private(rule: DateTimeFieldRule[_], minWidth: Int, max
         }
       }
     }
-    if (total > Integer.MAX_VALUE || total < Integer.MIN_VALUE) {
+    if (total > Int.MaxValue || total < Int.MinValue) {
       total /= 10
-      ({
         pos -= 1;
-        pos
-      })
     }
     setValue(context, total)
     return pos

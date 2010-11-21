@@ -65,7 +65,7 @@ object FixedZoneRules {
  * @param offset the fixed zone offset, not null
  */
 @SerialVersionUID(1L)
-final class FixedZoneRules private[zone](offset: ZoneOffset) extends ZoneRules with Serializable {
+final class FixedZoneRules private[zone](val offset: ZoneOffset) extends ZoneRules with Serializable {
   ZoneRules.checkNotNull(offset, "ZoneOffset must not be null")
 
   /**

@@ -243,12 +243,8 @@ object MathUtils {
    * @return negative if a is less than b, positive if a is greater than b, zero if equal
    */
   def safeCompare(a: Int, b: Int): Int = {
-    if (a < b) {
-      return -1
-    }
-    if (a > b) {
-      return 1
-    }
+    if (a < b) return -1
+    if (a > b) return 1
     return 0
   }
 

@@ -60,7 +60,8 @@ final class TextPrinterParser private[format](rule: DateTimeFieldRule[_], textSt
   else return "Text(" + rule.getID + "," + textStyle + ")"
 
   /** { @inheritDoc }*/
-  def parse(context: DateTimeParseContext, parseText: String, position: Int): Int = {
+  def parse(context: DateTimeParseContext, parseText: String, _position: Int): Int = {
+    var position = _position
     var length: Int = parseText.length
     if (position > length) {
       throw new IndexOutOfBoundsException
@@ -74,8 +75,8 @@ final class TextPrinterParser private[format](rule: DateTimeFieldRule[_], textSt
           return ~position
         }
         else if (matched > 0) {
-          position += (matched >>> 32)
-          context.setParsed(rule, matched.asInstanceOf[Int])
+          position += (matched >>> 32).toInt
+          context.setParsed(rule, matched.toInt)
           return position
         }
       }
@@ -86,10 +87,10 @@ final class TextPrinterParser private[format](rule: DateTimeFieldRule[_], textSt
       for (textStyle <- TextStyle.values) {
         var textStore: DateTimeFieldRule.TextStore = rule.getTextStore(context.getLocale, textStyle)
         if (textStore != null) {
-          var `match` : Long = textStore.matchText(!context.isCaseSensitive, parseText.substring(position))
-          if (`match` > 0) {
-            position += (`match` >>> 32)
-            context.setParsed(rule, `match`.asInstanceOf[Int])
+          var matched : Long = textStore.matchText(!context.isCaseSensitive, parseText.substring(position))
+          if (matched > 0) {
+            position += (matched >>> 32).toInt
+            context.setParsed(rule, matched.toInt)
             return position
           }
         }
@@ -125,7 +126,7 @@ final class TextPrinterParser private[format](rule: DateTimeFieldRule[_], textSt
    */
   private def numberPrinterParser: NumberPrinterParser = {
     if (_numberPrinterParser == null) _numberPrinterParser = new NumberPrinterParser(rule, 1, 10, SignStyle.NORMAL)
-    else _numberPrinterParser
+    _numberPrinterParser
   }
 
   /** { @inheritDoc }*/

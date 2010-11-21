@@ -119,6 +119,7 @@ object DateTimeFormatterBuilder {
      * In lenient parsing, any sign will be accepted unless the width is fixed.
      */
     object NOT_NEGATIVE extends SignStyle
+
   }
 
   abstract sealed class SignStyle
@@ -134,29 +135,29 @@ object DateTimeFormatterBuilder {
      * Full text style, with the most detail.
      * An example might be 'Tuesday, April 12, 1952 AD' or '3:30:42pm PST'.
      */
-    object FULL extends FormatStyle
+    object FULL extends FormatStyle(0)
 
     /**
      * Long text style, with lots of detail.
      * An example might be 'January 12, 1952'.
      */
-    object LONG extends FormatStyle
-
-    /**
-     * Short text style, typically numeric.
-     * An example might be '12.13.52' or '3:30pm'.
-     */
-    object SHORT extends FormatStyle
+    object LONG extends FormatStyle(1)
 
     /**
      * Medium text style, with some detail.
      * An example might be 'Jan 12, 1952'.
      */
-    object MEDIUM extends FormatStyle
+    object MEDIUM extends FormatStyle(2)
+
+    /**
+     * Short text style, typically numeric.
+     * An example might be '12.13.52' or '3:30pm'.
+     */
+    object SHORT extends FormatStyle(3)
 
   }
 
-  abstract sealed class FormatStyle
+  abstract sealed class FormatStyle(val ordinal: Int)
 
   /**
    * Validates that the input value is not null.
@@ -182,15 +183,16 @@ object DateTimeFormatterBuilder {
     object FULL extends TextStyle
 
     /**
-     * Narrow text, typically a single letter.
-     */
-    object NARROW extends TextStyle
-
-    /**
      * Short text, typically an abbreviation.
      */
     object SHORT extends TextStyle
 
+    /**
+     * Narrow text, typically a single letter.
+     */
+    object NARROW extends TextStyle
+
+    lazy val values = Array(FULL, SHORT, NARROW)
   }
 
   abstract sealed class TextStyle
@@ -323,7 +325,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
       throw new IllegalStateException("Cannot call optionalEnd() as there was no previous call to optionalStart()")
     }
     if (active.printers.size > 0) {
-      var cpp: CompositePrinterParser = new CompositePrinterParser(active.printers, active.parsers, active.optional)
+      val cpp: CompositePrinterParser = new CompositePrinterParser(active.printers, active.parsers, active.optional)
       active = active.parent
       appendInternal(cpp, cpp)
     }
@@ -378,7 +380,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    */
   def appendOffset(utcText: String, includeColon: Boolean, allowSeconds: Boolean): DateTimeFormatterBuilder = {
     checkNotNull(utcText, "UTC text must not be null")
-    var pp: ZoneOffsetPrinterParser = new ZoneOffsetPrinterParser(utcText, includeColon, allowSeconds)
+    val pp: ZoneOffsetPrinterParser = new ZoneOffsetPrinterParser(utcText, includeColon, allowSeconds)
     appendInternal(pp, pp)
     this
   }
@@ -395,7 +397,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    */
   def append(formatter: DateTimeFormatter): DateTimeFormatterBuilder = {
     checkNotNull(formatter, "DateTimeFormatter must not be null")
-    var cpp: CompositePrinterParser = formatter.toPrinterParser(false)
+    val cpp: CompositePrinterParser = formatter.toPrinterParser(false)
     appendInternal(cpp, cpp)
     this
   }
@@ -492,125 +494,122 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
   }
 
   private def parsePattern(pattern: String): Unit = {
-      var pos: Int = 0
-      while (pos < pattern.length) {
-          var cur: Char = pattern.charAt(pos)
-          if ((cur >= 'A' && cur <= 'Z') || (cur >= 'a' && cur <= 'z')) {
-            var start: Int = ({
-              pos += 1;
-              pos
-            })
-            while (pos < pattern.length && pattern.charAt(pos) == cur) {
+    var pos: Int = 0
+    while (pos < pattern.length) {
+      var cur: Char = pattern.charAt(pos)
+      if ((cur >= 'A' && cur <= 'Z') || (cur >= 'a' && cur <= 'z')) {
+        var start: Int = ({
+          pos += 1;
+          pos
+        })
+        while (pos < pattern.length && pattern.charAt(pos) == cur) {
+          pos += 1;
+        }
+        var count: Int = pos - start
+        if (cur == 'p') {
+          var pad: Int = 0
+          if (pos < pattern.length) {
+            cur = pattern.charAt(pos)
+            if ((cur >= 'A' && cur <= 'Z') || (cur >= 'a' && cur <= 'z')) {
+              pad = count
+              start = ({
                 pos += 1;
+                pos
+              })
+              while (pos < pattern.length && pattern.charAt(pos) == cur) {
+                pos += 1;
+              }
+              count = pos - start
             }
-            var count: Int = pos - start
-            if (cur == 'p') {
-              var pad: Int = 0
-              if (pos < pattern.length) {
-                cur = pattern.charAt(pos)
-                if ((cur >= 'A' && cur <= 'Z') || (cur >= 'a' && cur <= 'z')) {
-                  pad = count
-                  start = ({
-                    pos += 1;
-                    pos
-                  })
-                  while (pos < pattern.length && pattern.charAt(pos) == cur) {
-                      pos += 1;
-                  }
-                  count = pos - start
-                }
+          }
+          if (pad == 0) {
+            throw new IllegalArgumentException("Pad letter 'p' must be followed by valid pad pattern: " + pattern)
+          }
+          padNext(pad)
+        }
+        var fraction: Int = 0
+        if (cur == 'f') {
+          if (pos < pattern.length) {
+            cur = pattern.charAt(pos)
+            if (cur == 'H' || cur == 'K' || cur == 'm' || cur == 's' || cur == 'S' || cur == 'n') {
+              fraction = count
+              start = ({
+                pos += 1;
+                pos
+              })
+              while (pos < pattern.length && pattern.charAt(pos) == cur) {
+                pos += 1;
               }
-              if (pad == 0) {
-                throw new IllegalArgumentException("Pad letter 'p' must be followed by valid pad pattern: " + pattern)
-              }
-              padNext(pad)
+              count = pos - start
             }
-            var fraction: Int = 0
-            if (cur == 'f') {
-              if (pos < pattern.length) {
-                cur = pattern.charAt(pos)
-                if (cur == 'H' || cur == 'K' || cur == 'm' || cur == 's' || cur == 'S' || cur == 'n') {
-                  fraction = count
-                  start = ({
-                    pos += 1;
-                    pos
-                  })
-                  while (pos < pattern.length && pattern.charAt(pos) == cur) {
-                      pos += 1;
-                  }
-                  count = pos - start
-                }
-              }
-              if (fraction == 0) {
-                throw new IllegalArgumentException("Fraction letter 'f' must be followed by valid fraction pattern: " + pattern)
-              }
-            }
-            var rule: DateTimeFieldRule[_] = RULE_MAP.get(cur)
-            if (rule == null) {
-              if (cur == 'z') {
-                if (count < 4) {
-                  appendZoneText(TextStyle.SHORT)
-                }
-                else {
-                  appendZoneText(TextStyle.FULL)
-                }
-              }
-              else if (cur == 'I') {
-                appendZoneId
-              }
-              else if (cur == 'Z') {
-                appendOffset(if (count == 1) "+0000" else (if (count == 2) "+00:00" else "Z"), count == 2 || count >= 4, count >= 3)
-              }
-              else {
-                appendLiteral(pattern.substring(start, pos))
-              }
+          }
+          if (fraction == 0) {
+            throw new IllegalArgumentException("Fraction letter 'f' must be followed by valid fraction pattern: " + pattern)
+          }
+        }
+        var rule: DateTimeFieldRule[_] = RULE_MAP.get(cur)
+        if (rule == null) {
+          if (cur == 'z') {
+            if (count < 4) {
+              appendZoneText(TextStyle.SHORT)
             }
             else {
-              parseRule(cur, count, rule, fraction)
+              appendZoneText(TextStyle.FULL)
             }
-            fraction = 0
-              pos -= 1;
           }
-          else if (cur == '\'') {
-            var start: Int = ({
-              pos += 1;
-              pos
-            })
-            while (pos < pattern.length) {
-                if (pattern.charAt(pos) == '\'') {
-                  if (pos + 1 < pattern.length && pattern.charAt(pos + 1) == '\'') {
-                    ({
-                      pos += 1;
-                      pos
-                    })
-                  }
-                  else {
-                    break //todo: break is not supported
-                  }
-                }
-                pos += 1;
-            }
-            if (pos >= pattern.length) {
-              throw new IllegalArgumentException("Pattern ends with an incomplete string literal: " + pattern)
-            }
-            var str: String = pattern.substring(start + 1, pos)
-            if (str.length == 0) appendLiteral('\'')
-            else appendLiteral(str.replace("''", "'"))
+          else if (cur == 'I') {
+            appendZoneId
           }
-          else if (cur == '[') {
-            optionalStart
-          }
-          else if (cur == ']') {
-            if (active.parent == null) {
-              throw new IllegalArgumentException("Pattern invalid as it contains ] without previous [")
-            }
-            optionalEnd
+          else if (cur == 'Z') {
+            appendOffset(if (count == 1) "+0000" else (if (count == 2) "+00:00" else "Z"), count == 2 || count >= 4, count >= 3)
           }
           else {
-            appendLiteral(cur)
+            appendLiteral(pattern.substring(start, pos))
+          }
+        }
+        else {
+          parseRule(cur, count, rule, fraction)
+        }
+        fraction = 0
+        pos -= 1;
+      }
+      else if (cur == '\'') {
+        var start: Int = ({
+          pos += 1;
+          pos
+        })
+        while (pos < pattern.length) {
+          if (pattern.charAt(pos) == '\'') {
+            if (pos + 1 < pattern.length && pattern.charAt(pos + 1) == '\'') {
+              pos += 1;
+            }
+            else {
+              //break //todo: break is not supported
+            }
           }
           pos += 1;
+        }
+        if (pos >= pattern.length) {
+          throw new IllegalArgumentException("Pattern ends with an incomplete string literal: " + pattern)
+        }
+        val str: String = pattern.substring(start + 1, pos)
+        if (str.length == 0) appendLiteral('\'')
+        else appendLiteral(str.replace("''", "'"))
       }
+      else if (cur == '[') {
+        optionalStart
+      }
+      else if (cur == ']') {
+        if (active.parent == null) {
+          throw new IllegalArgumentException("Pattern invalid as it contains ] without previous [")
+        }
+        optionalEnd
+      }
+      else {
+        appendLiteral(cur)
+      }
+      pos += 1;
+    }
   }
 
   /**
@@ -659,7 +658,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
     if (maxWidth < minWidth) {
       throw new IllegalArgumentException("The maximum width must exceed or equal the minimum width but " + maxWidth + " < " + minWidth)
     }
-    var pp: FractionPrinterParser = new FractionPrinterParser(rule, minWidth, maxWidth)
+    val pp: FractionPrinterParser = new FractionPrinterParser(rule, minWidth, maxWidth)
     appendInternal(pp, pp)
     return this
   }
@@ -696,10 +695,10 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
         else appendValue(rule, count, 10, SignStyle.EXCEEDS_PAD)
       case 'M' =>
         count match {
-          case 1 =>              appendValue(rule)
-          case 2 =>              appendValue(rule, 2)
-          case 3 =>              appendText(rule, TextStyle.SHORT)
-          case _ =>              appendText(rule, TextStyle.FULL)
+          case 1 => appendValue(rule)
+          case 2 => appendValue(rule, 2)
+          case 3 => appendText(rule, TextStyle.SHORT)
+          case _ => appendText(rule, TextStyle.FULL)
         }
       case 'a' | 'E' =>
         if (count < 4) appendText(rule, TextStyle.SHORT)
@@ -750,7 +749,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
     if (maxWidth < minWidth) {
       throw new IllegalArgumentException("The maximum width must exceed or equal the minimum width but " + maxWidth + " < " + minWidth)
     }
-    var pp: NumberPrinterParser = new NumberPrinterParser(rule, minWidth, maxWidth, signStyle)
+    val pp: NumberPrinterParser = new NumberPrinterParser(rule, minWidth, maxWidth, signStyle)
     if (minWidth == maxWidth) {
       appendInternal(pp, pp)
     }
@@ -1083,7 +1082,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    */
   def appendValueReduced(rule: DateTimeFieldRule[_], width: Int, baseValue: Int): DateTimeFormatterBuilder = {
     checkNotNull(rule, "DateTimeFieldRule must not be null")
-    var pp: ReducedPrinterParser = new ReducedPrinterParser(rule, width, baseValue)
+    val pp: ReducedPrinterParser = new ReducedPrinterParser(rule, width, baseValue)
     appendFixedWidth(width, pp)
     this
   }
@@ -1140,7 +1139,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    */
   def appendValue(rule: DateTimeFieldRule[_]): DateTimeFormatterBuilder = {
     checkNotNull(rule, "DateTimeFieldRule must not be null")
-    var pp: NumberPrinterParser = new NumberPrinterParser(rule, 1, 10, SignStyle.NORMAL)
+    val pp: NumberPrinterParser = new NumberPrinterParser(rule, 1, 10, SignStyle.NORMAL)
     active.valueParserIndex = appendInternal(pp, pp)
     this
   }
@@ -1160,7 +1159,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
     if (active.valueParserIndex >= 0) {
       var basePP: NumberPrinterParser = active.printers.get(active.valueParserIndex).asInstanceOf[NumberPrinterParser]
       basePP = basePP.withSubsequentWidth(width)
-      var activeValueParser: Int = active.valueParserIndex
+      val activeValueParser: Int = active.valueParserIndex
       active.printers.set(active.valueParserIndex, basePP)
       active.parsers.set(active.valueParserIndex, basePP)
       appendInternal(pp, pp)
@@ -1213,6 +1212,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
     checkNotNull(formatter, "DateTimeFormatter must not be null")
     val cpp: CompositePrinterParser = formatter.toPrinterParser(true)
     appendInternal(cpp, cpp)
+    this
   }
 
   /**
@@ -1230,7 +1230,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    * @return this, for chaining, never null
    * @throws NullPointerException if the text style is null
    */
-  def appendLocalized(dateStyle: DateTimeFormatterBuilder.FormatStyle, timeStyle: DateTimeFormatterBuilder.FormatStyle, chronology: Chronology): DateTimeFormatterBuilder = {
+  def appendLocalized(dateStyle: FormatStyle, timeStyle: FormatStyle, chronology: Chronology): DateTimeFormatterBuilder = {
     checkNotNull(chronology, "Chronology must not be null")
     if (dateStyle != null || timeStyle != null) {
       val pp: LocalizedPrinterParser = new LocalizedPrinterParser(dateStyle, timeStyle, chronology)

@@ -333,7 +333,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
   def compareTo(other: MonthDay): Int = {
     var cmp: Int = month.compareTo(other.month)
     if (cmp == 0) cmp = MathUtils.safeCompare(day, other.day)
-    else cmp
+    cmp
   }
 
   /**

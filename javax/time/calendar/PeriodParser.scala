@@ -163,7 +163,7 @@ class PeriodParser protected {
     while (values.index < s.length) {
       var c: Char = s.charAt(values.index)
       if ((c < '0' || c > '9') && c != '-') {
-        break //todo: break is not supported
+        //break //todo: break is not supported
       }
       values.index += 1;
     }

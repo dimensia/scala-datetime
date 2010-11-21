@@ -52,7 +52,7 @@ import javax.time.calendar.Calendrical
  */
 final class PadPrinterParserDecorator private[format](printer: DateTimePrinter, parser: DateTimeParser, padWidth: Int, padChar: Char)
   extends DateTimePrinter with DateTimeParser {
-  /** { @inheritDoc }*/
+  /**{ @inheritDoc }*/
   def parse(context: DateTimeParseContext, _parseText: String, position: Int): Int = {
     var parseText = _parseText
     if (position > parseText.length) {
@@ -75,11 +75,8 @@ final class PadPrinterParserDecorator private[format](printer: DateTimePrinter, 
         if (firstError == 0) {
           firstError = resultPos
         }
-        ({
-          pos -= 1;
-          pos
-        })
-        continue //todo: continue is not supported
+        pos -= 1
+        //continue //todo: continue is not supported
       }
       if (resultPos != endPos) return ~position
       return resultPos
@@ -87,33 +84,26 @@ final class PadPrinterParserDecorator private[format](printer: DateTimePrinter, 
     return firstError
   }
 
-  /** { @inheritDoc }*/
+  /**{@inheritDoc}*/
   override def isPrintDataAvailable(calendrical: Calendrical): Boolean = printer.isPrintDataAvailable(calendrical)
 
-  /** { @inheritDoc }*/
+  /**{@inheritDoc}*/
   override def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = {
-    var buf: StringBuilder = new StringBuilder(32)
+    var buf: java.lang.StringBuilder = new java.lang.StringBuilder(32)
     printer.print(calendrical, buf, symbols)
     var len: Int = buf.length
     if (len > padWidth) {
       throw new CalendricalPrintException("Output of " + len + " characters exceeds pad width of " + padWidth)
     }
-    {
-      var i: Int = 0
-      while (i < padWidth - len) {
-        {
-          appendable.append(padChar)
-        }
-        ({
-          i += 1;
-          i
-        })
-      }
+    var i: Int = 0
+    while (i < padWidth - len) {
+      appendable.append(padChar)
+      i += 1
     }
     appendable.append(buf)
   }
 
-  /** { @inheritDoc }*/
+  /**{ @inheritDoc }*/
   override def toString: String = {
     var base: String = "Pad("
     if (printer == parser) base += printer

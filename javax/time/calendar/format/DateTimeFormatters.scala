@@ -63,8 +63,8 @@ object DateTimeFormatters {
 
   /**Singleton date formatter. */
   private val RFC_1123_DATE_TIME: DateTimeFormatter = {
-    new DateTimeFormatterBuilder
-    .appendText(ISOChronology.dayOfWeekRule, TextStyle.SHORT)
+    (new DateTimeFormatterBuilder)
+      .appendText(ISOChronology.dayOfWeekRule, TextStyle.SHORT)
       .appendLiteral(", ")
       .appendValue(ISOChronology.dayOfMonthRule, 2)
       .appendLiteral(' ')
@@ -85,8 +85,8 @@ object DateTimeFormatters {
 
   /**Singleton date formatter. */
   private val ISO_LOCAL_TIME: DateTimeFormatter = {
-    new DateTimeFormatterBuilder
-    .appendValue(ISOChronology.hourOfDayRule, 2)
+    (new DateTimeFormatterBuilder)
+      .appendValue(ISOChronology.hourOfDayRule, 2)
       .appendLiteral(':')
       .appendValue(ISOChronology.minuteOfHourRule, 2)
       .optionalStart
@@ -134,8 +134,8 @@ object DateTimeFormatters {
 
   /**Singleton date formatter. */
   private val ISO_ZONED_DATE_TIME: DateTimeFormatter = {
-    new DateTimeFormatterBuilder
-    .append(ISO_LOCAL_DATE_TIME)
+    (new DateTimeFormatterBuilder)
+      .append(ISO_LOCAL_DATE_TIME)
       .appendOffsetId
       .appendLiteral('[')
       .appendZoneId
@@ -311,7 +311,7 @@ object DateTimeFormatters {
    * @throws IllegalArgumentException if the pattern is invalid
    * @see DateTimeFormatterBuilder # appendPattern ( String )
    */
-  def pattern(pattern: String): DateTimeFormatter = new DateTimeFormatterBuilder.appendPattern(pattern).toFormatter
+  def pattern(pattern: String): DateTimeFormatter = (new DateTimeFormatterBuilder).appendPattern(pattern).toFormatter
 
   /**
    * Returns the ISO time formatter that prints/parses a time, with the
@@ -363,26 +363,26 @@ object DateTimeFormatters {
    * @param locale the locale to use, not null
    * @return the date, time or date-time formatter, never null
    */
-  def dateTime(dateStyle: FormatStyle.type, timeStyle: FormatStyle.type, locale: Locale): DateTimeFormatter = {
+  def dateTime(dateStyle: FormatStyle, timeStyle: FormatStyle, locale: Locale): DateTimeFormatter = {
     DateTimeFormatter.checkNotNull(dateStyle, "Date style must not be null")
     DateTimeFormatter.checkNotNull(timeStyle, "Time style must not be null")
-    return new DateTimeFormatterBuilder.appendLocalized(dateStyle, timeStyle).toFormatter(locale)
+    (new DateTimeFormatterBuilder).appendLocalized(dateStyle, timeStyle).toFormatter(locale)
   }
 
   /**Singleton date formatter. */
   private val ISO_OFFSET_TIME: DateTimeFormatter = {
-    new DateTimeFormatterBuilder
-    .parseCaseInsensitive
-    .append(ISO_LOCAL_TIME)
+    (new DateTimeFormatterBuilder)
+      .parseCaseInsensitive
+      .append(ISO_LOCAL_TIME)
       .appendOffsetId
       .toFormatter
   }
 
   /**Singleton date formatter. */
   private val ISO_DATE: DateTimeFormatter = {
-    new DateTimeFormatterBuilder
-    .parseCaseInsensitive
-    .append(ISO_LOCAL_DATE)
+    (new DateTimeFormatterBuilder)
+      .parseCaseInsensitive
+      .append(ISO_LOCAL_DATE)
       .optionalStart
       .appendOffsetId
       .optionalStart
@@ -428,17 +428,17 @@ object DateTimeFormatters {
 
   /**Singleton date formatter. */
   private val ISO_OFFSET_DATE: DateTimeFormatter = {
-    new DateTimeFormatterBuilder
-    .parseCaseInsensitive
-    .append(ISO_LOCAL_DATE)
+    (new DateTimeFormatterBuilder)
+      .parseCaseInsensitive
+      .append(ISO_LOCAL_DATE)
       .appendOffsetId
       .toFormatter
   }
 
   /**Singleton date formatter. */
   private val ISO_LOCAL_DATE: DateTimeFormatter = {
-    new DateTimeFormatterBuilder
-    .appendValue(ISOChronology.yearRule, 4, 10, SignStyle.EXCEEDS_PAD)
+    (new DateTimeFormatterBuilder)
+      .appendValue(ISOChronology.yearRule, 4, 10, SignStyle.EXCEEDS_PAD)
       .appendLiteral('-')
       .appendValue(ISOChronology.monthOfYearRule, 2)
       .appendLiteral('-')
@@ -474,9 +474,9 @@ object DateTimeFormatters {
    * @param locale the locale to use, not null
    * @return the time formatter, never null
    */
-  def time(timeStyle: FormatStyle.type, locale: Locale): DateTimeFormatter = {
+  def time(timeStyle: FormatStyle, locale: Locale): DateTimeFormatter = {
     DateTimeFormatter.checkNotNull(timeStyle, "Time style must not be null")
-    return new DateTimeFormatterBuilder.appendLocalized(null, timeStyle).toFormatter(locale)
+    (new DateTimeFormatterBuilder).appendLocalized(null, timeStyle).toFormatter(locale)
   }
 
   /**
@@ -510,7 +510,7 @@ object DateTimeFormatters {
    */
   def dateTime(dateTimeStyle: FormatStyle.type, locale: Locale): DateTimeFormatter = {
     DateTimeFormatter.checkNotNull(dateTimeStyle, "Date-time style must not be null")
-    return new DateTimeFormatterBuilder.appendLocalized(dateTimeStyle, dateTimeStyle).toFormatter(locale)
+    (new DateTimeFormatterBuilder).appendLocalized(dateTimeStyle, dateTimeStyle).toFormatter(locale)
   }
 
   /**
@@ -530,8 +530,8 @@ object DateTimeFormatters {
 
   /**Singleton date formatter. */
   private val ISO_DATE_TIME: DateTimeFormatter = {
-    new DateTimeFormatterBuilder
-    .append(ISO_LOCAL_DATE_TIME)
+    (new DateTimeFormatterBuilder)
+      .append(ISO_LOCAL_DATE_TIME)
       .optionalStart
       .appendOffsetId
       .optionalStart
@@ -576,17 +576,17 @@ object DateTimeFormatters {
 
   /**Singleton date formatter. */
   private val ISO_LOCAL_DATE_TIME: DateTimeFormatter = {
-    new DateTimeFormatterBuilder
-    .parseCaseInsensitive
-    .append(ISO_LOCAL_DATE)
+    (new DateTimeFormatterBuilder)
+      .parseCaseInsensitive
+      .append(ISO_LOCAL_DATE)
       .appendLiteral('T')
       .append(ISO_LOCAL_TIME)
       .toFormatter
   }
   /**Singleton date formatter. */
   private val ISO_OFFSET_DATE_TIME: DateTimeFormatter = {
-    new DateTimeFormatterBuilder
-    .append(ISO_LOCAL_DATE_TIME)
+    (new DateTimeFormatterBuilder)
+      .append(ISO_LOCAL_DATE_TIME)
       .appendOffsetId
       .toFormatter
   }
@@ -695,18 +695,18 @@ object DateTimeFormatters {
    * @param locale the locale to use, not null
    * @return the date formatter, never null
    */
-  def date(dateStyle: FormatStyle.type, locale: Locale): DateTimeFormatter = {
+  def date(dateStyle: FormatStyle, locale: Locale): DateTimeFormatter = {
     DateTimeFormatter.checkNotNull(dateStyle, "Date style must not be null")
-    return new DateTimeFormatterBuilder.appendLocalized(dateStyle, null).toFormatter(locale)
+    (new DateTimeFormatterBuilder).appendLocalized(dateStyle, null).toFormatter(locale)
   }
 
   /**Singleton date formatter. */
   private val ISO_ORDINAL_DATE: DateTimeFormatter = null
   /**Singleton date formatter. */
   private val BASIC_ISO_DATE: DateTimeFormatter = {
-    new DateTimeFormatterBuilder
-    .parseCaseInsensitive
-    .appendValue(ISOChronology.yearRule, 4)
+    (new DateTimeFormatterBuilder)
+      .parseCaseInsensitive
+      .appendValue(ISOChronology.yearRule, 4)
       .appendValue(ISOChronology.monthOfYearRule, 2)
       .appendValue(ISOChronology.dayOfMonthRule, 2)
       .optionalStart
@@ -735,7 +735,7 @@ object DateTimeFormatters {
    * @see DateTimeFormatterBuilder # appendPattern ( String )
    */
   def pattern(pattern: String, locale: Locale): DateTimeFormatter =
-    new DateTimeFormatterBuilder.appendPattern(pattern).toFormatter(locale)
+    (new DateTimeFormatterBuilder).appendPattern(pattern).toFormatter(locale)
 
   /**
    * Returns the ISO date formatter that prints/parses a date without an offset.
@@ -767,9 +767,9 @@ object DateTimeFormatters {
 
   /**Singleton date formatter. */
   private val ISO_TIME: DateTimeFormatter = {
-    new DateTimeFormatterBuilder
-    .parseCaseInsensitive
-    .append(ISO_LOCAL_TIME)
+    (new DateTimeFormatterBuilder)
+      .parseCaseInsensitive
+      .append(ISO_LOCAL_TIME)
       .optionalStart
       .appendOffsetId
       .optionalStart
@@ -837,9 +837,9 @@ object DateTimeFormatters {
 
   /**Singleton date formatter. */
   private val ISO_WEEK_DATE: DateTimeFormatter = {
-    new DateTimeFormatterBuilder
-    .parseCaseInsensitive
-    .appendValue(ISOChronology.weekBasedYearRule, 4, 10, SignStyle.EXCEEDS_PAD)
+    (new DateTimeFormatterBuilder)
+      .parseCaseInsensitive
+      .appendValue(ISOChronology.weekBasedYearRule, 4, 10, SignStyle.EXCEEDS_PAD)
       .appendLiteral("-W")
       .appendValue(ISOChronology
       .weekOfWeekBasedYearRule, 2)

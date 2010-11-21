@@ -292,7 +292,8 @@ object Duration {
    */
   def ofSeconds(seconds: BigDecimal): Duration = {
     Instant.checkNotNull(seconds, "Seconds must not be null")
-    return ofNanos(seconds.movePointRight(9).toBigIntegerExact)
+    //return ofNanos(seconds.movePointRight(9).toBigIntegerExact)
+    ofNanos((seconds * 1000000000).toBigIntExact.get)
   }
 
   /**

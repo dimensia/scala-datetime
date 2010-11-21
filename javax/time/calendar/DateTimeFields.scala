@@ -80,7 +80,7 @@ object DateTimeFields {
     ISOChronology.checkNotNull(fieldRule2, "Second DateTimeFieldRule must not be null")
     fieldRule1.checkValue(value1)
     fieldRule2.checkValue(value2)
-    val map: TreeMap[DateTimeFieldRule[_], Integer] = createMap
+    val map: TreeMap[DateTimeFieldRule[_], Int] = createMap
     map.put(fieldRule1, value1)
     map.put(fieldRule2, value2)
     return new DateTimeFields(map)
@@ -101,12 +101,12 @@ object DateTimeFields {
    * @throws NullPointerException if the map contains null keys or values
    * @throws IllegalCalendarFieldValueException if any value is invalid
    */
-  def of(fieldValueMap: Map[DateTimeFieldRule[_], Integer]): DateTimeFields = {
+  def of(fieldValueMap: Map[DateTimeFieldRule[_], Int]): DateTimeFields = {
     ISOChronology.checkNotNull(fieldValueMap, "Field-value map must not be null")
     if (fieldValueMap.isEmpty) {
       return EMPTY
     }
-    val map: TreeMap[DateTimeFieldRule[_], Integer] = createMap
+    val map: TreeMap[DateTimeFieldRule[_], Int] = createMap
     for (entry <- fieldValueMap.entrySet) {
       val fieldRule: DateTimeFieldRule[_] = entry.getKey
       val value: Integer = entry.getValue
@@ -133,7 +133,7 @@ object DateTimeFields {
   def of(fieldRule: DateTimeFieldRule[_], value: Int): DateTimeFields = {
     ISOChronology.checkNotNull(fieldRule, "DateTimeFieldRule must not be null")
     fieldRule.checkValue(value)
-    val map: TreeMap[DateTimeFieldRule[_], Integer] = createMap
+    val map: TreeMap[DateTimeFieldRule[_], Int] = createMap
     map.put(fieldRule, value)
     return new DateTimeFields(map)
   }
@@ -143,8 +143,8 @@ object DateTimeFields {
    *
    * @return ordered representation of internal map
    */
-  private def createMap: TreeMap[DateTimeFieldRule[_], Integer] = {
-    return new TreeMap[DateTimeFieldRule[_], Integer](Collections.reverseOrder)
+  private def createMap: TreeMap[DateTimeFieldRule[_], Int] = {
+    return new TreeMap[DateTimeFieldRule[_], Int](Collections.reverseOrder)
   }
 
   /**
@@ -160,8 +160,11 @@ object DateTimeFields {
  */
 
 @SerialVersionUID(1L)
-final class DateTimeFields private(fieldValueMap: TreeMap[DateTimeFieldRule[_], Int])
+final class DateTimeFields private(val fieldValueMap: TreeMap[DateTimeFieldRule[_], Int])
   extends Calendrical with CalendricalMatcher with Iterable[DateTimeFieldRule[_]] with Serializable {
+
+  import DateTimeFields._
+
   /**
    * Checks if this object contains a mapping for the specified field.
    * <p>
@@ -189,7 +192,7 @@ final class DateTimeFields private(fieldValueMap: TreeMap[DateTimeFieldRule[_], 
   def `with`(fieldRule: DateTimeFieldRule[_], value: Int): DateTimeFields = {
     ISOChronology.checkNotNull(fieldRule, "DateTimeFieldRule must not be null")
     fieldRule.checkValue(value)
-    val clonedMap: TreeMap[DateTimeFieldRule[_], Integer] = clonedMap
+    val clonedMap: TreeMap[DateTimeFieldRule[_], Int]= clonedMap
     clonedMap.put(fieldRule, value)
     return new DateTimeFields(clonedMap)
   }
@@ -220,7 +223,7 @@ final class DateTimeFields private(fieldValueMap: TreeMap[DateTimeFieldRule[_], 
    */
   def getInt(rule: DateTimeFieldRule[_]): Int = {
     ISOChronology.checkNotNull(rule, "DateTimeFieldRule must not be null")
-    var value: Integer = fieldValueMap.get(rule)
+    var value: Int = fieldValueMap.get(rule)
     if (value == null) throw new UnsupportedRuleException(rule)
     else value
   }
@@ -236,7 +239,7 @@ final class DateTimeFields private(fieldValueMap: TreeMap[DateTimeFieldRule[_], 
   override def matchesCalendrical(calendrical: Calendrical): Boolean = {
     ISOChronology.checkNotNull(calendrical, "Calendrical must not be null")
     for (entry <- fieldValueMap.entrySet) {
-      val dateValue: Integer = entry.getKey.getInteger(calendrical)
+      val dateValue: Int = entry.getKey.getInteger(calendrical)
       if (dateValue != null && dateValue.equals(entry.getValue) == false) {
         return false
       }
@@ -264,11 +267,11 @@ final class DateTimeFields private(fieldValueMap: TreeMap[DateTimeFieldRule[_], 
    */
   def withFieldRemoved(fieldRule: DateTimeFieldRule[_]): DateTimeFields = {
     ISOChronology.checkNotNull(fieldRule, "DateTimeFieldRule must not be null")
-    val clonedMap: TreeMap[DateTimeFieldRule[_], Integer] = clonedMap
+    val clonedMap: TreeMap[DateTimeFieldRule[_], Int] = clonedMap
     if (clonedMap.remove(fieldRule) == null) {
       return this
     }
-    return if (clonedMap.isEmpty) DateTimeField.EMPTY else new DateTimeFields(clonedMap)
+    return if (clonedMap.isEmpty) EMPTY else new DateTimeFields(clonedMap)
   }
 
   /**
@@ -276,10 +279,10 @@ final class DateTimeFields private(fieldValueMap: TreeMap[DateTimeFieldRule[_], 
    *
    * @return a clone of the field-value map, never null
    */
-  private def clonedMap: TreeMap[DateTimeFieldRule[_], Integer] = {
-    val cloned: TreeMap[DateTimeFieldRule[_], Integer] = createMap
+  private def clonedMap: TreeMap[DateTimeFieldRule[_], Int] = {
+    val cloned: TreeMap[DateTimeFieldRule[_], Int] = createMap
     cloned.putAll(fieldValueMap)
-    return cloned
+    cloned
   }
 
   /**
@@ -298,7 +301,7 @@ final class DateTimeFields private(fieldValueMap: TreeMap[DateTimeFieldRule[_], 
     if (fields.size == 0 || fields == this) {
       return this
     }
-    val clonedMap: TreeMap[DateTimeFieldRule[_], Integer] = clonedMap
+    val clonedMap: TreeMap[DateTimeFieldRule[_], Int] = clonedMap
     clonedMap.putAll(fields.fieldValueMap)
     return new DateTimeFields(clonedMap)
   }
@@ -317,7 +320,7 @@ final class DateTimeFields private(fieldValueMap: TreeMap[DateTimeFieldRule[_], 
   def get[T](rule: CalendricalRule[T]): T = {
     ISOChronology.checkNotNull(rule, "CalendricalRule must not be null")
     if (rule.isInstanceOf[DateTimeFieldRule[_]]) {
-      val value: Integer = fieldValueMap.get(rule)
+      val value: Int = fieldValueMap.get(rule)
       if (value != null) {
         val r: DateTimeFieldRule[T] = rule.asInstanceOf[DateTimeFieldRule[T]]
         return r.convertIntToValue(value)

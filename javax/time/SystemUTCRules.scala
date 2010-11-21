@@ -217,5 +217,5 @@ object SystemUTCRules extends SystemUTCRules{
    * @param offset the new offset after the leap
    * @return the TAI seconds
    */
-  private def tai(changeMjd: Long, offset: Int): Long = (changeMjd + 1 - OFFSET_MJD_TAI) * SECS_PER_DAY + offset
+  private def tai(changeMjd: Long, offset: Int): Long = (changeMjd + 1 - UTCRules.OFFSET_MJD_TAI) * UTCRules.SECS_PER_DAY + offset
 }

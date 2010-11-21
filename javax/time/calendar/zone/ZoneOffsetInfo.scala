@@ -84,7 +84,7 @@ object ZoneOffsetInfo {
  * @param transition the transition between two offsets on the local time-line.
  */
 
-final class ZoneOffsetInfo private[zone](dateTime: LocalDateTime, offset: ZoneOffset, transition: ZoneOffsetTransition) {
+final class ZoneOffsetInfo private[zone](val dateTime: LocalDateTime, val offset: ZoneOffset, val transition: ZoneOffsetTransition) {
 
   /**
    * Is a transition occurring on the local time-line.

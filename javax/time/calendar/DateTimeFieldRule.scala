@@ -88,7 +88,6 @@ object DateTimeFieldRule {
     if (valueTextMap.containsKey(null) || valueTextMap.containsValue(null) || valueTextMap.containsValue("")) {
       throw new IllegalArgumentException("The map must not contain null or empty text")
     }
-    this.locale = locale
     var copy: Map[Int, String] = new HashMap[Int, String](valueTextMap)
     var reverse: Map[String, Int] = new HashMap[String, Int]
     var insensitive: Map[String, Int] = new HashMap[String, Int]
@@ -106,8 +105,8 @@ object DateTimeFieldRule {
       lengthSet.add(upper.length)
     }
     if (reverse.size < copy.size) {
-      this.textValueMap = Collections.emptyMap
-      this.insensitiveTextValueMap = Collections.emptyMap
+      this.textValueMap = Collections.emptyMap[String, Int]
+      this.insensitiveTextValueMap = Collections.emptyMap[String, Int]
       this.lengths = null
     }
     else {
@@ -168,11 +167,11 @@ object DateTimeFieldRule {
         {
           var i: Int = lengthsStart
           while (i >= 0) {
-              var value: Int = insensitiveTextValueMap.get(parseText.substring(0, lengths(i)))
-              if (value != null) {
-                return ((lengths(i).toLong) << 32) + value
-              }
-              i -= 1;
+            var value: Int = insensitiveTextValueMap.get(parseText.substring(0, lengths(i)))
+            if (value != null) {
+              return ((lengths(i).toLong) << 32) + value
+            }
+            i -= 1;
           }
         }
         parseText = parseText.toLowerCase(locale)
@@ -180,11 +179,11 @@ object DateTimeFieldRule {
         {
           var i: Int = lengthsStart
           while (i >= 0) {
-              var value: Int = insensitiveTextValueMap.get(parseText.substring(0, lengths(i)))
-              if (value != null) {
-                return ((lengths(i).toLong) << 32) + value
-              }
-              i -= 1;
+            var value: Int = insensitiveTextValueMap.get(parseText.substring(0, lengths(i)))
+            if (value != null) {
+              return ((lengths(i).toLong) << 32) + value
+            }
+            i -= 1;
           }
         }
       }
@@ -192,11 +191,11 @@ object DateTimeFieldRule {
         {
           var i: Int = lengthsStart
           while (i >= 0) {
-              var value: Int = textValueMap.get(parseText.substring(0, lengths(i)))
-              if (value != null) {
-                return ((lengths(i).toLong) << 32) + value
-              }
-              i -= 1;
+            var value: Int = textValueMap.get(parseText.substring(0, lengths(i)))
+            if (value != null) {
+              return ((lengths(i).toLong) << 32) + value
+            }
+            i -= 1;
           }
         }
       }
@@ -377,10 +376,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
       throw new UnsupportedRuleException("The fractional value of " + getName + " cannot be converted as the minimum field value is not zero", this)
     }
     var range: Long = getMaximumValue
-    ({
-      range += 1;
-      range
-    })
+    range += 1;
     var decimal: BigDecimal = fraction.multiply(new BigDecimal(range), VALUE_CONTEXT)
     try {
       var value: Int = decimal.intValueExact
@@ -537,7 +533,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * @return the value of the field, never null
    * @throws UnsupportedRuleException if the field cannot be extracted
    */
-  final def getInt[T](calendrical: Calendrical): Int = {
+  final def getInt(calendrical: Calendrical): Int = {
     var value: T = getValue(calendrical)
     if (value == null) throw new UnsupportedRuleException(this)
     else convertValueToInt(value)
@@ -610,9 +606,9 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
   def convertIntToValue(value: Int): T = {
     //FIXME
     checkValue(value)
-//    if (classOf[Enum].isAssignableFrom(getReifiedType)) {        //We don't have Enums anymore...
-//      return getReifiedType.getEnumConstants(value - getMinimumValue)
-//    }
+    //    if (classOf[Enum].isAssignableFrom(getReifiedType)) {        //We don't have Enums anymore...
+    //      return getReifiedType.getEnumConstants(value - getMinimumValue)
+    //    }
     return reify(value)
   }
 

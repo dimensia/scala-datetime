@@ -31,11 +31,9 @@
  */
 package javax.time.calendar.format
 
-import java.io.IOException
 import java.util.Locale
 import javax.time.calendar.Calendrical
 import javax.time.calendar.Chronology
-import javax.time.calendar.format.DateTimeFormatterBuilder.FormatStyle
 
 /**
  * Prints or parses a localized pattern.
@@ -57,19 +55,19 @@ final class LocalizedPrinterParser private[format](val dateStyle: DateTimeFormat
                                                    val chronology: Chronology)
   extends DateTimePrinter with DateTimeParser {
 
-  /** { @inheritDoc }*/
+  /**{@inheritDoc}*/
   override def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit =
     formatter(symbols.getLocale).toPrinterParser(false).print(calendrical, appendable, symbols)
 
-  /** { @inheritDoc }*/
+  /**{@inheritDoc}*/
   override def isPrintDataAvailable(calendrical: Calendrical): Boolean = true
 
-  /** { @inheritDoc }*/
+  /**{@inheritDoc}*/
   override def toString: String =
     "Localized(" + (if (dateStyle != null) dateStyle else "") + "," +
       (if (timeStyle != null) timeStyle else "") + "," + chronology.getName + ")"
 
-  /** { @inheritDoc }*/
+  /**{@inheritDoc}*/
   def parse(context: DateTimeParseContext, parseText: String, position: Int): Int =
     formatter(context.getLocale).toPrinterParser(false).parse(context, parseText, position)
 
@@ -82,5 +80,5 @@ final class LocalizedPrinterParser private[format](val dateStyle: DateTimeFormat
    * @throws IllegalArgumentException if the formatter cannot be found
    */
   private def formatter(locale: Locale): DateTimeFormatter =
-    new DateTimeFormatterProviderImpl.getFormatter(dateStyle, timeStyle, locale, chronology)
+    (new DateTimeFormatterProviderImpl).getFormatter(dateStyle, timeStyle, locale, chronology)
 }

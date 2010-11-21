@@ -110,7 +110,7 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
    * The map of potentially invalid data to being merged, never null.
    * This is a concurrent hash map mainly to gain the no-nulls implementation.
    */
-  private val inputMap: Map[CalendricalRule[_], AnyRef] = new ConcurrentHashMap[CalendricalRule[_], AnyRef]
+  private val inputMap: Map[CalendricalRule[_], Any] = new ConcurrentHashMap[CalendricalRule[_], Any]
 
   /**
    * The overflow period to be added to the resultant date/time.
@@ -221,7 +221,7 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
    *
    * @return the rule-value map being merged, doesn't accept nulls, never null
    */
-  def getInputMap: Map[CalendricalRule[_], AnyRef] = inputMap
+  def getInputMap: Map[CalendricalRule[_], Any] = inputMap
 
   /**
    * Gets the overflow that results from the merge.
