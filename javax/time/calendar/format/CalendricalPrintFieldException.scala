@@ -68,7 +68,7 @@ class CalendricalPrintFieldException(msg: String, rule: DateTimeFieldRule[_], va
    *
    * @param cause the exception cause, may be null
    */
-  def this(cause: UnsupportedRuleException) {
+  def this(cause: UnsupportedRuleException[_]) {
     this ("Rule " + (if (cause.getRule == null) "null" else cause.getRule.getName) + " cannot be printed as the value cannot be obtained", cause.getRule, Int.MinValue)
   }
 

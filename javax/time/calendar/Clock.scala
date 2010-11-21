@@ -107,7 +107,7 @@ object Clock {
    */
   def systemDefaultZone: Clock = {
     val zone: TimeZone = TimeZone.of(java.util.TimeZone.getDefault.getID)
-    return new Clock.TimeSourceClock(TimeSource.system, zone)
+    new Clock.TimeSourceClock(TimeSource.system, zone)
   }
 
   /**
@@ -123,7 +123,7 @@ object Clock {
   def clockDefaultZone(timeSource: TimeSource): Clock = {
     ISOChronology.checkNotNull(timeSource, "TimeSource must not be null")
     val zone: TimeZone = TimeZone.of(java.util.TimeZone.getDefault.getID)
-    return new Clock.TimeSourceClock(timeSource, zone)
+    new Clock.TimeSourceClock(timeSource, zone)
   }
 
   /**
@@ -138,7 +138,7 @@ object Clock {
    */
   def system(zone: TimeZone): Clock = {
     ISOChronology.checkNotNull(zone, "TimeZone must not be null")
-    return new Clock.TimeSourceClock(TimeSource.system, zone)
+    new Clock.TimeSourceClock(TimeSource.system, zone)
   }
 
   /**
@@ -148,37 +148,29 @@ object Clock {
    * The time-zone being used.
    */
   @SerialVersionUID(1L)
-  private final class TimeSourceClock private(timeSource: TimeSource, zone: TimeZone) extends Clock with Serializable {
+  private[Clock] final class TimeSourceClock(val timeSource: TimeSource, val zone: TimeZone) extends Clock with Serializable {
 
     /** { @inheritDoc }*/
     override def getZone: TimeZone = zone
 
     /** { @inheritDoc }*/
-    override def toString: String = {
-      return "TimeSourceClock[" + timeSource + ", " + zone + ']'
-    }
+    override def toString: String = "TimeSourceClock[" + timeSource + ", " + zone + ']'
 
     /** { @inheritDoc }*/
     override def withSource(timeSource: TimeSource): Clock = {
       ISOChronology.checkNotNull(timeSource, "TimeSource must not be null")
-      if (timeSource.equals(this.timeSource)) {
-        return this
-      }
-      return new Clock.TimeSourceClock(timeSource, zone)
+      if (timeSource.equals(this.timeSource)) this
+      else new Clock.TimeSourceClock(timeSource, zone)
     }
 
     /** { @inheritDoc }*/
-    override def getSource: TimeSource = {
-      return timeSource
-    }
+    override def getSource: TimeSource = timeSource
 
     /** { @inheritDoc }*/
     override def withZone(zone: TimeZone): Clock = {
       ISOChronology.checkNotNull(zone, "TimeZone must not be null")
-      if (zone.equals(this.zone)) {
-        return this
-      }
-      return new Clock.TimeSourceClock(timeSource, zone)
+      if (zone.equals(this.zone)) this
+      else new Clock.TimeSourceClock(timeSource, zone)
     }
 
     /** { @inheritDoc }*/
@@ -213,7 +205,7 @@ object Clock {
   def clock(timeSource: TimeSource, timeZone: TimeZone): Clock = {
     ISOChronology.checkNotNull(timeSource, "TimeSource must not be null")
     ISOChronology.checkNotNull(timeZone, "TimeZone must not be null")
-    return new Clock.TimeSourceClock(timeSource, timeZone)
+    new Clock.TimeSourceClock(timeSource, timeZone)
   }
 }
 

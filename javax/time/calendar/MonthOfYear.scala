@@ -121,6 +121,9 @@ object MonthOfYear {
    * This has the numeric value of  { @code 12 }.
    */
   object DECEMBER extends MonthOfYear(12)
+
+  lazy val values = Array(JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER)
+
   /**
    * Obtains an instance of  { @code MonthOfYear } from an  { @code int } value.
    * <p>
@@ -297,7 +300,7 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Calendrical {
    * @return the value for the rule, null if the value cannot be returned
    */
   def get[T](rule: CalendricalRule[T]): T = {
-    if (rule.getReifiedType != classOf[MonthOfYear]) _ //null
+    if (rule.getReifiedType != classOf[MonthOfYear]) null
     else rule.reify(this)
   }
 

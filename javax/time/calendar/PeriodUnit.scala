@@ -69,7 +69,7 @@ object PeriodUnit {
    */
   private def buildEquivalentPeriods(equivalentPeriod: PeriodField): List[PeriodField] = {
     if (equivalentPeriod == null) {
-      return Collections.emptyList
+      return Collections.emptyList[PeriodField]
     }
     var equivalents: List[PeriodField] = new ArrayList[PeriodField]
     equivalents.add(equivalentPeriod)
@@ -85,22 +85,19 @@ object PeriodUnit {
 
 }
 
-abstract class PeriodUnit extends Comparable[PeriodUnit] with Serializable {
 
-  /**
-   * Constructor used by ISOChronology.
-   *
-   * @param name the name of the type, not null
-   * @param equivalentPeriod the period this is derived from, null if no equivalent
-   * @param estimatedDuration the estimated duration of one unit of this period, not null
-   * @throws ArithmeticException if the equivalent period calculation overflows
-   */
-  private[calendar] def this(@transient name: String, equivalentPeriod: PeriodField, estimatedDuration: Duration) {
-    this()
-    this.estimatedDuration = estimatedDuration
-    this.equivalentPeriods = PeriodUnit.buildEquivalentPeriods(equivalentPeriod)
-    this.hashCode = name.hashCode ^ estimatedDuration.hashCode ^ (if (equivalentPeriod != null) equivalentPeriod.hashCode else 0)
-  }
+/**
+ * @param name the name of the unit, never null
+ * @param equivalentPeriod the cache of periods equivalent to this unit, not null
+ * @param estimatedDuration the estimated duration of the unit, not null
+ * @param hashcode the cache of the unit hash code
+ */
+@SerialVersionUID(1L)
+abstract class PeriodUnit private[calendar](@transient val name: String, @transient val equivalentPeriods: List[PeriodField], @transient val estimatedDuration: Duration, @transient hashCode: Int)
+  extends Comparable[PeriodUnit] with Serializable {
+  ISOChronology.checkNotNull(name, "Name must not be null")
+
+  import PeriodUnit._
 
   /**
    * Constructor to create a unit that is derived from another smaller unit.
@@ -118,15 +115,11 @@ abstract class PeriodUnit extends Comparable[PeriodUnit] with Serializable {
    * @throws ArithmeticException if the equivalent period calculation overflows
    */
   protected def this(name: String, equivalentPeriod: PeriodField) {
-    this()
-    ISOChronology.checkNotNull(name, "Name must not be null")
+    this(name, buildEquivalentPeriods(equivalentPeriod), equivalentPeriod.toEstimatedDuration, name.hashCode ^ estimatedDuration.hashCode ^ equivalentPeriod.hashCode)
     ISOChronology.checkNotNull(equivalentPeriod, "Equivalent period must not be null")
     if (equivalentPeriod.getAmount <= 0) {
       throw new IllegalArgumentException("Equivalent period must not be negative or zero")
     }
-    this.estimatedDuration = equivalentPeriod.toEstimatedDuration
-    this.equivalentPeriods = buildEquivalentPeriods(equivalentPeriod)
-    this.hashCode = name.hashCode ^ estimatedDuration.hashCode ^ equivalentPeriod.hashCode
   }
 
   /**
@@ -142,22 +135,12 @@ abstract class PeriodUnit extends Comparable[PeriodUnit] with Serializable {
    * @throws IllegalArgumentException if the duration is zero or negative
    */
   protected def this(name: String, estimatedDuration: Duration) {
-    this()
-    ISOChronology.checkNotNull(name, "Name must not be null")
+    this(name, buildEquivalentPeriods(null), estimatedDuration, name.hashCode ^ estimatedDuration.hashCode ^ 0)
     ISOChronology.checkNotNull(estimatedDuration, "Estimated duration must not be null")
     if (estimatedDuration.isNegative || estimatedDuration.isZero) {
       throw new IllegalArgumentException("Alternate period must not be negative or zero")
     }
-    this.estimatedDuration = estimatedDuration
-    this.equivalentPeriods = buildEquivalentPeriods(null)
-    this.hashCode = name.hashCode ^ estimatedDuration.hashCode ^ 0
   }
-
-    /**
-     * The estimated duration of the unit, not null.
-     */
-    @transient
-    private val estimatedDuration: Duration = null
 
   /**
    * Gets the periods that are equivalent to this unit.
@@ -189,12 +172,6 @@ abstract class PeriodUnit extends Comparable[PeriodUnit] with Serializable {
    * @return the estimate of the duration in seconds, never null
    */
   def getEstimatedDuration: Duration = estimatedDuration
-
-  /**
-   * The cache of periods equivalent to this unit, not null.
-   */
-  @transient
-  private val equivalentPeriods: List[PeriodField] = null
 
   /**
    * Checks whether this unit can be converted to the specified unit.
@@ -284,19 +261,6 @@ abstract class PeriodUnit extends Comparable[PeriodUnit] with Serializable {
    * @return the name of the unit, never null
    */
   def getName: String = name
-
-  /**
-   * Returns a hash code based on the name, estimated duration and equivalent period.
-   *
-   * @return a suitable hash code
-   */
-  override def hashCode: Int = hashCode
-
-  /**
-   * The cache of the unit hash code.
-   */
-  @transient
-  private val hashCode: Int = 0
 
   /**
    * Gets the period in the specified unit that is equivalent to this unit.

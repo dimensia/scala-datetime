@@ -33,7 +33,6 @@ package javax.time.calendar.zone
 
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.IOException
 import java.io.Serializable
 import javax.time.calendar.DateAdjusters
 import javax.time.calendar.DayOfWeek
@@ -63,7 +62,7 @@ import javax.time.calendar.zone.ZoneRulesBuilder.TimeDefinition
  *
  * @author Stephen Colebourne
  */
-final object ZoneOffsetTransitionRule {
+object ZoneOffsetTransitionRule {
   /**
    * Creates an instance defining the yearly rule to create transitions between two offsets.
    * <p>
@@ -113,7 +112,8 @@ final object ZoneOffsetTransitionRule {
     var dowByte: Int = (data & (7 << 19)) >>> 19
     var dow: DayOfWeek = if (dowByte == 0) null else DayOfWeek.of(dowByte)
     var timeByte: Int = (data & (31 << 14)) >>> 14
-    var defn: ZoneRulesBuilder.TimeDefinition = TimeDefinition.values((data & (3 << 12)) >>> 12)
+    //TimeDefinition defn = TimeDefinition.values()[(data & (3 << 12)) >>> 12];
+    var defn: ZoneRulesBuilder.TimeDefinition = TimeDefinition.of((data & (3 << 12)) >>> 12)
     var stdByte: Int = (data & (255 << 4)) >>> 4
     var beforeByte: Int = (data & (3 << 2)) >>> 2
     var afterByte: Int = (data & 3)
@@ -125,34 +125,48 @@ final object ZoneOffsetTransitionRule {
   }
 }
 
-  /**
-   * Creates an instance defining the yearly rule to create transitions between two offsets.
-   *
-   * @param month the month of the month-day of the first day of the cutover week, not null
-   * @param dayOfMonthIndicator the day of the month-day of the cutover week, positive if the week is that
-   *  day or later, negative if the week is that day or earlier, counting from the last day of the month,
-   *  from -28 to 31 excluding 0
-   * @param dayOfWeek the required day-of-week, null if the month-day should not be changed
-   * @param time the cutover time in the 'before' offset, not null
-   * @param timeEndOfDay whether the time is midnight at the end of day
-   * @param timeDefnition how to interpret the cutover
-   * @param standardOffset the standard offset in force at the cutover, not null
-   * @param offsetBefore the offset before the cutover, not null
-   * @param offsetAfter the offset after the cutover, not null
-   * @throws IllegalArgumentException if the day of month indicator is invalid
-   * @throws IllegalArgumentException if the end of day flag is true when the time is not midnight
-   */
+/**
+ * Creates an instance defining the yearly rule to create transitions between two offsets.
+ *
+ * @param month the month of the month-day of the first day of the cutover week, not null
+ * @param dayOfMonthIndicator The day-of-month of the month-day of the cutover week.
+ * If positive, it is the start of the week where the cutover can occur.
+ * If negative, it represents the end of the week where cutover can occur.
+ * The value is the number of days from the end of the month, such that
+ * {@code -1} is the last day of the month,  {@code -2} is the second
+ * to last day, and so on.
+ * @param dayOfWeek the required day-of-week, null if the month-day should not be changed
+ * @param time the cutover time in the 'before' offset, not null
+ * @param timeEndOfDay whether the time is midnight at the end of day
+ * @param timeDefnition how to interpret the cutover
+ * @param standardOffset the standard offset in force at the cutover, not null
+ * @param offsetBefore the offset before the cutover, not null
+ * @param offsetAfter the offset after the cutover, not null
+ * @throws IllegalArgumentException if the day of month indicator is invalid
+ * @throws IllegalArgumentException if the end of day flag is true when the time is not midnight
+ */
 @SerialVersionUID(-32352886665458L)
-final class ZoneOffsetTransitionRule(month: MonthOfYear,
-                                     _dayOfMonthIndicator: Int,
-                                     dayOfWeek: DayOfWeek,
-                                     time: LocalTime,
-                                     timeEndOfDay: Boolean,
-                                     timeDefinition: ZoneRulesBuilder.TimeDefinition,
-                                     standardOffset: ZoneOffset,
-                                     offsetBefore: ZoneOffset,
-                                     offsetAfter: ZoneOffset)
+final class ZoneOffsetTransitionRule(val month: MonthOfYear,
+                                     val dayOfMonthIndicator: Byte,
+                                     val dayOfWeek: DayOfWeek,
+                                     val time: LocalTime,
+                                     val timeEndOfDay: Boolean,
+                                     val timeDefinition: ZoneRulesBuilder.TimeDefinition,
+                                     val standardOffset: ZoneOffset,
+                                     val offsetBefore: ZoneOffset,
+                                     val offsetAfter: ZoneOffset)
   extends Serializable {
+
+  def this(month: MonthOfYear,
+           dayOfMonthIndicator: Int,
+           dayOfWeek: DayOfWeek,
+           time: LocalTime,
+           timeEndOfDay: Boolean,
+           timeDefinition: ZoneRulesBuilder.TimeDefinition,
+           standardOffset: ZoneOffset,
+           offsetBefore: ZoneOffset,
+           offsetAfter: ZoneOffset) = this (month, dayOfMonthIndicator.toByte, dayOfWeek, time, timeEndOfDay, timeDefinition, standardOffset, offsetBefore, offsetAfter)
+
   /**
    * Uses a serialization delegate.
    *
@@ -160,15 +174,6 @@ final class ZoneOffsetTransitionRule(month: MonthOfYear,
    */
   private def writeReplace: AnyRef = new Ser(Ser.ZOTRULE, this)
 
-  /**
-   * The day-of-month of the month-day of the cutover week.
-   * If positive, it is the start of the week where the cutover can occur.
-   * If negative, it represents the end of the week where cutover can occur.
-   * The value is the number of days from the end of the month, such that
-   * { @code -1 } is the last day of the month,  { @code -2 } is the second
-   * to last day, and so on.
-   */
-  private lazy val dayOfMonthIndicator: Byte = _dayOfMonthIndicator.toByte
   /**
    * Gets the month of the transition.
    * <p>
@@ -194,8 +199,8 @@ final class ZoneOffsetTransitionRule(month: MonthOfYear,
       return true
     }
     if (otherRule.isInstanceOf[ZoneOffsetTransitionRule]) {
-      var other: ZoneOffsetTransitionRule = otherRule.asInstanceOf[ZoneOffsetTransitionRule]
-      return month == other.month && dayOfMonthIndicator == other.dom && dayOfWeek == other.dow && timeDefinition == other.timeDefinition && time.equals(other.time) && timeEndOfDay == other.timeEndOfDay && standardOffset.equals(other.standardOffset) && offsetBefore.equals(other.offsetBefore) && offsetAfter.equals(other.offsetAfter)
+      val other: ZoneOffsetTransitionRule = otherRule.asInstanceOf[ZoneOffsetTransitionRule]
+      return month == other.month && dayOfMonthIndicator == other.dayOfMonthIndicator && dayOfWeek == other.dayOfWeek && timeDefinition == other.timeDefinition && time.equals(other.time) && timeEndOfDay == other.timeEndOfDay && standardOffset.equals(other.standardOffset) && offsetBefore.equals(other.offsetBefore) && offsetAfter.equals(other.offsetAfter)
     }
     return false
   }
@@ -206,7 +211,7 @@ final class ZoneOffsetTransitionRule(month: MonthOfYear,
    * @return the hash code
    */
   override def hashCode: Int = {
-    var hash: Int = ((time.toSecondOfDay + (if (timeEndOfDay) 1 else 0)) << 15) + (month.ordinal << 11) + ((dayOfMonthIndicator + 32) << 5) + ((if (dayOfWeek == null) 7 else dayOfWeek.ordinal) << 2) + (timeDefinition.ordinal)
+    val hash: Int = ((time.toSecondOfDay + (if (timeEndOfDay) 1 else 0)) << 15) + (month.ordinal << 11) + ((dayOfMonthIndicator + 32) << 5) + ((if (dayOfWeek == null) 7 else dayOfWeek.ordinal) << 2) + (timeDefinition.ordinal)
     return hash ^ standardOffset.hashCode ^ offsetBefore.hashCode ^ offsetAfter.hashCode
   }
 
@@ -266,9 +271,9 @@ final class ZoneOffsetTransitionRule(month: MonthOfYear,
     if (timeEndOfDay) {
       date = date.plusDays(1)
     }
-    var localDT: LocalDateTime = LocalDateTime.of(date, time)
-    var transition: OffsetDateTime = timeDefinition.createDateTime(localDT, standardOffset, offsetBefore)
-    return new ZoneOffsetTransition(transition, offsetAfter)
+    val localDT: LocalDateTime = LocalDateTime.of(date, time)
+    val transition: OffsetDateTime = timeDefinition.createDateTime(localDT, standardOffset, offsetBefore)
+    new ZoneOffsetTransition(transition, offsetAfter)
   }
 
   /**
@@ -325,7 +330,7 @@ final class ZoneOffsetTransitionRule(month: MonthOfYear,
    * @return a string for debugging, never null
    */
   override def toString: String = {
-    var buf: StringBuilder = new StringBuilder
+    val buf: java.lang.StringBuilder = new java.lang.StringBuilder
     buf.append("TransitionRule[").append(if (offsetBefore.compareTo(offsetAfter) > 0) "Gap " else "Overlap ").append(offsetBefore).append(" to ").append(offsetAfter).append(", ")
     if (dayOfWeek != null) {
       if (dayOfMonthIndicator == -1) {
@@ -364,20 +369,20 @@ final class ZoneOffsetTransitionRule(month: MonthOfYear,
    */
   def isMidnightEndOfDay: Boolean = timeEndOfDay
 
-    /**
-     * Gets the offset after the transition.
-     *
-     * @return the offset after, never null
-     */
-    def getOffsetAfter: ZoneOffset = offsetAfter
+  /**
+   * Gets the offset after the transition.
+   *
+   * @return the offset after, never null
+   */
+  def getOffsetAfter: ZoneOffset = offsetAfter
 
-    /**
-     * Gets the local time of day of the transition which must be checked with
-     * { @link # isMidnightEndOfDay ( ) }.
-     * <p>
-     * The time is converted into an instant using the time definition.
-     *
-     * @return the local time of day of the transition, never null
-     */
-    def getLocalTime: LocalTime = time
-  }
+  /**
+   * Gets the local time of day of the transition which must be checked with
+   * { @link # isMidnightEndOfDay ( ) }.
+   * <p>
+   * The time is converted into an instant using the time definition.
+   *
+   * @return the local time of day of the transition, never null
+   */
+  def getLocalTime: LocalTime = time
+}

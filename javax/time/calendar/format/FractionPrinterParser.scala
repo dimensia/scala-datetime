@@ -31,7 +31,6 @@
  */
 package javax.time.calendar.format
 
-import java.io.IOException
 import java.math.BigDecimal
 import java.math.RoundingMode
 import javax.time.calendar.Calendrical
@@ -55,10 +54,10 @@ import javax.time.calendar.DateTimeFieldRule
 final class FractionPrinterParser private[format](val rule: DateTimeFieldRule[_], val minWidth: Int, val maxWidth: Int)
   extends DateTimePrinter with DateTimeParser {
 
-  /** { @inheritDoc }*/
+  /**{ @inheritDoc }*/
   override def toString: String = "Fraction(" + rule.getID + "," + minWidth + "," + maxWidth + ")"
 
-  /** { @inheritDoc }*/
+  /**{ @inheritDoc }*/
   override def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = {
     var value: Int = rule.getInt(calendrical)
     var fraction: BigDecimal = rule.convertIntToFraction(value)
@@ -90,11 +89,12 @@ final class FractionPrinterParser private[format](val rule: DateTimeFieldRule[_]
     }
   }
 
-  /** { @inheritDoc }*/
+  /**{ @inheritDoc }*/
   override def isPrintDataAvailable(calendrical: Calendrical): Boolean = calendrical.get(rule) != null
 
-  /** { @inheritDoc }*/
-  def parse(context: DateTimeParseContext, parseText: String, position: Int): Int = {
+  /**{ @inheritDoc }*/
+  def parse(context: DateTimeParseContext, parseText: String, _position: Int): Int = {
+    var position = _position
     var length: Int = parseText.length
     if (position == length) {
       if (minWidth > 0) {
@@ -109,10 +109,7 @@ final class FractionPrinterParser private[format](val rule: DateTimeFieldRule[_]
       }
       return position
     }
-    ({
-      position += 1;
-      position
-    })
+    position += 1;
     var minEndPos: Int = position + minWidth
     if (minEndPos > length) {
       return ~position
@@ -130,11 +127,8 @@ final class FractionPrinterParser private[format](val rule: DateTimeFieldRule[_]
         if (pos < minEndPos) {
           return ~position
         }
-        ({
-          pos -= 1;
-          pos
-        })
-        break //todo: break is not supported
+        pos -= 1;
+        //break //todo: break is not supported
       }
       total = total * 10 + digit
     }

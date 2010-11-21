@@ -481,7 +481,7 @@ object ZonedDateTime {
   private[calendar] object Rule extends Rule
 
   @SerialVersionUID(1L)
-  private[calendar] final class Rule private
+  private[calendar] sealed class Rule
     extends CalendricalRule[ZonedDateTime](classOf[ZonedDateTime], ISOChronology, "ZonedDateTime", ISOChronology.periodNanos, null)
     with Serializable {
     private def readResolve: AnyRef = Rule
@@ -497,7 +497,7 @@ object ZonedDateTime {
  * @param zone the time-zone, validated as not null
  */
 @SerialVersionUID(-456761901L)
-final class ZonedDateTime private(dateTime: OffsetDateTime, zone: TimeZone)
+final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZone)
   extends InstantProvider with DateTimeProvider with Calendrical with CalendricalMatcher with Comparable[ZonedDateTime] with Serializable {
 
   import ZonedDateTime._

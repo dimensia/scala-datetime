@@ -128,8 +128,8 @@ object LocalDate {
   private[calendar] object Rule extends Rule
 
   @SerialVersionUID(1L)
-  private[calendar] final class Rule private
-    extends CalendricalRule[LocalDate](classOf[LocalDate], ISOChronology.INSTANCE, "LocalDate", ISOChronology.periodDays, null) with Serializable {
+  private[calendar] sealed class Rule
+    extends CalendricalRule[LocalDate](classOf[LocalDate], ISOChronology, "LocalDate", ISOChronology.periodDays, null) with Serializable {
 
     protected override def derive(calendrical: Calendrical): LocalDate = {
       val ldt: LocalDateTime = calendrical.get(LocalDateTime.rule)
@@ -215,7 +215,8 @@ object LocalDate {
    * @return the local date, never null
    * @throws IllegalCalendarFieldValueException if the epoch days exceeds the supported date range
    */
-  private[calendar] def ofYearZeroDays(epochDays: Long): LocalDate = {
+  private[calendar] def ofYearZeroDays(_epochDays: Long): LocalDate = {
+    var epochDays = _epochDays
     epochDays -= 60
     var adjust: Long = 0
     if (epochDays < 0) {
@@ -306,7 +307,7 @@ object LocalDate {
  * @param monthOfYear the month-of-year to represent, not null
  * @param dayOfMonth the day-of-month to represent, valid for year-month, from 1 to 31
  */
-final class LocalDate private(year: Int, month: MonthOfYear, day: Int)
+final class LocalDate private(val year: Int, val month: MonthOfYear, val day: Int)
   extends Calendrical with DateProvider with CalendricalMatcher with DateAdjuster with Comparable[LocalDate] with Serializable {
   /**
    * Resolves the date, handling incorrectly implemented resolvers.
@@ -783,7 +784,7 @@ final class LocalDate private(year: Int, month: MonthOfYear, day: Int)
    * @param calendrical the calendrical to match, not null
    * @return true if the calendrical matches, false otherwise
    */
-  override def matchesCalendrical(calendrical: Calendrical): Boolean = this.equals(calendrical.get(rule))
+  override def matchesCalendrical(calendrical: Calendrical): Boolean = this.equals(calendrical.get(LocalDate.rule))
 
   /**
    * Returns an offset date formed from this time and the specified offset.
@@ -811,7 +812,7 @@ final class LocalDate private(year: Int, month: MonthOfYear, day: Int)
    */
   def withDayOfMonth(dayOfMonth: Int): LocalDate = {
     if (this.day == dayOfMonth) this
-    else of(year, month, dayOfMonth)
+    else LocalDate.of(year, month, dayOfMonth)
   }
 
   /**

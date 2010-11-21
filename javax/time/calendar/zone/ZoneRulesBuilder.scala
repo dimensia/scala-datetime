@@ -36,17 +36,7 @@ import java.util.Collections
 import java.util.HashMap
 import java.util.List
 import java.util.Map
-import javax.time.calendar.DateAdjusters
-import javax.time.calendar.DayOfWeek
-import javax.time.calendar.ISOChronology
-import javax.time.calendar.LocalDate
-import javax.time.calendar.LocalDateTime
-import javax.time.calendar.LocalTime
-import javax.time.calendar.MonthOfYear
-import javax.time.calendar.OffsetDateTime
-import javax.time.calendar.Period
-import javax.time.calendar.Year
-import javax.time.calendar.ZoneOffset
+import javax.time.calendar._
 
 /**
  * A mutable builder used to create all the rules for a historic time-zone.
@@ -79,7 +69,7 @@ object ZoneRulesBuilder {
    * </ul>
    */
 
-  sealed abstract class TimeDefinition {
+  sealed abstract class TimeDefinition(val ordinal: Int) {
     /**
      * Creates the offset date-time from the specified local date-time.
      * <p>
@@ -109,15 +99,23 @@ object ZoneRulesBuilder {
 
   object TimeDefinition {
 
-    /**The local date-time is expressed in terms of the standard offset. */
-    object STANDARD extends TimeDefinition
-
     /**The local date-time is expressed in terms of the UTC offset. */
-    object UTC extends TimeDefinition
+    object UTC extends TimeDefinition(0)
 
     /**The local date-time is expressed in terms of the wall offset. */
-    object WALL extends TimeDefinition
+    object WALL extends TimeDefinition(1)
 
+    /**The local date-time is expressed in terms of the standard offset. */
+    object STANDARD extends TimeDefinition(2)
+
+    def of(ordinal: Int): TimeDefinition = {
+      ordinal match {
+        case 0 => UTC
+        case 1 => WALL
+        case 2 => STANDARD
+        case _ => throw new IllegalCalendarFieldValueException(null, ordinal, 0, 2)
+      }
+    }
   }
 
   /**
@@ -222,7 +220,7 @@ class ZoneRulesBuilder {
     checkNotNull(standardOffset, "Standard offset must not be null")
     checkNotNull(until, "Until date-time must not be null")
     checkNotNull(untilDefinition, "Time definition must not be null")
-    var window: ZoneRulesBuilder#TZWindow = new ZoneRulesBuilder#TZWindow(standardOffset, until, untilDefinition)
+    var window: ZoneRulesBuilder#TZWindow = new TZWindow(standardOffset, until, untilDefinition)
     if (windowList.size > 0) {
       var previous: ZoneRulesBuilder#TZWindow = windowList.get(windowList.size - 1)
       window.validateWindowOrder(previous)
@@ -242,7 +240,7 @@ class ZoneRulesBuilder {
    * @throws IllegalStateException if no windows have been added
    * @throws IllegalStateException if there is only one rule defined as being forever for any given window
    */
-  def toRules(id: String): ZoneRules = toRules(id, new HashMap[AnyRef, AnyRef])
+  def toRules(id: String): ZoneRules = toRules(id, new HashMap[Any, Any])
 
   /**
    * A definition of the way a local time can be converted to an offset time.
@@ -260,7 +258,7 @@ class ZoneRulesBuilder {
    * @param timeDefinition the time definition, not null
    * @param savingAfter the savings amount, not null
    */
-  private[zone] class TZRule(private var year: Int,
+  private[zone] class TZRule(var year: Int,
                              private var month: MonthOfYear,
                              private var dayOfMonthIndicator: Int,
                              private var dayOfWeek: DayOfWeek,
@@ -368,12 +366,12 @@ class ZoneRulesBuilder {
    * @param windowEnd the end of the window, relative to the time definition, null if forever
    * @param timeDefinition the time definition for calculating the true end, not null
    */
-  private[zone] class TZWindow private[zone](standardOffset: ZoneOffset,
-                                             windowEnd: LocalDateTime,
-                                             timeDefinition: ZoneRulesBuilder.TimeDefinition) {
+  private[zone] class TZWindow(val standardOffset: ZoneOffset,
+                               val windowEnd: LocalDateTime,
+                               timeDefinition: ZoneRulesBuilder.TimeDefinition) {
 
     /**The fixed amount of the saving to be applied during this window. */
-    private var fixedSavingAmount: Period = null
+    private[zone] var fixedSavingAmount: Period = null
     /**The last rules. */
     private var lastRuleList: List[ZoneRulesBuilder#TZRule] = new ArrayList[ZoneRulesBuilder#TZRule]
     /**
@@ -478,7 +476,7 @@ class ZoneRulesBuilder {
       }
       var year: Int = startYear
       while (year <= endYear) {
-        var rule: ZoneRulesBuilder#TZRule = new ZoneRulesBuilder#TZRule(year, month, dayOfMonthIndicator, dayOfWeek, time, timeEndOfDay, timeDefinition, savingAmount)
+        var rule: ZoneRulesBuilder#TZRule = new TZRule(year, month, dayOfMonthIndicator, dayOfWeek, time, timeEndOfDay, timeDefinition, savingAmount)
         if (lastRule) {
           lastRuleList.add(rule)
           maxLastRuleStartYear = Math.max(startYear, maxLastRuleStartYear)
@@ -553,7 +551,7 @@ class ZoneRulesBuilder {
   /**
    * A map for deduplicating the output.
    */
-  private var deduplicateMap: Map[AnyRef, AnyRef] = null
+  private var deduplicateMap: Map[Any, Any] = null
   /**
    * Completes the build converting the builder to a set of time-zone rules.
    * <p>
@@ -566,7 +564,7 @@ class ZoneRulesBuilder {
    * @throws IllegalStateException if no windows have been added
    * @throws IllegalStateException if there is only one rule defined as being forever for any given window
    */
-  private[zone] def toRules(id: String, deduplicateMap: Map[AnyRef, AnyRef]): ZoneRules = {
+  private[zone] def toRules(id: String, deduplicateMap: Map[Any, Any]): ZoneRules = {
     checkNotNull(id, "Time zone id must not be null")
     this.deduplicateMap = deduplicateMap
     if (windowList.isEmpty) {

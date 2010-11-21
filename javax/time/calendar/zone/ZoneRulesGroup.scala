@@ -204,7 +204,7 @@ object ZoneRulesGroup {
  * @param groupID the zone rules group ID, such as 'TZDB', not null
  * @throws CalendricalException if the group ID is invalid
  */
-final class ZoneRulesGroup(groupID: String) {
+final class ZoneRulesGroup(val groupID: String) {
 
   import ZoneRulesGroup._
 

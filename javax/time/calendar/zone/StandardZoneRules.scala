@@ -120,11 +120,11 @@ object StandardZoneRules {
  * @param lastRules the recurring last rules, size 15 or less, not null
  */
 @SerialVersionUID(1L)
-final class StandardZoneRules private(standardTransitions: Array[Long],
-                                      standardOffsets: Array[ZoneOffset],
-                                      savingsInstantTransitions: Array[Long],
-                                      wallOffsets: Array[ZoneOffset],
-                                      lastRules: Array[ZoneOffsetTransitionRule])
+final class StandardZoneRules private[zone](val standardTransitions: Array[Long],
+                                      val standardOffsets: Array[ZoneOffset],
+                                      val savingsInstantTransitions: Array[Long],
+                                      val wallOffsets: Array[ZoneOffset],
+                                      val lastRules: Array[ZoneOffsetTransitionRule])
   extends ZoneRules with Serializable {
 
   var localTransitionList: List[LocalDateTime] = new ArrayList[LocalDateTime] {

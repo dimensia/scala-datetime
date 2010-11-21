@@ -112,7 +112,7 @@ final class DateTimeFormatter private[format] (symbols: DateTimeFormatSymbols, p
    *
    * @return this formatter as a classic format instance, never null
    */
-  def toFormat: Format = new DateTimeFormatter#ClassicFormat
+  def toFormat: Format = new ClassicFormat
 
   /**
    * Returns a description of the underlying formatters.
@@ -238,7 +238,7 @@ final class DateTimeFormatter private[format] (symbols: DateTimeFormatSymbols, p
         printerParser.print(calendrical, appendable, symbols)
       }
       catch {
-        case ex: UnsupportedRuleException => {
+        case ex: UnsupportedRuleException[_] => {
           throw new CalendricalPrintFieldException(ex)
         }
         case ex: IOException => {

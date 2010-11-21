@@ -37,7 +37,6 @@ import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 import javax.time.calendar.Chronology
-import javax.time.calendar.format.DateTimeFormatterBuilder.FormatStyle
 
 /**
  * The Service Provider Implementation to obtain date-time formatters.
@@ -52,6 +51,9 @@ object DateTimeFormatterProviderImpl {
 }
 
 class DateTimeFormatterProviderImpl extends DateTimeFormatterProvider {
+
+  import DateTimeFormatterProviderImpl._
+
   /**
    * Converts the enum style to the old format style.
    * @param style the enum style, not null
@@ -86,7 +88,7 @@ class DateTimeFormatterProviderImpl extends DateTimeFormatterProvider {
     }
     if (dateFormat.isInstanceOf[SimpleDateFormat]) {
       var pattern: String = (dateFormat.asInstanceOf[SimpleDateFormat]).toPattern
-      var formatter: DateTimeFormatter = new DateTimeFormatterBuilder.appendPattern(pattern).toFormatter(locale)
+      var formatter: DateTimeFormatter = (new DateTimeFormatterBuilder).appendPattern(pattern).toFormatter(locale)
       FORMATTER_CACHE.putIfAbsent(key, formatter)
       return formatter
     }

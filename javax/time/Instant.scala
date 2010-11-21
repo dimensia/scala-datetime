@@ -274,7 +274,8 @@ object Instant {
    */
   def ofEpochSeconds(epochSeconds: BigDecimal): Instant = {
     checkNotNull(epochSeconds, "Seconds must not be null")
-    return ofEpochNanos(epochSeconds.movePointRight(9).toBigIntegerExact)
+    //ofEpochNanos(epochSeconds.movePointRight(9).toBigIntegerExact)
+    ofEpochNanos((epochSeconds * 1000000000).toBigIntExact.get)
   }
 
   /**

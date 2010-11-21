@@ -95,6 +95,9 @@ object DayOfWeek {
    * This has the numeric value of  { @code 7 }.
    */
   object SUNDAY extends DayOfWeek(7)
+
+  lazy val values = Array(MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY)
+
   /**
    * Returns the  { @code DayOfWeek } instance that corresponds to the first
    * day-of-week for a given  { @code locale }.
@@ -267,7 +270,7 @@ sealed abstract class DayOfWeek(val ordinal: Int) extends Calendrical {
    * @return the value for the rule, null if the value cannot be returned
    */
   def get[T](rule: CalendricalRule[T]): T = {
-    if (rule.getReifiedType != classOf[DayOfWeek]) _ //null
+    if (rule.getReifiedType != classOf[DayOfWeek]) null
     else rule.reify(this)
   }
 
@@ -280,5 +283,7 @@ sealed abstract class DayOfWeek(val ordinal: Int) extends Calendrical {
    * @return the day-of-week, from 1 (Monday) to 7 (Sunday)
    */
   def getValue: Int = ordinal
+
+  def name = this.getClass.getName
 }
 

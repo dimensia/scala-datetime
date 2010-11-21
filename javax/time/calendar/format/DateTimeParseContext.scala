@@ -127,6 +127,23 @@ final class DateTimeParseContext(val symbols: DateTimeFormatSymbols) {
    * Whether to parse using strict rules.
    */
   var strict: Boolean = true
+
+  /**
+   * Checks if parsing is strict.
+   * <p>
+   * Strict parsing requires exact matching of the text and sign styles.
+   *
+   * @return true if parsing is strict, false if lenient
+   */
+  def isStrict: Boolean = strict
+
+  /**
+   * Sets whether parsing is strict or lenient.
+   *
+   * @param strict  changes the parsing to be strict or lenient from now on
+   */
+  def setStrict: Unit = this.strict = strict;
+
   /**
    * Gets the set of parsed rules.
    * <p>
@@ -216,7 +233,7 @@ final class DateTimeParseContext(val symbols: DateTimeFormatSymbols) {
    * @param rule the rule to query from the map, not null
    * @return the value mapped to the specified rule, null if rule not in the map
    */
-  def getParsed(rule: CalendricalRule[_]): AnyRef = {
+  def getParsed(rule: CalendricalRule[_]): Any = {
     DateTimeFormatter.checkNotNull(rule, "CalendricalRule must not be null")
     currentCalendrical.values.get(rule)
   }

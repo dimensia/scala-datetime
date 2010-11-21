@@ -2,12 +2,43 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b26d77e2-ef47-4882-9b1b-8101f2880066" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/UTCRules.scala" afterPath="$PROJECT_DIR$/javax/time/UTCRules.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Scala-datetime.iml" afterPath="$PROJECT_DIR$/Scala-datetime.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/Duration.scala" afterPath="$PROJECT_DIR$/javax/time/Duration.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/Instant.scala" afterPath="$PROJECT_DIR$/javax/time/Instant.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/MathUtils.scala" afterPath="$PROJECT_DIR$/javax/time/MathUtils.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/SystemUTCRules.scala" afterPath="$PROJECT_DIR$/javax/time/SystemUTCRules.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/AmPmOfDay.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/AmPmOfDay.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/CalendricalMerger.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/CalendricalMerger.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/Period.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/Period.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/ZoneResolver.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/ZoneResolver.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/Clock.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/Clock.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/DateTimeFieldRule.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/DateTimeFieldRule.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/DateTimeFields.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/DateTimeFields.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/DayOfWeek.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/DayOfWeek.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/LocalDate.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/LocalDate.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/MonthDay.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/MonthDay.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/MonthOfYear.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/MonthOfYear.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/PeriodParser.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/PeriodParser.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/PeriodUnit.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/PeriodUnit.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/ZonedDateTime.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/ZonedDateTime.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/format/CalendricalPrintFieldException.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/format/CalendricalPrintFieldException.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/format/DateTimeFormatter.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/format/DateTimeFormatter.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/format/DateTimeFormatterBuilder.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/format/DateTimeFormatterBuilder.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/format/DateTimeFormatterProviderImpl.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/format/DateTimeFormatterProviderImpl.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/format/DateTimeFormatters.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/format/DateTimeFormatters.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/format/DateTimeParseContext.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/format/DateTimeParseContext.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/format/ZonePrinterParser.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/format/ZonePrinterParser.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/format/FractionPrinterParser.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/format/FractionPrinterParser.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/format/LocalizedPrinterParser.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/format/LocalizedPrinterParser.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/format/NumberPrinterParser.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/format/NumberPrinterParser.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/format/PadPrinterParserDecorator.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/format/PadPrinterParserDecorator.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/format/TextPrinterParser.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/format/TextPrinterParser.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/zone/FixedZoneRules.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/zone/FixedZoneRules.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/zone/Ser.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/zone/Ser.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/zone/StandardZoneRules.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/zone/StandardZoneRules.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/zone/TZDBZoneRulesCompiler.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/zone/TZDBZoneRulesCompiler.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/zone/ZoneOffsetInfo.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/zone/ZoneOffsetInfo.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/zone/ZoneOffsetTransitionRule.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/zone/ZoneOffsetTransitionRule.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/zone/ZoneRulesBuilder.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/zone/ZoneRulesBuilder.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/javax/time/calendar/zone/ZoneRulesGroup.scala" afterPath="$PROJECT_DIR$/javax/time/calendar/zone/ZoneRulesGroup.scala" />
     </list>
     <ignored path="scala-datetime.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -66,64 +97,73 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="ZoneResolver.scala" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/javax/time/calendar/ZoneResolver.scala">
+      <file leaf-file-name="ZoneRulesBuilder.scala" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/javax/time/calendar/zone/ZoneRulesBuilder.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="163" column="21" selection-start="8133" selection-end="8133" vertical-scroll-proportion="0.0">
+            <state line="242" column="51" selection-start="11094" selection-end="11094" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UTCInstant.scala" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/javax/time/UTCInstant.scala">
+      <file leaf-file-name="CalendricalMerger.scala" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/javax/time/calendar/CalendricalMerger.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="186" column="68" selection-start="9189" selection-end="9189" vertical-scroll-proportion="0.0">
+            <state line="223" column="46" selection-start="8216" selection-end="8216" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UTCRules.scala" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/javax/time/UTCRules.scala">
+      <file leaf-file-name="DateTimeFieldRule.scala" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/javax/time/calendar/DateTimeFieldRule.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="101" column="15" selection-start="4528" selection-end="4528" vertical-scroll-proportion="0.0">
+            <state line="378" column="0" selection-start="14525" selection-end="14525" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CalendricalRule.scala" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/javax/time/calendar/CalendricalRule.scala">
+      <file leaf-file-name="DateTimeFormatter.scala" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/javax/time/calendar/format/DateTimeFormatter.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="186" column="54" selection-start="8021" selection-end="8021" vertical-scroll-proportion="0.0">
+            <state line="114" column="29" selection-start="4795" selection-end="4795" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="HistoricEra.scala" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/javax/time/i18n/HistoricEra.scala">
+      <file leaf-file-name="ZonedDateTime.scala" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/javax/time/calendar/ZonedDateTime.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="131" column="60" selection-start="5325" selection-end="5325" vertical-scroll-proportion="0.0">
+            <state line="499" column="68" selection-start="24815" selection-end="24815" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="HistoricDate.scala" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/javax/time/i18n/HistoricDate.scala">
+      <file leaf-file-name="DateTimeFields.scala" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/javax/time/calendar/DateTimeFields.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="387" column="35" selection-start="15523" selection-end="15523" vertical-scroll-proportion="0.0">
+            <state line="194" column="53" selection-start="8290" selection-end="8290" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SystemUTCRules.scala" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/javax/time/SystemUTCRules.scala">
+      <file leaf-file-name="CalendricalPrintFieldException.scala" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/javax/time/calendar/format/CalendricalPrintFieldException.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="219" column="73" selection-start="8701" selection-end="8701" vertical-scroll-proportion="0.0">
+            <state line="50" column="36" selection-start="2189" selection-end="2189" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AmPmOfDay.scala" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/javax/time/calendar/AmPmOfDay.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="107" column="51" selection-start="4580" selection-end="4580" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -132,25 +172,16 @@
       <file leaf-file-name="CopticChronology.scala" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/javax/time/i18n/CopticChronology.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="276" column="44" selection-start="9731" selection-end="9731" vertical-scroll-proportion="0.0">
+            <state line="201" column="45" selection-start="7541" selection-end="7541" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Period.scala" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/javax/time/calendar/Period.scala">
+      <file leaf-file-name="CalendricalRule.scala" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/javax/time/calendar/CalendricalRule.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="423" column="7" selection-start="18742" selection-end="18742" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ZonePrinterParser.scala" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/javax/time/calendar/format/ZonePrinterParser.scala">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="225" column="52" selection-start="8370" selection-end="8370" vertical-scroll-proportion="0.65585583">
+            <state line="200" column="45" selection-start="8539" selection-end="8539" vertical-scroll-proportion="0.71043164">
               <folding />
             </state>
           </provider>
@@ -189,28 +220,47 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/javax/time/calendar/MonthOfYear.scala" />
-        <option value="$PROJECT_DIR$/javax/time/calendar/format/DateTimeFormatter.scala" />
-        <option value="$PROJECT_DIR$/javax/time/calendar/format/DateTimeFormatSymbols.scala" />
-        <option value="$PROJECT_DIR$/javax/time/calendar/format/CompositePrinterParser.scala" />
-        <option value="$PROJECT_DIR$/javax/time/calendar/format/CharLiteralPrinterParser.scala" />
-        <option value="$PROJECT_DIR$/javax/time/calendar/format/CalendricalPrintFieldException.scala" />
-        <option value="$PROJECT_DIR$/javax/time/i18n/CopticDate.scala" />
-        <option value="$PROJECT_DIR$/javax/time/i18n/CopticChronology.scala" />
-        <option value="$PROJECT_DIR$/javax/time/SystemUTCRules.scala" />
-        <option value="$PROJECT_DIR$/javax/time/i18n/HistoricChronology.scala" />
         <option value="$PROJECT_DIR$/javax/time/calendar/format/DateTimeParseContext.scala" />
+        <option value="$PROJECT_DIR$/javax/time/calendar/format/TextPrinterParser.scala" />
+        <option value="$PROJECT_DIR$/javax/time/calendar/format/CalendricalPrintFieldException.scala" />
+        <option value="$PROJECT_DIR$/javax/time/calendar/format/PadPrinterParserDecorator.scala" />
+        <option value="$PROJECT_DIR$/javax/time/calendar/format/NumberPrinterParser.scala" />
+        <option value="$PROJECT_DIR$/javax/time/calendar/LocalDate.scala" />
+        <option value="$PROJECT_DIR$/javax/time/SystemUTCRules.scala" />
+        <option value="$PROJECT_DIR$/javax/time/calendar/zone/TZDBZoneRulesCompiler.scala" />
+        <option value="$PROJECT_DIR$/javax/time/calendar/zone/StandardZoneRules.scala" />
+        <option value="$PROJECT_DIR$/javax/time/calendar/zone/ZoneRulesBuilder.scala" />
+        <option value="$PROJECT_DIR$/javax/time/calendar/MonthOfYear.scala" />
         <option value="$PROJECT_DIR$/javax/time/calendar/CalendricalMerger.scala" />
-        <option value="$PROJECT_DIR$/javax/time/calendar/ZoneResolver.scala" />
-        <option value="$PROJECT_DIR$/javax/time/UTCRules.scala" />
-        <option value="$PROJECT_DIR$/javax/time/calendar/Period.scala" />
-        <option value="$PROJECT_DIR$/javax/time/calendar/format/ZonePrinterParser.scala" />
+        <option value="$PROJECT_DIR$/javax/time/calendar/ZonedDateTime.scala" />
+        <option value="$PROJECT_DIR$/javax/time/calendar/format/DateTimeFormatter.scala" />
+        <option value="$PROJECT_DIR$/javax/time/calendar/DateTimeFields.scala" />
+        <option value="$PROJECT_DIR$/javax/time/calendar/DateTimeFieldRule.scala" />
       </list>
     </option>
+  </component>
+  <component name="MavenProjectNavigator">
+    <treeState />
   </component>
   <component name="ModuleEditorState">
     <option name="LAST_EDITED_MODULE_NAME" />
     <option name="LAST_EDITED_TAB_NAME" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id>Inspections</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>Abstraction issues</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
   </component>
   <component name="ProjectLevelVcsManager">
     <OptionsSetting value="true" id="Add" />
@@ -238,6 +288,8 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="Favorites" />
       <pane id="ProjectPane">
         <subPane>
@@ -281,17 +333,15 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="GoToFile.includeJavaFiles" value="false" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Facets" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="MemberChooser.sorted" value="false" />
-    <property name="options.lastSelected" value="preferences.sourceCode.Scala" />
+    <property name="options.lastSelected" value="project.propDebugger" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
@@ -323,6 +373,7 @@
       <setting name="sysFilter" value=".*" />
       <setting name="exampleFilter" value=".*" />
       <method>
+        <option name="AntTarget" enabled="false" />
         <option name="BuildArtifacts" enabled="false" />
         <option name="Make" enabled="true" />
         <option name="Maven.BeforeRunTask" enabled="false" />
@@ -365,30 +416,6 @@
         <option name="Maven.BeforeRunTask" enabled="false" />
       </method>
     </configuration>
-    <configuration default="true" type="JUnit" factoryName="JUnit">
-      <module name="" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="moduleWithDependencies" />
-      </option>
-      <envs />
-      <patterns />
-      <method>
-        <option name="BuildArtifacts" enabled="false" />
-        <option name="Make" enabled="true" />
-        <option name="Maven.BeforeRunTask" enabled="false" />
-      </method>
-    </configuration>
     <configuration default="true" type="ScalaTestRunConfiguration" factoryName="ScalaTest">
       <module name="" />
       <setting name="path" value="" />
@@ -398,6 +425,7 @@
       <setting name="version" value="false" />
       <setting name="workingDirectory" value="$PROJECT_DIR$" />
       <method>
+        <option name="AntTarget" enabled="false" />
         <option name="BuildArtifacts" enabled="false" />
         <option name="Make" enabled="true" />
         <option name="Maven.BeforeRunTask" enabled="false" />
@@ -427,25 +455,25 @@
     <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
   </component>
   <component name="ToolWindowManager">
-    <frame x="11" y="1" width="1732" height="1179" extended-state="1" />
-    <editor active="false" />
+    <frame x="0" y="1" width="1921" height="1175" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.41245136" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3294347" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.33253732" sideWeight="0.35505837" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.33253732" sideWeight="0.22568093" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3294347" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3294347" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4122807" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3315508" sideWeight="0.32163742" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32994652" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3315508" sideWeight="0.25925925" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32976654" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
@@ -482,114 +510,114 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar:///usr/lib/jvm/java-6-openjdk/jre/lib/rt.jar!/java/util/Map.class">
+    <entry file="file://$PROJECT_DIR$/javax/time/calendar/format/DateTimeFormatterBuilder.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="44" selection-start="634" selection-end="634" vertical-scroll-proportion="0.52697617">
+        <state line="159" column="24" selection-start="6123" selection-end="6123" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/javax/time/calendar/format/DateTimeFormatters.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="512" column="51" selection-start="23625" selection-end="23625" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/javax/time/calendar/zone/TZDBZoneRulesCompiler.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="817" column="25" selection-start="28504" selection-end="28504" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/javax/time/calendar/zone/StandardZoneRules.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="122" column="42" selection-start="4348" selection-end="4348" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/javax/time/calendar/MonthOfYear.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="301" column="11" selection-start="9981" selection-end="9981" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/javax/time/calendar/CalendricalMerger.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="0" selection-start="1688" selection-end="1688" vertical-scroll-proportion="0.095663264">
+        <state line="223" column="46" selection-start="8216" selection-end="8216" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$PROJECT_DIR$/../lib/scala-current/src/scala-library-src.jar!/scala/Predef.scala">
+    <entry file="file://$PROJECT_DIR$/javax/time/calendar/UnsupportedRuleException.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="7" selection-start="1107" selection-end="1107" vertical-scroll-proportion="0.33290815">
+        <state line="46" column="6" selection-start="1998" selection-end="1998" vertical-scroll-proportion="0.43165466">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/javax/time/calendar/format/DateTimeParseContext.scala">
+    <entry file="file://$PROJECT_DIR$/javax/time/calendar/ZonedDateTime.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="64" column="36" selection-start="2805" selection-end="2805" vertical-scroll-proportion="0.0">
+        <state line="499" column="68" selection-start="24815" selection-end="24815" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/javax/time/i18n/CopticDate.scala">
+    <entry file="file://$PROJECT_DIR$/javax/time/calendar/zone/ZoneRulesBuilder.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="316" column="35" selection-start="12231" selection-end="12231" vertical-scroll-proportion="0.0">
+        <state line="242" column="51" selection-start="11094" selection-end="11094" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/javax/time/calendar/ZoneResolvers.scala">
+    <entry file="file://$PROJECT_DIR$/javax/time/calendar/format/DateTimeFormatter.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="248" column="9" selection-start="10509" selection-end="10509" vertical-scroll-proportion="0.0">
+        <state line="114" column="29" selection-start="4795" selection-end="4795" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/javax/time/calendar/ZoneResolver.scala">
+    <entry file="file://$PROJECT_DIR$/javax/time/calendar/DateTimeFields.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="163" column="21" selection-start="8133" selection-end="8133" vertical-scroll-proportion="0.0">
+        <state line="194" column="53" selection-start="8290" selection-end="8290" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/javax/time/UTCInstant.scala">
+    <entry file="file://$PROJECT_DIR$/javax/time/calendar/format/CalendricalPrintFieldException.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="186" column="68" selection-start="9189" selection-end="9189" vertical-scroll-proportion="0.0">
+        <state line="50" column="36" selection-start="2189" selection-end="2189" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/javax/time/UTCRules.scala">
+    <entry file="file://$PROJECT_DIR$/javax/time/calendar/AmPmOfDay.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="101" column="15" selection-start="4528" selection-end="4528" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/javax/time/calendar/CalendricalRule.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="186" column="54" selection-start="8021" selection-end="8021" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/javax/time/i18n/HistoricEra.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="131" column="60" selection-start="5325" selection-end="5325" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/javax/time/i18n/HistoricDate.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="387" column="35" selection-start="15523" selection-end="15523" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/javax/time/SystemUTCRules.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="219" column="73" selection-start="8701" selection-end="8701" vertical-scroll-proportion="0.0">
+        <state line="107" column="51" selection-start="4580" selection-end="4580" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/javax/time/i18n/CopticChronology.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="276" column="44" selection-start="9731" selection-end="9731" vertical-scroll-proportion="0.0">
+        <state line="201" column="45" selection-start="7541" selection-end="7541" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/javax/time/calendar/Period.scala">
+    <entry file="file://$PROJECT_DIR$/javax/time/calendar/DateTimeFieldRule.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="423" column="7" selection-start="18742" selection-end="18742" vertical-scroll-proportion="0.0">
+        <state line="378" column="0" selection-start="14525" selection-end="14525" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/javax/time/calendar/format/ZonePrinterParser.scala">
+    <entry file="file://$PROJECT_DIR$/javax/time/calendar/CalendricalRule.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="225" column="52" selection-start="8370" selection-end="8370" vertical-scroll-proportion="0.65585583">
+        <state line="200" column="45" selection-start="8539" selection-end="8539" vertical-scroll-proportion="0.71043164">
           <folding />
         </state>
       </provider>
@@ -597,6 +625,79 @@
   </component>
   <component name="masterDetails">
     <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>Scala (Scala-datetime)|Scala</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>Scala</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.6</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>Scala-datetime</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.5" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>Scala-current</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
       <state key="ScopeChooserConfigurable.UI">
         <settings>
           <splitter-proportions />
