@@ -358,7 +358,7 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
    */
-  def get[T](rule: CalendricalRule[T]): T = rule.deriveValueFor(rule, year, this)
+  def get[T](rule: CalendricalRule[T]): Option[T] = Some(rule.deriveValueFor(rule, year, this))
 
   /**
    * Adjusts a date to have the value of this year, using a resolver to

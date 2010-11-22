@@ -128,12 +128,9 @@ object HistoricDate {
   @SerialVersionUID(1L)
   private[i18n] sealed class Rule private
     extends CalendricalRule[HistoricDate](classOf[HistoricDate], HistoricChronology.standardCutover, "HistoricDate", HistoricChronology.periodDays, null) with Serializable {
-    protected override def derive(calendrical: Calendrical): HistoricDate = {
-      var ld: LocalDate = calendrical.get(LocalDate.rule)
-      if (ld == null) {
-        return null
-      }
-      return null //TODO
+    protected override def derive(calendrical: Calendrical): Option[HistoricDate] = {
+      val ld: LocalDate = calendrical.get(LocalDate.rule).getOrElse(return None)
+      return None //TODO
     }
 
     protected override def merge(merger: CalendricalMerger): Unit = {
@@ -383,7 +380,7 @@ final class HistoricDate private[i18n](val chrono: HistoricChronology, @transien
    * @return the value for the field
    * @throws UnsupportedRuleException if no value for the field is found
    */
-  def get[T](rule: CalendricalRule[T]): T = {
+  def get[T](rule: CalendricalRule[T]): Option[T] = {
     if (rule.equals(LocalDate.rule)) rule.reify(toLocalDate)
     else rule.deriveValueFor(rule, this, this)
   }

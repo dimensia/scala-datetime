@@ -104,7 +104,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * @param calendrical the calendrical to get the value from, not null
    * @return the value, null if unable to derive the value
    */
-  final def deriveValueFrom[T](calendrical: Calendrical): T = {
+  final def deriveValueFrom[T](calendrical: Calendrical): Option[T] = {
     ISOChronology.checkNotNull(calendrical, "Calendrical must not be null")
     derive(calendrical)
   }
@@ -139,11 +139,11 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * @param calendrical the calendrical to get the value from, not null
    * @return the value, null if unable to derive the value
    */
-  final def deriveValueFor[R](rule: CalendricalRule[R], value: T, calendrical: Calendrical): R = {
+  final def deriveValueFor[R](rule: CalendricalRule[R], value: T, calendrical: Calendrical): Option[R] = {
     ISOChronology.checkNotNull(rule, "CalendricalRule must not be null")
     ISOChronology.checkNotNull(value, "Value must not be null")
     ISOChronology.checkNotNull(calendrical, "Calendrical must not be null")
-    if (rule.equals(this)) rule.reify(value)
+    if (rule == this) rule.reify(value)
     else rule.derive(calendrical)
   }
 
@@ -184,7 +184,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * @param calendrical the calendrical to derive from, not null
    * @return the derived value, null if unable to derive
    */
-  protected def derive(calendrical: Calendrical): T = null
+  protected def derive(calendrical: Calendrical): Option[T] = None
 
   /**
    * Gets the value of this rule from the specified calendrical returning
@@ -195,7 +195,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * @param calendrical the calendrical to get the field value from, not null
    * @return the value of the field, null if unable to extract the field
    */
-  final def getValue(calendrical: Calendrical): T = {
+  final def getValue(calendrical: Calendrical): Option[T] = {
     ISOChronology.checkNotNull(calendrical, "Calendrical must not be null")
     calendrical.get(this)
   }
@@ -221,7 +221,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * @param value the value to interpret, not null
    */
   private[calendar] final def interpretValue(merger: CalendricalMerger, value: AnyRef): T = {
-    if (reified.isInstance(value)) return reify(value)
+    if (reified.isInstance(value)) return reify(value).get
     val result: T = interpret(merger, value)
     if (result != null) return result
     throw new CalendricalException(
@@ -300,9 +300,9 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * @return the type-cast input value, may be null
    * @throws ClassCastException if the value is not of the reified type
    */
-  final def reify(value: Any): T = {
-    if (value == null) null
-    else if (reified.isInstance(value)) value.asInstanceOf[T]
+  final def reify(value: Any): Option[T] = {
+    if (value == null) None
+    else if (reified.isInstance(value)) Some(value.asInstanceOf[T])
     else throw new ClassCastException("Value of type " + value.asInstanceOf[AnyRef].getClass.getName + " cannot be cast to type " + reified.getName)
   }
 
@@ -434,7 +434,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    *
    * @param merger the merger instance controlling the merge process, not null
    */
-  protected def merge(merger: CalendricalMerger): Unit = {}
+  protected def merge(merger: CalendricalMerger): Unit
 
   /**
    * Gets the value of the rule from the specified calendrical throwing
@@ -448,9 +448,10 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * @throws UnsupportedRuleException if the rule cannot be extracted
    */
   final def getValueChecked(calendrical: Calendrical): T = {
-    var value: T = getValue(calendrical)
-    if (value == null) throw new UnsupportedRuleException(this)
-    else value
+    getValue(calendrical) match {
+      case None => throw new UnsupportedRuleException(this)
+      case Some(value) => value
+    }
   }
 
   /**
@@ -464,5 +465,5 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * @param value the value to interpret, null if unable to interpret the value
    * @return the interpreted value
    */
-  protected def interpret(merger: CalendricalMerger, value: AnyRef): T = null
+  protected def interpret(merger: CalendricalMerger, value: AnyRef): T
 }

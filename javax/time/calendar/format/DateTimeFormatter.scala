@@ -78,23 +78,23 @@ object DateTimeFormatter {
 }
 
 
-  /**
-   * Constructor used by immutable copying.
-   *
-   * @param symbols the symbols to use for text formatting, not null
-   * @param asciiNumerics whether to use ASCII numerics (true) or locale numerics (false)
-   * @param printerParser the printer/parser to use, not null
-   */
-final class DateTimeFormatter private[format] (symbols: DateTimeFormatSymbols, printerParser: CompositePrinterParser){
+/**
+ * Constructor used by immutable copying.
+ *
+ * @param symbols the symbols to use for text formatting, not null
+ * @param asciiNumerics whether to use ASCII numerics (true) or locale numerics (false)
+ * @param printerParser the printer/parser to use, not null
+ */
+final class DateTimeFormatter private[format](symbols: DateTimeFormatSymbols, printerParser: CompositePrinterParser) {
 
-    /**
+  /**
    * Constructor.
    *
    * @param locale the locale to use for text formatting, not null
    * @param printerParser the printer/parser to use, not null
    */
-  def this(locale: Locale, printerParser: CompositePrinterParser){
-    this(DateTimeFormatSymbols.getInstance(locale),printerParser)
+  def this(locale: Locale, printerParser: CompositePrinterParser) {
+    this (DateTimeFormatSymbols.getInstance(locale), printerParser)
   }
 
   /**
@@ -132,158 +132,158 @@ final class DateTimeFormatter private[format] (symbols: DateTimeFormatSymbols, p
    */
   private[format] def toPrinterParser(optional: Boolean): CompositePrinterParser = printerParser.withOptional(optional)
 
-    /**
-     * Implements the classic Java Format API.
-     */
-    private[format] class ClassicFormat extends Format {
-      /** { @inheritDoc }*/
-      def parseObject(source: String, pos: ParsePosition): AnyRef = {
-        var context: DateTimeParseContext = parse(source, pos)
-        return if (context != null) context.toCalendricalMerger.merge else null
-      }
-
-      /** { @inheritDoc }*/
-      def format(obj: AnyRef, toAppendTo: StringBuffer, pos: FieldPosition): StringBuffer = {
-        DateTimeFormatter.checkNotNull(obj, "Object to be printed must not be null")
-        DateTimeFormatter.checkNotNull(toAppendTo, "StringBuffer must not be null")
-        DateTimeFormatter.checkNotNull(pos, "FieldPosition must not be null")
-        if (!obj.isInstanceOf[Calendrical]) {
-          throw new IllegalArgumentException("DateTimeFormatter can format Calendrical instances")
-        }
-        pos.setBeginIndex(0)
-        pos.setEndIndex(0)
-        print(obj.asInstanceOf[Calendrical], toAppendTo)
-        return toAppendTo
-      }
-
-      /** { @inheritDoc }*/
-      override def parseObject(source: String): AnyRef = {
-        try {
-          return parse(source)
-        }
-        catch {
-          case ex: CalendricalParseException => {
-            throw new ParseException(ex.getMessage, ex.getErrorIndex)
-          }
-        }
-      }
+  /**
+   * Implements the classic Java Format API.
+   */
+  private[format] class ClassicFormat extends Format {
+    /**{ @inheritDoc }*/
+    def parseObject(source: String, pos: ParsePosition): AnyRef = {
+      var context: DateTimeParseContext = parse(source, pos)
+      return if (context != null) context.toCalendricalMerger.merge else null
     }
 
-    /**
-     * Parses the text into a Calendrical.
-     * <p>
-     * The result may be invalid including out of range values such as a month of 65.
-     * The methods on the calendrical allow you to handle the invalid input.
-     * For example:
-     * <pre>
-     * LocalDateTime dt = parser.parse(str).mergeStrict().toLocalDateTime();
-     * </pre>
-     *
-     * @param text the text to parse, not null
-     * @param position the position to parse from, updated with length parsed
-     *  and the index of any error, not null
-     * @return the parsed text, null only if the parse results in an error
-     * @throws UnsupportedOperationException if this formatter cannot parse
-     * @throws NullPointerException if the text or position is null
-     * @throws IndexOutOfBoundsException if the position is invalid
-     */
-    def parse(text: String, position: ParsePosition): DateTimeParseContext = {
-      DateTimeFormatter.checkNotNull(text, "Text must not be null")
-      DateTimeFormatter.checkNotNull(position, "ParsePosition must not be null")
-      var context: DateTimeParseContext = new DateTimeParseContext(symbols)
-      var pos: Int = position.getIndex
-      pos = printerParser.parse(context, text, pos)
-      if (pos < 0) {
-        position.setErrorIndex(~pos)
-        return null
+    /**{ @inheritDoc }*/
+    def format(obj: AnyRef, toAppendTo: StringBuffer, pos: FieldPosition): StringBuffer = {
+      DateTimeFormatter.checkNotNull(obj, "Object to be printed must not be null")
+      DateTimeFormatter.checkNotNull(toAppendTo, "StringBuffer must not be null")
+      DateTimeFormatter.checkNotNull(pos, "FieldPosition must not be null")
+      if (!obj.isInstanceOf[Calendrical]) {
+        throw new IllegalArgumentException("DateTimeFormatter can format Calendrical instances")
       }
-      position.setIndex(pos)
-      return context
+      pos.setBeginIndex(0)
+      pos.setEndIndex(0)
+      print(obj.asInstanceOf[Calendrical], toAppendTo)
+      return toAppendTo
     }
 
-    /**
-     * Checks whether this formatter can parse.
-     * <p>
-     * Depending on how this formatter is initialized, it may not be possible
-     * for it to parse at all. This method allows the caller to check whether
-     * the parse methods will throw UnsupportedOperationException or not.
-     *
-     * @return true if the formatter supports parsing
-     */
-    def isParseSupported: Boolean = printerParser.isParseSupported
-
-    /**
-     * Prints the calendrical to an Appendable using this formatter.
-     * <p>
-     * This method prints the calendrical to the specified Appendable.
-     * Appendable is a general purpose interface that is implemented by all
-     * key character output classes including StringBuffer, StringBuilder,
-     * PrintStream and Writer.
-     * <p>
-     * Although Appendable methods throw an IOException, this method does not.
-     * Instead, any IOException is wrapped in a runtime exception.
-     * See  { @link CalendricalPrintException # rethrowIOException ( ) } for a means
-     * to extract the IOException.
-     *
-     * @param calendrical the calendrical to print, not null
-     * @param appendable the appendable to print to, not null
-     * @throws UnsupportedOperationException if this formatter cannot print
-     * @throws NullPointerException if the calendrical or appendable is null
-     * @throws CalendricalPrintException if an error occurs during printing
-     */
-    def print(calendrical: Calendrical, appendable: Appendable): Unit = {
-      DateTimeFormatter.checkNotNull(calendrical, "Calendrical must not be null")
-      DateTimeFormatter.checkNotNull(appendable, "Appendable must not be null")
+    /**{ @inheritDoc }*/
+    override def parseObject(source: String): AnyRef = {
       try {
-        printerParser.print(calendrical, appendable, symbols)
+        return parse(source)
       }
       catch {
-        case ex: UnsupportedRuleException[_] => {
-          throw new CalendricalPrintFieldException(ex)
-        }
-        case ex: IOException => {
-          throw new CalendricalPrintException(ex.getMessage, ex)
+        case ex: CalendricalParseException => {
+          throw new ParseException(ex.getMessage, ex.getErrorIndex)
         }
       }
     }
+  }
 
-    /**
-     * Fully parses the text returning a merger that can be used to manage the
-     * merging of separate parsed fields to a meaningful calendrical.
-     * <p>
-     * If the parse completes without reading the entire length of the text,
-     * or a problem occurs during parsing, then an exception is thrown.
-     * <p>
-     * The result may be invalid including out of range values such as a month of 65.
-     * The methods on the calendrical allow you to handle the invalid input.
-     * For example:
-     * <pre>
-     * LocalDateTime dt = parser.parse(str).merge().get(LocalDateTime.rule());
-     * </pre>
-     *
-     * @param text the text to parse, not null
-     * @return the parsed text, never null
-     * @throws UnsupportedOperationException if this formatter cannot parse
-     * @throws NullPointerException if the text is null
-     * @throws CalendricalParseException if the parse fails
-     */
-    def parse(text: String): CalendricalMerger = {
-      var pos: ParsePosition = new ParsePosition(0)
-      var result: DateTimeParseContext = parse(text, pos)
-      if (pos.getErrorIndex >= 0 || pos.getIndex < text.length) {
-        var str: String = text
-        if (str.length > 64) {
-          str = str.substring(0, 64) + "..."
-        }
-        if (pos.getErrorIndex >= 0) {
-          throw new CalendricalParseException("Text '" + str + "' could not be parsed at index " + pos.getErrorIndex, text, pos.getErrorIndex)
-        }
-        else {
-          throw new CalendricalParseException("Text '" + str + "' could not be parsed, unparsed text found at index " + pos.getIndex, text, pos.getIndex)
-        }
-      }
-      return result.toCalendricalMerger
+  /**
+   * Parses the text into a Calendrical.
+   * <p>
+   * The result may be invalid including out of range values such as a month of 65.
+   * The methods on the calendrical allow you to handle the invalid input.
+   * For example:
+   * <pre>
+   * LocalDateTime dt = parser.parse(str).mergeStrict().toLocalDateTime();
+   * </pre>
+   *
+   * @param text the text to parse, not null
+   * @param position the position to parse from, updated with length parsed
+   *  and the index of any error, not null
+   * @return the parsed text, null only if the parse results in an error
+   * @throws UnsupportedOperationException if this formatter cannot parse
+   * @throws NullPointerException if the text or position is null
+   * @throws IndexOutOfBoundsException if the position is invalid
+   */
+  def parse(text: String, position: ParsePosition): DateTimeParseContext = {
+    DateTimeFormatter.checkNotNull(text, "Text must not be null")
+    DateTimeFormatter.checkNotNull(position, "ParsePosition must not be null")
+    var context: DateTimeParseContext = new DateTimeParseContext(symbols)
+    var pos: Int = position.getIndex
+    pos = printerParser.parse(context, text, pos)
+    if (pos < 0) {
+      position.setErrorIndex(~pos)
+      return null
     }
+    position.setIndex(pos)
+    return context
+  }
+
+  /**
+   * Checks whether this formatter can parse.
+   * <p>
+   * Depending on how this formatter is initialized, it may not be possible
+   * for it to parse at all. This method allows the caller to check whether
+   * the parse methods will throw UnsupportedOperationException or not.
+   *
+   * @return true if the formatter supports parsing
+   */
+  def isParseSupported: Boolean = printerParser.isParseSupported
+
+  /**
+   * Prints the calendrical to an Appendable using this formatter.
+   * <p>
+   * This method prints the calendrical to the specified Appendable.
+   * Appendable is a general purpose interface that is implemented by all
+   * key character output classes including StringBuffer, StringBuilder,
+   * PrintStream and Writer.
+   * <p>
+   * Although Appendable methods throw an IOException, this method does not.
+   * Instead, any IOException is wrapped in a runtime exception.
+   * See  { @link CalendricalPrintException # rethrowIOException ( ) } for a means
+   * to extract the IOException.
+   *
+   * @param calendrical the calendrical to print, not null
+   * @param appendable the appendable to print to, not null
+   * @throws UnsupportedOperationException if this formatter cannot print
+   * @throws NullPointerException if the calendrical or appendable is null
+   * @throws CalendricalPrintException if an error occurs during printing
+   */
+  def print(calendrical: Calendrical, appendable: Appendable): Unit = {
+    DateTimeFormatter.checkNotNull(calendrical, "Calendrical must not be null")
+    DateTimeFormatter.checkNotNull(appendable, "Appendable must not be null")
+    try {
+      printerParser.print(calendrical, appendable, symbols)
+    }
+    catch {
+      case ex: UnsupportedRuleException[_] => {
+        throw new CalendricalPrintFieldException(ex)
+      }
+      case ex: IOException => {
+        throw new CalendricalPrintException(ex.getMessage, ex)
+      }
+    }
+  }
+
+  /**
+   * Fully parses the text returning a merger that can be used to manage the
+   * merging of separate parsed fields to a meaningful calendrical.
+   * <p>
+   * If the parse completes without reading the entire length of the text,
+   * or a problem occurs during parsing, then an exception is thrown.
+   * <p>
+   * The result may be invalid including out of range values such as a month of 65.
+   * The methods on the calendrical allow you to handle the invalid input.
+   * For example:
+   * <pre>
+   * LocalDateTime dt = parser.parse(str).merge().get(LocalDateTime.rule());
+   * </pre>
+   *
+   * @param text the text to parse, not null
+   * @return the parsed text, never null
+   * @throws UnsupportedOperationException if this formatter cannot parse
+   * @throws NullPointerException if the text is null
+   * @throws CalendricalParseException if the parse fails
+   */
+  def parse(text: String): CalendricalMerger = {
+    var pos: ParsePosition = new ParsePosition(0)
+    var result: DateTimeParseContext = parse(text, pos)
+    if (pos.getErrorIndex >= 0 || pos.getIndex < text.length) {
+      var str: String = text
+      if (str.length > 64) {
+        str = str.substring(0, 64) + "..."
+      }
+      if (pos.getErrorIndex >= 0) {
+        throw new CalendricalParseException("Text '" + str + "' could not be parsed at index " + pos.getErrorIndex, text, pos.getErrorIndex)
+      }
+      else {
+        throw new CalendricalParseException("Text '" + str + "' could not be parsed, unparsed text found at index " + pos.getIndex, text, pos.getIndex)
+      }
+    }
+    return result.toCalendricalMerger
+  }
 
   /**
    * Gets the locale to be used during formatting.
@@ -330,15 +330,16 @@ final class DateTimeFormatter private[format] (symbols: DateTimeFormatSymbols, p
     DateTimeFormatter.checkNotNull(text, "Text must not be null")
     DateTimeFormatter.checkNotNull(rule, "CalendricalRule must not be null")
     var merger: CalendricalMerger = parse(text)
-    var result: T = merger.merge.get(rule)
-    if (result == null) {
-      var str: String = text
-      if (str.length > 64) {
-        str = str.substring(0, 64) + "..."
-      }
-      throw new CalendricalParseException("Text '" + str + "' could not be parsed into " + rule.getName + " but was parsed to " + merger, text, 0)
+    var result: Option[T] = merger.merge.get(rule)
+    result match {
+      case Some(result) => result
+      case None =>
+        var str: String = text
+        if (str.length > 64) {
+          str = str.substring(0, 64) + "..."
+        }
+        throw new CalendricalParseException("Text '" + str + "' could not be parsed into " + rule.getName + " but was parsed to " + merger, text, 0)
     }
-    return result
   }
 
   /**
@@ -352,20 +353,20 @@ final class DateTimeFormatter private[format] (symbols: DateTimeFormatSymbols, p
    */
   def isPrintSupported: Boolean = printerParser.isPrintSupported
 
-    /**
-     * Prints the calendrical using this formatter.
-     * <p>
-     * This method prints the calendrical to a String.
-     *
-     * @param calendrical the calendrical to print, not null
-     * @return the printed string, never null
-     * @throws UnsupportedOperationException if this formatter cannot print
-     * @throws NullPointerException if the calendrical is null
-     * @throws CalendricalPrintException if an error occurs during printing
-     */
-    def print(calendrical: Calendrical): String = {
-      var buf: java.lang.StringBuilder = new java.lang.StringBuilder(32)
-      this.print(calendrical, buf)
-      return buf.toString
-    }
+  /**
+   * Prints the calendrical using this formatter.
+   * <p>
+   * This method prints the calendrical to a String.
+   *
+   * @param calendrical the calendrical to print, not null
+   * @return the printed string, never null
+   * @throws UnsupportedOperationException if this formatter cannot print
+   * @throws NullPointerException if the calendrical is null
+   * @throws CalendricalPrintException if an error occurs during printing
+   */
+  def print(calendrical: Calendrical): String = {
+    var buf: java.lang.StringBuilder = new java.lang.StringBuilder(32)
+    this.print(calendrical, buf)
+    return buf.toString
   }
+}

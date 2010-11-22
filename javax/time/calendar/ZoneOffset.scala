@@ -229,20 +229,20 @@ object ZoneOffset {
     with Serializable {
     private def readResolve: AnyRef = Rule
 
-    protected override def derive(calendrical: Calendrical): ZoneOffset = {
+    protected override def derive(calendrical: Calendrical): Option[ZoneOffset] = {
       var odt: OffsetDateTime = calendrical.get(OffsetDateTime.rule)
       if (odt != null) {
-        return odt.getOffset
+        return Some(odt.getOffset)
       }
       var od: OffsetDate = calendrical.get(OffsetDate.rule)
       if (od != null) {
-        return od.getOffset
+        return Some(od.getOffset)
       }
       var ot: OffsetTime = calendrical.get(OffsetTime.rule)
       if (ot != null) {
-        return ot.getOffset
+        return Some(ot.getOffset)
       }
-      return null
+      return None
     }
   }
     /**
@@ -433,7 +433,7 @@ final class ZoneOffset private(val amountSeconds: Int) extends Calendrical with 
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
    */
-  def get[T](rule: CalendricalRule[T]): T = rule.deriveValueFor(rule, this, this)
+  def get[T](rule: CalendricalRule[T]): Option[T] = Some(rule.deriveValueFor(rule, this, this))
 
   /**
    * Gets the total zone offset in seconds.

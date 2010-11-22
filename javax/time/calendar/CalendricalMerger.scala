@@ -139,17 +139,17 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
   def storeMerged[T](rule: CalendricalRule[T], value: T): Unit = {
     ISOChronology.checkNotNull(rule, "CalendricalRule must not be null")
     ISOChronology.checkNotNull(value, "Value must not be null")
-    val oldValue: T = getValue(rule)
-    if (oldValue != null) {
-      if (oldValue.equals(value) == false) {
-        throw new InvalidCalendarFieldException("Merge resulted in two different values, " + value + " and " + oldValue + ", for " + rule.getID + " given input " + inputMap, rule)
-      }
-      else {
-        return
+
+    val oldValue: Option[T] = getValue(rule)
+    if (oldValue.isDefined) {
+      if (oldValue.get.equals(value) == false) {
+        throw new InvalidCalendarFieldException("Merge resulted in two different values, " + value + " and " + oldValue.get + ", for " + rule.getID + " given input " + inputMap, rule);
+      } else {
+        return // no change
       }
     }
-    processingMap.put(rule, value)
-    iterator = processingMap.keySet.iterator
+    processingMap.put(rule, value);
+    iterator = processingMap.keySet.iterator // restart the iterator
   }
 
   /**
@@ -204,7 +204,7 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
    */
-  def getValue[T](rule: CalendricalRule[T]): T = rule.reify(processingMap.get(rule))
+  def getValue[T](rule: CalendricalRule[T]): Option[T] = rule.reify(processingMap.get(rule))
 
   /**
    * Gets the underlying rule-value map that is being merged.
@@ -266,10 +266,12 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
    */
-  def get[T](rule: CalendricalRule[T]): T = {
+  def get[T](rule: CalendricalRule[T]): Option[T] = {
     ISOChronology.checkNotNull(rule, "CalendricalRule must not be null")
-    val value: T = getValue(rule)
-    return if (value != null) value else rule.deriveValueFrom(this)
+    getValue(rule) match {
+      case None => rule.deriveValueFrom(this)
+      case Some(value) => Some(value)
+    }
   }
 
   /**

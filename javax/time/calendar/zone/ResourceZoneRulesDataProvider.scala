@@ -85,7 +85,7 @@ object ResourceZoneRulesDataProvider {
 
     def isRegionID(regionID: String): Boolean = Arrays.binarySearch(regionArray.asInstanceOf[Array[AnyRef]], regionID) >= 0
 
-    def getRegionIDs: Set[String] = Collections.unmodifiableSet(new HashSet[String](Arrays.asList(regionArray)))
+    def getRegionIDs: Set[String] = Collections.unmodifiableSet(new HashSet[String](Arrays.asList[String](regionArray: _*)))
 
     def getVersionID: String = versionID
 
@@ -169,7 +169,7 @@ final class ResourceZoneRulesDataProvider private(url: URL) extends ZoneRulesDat
         i += 1;
       }
     }
-    this.regions = new HashSet[String](Arrays.asList(regionArray))
+    this.regions = new HashSet[String](Arrays.asList(regionArray: _*))
     var versionSet: Set[ZoneRulesVersion] = new HashSet[ZoneRulesVersion](versionCount) {
       var i: Int = 0
       while (i < versionCount) {

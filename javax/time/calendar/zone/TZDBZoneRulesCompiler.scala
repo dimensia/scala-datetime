@@ -178,58 +178,53 @@ object TZDBZoneRulesCompiler {
     var verbose: Boolean = false
     var i: Int = 0
 
-    {
-      i = 0
-      while (i < args.length) {
-        {
-          var arg: String = args(i)
-          if (arg.startsWith("-") == false) {
-            //break //todo: break is not supported
-          }
-          if ("-srcdir".equals(arg)) {
-            if (baseSrcDir == null && ({
-              i += 1;
-              i - 1
-            }) < args.length) {
-              baseSrcDir = new File(args(i))
-              //continue //todo: continue is not supported
-            }
-          }
-          else if ("-dstdir".equals(arg)) {
-            if (dstDir == null && ({
-              i += 1;
-              i - 1
-            }) < args.length) {
-              dstDir = new File(args(i))
-              //continue //todo: continue is not supported
-            }
-          }
-          else if ("-version".equals(arg)) {
-            if (version == null && ({
-              i += 1;
-              i - 1
-            }) < args.length) {
-              version = args(i)
-              //continue //todo: continue is not supported
-            }
-          }
-          else if ("-verbose".equals(arg)) {
-            if (verbose == false) {
-              verbose = true
-              //continue //todo: continue is not supported
-            }
-          }
-          else if ("-help".equals(arg) == false) {
-            System.out.println("Unrecognised option: " + arg)
-          }
-          outputHelp
-          return
+    i = 0
+    while (i < args.length) {
+      {
+        var arg: String = args(i)
+        if (arg.startsWith("-") == false) {
+          //break //todo: break is not supported
         }
-        ({
-          i += 1;
-          i
-        })
+        if ("-srcdir".equals(arg)) {
+          if (baseSrcDir == null && ({
+            i += 1;
+            i - 1
+          }) < args.length) {
+            baseSrcDir = new File(args(i))
+            //continue //todo: continue is not supported
+          }
+        }
+        else if ("-dstdir".equals(arg)) {
+          if (dstDir == null && ({
+            i += 1;
+            i - 1
+          }) < args.length) {
+            dstDir = new File(args(i))
+            //continue //todo: continue is not supported
+          }
+        }
+        else if ("-version".equals(arg)) {
+          if (version == null && ({
+            i += 1;
+            i - 1
+          }) < args.length) {
+            version = args(i)
+            //continue //todo: continue is not supported
+          }
+        }
+        else if ("-verbose".equals(arg)) {
+          if (verbose == false) {
+            verbose = true
+            //continue //todo: continue is not supported
+          }
+        }
+        else if ("-help".equals(arg) == false) {
+          System.out.println("Unrecognised option: " + arg)
+        }
+        outputHelp
+        return
       }
+      i += 1;
     }
     if (baseSrcDir == null) {
       System.out.println("Source directory must be specified using -srcdir: " + baseSrcDir)
@@ -240,7 +235,7 @@ object TZDBZoneRulesCompiler {
       return
     }
     dstDir = (if (dstDir != null) dstDir else baseSrcDir)
-    var srcFileNames: List[String] = Arrays.asList(Arrays.copyOfRange(args, i, args.length))
+    var srcFileNames: List[String] = Arrays.asList(args.slice(i, args.length): _*)
     if (srcFileNames.isEmpty) {
       System.out.println("Source filenames not specified, using default set")
       System.out.println("(africa antarctica asia australasia backward etcetera europe northamerica southamerica)")
@@ -283,7 +278,7 @@ object TZDBZoneRulesCompiler {
    * Process to create the jar files.
    */
   private def process(srcDirs: List[File], srcFileNames: List[String], dstDir: File, verbose: Boolean): Unit = {
-    var deduplicateMap: Map[AnyRef, AnyRef] = new HashMap[AnyRef, AnyRef]
+    var deduplicateMap: Map[Any, Any] = new HashMap[Any, Any]
     var allBuiltZones: Map[String, SortedMap[String, ZoneRules]] = new TreeMap[String, SortedMap[String, ZoneRules]]
     var allRegionIds: Set[String] = new TreeSet[String]
     var allRules: Set[ZoneRules] = new HashSet[ZoneRules]

@@ -317,13 +317,13 @@ final class DateTimeFields private(val fieldValueMap: TreeMap[DateTimeFieldRule[
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
    */
-  def get[T](rule: CalendricalRule[T]): T = {
+  def get[T](rule: CalendricalRule[T]): Option[T] = {
     ISOChronology.checkNotNull(rule, "CalendricalRule must not be null")
     if (rule.isInstanceOf[DateTimeFieldRule[_]]) {
       val value: Int = fieldValueMap.get(rule)
       if (value != null) {
         val r: DateTimeFieldRule[T] = rule.asInstanceOf[DateTimeFieldRule[T]]
-        return r.convertIntToValue(value)
+        return Some(r.convertIntToValue(value))
       }
     }
     return rule.deriveValueFrom(this)

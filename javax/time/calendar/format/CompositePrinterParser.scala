@@ -74,7 +74,7 @@ final class CompositePrinterParser private[format](_printers: List[DateTimePrint
    */
   def withOptional(optional: Boolean): CompositePrinterParser = {
     if (optional == this.optional) this
-    else new CompositePrinterParser(Arrays.asList(printers), Arrays.asList(parsers), optional)
+    else new CompositePrinterParser(Arrays.asList(printers: _*), Arrays.asList(parsers: _*), optional)
   }
 
   /** { @inheritDoc }*/

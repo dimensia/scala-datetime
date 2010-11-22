@@ -326,9 +326,9 @@ object LocalDateTime {
       }
     }
 
-    protected override def derive(calendrical: Calendrical): LocalDateTime = {
+    protected override def derive(calendrical: Calendrical): Option[LocalDateTime] = {
       val odt: OffsetDateTime = calendrical.get(OffsetDateTime.rule)
-      if (odt != null) odt.toLocalDateTime else null
+      if (odt != null) Some(odt.toLocalDateTime) else None
     }
   }
 
@@ -1560,7 +1560,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
    */
-  def get[T](rule: CalendricalRule[T]): T = rule.deriveValueFor(rule, this, this)
+  def get[T](rule: CalendricalRule[T]): Option[T] = Some(rule.deriveValueFor(rule, this, this))
 
   /**
    * Returns a copy of this   { @code LocalDateTime } with the specified period in months subtracted.

@@ -64,6 +64,7 @@ object CopticChronology extends CopticChronology {
    * @return the rule for the day-of-month field, never null
    */
   def dayOfMonthRule: DateTimeFieldRule[Int] = DayOfMonthRule
+
   /**
    * Gets the rule for the day-of-week field in the Coptic chronology.
    *
@@ -89,9 +90,11 @@ object CopticChronology extends CopticChronology {
 
     private def readResolve: AnyRef = YearRule
 
-    protected def derive(calendrical: Calendrical): Integer = {
-      val cd: CopticDate = calendrical.get(CopticDate.rule)
-      if (cd != null) cd.getYear else null
+    protected def derive(calendrical: Calendrical): Option[Int] = {
+      calendrical.get(CopticDate.rule) match {
+        case None => None
+        case Some(cd) => Some(cd.getYear)
+      }
     }
 
     protected def merge(merger: CalendricalMerger): Unit = {
@@ -151,20 +154,21 @@ object CopticChronology extends CopticChronology {
   private sealed class DayOfYearRule private
     extends DateTimeFieldRule[Int](classOf[Int], CopticChronology, "DayOfYear", periodDays, YEARS, 1, 366) with Serializable {
     override def getMaximumValue(calendrical: Calendrical): Int = {
-      val year: Int = calendrical.get(CopticChronology.yearRule)
-      if (year != null) {
-        return if (isLeapYear(year)) 366 else 365
+      calendrical.get(CopticChronology.yearRule) match {
+        case None => getMaximumValue
+        case Some(year) => if (isLeapYear(year)) 366 else 365
       }
-      return getMaximumValue
     }
 
     override def getSmallestMaximumValue: Int = 365
 
     private def readResolve: AnyRef = DayOfYearRule
 
-    protected def derive(calendrical: Calendrical): Integer = {
-      val cd: CopticDate = calendrical.get(CopticDate.rule)
-      return if (cd != null) cd.getDayOfYear else null
+    protected def derive(calendrical: Calendrical): Option[Int] = {
+      calendrical.get(CopticDate.rule) match {
+        case None => None
+        case Some(cd) => Some(cd.getDayOfYear)
+      }
     }
 
     protected def merge(merger: CalendricalMerger): Unit = {
@@ -197,9 +201,11 @@ object CopticChronology extends CopticChronology {
     with Serializable {
     private def readResolve: AnyRef = MonthOfYearRule
 
-    protected def derive(calendrical: Calendrical): Int = {
-      val cd: CopticDate = calendrical.get(CopticDate.rule)
-      if (cd != null) cd.getMonthOfYear else null
+    protected def derive(calendrical: Calendrical): Option[Int] = {
+      calendrical.get(CopticDate.rule) match {
+        case None => None
+        case Some(cd) => Some(cd.getMonthOfYear)
+      }
     }
   }
 
@@ -244,9 +250,11 @@ object CopticChronology extends CopticChronology {
 
     private def readResolve: AnyRef = DayOfWeekRule
 
-    protected def derive(calendrical: Calendrical): DayOfWeek = {
-      val cd: CopticDate = calendrical.get(CopticDate.rule)
-      if (cd != null) cd.getDayOfWeek else null
+    protected def derive(calendrical: Calendrical): Option[DayOfWeek] = {
+      calendrical.get(CopticDate.rule) match {
+        case None => None
+        case Some(cd) => Some(cd.getDayOfWeek)
+      }
     }
   }
 
@@ -261,20 +269,19 @@ object CopticChronology extends CopticChronology {
     private def readResolve: AnyRef = DayOfMonthRule
 
     override def getMaximumValue(calendrical: Calendrical): Int = {
-      val year: Int = calendrical.get(CopticChronology.yearRule)
-      var moy: Int = calendrical.get(CopticChronology.monthOfYearRule)
-      if (year != null && moy != null) {
-        if (moy == 13) return if (isLeapYear(year)) 6 else 5
-        else return 30
-      }
-      return getMaximumValue
+      val year: Int = calendrical.get(CopticChronology.yearRule).getOrElse(getMaximumValue)
+      var moy: Int = calendrical.get(CopticChronology.monthOfYearRule).getOrElse(getMaximumValue)
+      if (moy == 13) return if (isLeapYear(year)) 6 else 5
+      else return 30
     }
 
     override def getSmallestMaximumValue: Int = 5
 
-    protected def derive(calendrical: Calendrical): Int = {
-      val cd: CopticDate = calendrical.get(CopticDate.rule)
-      if (cd != null) cd.getDayOfMonth else null
+    protected def derive(calendrical: Calendrical): Option[Int] = {
+      calendrical.get(CopticDate.rule) match {
+        case None => None
+        case Some(cd) => Some(cd.getDayOfMonth)
+      }
     }
   }
 

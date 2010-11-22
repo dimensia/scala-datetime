@@ -534,9 +534,10 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * @throws UnsupportedRuleException if the field cannot be extracted
    */
   final def getInt(calendrical: Calendrical): Int = {
-    var value: T = getValue(calendrical)
-    if (value == null) throw new UnsupportedRuleException(this)
-    else convertValueToInt(value)
+    getValue(calendrical) match {
+      case Some(value) => convertValueToInt(value)
+      case None => throw new UnsupportedRuleException(this)
+    }
   }
 
   /**
@@ -606,10 +607,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
   def convertIntToValue(value: Int): T = {
     //FIXME
     checkValue(value)
-    //    if (classOf[Enum].isAssignableFrom(getReifiedType)) {        //We don't have Enums anymore...
-    //      return getReifiedType.getEnumConstants(value - getMinimumValue)
-    //    }
-    return reify(value)
+    return reify(value).getOrElse(throw new IllegalCalendarFieldValueException)
   }
 
   /**
@@ -658,8 +656,10 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * @param calendrical the calendrical to get the field value from, not null
    * @return the value of the field, null if unable to extract the field
    */
-  final def getInteger(calendrical: Calendrical): Integer = {
-    var value: T = getValue(calendrical)
-    return if (value == null) null else convertValueToInteger(value)
+  final def getInteger(calendrical: Calendrical): Option[Int] = {
+    getValue(calendrical) match {
+      case None => None
+      case Some(value) => Some(convertValueToInteger(value))
+    }
   }
 }
