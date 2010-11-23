@@ -448,7 +448,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    * @return true if this point is equal to the specified month-day
    */
   override def equals(other: AnyRef): Boolean = {
-    if (this == other) true
+    if (this eq other) true
     else if (other.isInstanceOf[MonthDay]) {
       val otherMD: MonthDay = other.asInstanceOf[MonthDay]
       month == otherMD.month && day == otherMD.day
