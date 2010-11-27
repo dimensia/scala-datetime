@@ -194,10 +194,10 @@ object MonthDay {
 
     private def readResolve: AnyRef = Rule
 
-    protected override def derive(calendrical: Calendrical): MonthDay = {
-      val moy: MonthOfYear = calendrical.get(ISOChronology.monthOfYearRule)
-      val dom: Int = calendrical.get(ISOChronology.dayOfMonthRule)
-      if (moy != null && dom != null) MonthDay.of(moy, dom) else null
+    protected override def derive(calendrical: Calendrical): Option[MonthDay] = {
+      val moy: MonthOfYear = calendrical.get(ISOChronology.monthOfYearRule).getOrElse(return None)
+      val dom: Int = calendrical.get(ISOChronology.dayOfMonthRule).getOrElse(return None)
+      return Some(MonthDay.of(moy, dom))
     }
   }
 
@@ -346,11 +346,11 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
    */
-  def get[T](rule: CalendricalRule[T]): T = {
+  def get[T](rule: CalendricalRule[T]): Option[T] = {
     ISOChronology.checkNotNull(rule, "CalendricalRule must not be null")
     if (rule.equals(ISOChronology.monthOfYearRule)) return rule.reify(month)
     if (rule.equals(ISOChronology.dayOfMonthRule)) return rule.reify(day)
-    return rule.deriveValueFor(rule, this, this)
+    return Some(rule.deriveValueFor(rule, this, this))
   }
 
   /**
@@ -448,7 +448,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    * @return true if this point is equal to the specified month-day
    */
   override def equals(other: AnyRef): Boolean = {
-    if (this == other) true
+    if (this eq other) true
     else if (other.isInstanceOf[MonthDay]) {
       val otherMD: MonthDay = other.asInstanceOf[MonthDay]
       month == otherMD.month && day == otherMD.day

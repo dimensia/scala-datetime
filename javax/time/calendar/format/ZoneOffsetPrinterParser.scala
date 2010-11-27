@@ -111,10 +111,8 @@ final class ZoneOffsetPrinterParser private[format](utcText: String, includeColo
 
   /** { @inheritDoc }*/
   override def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = {
-    var offset: ZoneOffset = calendrical.get(ZoneOffset.rule)
-    if (offset == null) {
-      throw new CalendricalPrintException("Unable to print ZoneOffset")
-    }
+    val offset: ZoneOffset = calendrical.get(ZoneOffset.rule).getOrElse(throw new CalendricalPrintException("Unable to print ZoneOffset"))
+
     var totalSecs: Int = offset.getAmountSeconds
     if (totalSecs == 0) {
       appendable.append(utcText)

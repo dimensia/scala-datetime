@@ -122,9 +122,9 @@ object OffsetTime {
     extends CalendricalRule[OffsetTime](classOf[OffsetTime], ISOChronology, "OffsetTime", ISOChronology.periodNanos, ISOChronology.periodDays)
     with Serializable {
 
-    protected override def derive(calendrical: Calendrical): OffsetTime = {
+    protected override def derive(calendrical: Calendrical): Option[OffsetTime] = {
       val odt: OffsetDateTime = calendrical.get(OffsetDateTime.rule)
-      return if (odt != null) odt.toOffsetTime else null
+      return if (odt != null) Some(odt.toOffsetTime) else None
     }
 
     private def readResolve: AnyRef = Rule
@@ -255,7 +255,7 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
    */
-  def get[T](rule: CalendricalRule[T]): T = rule.deriveValueFor(rule, this, this)
+  def get[T](rule: CalendricalRule[T]): Option[T] = Some(rule.deriveValueFor(rule, this, this))
 
   /**
    * Returns a copy of this   { @code OffsetTime } with the second-of-minute value altered.

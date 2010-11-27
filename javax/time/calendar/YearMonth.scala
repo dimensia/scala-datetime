@@ -97,10 +97,10 @@ object YearMonth {
   private[calendar] sealed class Rule
     extends CalendricalRule[YearMonth](classOf[YearMonth], ISOChronology, "YearMonth", ISOChronology.periodMonths, null)
     with Serializable {
-    protected override def derive(calendrical: Calendrical): YearMonth = {
+    protected override def derive(calendrical: Calendrical): Option[YearMonth] = {
       var year: Int = calendrical.get(ISOChronology.yearRule)
       var moy: MonthOfYear = calendrical.get(ISOChronology.monthOfYearRule)
-      return if (year != null && moy != null) YearMonth.of(year, moy) else null
+      return if (year != null && moy != null) Some(YearMonth.of(year, moy)) else None
     }
 
     private def readResolve: AnyRef = Rule
@@ -333,11 +333,11 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
    */
-  def get[T](rule: CalendricalRule[T]): T = {
+  def get[T](rule: CalendricalRule[T]): Option[T] = {
     ISOChronology.checkNotNull(rule, "CalendricalRule must not be null")
-    if (rule.equals(ISOChronology.yearRule)) return rule.reify(year)
-    if (rule.equals(ISOChronology.monthOfYearRule)) return rule.reify(month)
-    return rule.deriveValueFor(rule, this, this)
+    if (rule.equals(ISOChronology.yearRule)) return Some(rule.reify(year))
+    if (rule.equals(ISOChronology.monthOfYearRule)) return Some(rule.reify(month))
+    return Some(rule.deriveValueFor(rule, this, this))
   }
 
   /**

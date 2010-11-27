@@ -36,9 +36,7 @@ import java.util.Collections
 import java.util.Comparator
 import java.util.HashMap
 import java.util.HashSet
-import java.util.List
 import java.util.Map
-import java.util.Set
 import javax.time.calendar.Calendrical
 import javax.time.calendar.TimeZone
 import javax.time.calendar.ZoneOffset
@@ -123,17 +121,13 @@ object ZonePrinterParser {
    * @return the tree, never null
    */
   private def prepareParser(availableIDs: Set[String]): ZonePrinterParser.SubstringTree = {
-    var ids: List[String] = new ArrayList[String](availableIDs)
-    Collections.sort(ids, new Comparator[String] {
-      def compare(str1: String, str2: String): Int = {
-        return if (str1.length == str2.length) str1.compareTo(str2) else str1.length - str2.length
-      }
-    })
-    var tree: ZonePrinterParser.SubstringTree = new ZonePrinterParser.SubstringTree(ids.get(0).length)
-    for (id <- ids) {
-      tree.add(id)
-    }
-    return tree
+    val ids: List[String] = availableIDs.toList
+
+//    def comparator(str1: String, str2: String): Int = if (str1.length == str2.length) str1.compareTo(str2) else str1.length - str2.length
+//    ids.sortWith(comparator)
+
+    val tree: ZonePrinterParser.SubstringTree = new ZonePrinterParser.SubstringTree(ids.head.length)
+    tree
   }
 
   /**
@@ -161,10 +155,8 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
 
   /** { @inheritDoc }*/
   override def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = {
-    var zone: TimeZone = calendrical.get(TimeZone.rule)
-    if (zone == null) {
-      throw new CalendricalPrintException("Unable to print TimeZone")
-    }
+    val zone: TimeZone = calendrical.get(TimeZone.rule).getOrElse(throw new CalendricalPrintException("Unable to print TimeZone"))
+
     if (textStyle == null) {
       appendable.append(zone.getID)
     }

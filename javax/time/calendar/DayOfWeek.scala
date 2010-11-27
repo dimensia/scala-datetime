@@ -269,8 +269,8 @@ sealed abstract class DayOfWeek(val ordinal: Int) extends Calendrical {
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
    */
-  def get[T](rule: CalendricalRule[T]): T = {
-    if (rule.getReifiedType != classOf[DayOfWeek]) null
+  def get[T](rule: CalendricalRule[T]): Option[T] = {
+    if (rule.getReifiedType != classOf[DayOfWeek]) None
     else rule.reify(this)
   }
 

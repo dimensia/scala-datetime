@@ -181,13 +181,10 @@ object CopticDate {
       merger.removeProcessed(this)
     }
 
-    protected override def derive(calendrical: Calendrical): CopticDate = {
-      var ld: LocalDate = calendrical.get(LocalDate.rule)
-      if (ld == null) {
-        return null
-      }
+    protected override def derive(calendrical: Calendrical): Option[CopticDate] = {
+      val ld: LocalDate = calendrical.get(LocalDate.rule).getOrElse(return None)
       val epochDays: Long = ld.toModifiedJulianDays + MJD_TO_COPTIC
-      return copticDateFromEpochDays(epochDays.asInstanceOf[Int])
+      return Some(copticDateFromEpochDays(epochDays.toInt))
     }
 
     private def readResolve: AnyRef = Rule
@@ -298,9 +295,7 @@ final class CopticDate private(val epochDays: Int, @transient year: Int, @transi
    * @return a new updated CopticDate instance, never null
    * @throws IllegalCalendarFieldValueException if the year is out of range
    */
-  def withYear(year: Int): CopticDate = {
-    return copticDatePreviousValid(year, getMonthOfYear, getDayOfMonth)
-  }
+  def withYear(year: Int): CopticDate = copticDatePreviousValid(year, getMonthOfYear, getDayOfMonth)
 
   /**
    * Gets the value of the specified calendar field.
@@ -312,7 +307,7 @@ final class CopticDate private(val epochDays: Int, @transient year: Int, @transi
    * @return the value for the field
    * @throws UnsupportedRuleException if no value for the field is found
    */
-  def get[T](rule: CalendricalRule[T]): T = {
+  def get[T](rule: CalendricalRule[T]): Option[T] = {
     if (rule.equals(LocalDate.rule)) rule.reify(toLocalDate)
     else rule.deriveValueFor(rule, this, this)
   }

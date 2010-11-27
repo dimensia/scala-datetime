@@ -125,12 +125,12 @@ object LocalTime {
   private[calendar] sealed class Rule
     extends CalendricalRule[LocalTime](classOf[LocalTime], ISOChronology, "LocalTime", ISOChronology.periodNanos, ISOChronology.periodDays)
     with Serializable {
-    protected override def derive(calendrical: Calendrical): LocalTime = {
+    protected override def derive(calendrical: Calendrical): Option[LocalTime] = {
       val ldt: LocalDateTime = calendrical.get(LocalDateTime.rule)
-      if (ldt != null) return ldt.toLocalTime
+      if (ldt != null) return Some(ldt.toLocalTime)
       val ot: OffsetTime = calendrical.get(OffsetTime.rule)
-      if (ot != null) ot.toLocalTime
-      return null
+      if (ot != null) return Some(ot.toLocalTime)
+      return None
     }
 
     private def readResolve: AnyRef = Rule
@@ -910,7 +910,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
    */
-  def get[T](rule: CalendricalRule[T]): T = rule.deriveValueFor(rule, this, this)
+  def get[T](rule: CalendricalRule[T]): Option[T] = SOme(rule.deriveValueFor(rule, this, this))
 
   /**
    * Outputs this time as a    { @code String } using the formatter.

@@ -59,5 +59,5 @@ trait Calendrical {
    * @param rule the rule to query, not null
    * @return the value for the rule, null if no value for the rule
    */
-  def get[T](rule: CalendricalRule[T]): T
+  def get[T](rule: CalendricalRule[T]): Option[T]
 }

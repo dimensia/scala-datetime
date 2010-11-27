@@ -131,12 +131,11 @@ object LocalDate {
   private[calendar] sealed class Rule
     extends CalendricalRule[LocalDate](classOf[LocalDate], ISOChronology, "LocalDate", ISOChronology.periodDays, null) with Serializable {
 
-    protected override def derive(calendrical: Calendrical): LocalDate = {
-      val ldt: LocalDateTime = calendrical.get(LocalDateTime.rule)
-      if (ldt != null) return ldt.toLocalDate
-      val od: OffsetDate = calendrical.get(OffsetDate.rule)
-      if (od != null) return od.toLocalDate
-      return null
+    protected override def derive(calendrical: Calendrical): Option[LocalDate] = {
+      val ldt: LocalDateTime = calendrical.get(LocalDateTime.rule).getOrElse(return None)
+      return Some(ldt.toLocalDate)
+      val od: OffsetDate = calendrical.get(OffsetDate.rule).getOrElse(return None)
+      return Some(od.toLocalDate)
     }
 
     private def readResolve: AnyRef = Rule
@@ -990,12 +989,12 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * <p>
    * This method queries the value of the specified calendrical rule.
    * If the value cannot be returned for the rule from this date then
-   * { @code null } will be returned.
+   * {@code null} will be returned.
    *
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
    */
-  def get[T](rule: CalendricalRule[T]): T = rule.deriveValueFor(rule, this, this)
+  def get[T](rule: CalendricalRule[T]): Option[T] = Some(rule.deriveValueFor(rule, this, this))
 
   /**
    * Gets the chronology that this date uses, which is the ISO calendar system.
@@ -1005,7 +1004,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
   def getChronology: ISOChronology = ISOChronology
 
   /**
-   * Returns a copy of this   { @code LocalDate } with the specified period in months added.
+   * Returns a copy of this {@code LocalDate} with the specified period in months added.
    * <p>
    * This method add the specified amount to the months field in three steps:
    * <ol>
@@ -1018,34 +1017,34 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * 2007-04-31. Instead of returning an invalid result, the last valid day
    * of the month, 2007-04-30, is selected instead.
    * <p>
-   * This method does the same as   { @code plusMonths ( months, DateResolvers.previousValid ( ) ) }.
+   * This method does the same as {@code plusMonths(months, DateResolvers.previousValid())}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param months the months to add, may be negative
-   * @return a { @code LocalDate } based on this date with the months added, never null
+   * @return a {@code LocalDate} based on this date with the months added, never null
    * @throws CalendricalException if the result exceeds the supported date range
-   * @see # plusMonths ( long, javax.time.calendar.DateResolver )
+   * @see #plusMonths(long,javax.time.calendar.DateResolver)
    */
   def plusMonths(months: Long): LocalDate = {
     return plusMonths(months, DateResolvers.previousValid)
   }
 
   /**
-   * Checks if this   { @code LocalDate } is after the specified date.
+   * Checks if this {@code LocalDate} is after the specified date.
    * <p>
    * The comparison is based on the time-line position of the dates.
    *
    * @param other the other date to compare to, not null
    * @return true if this is after the specified date
-   * @throws NullPointerException if   { @code other } is null
+   * @throws NullPointerException if {@code other} is null
    */
   def isAfter(other: LocalDate): Boolean = {
     return compareTo(other) > 0
   }
 
   /**
-   * Returns a copy of this   { @code LocalDate } with the date altered using the adjuster.
+   * Returns a copy of this {@code LocalDate} with the date altered using the adjuster.
    * <p>
    * Adjusters can be used to alter the date in various ways.
    * A simple adjuster might simply set the one of the fields, such as the year field.
@@ -1054,7 +1053,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * This instance is immutable and unaffected by this method call.
    *
    * @param adjuster the adjuster to use, not null
-   * @return a { @code LocalDate } based on this date adjusted as necessary, never null
+   * @return a {@code LocalDate} based on this date adjusted as necessary, never null
    * @throws NullPointerException if the adjuster returned null
    */
   def `with`(adjuster: DateAdjuster): LocalDate = {
@@ -1065,20 +1064,20 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
   }
 
   /**
-   * Returns a copy of this   { @code LocalDate } with the specified date period subtracted.
+   * Returns a copy of this {@code LocalDate} with the specified date period subtracted.
    * <p>
    * This subtracts the specified period from this date, returning a new date.
    * Before subtraction, the period is converted to a date-based   { @code Period } using
-   * { @link Period # ofDateFields ( PeriodProvider ) }.
+   * {@link Period#ofDateFields(PeriodProvider)}.
    * That factory ignores any time-based ISO fields, thus subtracting a time-based
    * period from this date will have no effect. If you want to take time fields into
-   * account, call   { @link Period # normalizedWith24HourDays ( ) } on the input period.
+   * account, call {@link Period#normalizedWith24HourDays()} on the input period.
    * <p>
    * The detailed rules for the addition have some complexity due to variable length months.
-   * The goal is to match the code for   { @code minusYears ( ).minusMonths ( ).minusDays ( ) } in most cases.
+   * The goal is to match the code for {@code minusYears().minusMonths().minusDays()} in most cases.
    * The principle case of difference is best expressed by example:
-   * { @code 2010 -03-31 } minus   { @code P1M1M } yields   { @code 2010 -02-28 } whereas
-   * { @code minusMonths ( 1 ).minusDays ( 1 ) } gives   { @code 2010 -02-27 }.
+   * {@code 2010 -03-31} minus {@code P1M1M} yields {@code 2010 -02-28} whereas
+   * {@code minusMonths(1).minusDays(1)} gives {@code 2010 -02-27}.
    * <p>
    * The rules are expressed in five steps:
    * <ol>
@@ -1104,8 +1103,8 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * This instance is immutable and unaffected by this method call.
    *
    * @param periodProvider the period to subtract, not null
-   * @return a { @code LocalDate } based on this date with the period subtracted, never null
-   * @throws CalendricalException if the specified period cannot be converted to a   { @code Period }
+   * @return a {@code LocalDate} based on this date with the period subtracted, never null
+   * @throws CalendricalException if the specified period cannot be converted to a {@code Period}
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def minus(periodProvider: PeriodProvider): LocalDate = {

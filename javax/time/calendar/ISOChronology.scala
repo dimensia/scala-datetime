@@ -98,9 +98,9 @@ object ISOChronology extends ISOChronology {
     extends CalendricalRule[Long](classOf[Long], ISOChronology, "EpochDays", DAYS, null)
     with Serializable {
 
-    protected override def derive(calendrical: Calendrical): Long = {
+    protected override def derive(calendrical: Calendrical): Option[Long] = {
       var date: LocalDate = calendrical.get(LocalDate.rule)
-      return if (date != null) date.toEpochDays else null
+      return if (date != null) Some(date.toEpochDays) else None
     }
 
     protected override def merge(merger: CalendricalMerger): Unit = {
@@ -925,9 +925,9 @@ object ISOChronology extends ISOChronology {
   @SerialVersionUID(1L)
   private[calendar] sealed class NanoOfDayRule
     extends CalendricalRule[Long](classOf[Long], ISOChronology, "NanoOfDay", NANOS, DAYS) with Serializable {
-    protected override def derive(calendrical: Calendrical): Long = {
+    protected override def derive(calendrical: Calendrical): Option[Long] = {
       var time: LocalTime = calendrical.get(LocalTime.rule)
-      return if (time != null) time.toNanoOfDay else null
+      return if (time != null) Some(time.toNanoOfDay) else None
     }
 
     private def readResolve: AnyRef = NanoOfDayRule

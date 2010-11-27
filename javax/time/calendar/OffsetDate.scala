@@ -67,9 +67,9 @@ object OffsetDate {
     extends CalendricalRule[OffsetDate](classOf[OffsetDate], ISOChronology, "OffsetDate", ISOChronology.periodDays, null)
     with Serializable {
 
-    protected override def derive(calendrical: Calendrical): OffsetDate = {
+    protected override def derive(calendrical: Calendrical): Option[OffsetDate] = {
       val odt: OffsetDateTime = calendrical.get(OffsetDateTime.rule)
-      if (odt != null) odt.toOffsetDate else null
+      if (odt != null) Some(odt.toOffsetDate) else None
     }
 
     private def readResolve: AnyRef = Rule
@@ -821,7 +821,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
    */
-  def get[T](rule: CalendricalRule[T]): T = rule.deriveValueFor(rule, this, this)
+  def get[T](rule: CalendricalRule[T]): Option[T] = Some(rule.deriveValueFor(rule, this, this))
 
   /**
    * Compares this date to another date based on the UTC equivalent dates
