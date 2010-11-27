@@ -99,8 +99,10 @@ object ISOChronology extends ISOChronology {
     with Serializable {
 
     protected override def derive(calendrical: Calendrical): Option[Long] = {
-      var date: LocalDate = calendrical.get(LocalDate.rule)
-      return if (date != null) Some(date.toEpochDays) else None
+      calendrical.get(LocalDate.rule) match {
+        case Some(date) => Some(date.toEpochDays)
+        case None => None
+      }
     }
 
     protected override def merge(merger: CalendricalMerger): Unit = {
@@ -147,9 +149,11 @@ object ISOChronology extends ISOChronology {
       return null
     }
 
-    protected def derive(calendrical: Calendrical): MonthOfYear = {
-      var date: LocalDate = calendrical.get(LocalDate.rule)
-      return if (date != null) date.getMonthOfYear else null
+    protected def derive(calendrical: Calendrical): Option[MonthOfYear] = {
+      calendrical.get(LocalDate.rule) match {
+        case Some(date) => Some(date.getMonthOfYear)
+        case None => None
+      }
     }
 
     override def convertIntToValue(value: Int): MonthOfYear = {
@@ -426,9 +430,11 @@ object ISOChronology extends ISOChronology {
       textStores.put(TextStyle.SHORT, new DateTimeFieldRule.TextStore(locale, map))
     }
 
-    protected def derive(calendrical: Calendrical): DayOfWeek = {
-      val date: LocalDate = calendrical.get(LocalDate.rule)
-      if (date != null) getDayOfWeekFromDate(date) else null
+    protected def derive(calendrical: Calendrical): Option[DayOfWeek] = {
+      calendrical.get(LocalDate.rule) match {
+        case Some(date) => Some(getDayOfWeekFromDate(date))
+        case None => None
+      }
     }
 
     private def readResolve: AnyRef = DayOfWeekRule
@@ -811,7 +817,7 @@ object ISOChronology extends ISOChronology {
 
     override def convertIntToValue(value: Int): AmPmOfDay = AmPmOfDay.of(value)
 
-    protected def createTextStores(textStores: Map[TextStyle, DateTimeFieldRule.TextStore], locale: Locale): ChronoUnit = {
+    protected def createTextStores(textStores: Map[TextStyle, DateTimeFieldRule.TextStore], locale: Locale): Unit = {
       var oldSymbols: DateFormatSymbols = new DateFormatSymbols(locale)
       var array: Array[String] = oldSymbols.getAmPmStrings
       var map: Map[Int, String] = new HashMap[Int, String]
@@ -840,10 +846,7 @@ object ISOChronology extends ISOChronology {
     }
 
     protected def derive(calendrical: Calendrical): AmPmOfDay = {
-      var hourVal: Int = calendrical.get(hourOfDayRule)
-      if (hourVal == null) {
-        return null
-      }
+      var hourVal: Int = calendrical.get(hourOfDayRule).getOrElse(return null)
       var hour: Int = hourVal
       hour = (if (hour < 0) 1073741832 + hour + 1073741832 else hour)
       return AmPmOfDay.of((hour % 24) / 12)
@@ -926,8 +929,10 @@ object ISOChronology extends ISOChronology {
   private[calendar] sealed class NanoOfDayRule
     extends CalendricalRule[Long](classOf[Long], ISOChronology, "NanoOfDay", NANOS, DAYS) with Serializable {
     protected override def derive(calendrical: Calendrical): Option[Long] = {
-      var time: LocalTime = calendrical.get(LocalTime.rule)
-      return if (time != null) Some(time.toNanoOfDay) else None
+      calendrical.get(LocalTime.rule) match {
+        case Some(time) => Some(time.toNanoOfDay)
+        case None => None
+      }
     }
 
     private def readResolve: AnyRef = NanoOfDayRule
@@ -1058,9 +1063,11 @@ object ISOChronology extends ISOChronology {
 
     def convertValueToInt(value: QuarterOfYear): Int = value.getValue
 
-    protected def derive(calendrical: Calendrical): QuarterOfYear = {
-      var moy: MonthOfYear = calendrical.get(monthOfYearRule)
-      return if (moy != null) QuarterOfYear.of(moy.ordinal / 3 + 1) else null
+    protected def derive(calendrical: Calendrical): Option[QuarterOfYear] = {
+      calendrical.get(monthOfYearRule) match {
+        case Some(moy) => Some(QuarterOfYear.of(moy.ordinal / 3 + 1))
+        case None => None
+      }
     }
 
     override def convertIntToValue(value: Int): QuarterOfYear = QuarterOfYear.of(value)
@@ -1125,82 +1132,101 @@ object ISOChronology extends ISOChronology {
 
     override def getSmallestMaximumValue: Int = smallestMaximum
 
-    protected def derive(calendrical: Calendrical): Integer = {
+    protected def derive(calendrical: Calendrical): Option[Int] = {
       ordinal match {
-        case NANO_OF_SECOND_ORDINAL => {
-          var time: LocalTime = calendrical.get(LocalTime.rule)
-          return if (time != null) time.getNanoOfSecond else null
-        }
+        case NANO_OF_SECOND_ORDINAL =>
+          calendrical.get(LocalTime.rule) match {
+            case Some(time) => Some(time.getNanoOfSecond)
+            case None => None
+          }
         case MILLI_OF_SECOND_ORDINAL => {
-          var time: LocalTime = calendrical.get(LocalTime.rule)
-          return if (time != null) time.getNanoOfSecond / 1000000 else null
+          calendrical.get(LocalTime.rule) match {
+            case Some(time) => Some(time.getNanoOfSecond / 1000000)
+            case None => None
+          }
         }
-        case MILLI_OF_DAY_ORDINAL => {
-          var time: LocalTime = calendrical.get(LocalTime.rule)
-          return if (time != null) (time.toNanoOfDay / 1000000L).asInstanceOf[Int] else null
-        }
-        case SECOND_OF_MINUTE_ORDINAL => {
-          var time: LocalTime = calendrical.get(LocalTime.rule)
-          return if (time != null) time.getSecondOfMinute else null
-        }
-        case SECOND_OF_DAY_ORDINAL => {
-          var time: LocalTime = calendrical.get(LocalTime.rule)
-          return if (time != null) time.toSecondOfDay else null
-        }
-        case MINUTE_OF_HOUR_ORDINAL => {
-          var time: LocalTime = calendrical.get(LocalTime.rule)
-          return if (time != null) time.getMinuteOfHour else null
-        }
-        case CLOCK_HOUR_OF_AMPM_ORDINAL => {
-          var hourVal: Int = calendrical.get(hourOfAmPmRule)
-          return if (hourVal != null) (hourVal + 12) % 13 else null
-        }
-        case HOUR_OF_AMPM_ORDINAL => {
-          var hourVal: Int = calendrical.get(hourOfDayRule)
-          return if (hourVal != null) hourVal % 12 else null
-        }
-        case CLOCK_HOUR_OF_DAY_ORDINAL => {
-          var hourVal: Int = calendrical.get(hourOfDayRule)
-          return if (hourVal != null) (hourVal + 24) % 25 else null
-        }
-        case HOUR_OF_DAY_ORDINAL => {
-          var time: LocalTime = calendrical.get(LocalTime.rule)
-          return if (time != null) time.getHourOfDay else null
-        }
-        case DAY_OF_MONTH_ORDINAL => {
-          var date: LocalDate = calendrical.get(LocalDate.rule)
-          return if (date != null) date.getDayOfMonth else null
-        }
-        case DAY_OF_YEAR_ORDINAL => {
-          var date: LocalDate = calendrical.get(LocalDate.rule)
-          return if (date != null) getDayOfYearFromDate(date) else null
-        }
-        case MONTH_OF_QUARTER_ORDINAL => {
-          var moy: MonthOfYear = calendrical.get(monthOfYearRule)
-          return if (moy != null) (moy.ordinal % 3 + 1) else null
-        }
-        case WEEK_OF_MONTH_ORDINAL => {
-          var domVal: Int = calendrical.get(dayOfMonthRule)
-          return if (domVal != null) (domVal + 6) / 7 else null
-        }
-        case WEEK_OF_WEEK_BASED_YEAR_ORDINAL => {
-          var date: LocalDate = calendrical.get(LocalDate.rule)
-          return if (date != null) getWeekOfWeekBasedYearFromDate(date) else null
-        }
-        case WEEK_OF_YEAR_ORDINAL => {
-          var doyVal: Int = calendrical.get(dayOfYearRule)
-          return if (doyVal != null) (doyVal + 6) / 7 else null
-        }
-        case WEEK_BASED_YEAR_ORDINAL => {
-          var date: LocalDate = calendrical.get(LocalDate.rule)
-          return if (date != null) getWeekBasedYearFromDate(date) else null
-        }
-        case YEAR_ORDINAL => {
-          var date: LocalDate = calendrical.get(LocalDate.rule)
-          return if (date != null) date.getYear else null
-        }
+        case MILLI_OF_DAY_ORDINAL =>
+          calendrical.get(LocalTime.rule) match {
+            case Some(time) => Some((time.toNanoOfDay / 1000000L).toInt)
+            case None => None
+          }
+        case SECOND_OF_MINUTE_ORDINAL =>
+          calendrical.get(LocalTime.rule) match {
+            case Some(time) => Some(time.getSecondOfMinute)
+            case None => None
+          }
+        case SECOND_OF_DAY_ORDINAL =>
+          calendrical.get(LocalTime.rule) match {
+            case Some(time) => Some(time.toSecondOfDay)
+            case None => None
+          }
+        case MINUTE_OF_HOUR_ORDINAL =>
+          calendrical.get(LocalTime.rule) match {
+            case Some(time) => Some(time.getMinuteOfHour)
+            case None => None
+          }
+        case CLOCK_HOUR_OF_AMPM_ORDINAL =>
+          calendrical.get(hourOfAmPmRule) match {
+            case Some(hourVal) => Some((hourVal + 12) % 13)
+            case None => None
+          }
+        case HOUR_OF_AMPM_ORDINAL =>
+          calendrical.get(hourOfDayRule) match {
+            case Some(hourVal) => Some(hourVal % 12)
+            case None => None
+          }
+        case CLOCK_HOUR_OF_DAY_ORDINAL =>
+          calendrical.get(hourOfDayRule) match {
+            case Some(hourVal) => Some((hourVal + 24) % 25)
+            case None => None
+          }
+        case HOUR_OF_DAY_ORDINAL =>
+          calendrical.get(LocalTime.rule) match {
+            case Some(time) => Some(time.getHourOfDay)
+            case None => None
+          }
+        case DAY_OF_MONTH_ORDINAL =>
+          calendrical.get(LocalDate.rule) match {
+            case Some(date) => Some(date.getDayOfMonth)
+            case None => None
+          }
+        case DAY_OF_YEAR_ORDINAL =>
+          calendrical.get(LocalDate.rule) match {
+            case Some(date) => Some(getDayOfYearFromDate(date))
+            case None => None
+          }
+        case MONTH_OF_QUARTER_ORDINAL =>
+          calendrical.get(monthOfYearRule) match {
+            case Some(moy) => Some(moy.ordinal % 3 + 1)
+            case None => None
+          }
+        case WEEK_OF_MONTH_ORDINAL =>
+          calendrical.get(dayOfMonthRule) match {
+            case Some(domVal) => Some((domVal + 6) / 7)
+            case None => None
+          }
+        case WEEK_OF_WEEK_BASED_YEAR_ORDINAL =>
+          calendrical.get(LocalDate.rule) match {
+            case Some(date) => Some(getWeekOfWeekBasedYearFromDate(date))
+            case None => None
+          }
+        case WEEK_OF_YEAR_ORDINAL =>
+          calendrical.get(dayOfYearRule) match {
+            case Some(doyVal) => Some((doyVal + 6) / 7)
+            case None => None
+          }
+        case WEEK_BASED_YEAR_ORDINAL =>
+          calendrical.get(LocalDate.rule) match {
+            case Some(date) => Some(getWeekBasedYearFromDate(date))
+            case None => None
+          }
+        case YEAR_ORDINAL =>
+          calendrical.get(LocalDate.rule) match {
+            case Some(date) => Some(date.getYear)
+            case None => None
+          }
+        case _ => None
       }
-      return null
     }
 
     private def readResolve: AnyRef = RULE_CACHE(ordinal / 16)
@@ -1212,31 +1238,30 @@ object ISOChronology extends ISOChronology {
 
     override def getMaximumValue(calendrical: Calendrical): Int = {
       ordinal match {
-        case DAY_OF_MONTH_ORDINAL => {
-          var moy: MonthOfYear = calendrical.get(monthOfYearRule)
-          if (moy == null) {
-            return 31
+        case DAY_OF_MONTH_ORDINAL =>
+          calendrical.get(monthOfYearRule) match {
+            case Some(moy) =>
+              calendrical.get(yearRule) match {
+                case Some(year) => moy.lengthInDays(isLeapYear(year))
+                case None => moy.maxLengthInDays
+            }
+            case None => 31
           }
-          var year: Int = calendrical.get(yearRule)
-          return if (year != null) moy.lengthInDays(isLeapYear(year)) else moy.maxLengthInDays
-        }
-        case DAY_OF_YEAR_ORDINAL => {
-          var year: Int = calendrical.get(yearRule)
-          return (if (year != null && isLeapYear(year) == false) 365 else 366)
-        }
+        case DAY_OF_YEAR_ORDINAL =>
+          calendrical.get(yearRule) match {
+            case Some(year) if !isLeapYear(year) => 365
+            case _ => 366
+          }
         case WEEK_OF_MONTH_ORDINAL => {
-          var year: Int = calendrical.get(yearRule)
-          var moy: MonthOfYear = calendrical.get(monthOfYearRule)
-          if (year != null && moy == MonthOfYear.FEBRUARY) {
-            return if (isLeapYear(year)) 5 else 4
+          var year: Option[Int] = calendrical.get(yearRule)
+          var moy: Option[MonthOfYear] = calendrical.get(monthOfYearRule)
+          if (year.isDefined && moy == Some(MonthOfYear.FEBRUARY)) {
+            return if (isLeapYear(year.get)) 5 else 4
           }
           return getMaximumValue
         }
         case WEEK_OF_WEEK_BASED_YEAR_ORDINAL => {
-          var date: LocalDate = calendrical.get(LocalDate.rule)
-          if (date == null) {
-            return 53
-          }
+          var date: LocalDate = calendrical.get(LocalDate.rule).getOrElse(return 53)
           date = date.withDayOfMonth(1).withMonthOfYear(1)
           if (date.getDayOfWeek == DayOfWeek.THURSDAY || (date.getDayOfWeek == DayOfWeek.WEDNESDAY && isLeapYear(date.getYear))) {
             return 53
