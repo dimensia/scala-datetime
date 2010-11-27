@@ -68,7 +68,7 @@ object StandardZoneRules {
    */
   private[zone] def readExternal(in: DataInput): StandardZoneRules = {
     val stdSize: Int = in.readInt
-    val stdTrans: Array[Long] = (0 until stdSize).map(_ => Ser.readEpochSecs(in))
+    val stdTrans: Array[Long] = (0 until stdSize).map(_ => Ser.readEpochSecs(in)).toArray
 
     val stdOffsets: Array[ZoneOffset] = new Array[ZoneOffset](stdSize + 1) //TODO: Purpose of + 1?
     for (i <- 0 until stdOffsets.length) {
@@ -76,7 +76,7 @@ object StandardZoneRules {
     }
 
     val savSize: Int = in.readInt
-    val savTrans: Array[Long] = (0 until stdSize).map(_ => Ser.readEpochSecs(in))
+    val savTrans: Array[Long] = (0 until stdSize).map(_ => Ser.readEpochSecs(in)).toArray
 
 
     val savOffsets: Array[ZoneOffset] = new Array[ZoneOffset](savSize + 1) //TODO: Purpose of + 1?
