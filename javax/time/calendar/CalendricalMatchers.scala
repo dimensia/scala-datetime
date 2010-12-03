@@ -79,59 +79,59 @@ object CalendricalMatchers {
 
     /**Leap year matcher. */
     object LEAP_YEAR extends CalendricalMatcher {
-      /** { @inheritDoc }*/
+      /**{ @inheritDoc }*/
       override def matchesCalendrical(calendrical: Calendrical): Boolean = {
-        var yearVal: Int = calendrical.get(ISOChronology.yearRule)
-        return yearVal != null && ISOChronology.isLeapYear(yearVal)
+        var yearVal: Int = calendrical.get(ISOChronology.yearRule).getOrElse(return false)
+        return ISOChronology.isLeapYear(yearVal)
       }
     }
 
     /**Leap day matcher. */
     object LEAP_DAY extends CalendricalMatcher {
-      /** { @inheritDoc }*/
+      /**{ @inheritDoc }*/
       override def matchesCalendrical(calendrical: Calendrical): Boolean = {
-        var moy: MonthOfYear = calendrical.get(ISOChronology.monthOfYearRule)
-        var domVal: Int = calendrical.get(ISOChronology.dayOfMonthRule)
-        return domVal != null && domVal == 29 && moy == MonthOfYear.FEBRUARY
+        var moy: MonthOfYear = calendrical.get(ISOChronology.monthOfYearRule).get
+        var domVal: Int = calendrical.get(ISOChronology.dayOfMonthRule).getOrElse(return false)
+        return domVal == 29 && moy == MonthOfYear.FEBRUARY
       }
     }
 
     /**Non weekend matcher. */
     object NON_WEEKEND_DAY extends CalendricalMatcher {
-      /** { @inheritDoc }*/
+      /**{ @inheritDoc }*/
       override def matchesCalendrical(calendrical: Calendrical): Boolean = {
-        var dow: DayOfWeek = calendrical.get(ISOChronology.dayOfWeekRule)
-        return dow != null && dow != DayOfWeek.SATURDAY && dow != DayOfWeek.SUNDAY
+        var dow: DayOfWeek = calendrical.get(ISOChronology.dayOfWeekRule).getOrElse(return false)
+        return dow != DayOfWeek.SATURDAY && dow != DayOfWeek.SUNDAY
       }
     }
 
     /**Non weekend matcher. */
     object WEEKEND_DAY extends CalendricalMatcher {
-      /** { @inheritDoc }*/
+      /**{ @inheritDoc }*/
       override def matchesCalendrical(calendrical: Calendrical): Boolean = {
-        var dow: DayOfWeek = calendrical.get(ISOChronology.dayOfWeekRule)
+        var dow: DayOfWeek = calendrical.get(ISOChronology.dayOfWeekRule).getOrElse(return false)
         return dow == DayOfWeek.SATURDAY || dow == DayOfWeek.SUNDAY
       }
     }
 
     /**Last day-of-year matcher. */
     object LAST_DAY_OF_YEAR extends CalendricalMatcher {
-      /** { @inheritDoc }*/
+      /**{ @inheritDoc }*/
       override def matchesCalendrical(calendrical: Calendrical): Boolean = {
-        var moy: MonthOfYear = calendrical.get(ISOChronology.monthOfYearRule)
-        var domVal: Int = calendrical.get(ISOChronology.dayOfMonthRule)
-        return domVal != null && domVal == 31 && moy == MonthOfYear.DECEMBER
+        var moy: MonthOfYear = calendrical.get(ISOChronology.monthOfYearRule).getOrElse(return false)
+        var domVal: Int = calendrical.get(ISOChronology.dayOfMonthRule).getOrElse(return false)
+        return domVal == 31 && moy == MonthOfYear.DECEMBER
       }
     }
 
     /**Last day-of-month matcher. */
     object LAST_DAY_OF_MONTH extends CalendricalMatcher {
-      /** { @inheritDoc }*/
+      /**{ @inheritDoc }*/
       override def matchesCalendrical(calendrical: Calendrical): Boolean = {
-        var yearVal: Int = calendrical.get(ISOChronology.yearRule)
-        var moy: MonthOfYear = calendrical.get(ISOChronology.monthOfYearRule)
-        var domVal: Int = calendrical.get(ISOChronology.dayOfMonthRule)
-        return yearVal != null && moy != null && domVal != null && domVal == moy.getLastDayOfMonth(ISOChronology.isLeapYear(yearVal))
+        var yearVal: Int = calendrical.get(ISOChronology.yearRule).getOrElse(return false)
+        var moy: MonthOfYear = calendrical.get(ISOChronology.monthOfYearRule).getOrElse(return false)
+        var domVal: Int = calendrical.get(ISOChronology.dayOfMonthRule).getOrElse(return false)
+        return domVal == moy.getLastDayOfMonth(ISOChronology.isLeapYear(yearVal))
       }
     }
 
@@ -212,20 +212,18 @@ object CalendricalMatchers {
    */
   @SerialVersionUID(1L)
   private final class DayOfWeekInMonth(val ordinal: Int, val dayOfWeek: DayOfWeek) extends CalendricalMatcher with Serializable {
-    /** { @inheritDoc }*/
+    /**{@inheritDoc}*/
     def matchesCalendrical(calendrical: Calendrical): Boolean = {
-      var domVal: Int = calendrical.get(ISOChronology.dayOfMonthRule)
-      var dow: DayOfWeek = calendrical.get(ISOChronology.dayOfWeekRule)
-      if (dow != dayOfWeek || domVal == null) {
-        return false
-      }
-      return (domVal - 1) / 7 == ordinal - 1
+      var domVal: Int = calendrical.get(ISOChronology.dayOfMonthRule).getOrElse(return false)
+      var dow: DayOfWeek = calendrical.get(ISOChronology.dayOfWeekRule).getOrElse(return false)
+      if (dow != dayOfWeek) return false
+      else return (domVal - 1) / 7 == ordinal - 1
     }
 
-    /** { @inheritDoc }*/
+    /**{@inheritDoc}*/
     override def hashCode: Int = ordinal + 8 * dayOfWeek.ordinal
 
-    /** { @inheritDoc }*/
+    /**{@inheritDoc}*/
     override def equals(obj: AnyRef): Boolean = {
       if (obj.isInstanceOf[CalendricalMatchers.DayOfWeekInMonth]) {
         var other: CalendricalMatchers.DayOfWeekInMonth = obj.asInstanceOf[CalendricalMatchers.DayOfWeekInMonth]

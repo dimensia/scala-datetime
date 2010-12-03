@@ -251,16 +251,12 @@ object HistoricChronology {
     }
 
     protected def merge(merger: CalendricalMerger): Unit = {
-      val yearVal: Int = merger.getValue(chrono.yearRule)
+      val yearVal: Int = merger.getValue(chrono.yearRule).get
       if (yearVal != null) {
-        val doy: Int = merger.getValue(this)
-        var date: HistoricDate = null
-        if (merger.getContext.isStrict) {
-          date = HistoricDate.of(yearVal, MonthOfYear.JANUARY, 1).withDayOfYear(doy)
-        }
-        else {
-          date = HistoricDate.of(yearVal, MonthOfYear.JANUARY, 1).plusDays(doy).plusDays(-1)
-        }
+        val doy: Int = merger.getValue(this).get
+        var date: HistoricDate =
+          if (merger.getContext.isStrict) HistoricDate.of(yearVal, MonthOfYear.JANUARY, 1).withDayOfYear(doy)
+          else HistoricDate.of(yearVal, MonthOfYear.JANUARY, 1).plusDays(doy).plusDays(-1)
         merger.storeMerged(LocalDate.rule, date.toLocalDate)
         merger.removeProcessed(this)
         merger.removeProcessed(chrono.yearRule)

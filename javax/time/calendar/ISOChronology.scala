@@ -106,7 +106,7 @@ object ISOChronology extends ISOChronology {
     }
 
     protected override def merge(merger: CalendricalMerger): Unit = {
-      var epochDays: Long = merger.getValue(this)
+      var epochDays: Long = merger.getValue(this).get
       merger.storeMerged(LocalDate.rule, LocalDate.ofEpochDays(epochDays))
       merger.removeProcessed(this)
     }
@@ -938,7 +938,7 @@ object ISOChronology extends ISOChronology {
     private def readResolve: AnyRef = NanoOfDayRule
 
     protected override def merge(merger: CalendricalMerger): Unit = {
-      var nod: Long = merger.getValue(this)
+      var nod: Long = merger.getValue(this).get
       merger.storeMerged(LocalTime.rule, LocalTime.ofNanoOfDay(nod))
       merger.removeProcessed(this)
     }
@@ -1416,12 +1416,12 @@ sealed class ISOChronology private
         merger.removeProcessed(ISOChronology.clockHourOfAmPmRule)
       }
     }
-    var hourVal: Int = merger.getValue(ISOChronology.hourOfDayRule)
+    var hourVal: Int = merger.getValue(ISOChronology.hourOfDayRule).get
     if (hourVal != null) {
-      var minuteVal: Int = merger.getValue(ISOChronology.minuteOfHourRule)
-      var secondVal: Int = merger.getValue(ISOChronology.secondOfMinuteRule)
-      var mosVal: Int = merger.getValue(ISOChronology.milliOfSecondRule)
-      var nanoVal: Int = merger.getValue(ISOChronology.nanoOfSecondRule)
+      var minuteVal: Int = merger.getValue(ISOChronology.minuteOfHourRule).get
+      var secondVal: Int = merger.getValue(ISOChronology.secondOfMinuteRule).get
+      var mosVal: Int = merger.getValue(ISOChronology.milliOfSecondRule).get
+      var nanoVal: Int = merger.getValue(ISOChronology.nanoOfSecondRule).get
       if (minuteVal != null && secondVal != null && nanoVal != null) {
         merger.storeMerged(LocalTime.rule, LocalTime.of(hourVal, minuteVal, secondVal, nanoVal))
         merger.removeProcessed(ISOChronology.hourOfDayRule)
@@ -1453,17 +1453,17 @@ sealed class ISOChronology private
       }
     }
     var qoy: QuarterOfYear = merger.getValue(ISOChronology.quarterOfYearRule)
-    var moqVal: Int = merger.getValue(ISOChronology.monthOfQuarterRule)
+    var moqVal: Int = merger.getValue(ISOChronology.monthOfQuarterRule).get
     if (qoy != null && moqVal != null) {
       var moy: MonthOfYear = MonthOfYear.of(qoy.getFirstMonthOfQuarter.ordinal + moqVal)
       merger.storeMerged(ISOChronology.monthOfYearRule, moy)
       merger.removeProcessed(ISOChronology.quarterOfYearRule)
       merger.removeProcessed(ISOChronology.monthOfQuarterRule)
     }
-    var yearVal: Int = merger.getValue(ISOChronology.yearRule)
+    var yearVal: Int = merger.getValue(ISOChronology.yearRule).get
     if (yearVal != null) {
-      var moy: MonthOfYear = merger.getValue(ISOChronology.monthOfYearRule)
-      var domVal: Int = merger.getValue(ISOChronology.dayOfMonthRule)
+      var moy: MonthOfYear = merger.getValue(ISOChronology.monthOfYearRule).get
+      var domVal: Int = merger.getValue(ISOChronology.dayOfMonthRule).get
       if (moy != null && domVal != null) {
         var date: LocalDate = merger.getContext.resolveDate(yearVal, moy.getValue, domVal)
         merger.storeMerged(LocalDate.rule, date)
@@ -1471,14 +1471,14 @@ sealed class ISOChronology private
         merger.removeProcessed(ISOChronology.monthOfYearRule)
         merger.removeProcessed(ISOChronology.dayOfMonthRule)
       }
-      var doyVal: Int = merger.getValue(ISOChronology.dayOfYearRule)
+      var doyVal: Int = merger.getValue(ISOChronology.dayOfYearRule).get
       if (doyVal != null) {
         merger.storeMerged(LocalDate.rule, ISOChronology.getDateFromDayOfYear(yearVal, doyVal))
         merger.removeProcessed(ISOChronology.yearRule)
         merger.removeProcessed(ISOChronology.dayOfYearRule)
       }
-      var woyVal: Int = merger.getValue(ISOChronology.weekOfYearRule)
-      var dow: DayOfWeek = merger.getValue(ISOChronology.dayOfWeekRule)
+      var woyVal: Int = merger.getValue(ISOChronology.weekOfYearRule).get
+      var dow: DayOfWeek = merger.getValue(ISOChronology.dayOfWeekRule).get
       if (woyVal != null && dow != null) {
         var date: LocalDate = LocalDate.of(yearVal, 1, 1).plusWeeks(woyVal - 1)
         date = date.`with`(DateAdjusters.nextOrCurrent(dow))
@@ -1487,7 +1487,7 @@ sealed class ISOChronology private
         merger.removeProcessed(ISOChronology.weekOfYearRule)
         merger.removeProcessed(ISOChronology.dayOfWeekRule)
       }
-      var womVal: Int = merger.getValue(ISOChronology.weekOfMonthRule)
+      var womVal: Int = merger.getValue(ISOChronology.weekOfMonthRule).get
       if (moy != null && womVal != null && dow != null) {
         var date: LocalDate = LocalDate.of(yearVal, moy, 1).plusWeeks(womVal - 1)
         date = date.`with`(DateAdjusters.nextOrCurrent(dow))
@@ -1498,20 +1498,20 @@ sealed class ISOChronology private
         merger.removeProcessed(ISOChronology.dayOfWeekRule)
       }
     }
-    var wbyVal: Int = merger.getValue(ISOChronology.weekBasedYearRule)
+    var wbyVal: Int = merger.getValue(ISOChronology.weekBasedYearRule).get
     if (wbyVal != null) {
-      var woy: Int = merger.getValue(ISOChronology.weekOfWeekBasedYearRule)
-      var dow: DayOfWeek = merger.getValue(ISOChronology.dayOfWeekRule)
+      var woy: Int = merger.getValue(ISOChronology.weekOfWeekBasedYearRule).get
+      var dow: DayOfWeek = merger.getValue(ISOChronology.dayOfWeekRule).get
       if (woy != null && dow != null) {
         merger.removeProcessed(ISOChronology.weekBasedYearRule)
         merger.removeProcessed(ISOChronology.weekOfWeekBasedYearRule)
         merger.removeProcessed(ISOChronology.dayOfWeekRule)
       }
     }
-    var date: LocalDate = merger.getValue(LocalDate.rule)
-    var time: LocalTime = merger.getValue(LocalTime.rule)
-    var offset: ZoneOffset = merger.getValue(ZoneOffset.rule)
-    var zone: TimeZone = merger.getValue(TimeZone.rule)
+    var date: LocalDate = merger.getValue(LocalDate.rule).get
+    var time: LocalTime = merger.getValue(LocalTime.rule).get
+    var offset: ZoneOffset = merger.getValue(ZoneOffset.rule).get
+    var zone: TimeZone = merger.getValue(TimeZone.rule).get
     if (date != null && time != null) {
       merger.storeMerged(LocalDateTime.rule, LocalDateTime.of(date, time))
       merger.removeProcessed(LocalDate.rule)
@@ -1527,7 +1527,7 @@ sealed class ISOChronology private
       merger.removeProcessed(LocalTime.rule)
       merger.removeProcessed(ZoneOffset.rule)
     }
-    var ldt: LocalDateTime = merger.getValue(LocalDateTime.rule)
+    var ldt: LocalDateTime = merger.getValue(LocalDateTime.rule).get
     if (ldt != null && offset != null) {
       merger.storeMerged(OffsetDateTime.rule, OffsetDateTime.of(ldt, offset))
       merger.removeProcessed(LocalDateTime.rule)

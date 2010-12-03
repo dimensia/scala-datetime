@@ -131,8 +131,10 @@ object OffsetDateTime {
     with Serializable {
 
     protected override def derive(calendrical: Calendrical): Option[OffsetDateTime] = {
-      val zdt: ZonedDateTime = calendrical.get(ZonedDateTime.rule)
-      if (zdt != null) Some(zdt.toOffsetDateTime) else None
+      calendrical.get(ZonedDateTime.rule) match {
+        case Some(zdt) => Some(zdt.toOffsetDateTime)
+        case None => None
+      }
     }
 
     private def readResolve: AnyRef = Rule

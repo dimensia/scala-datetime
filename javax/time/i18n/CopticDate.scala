@@ -176,7 +176,7 @@ object CopticDate {
     extends CalendricalRule[CopticDate](classOf[CopticDate], CopticChronology, "CopticDate", CopticChronology.periodDays, null)
     with Serializable {
     protected override def merge(merger: CalendricalMerger): Unit = {
-      val cd: CopticDate = merger.getValue(this)
+      val cd: CopticDate = merger.getValue(this).get
       merger.storeMerged(LocalDate.rule, cd.toLocalDate)
       merger.removeProcessed(this)
     }

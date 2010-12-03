@@ -317,19 +317,22 @@ object LocalDateTime {
     private def readResolve: AnyRef = Rule
 
     protected override def merge(merger: CalendricalMerger): Unit = {
-      val offset: ZoneOffset = merger.getValue(ZoneOffset.rule)
-      if (offset != null) {
-        val dateTime: LocalDateTime = merger.getValue(this)
-        merger.storeMerged(OffsetDateTime.rule, OffsetDateTime.of(dateTime, offset))
-        merger.removeProcessed(this)
-        merger.removeProcessed(ZoneOffset.rule)
+      merger.getValue(ZoneOffset.rule) match {
+        case Some(offset) => {
+          val dateTime: LocalDateTime = merger.getValue(this).get
+          merger.storeMerged(OffsetDateTime.rule, OffsetDateTime.of(dateTime, offset))
+          merger.removeProcessed(this)
+          merger.removeProcessed(ZoneOffset.rule)
+        }
+        case None =>
       }
     }
 
-    protected override def derive(calendrical: Calendrical): Option[LocalDateTime] = {
-      val odt: OffsetDateTime = calendrical.get(OffsetDateTime.rule)
-      if (odt != null) Some(odt.toLocalDateTime) else None
-    }
+    protected override def derive(calendrical: Calendrical): Option[LocalDateTime] =
+      calendrical.get(OffsetDateTime.rule) match {
+        case Some(odt) => Some(odt.toLocalDateTime)
+        case None => None
+      }
   }
 
   /**

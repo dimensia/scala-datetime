@@ -98,9 +98,9 @@ object YearMonth {
     extends CalendricalRule[YearMonth](classOf[YearMonth], ISOChronology, "YearMonth", ISOChronology.periodMonths, null)
     with Serializable {
     protected override def derive(calendrical: Calendrical): Option[YearMonth] = {
-      var year: Int = calendrical.get(ISOChronology.yearRule)
-      var moy: MonthOfYear = calendrical.get(ISOChronology.monthOfYearRule)
-      return if (year != null && moy != null) Some(YearMonth.of(year, moy)) else None
+      var year: Int = calendrical.get(ISOChronology.yearRule).getOrElse(return None)
+      var moy: MonthOfYear = calendrical.get(ISOChronology.monthOfYearRule).getOrElse(return None)
+      return Some(YearMonth.of(year, moy))
     }
 
     private def readResolve: AnyRef = Rule

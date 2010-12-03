@@ -259,13 +259,13 @@ class ZoneRulesBuilder {
    * @param savingAfter the savings amount, not null
    */
   private[zone] class TZRule(var year: Int,
-                             private var month: MonthOfYear,
-                             private var dayOfMonthIndicator: Int,
-                             private var dayOfWeek: DayOfWeek,
-                             private var time: LocalTime,
-                             private var timeEndOfDay: Boolean,
-                             private var timeDefinition: ZoneRulesBuilder.TimeDefinition,
-                             private var savingAmount: Period)
+                             var month: MonthOfYear,
+                             var dayOfMonthIndicator: Int,
+                             var dayOfWeek: DayOfWeek,
+                             var time: LocalTime,
+                             var timeEndOfDay: Boolean,
+                             var timeDefinition: ZoneRulesBuilder.TimeDefinition,
+                             var savingAmount: Period)
     extends Comparable[ZoneRulesBuilder#TZRule] {
     /**
      * Converts this to a transition rule.

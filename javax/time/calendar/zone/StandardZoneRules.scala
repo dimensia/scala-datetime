@@ -85,13 +85,11 @@ object StandardZoneRules {
     }
 
     val ruleSize: Int = in.readByte
-    val rules: Array[ZoneOffsetTransitionRule] = (0 until ruleSize).map(_ => ZoneOffsetTransitionRule.readExternal(in))
+    val rules: Array[ZoneOffsetTransitionRule] = (0 until ruleSize).map(_ => ZoneOffsetTransitionRule.readExternal(in)).toArray
 
     new StandardZoneRules(stdTrans, stdOffsets, savTrans, savOffsets, rules)
   }
-}
 
-private[zone] object StandardZoneRulesBuilder {
   /**
    * @param baseStandardOffset the standard offset to use before legal rules were set, not null
    * @param baseWallOffset the wall offset to use before legal rules were set, not null
@@ -112,7 +110,7 @@ private[zone] object StandardZoneRulesBuilder {
 
     val savingsLocalTransitions: Array[LocalDateTime] = transitionList.flatMap(buildTransitions)
     val wallOffsets: Array[ZoneOffset] = baseWallOffset +: transitionList.map(_.getOffsetAfter)
-    val savingsInstantTransitions: Array[Long] = transitionList.map(_.getInstant.getEpochSeconds)
+    val savingsInstantTransitions: Array[Long] = transitionList.map(_.getInstant.getEpochSeconds).toArray
 
     new StandardZoneRules(standardTransitions, standardOffsets, savingsInstantTransitions, wallOffsets, lastRules.toArray)
   }
@@ -476,7 +474,7 @@ final class StandardZoneRules private(private val standardTransitions: Array[Lon
    * @return independent, modifiable copy of the list of transitions, never null
    */
   def getTransitions: Buffer[ZoneOffsetTransition] = {
-    var list: Buffer[ZoneOffsetTransition] = new Buffer[ZoneOffsetTransition]()
+    var list: Buffer[ZoneOffsetTransition] = Buffer[ZoneOffsetTransition]()
     for (i <- 0 until savingsInstantTransitions.length) {
       var instant: Instant = Instant.ofEpochSeconds(savingsInstantTransitions(i))
       var trans: OffsetDateTime = OffsetDateTime.ofInstant(instant, wallOffsets(i))

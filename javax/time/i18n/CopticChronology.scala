@@ -98,13 +98,13 @@ object CopticChronology extends CopticChronology {
     }
 
     protected def merge(merger: CalendricalMerger): Unit = {
-      val moyVal: Int = merger.getValue(CopticChronology.monthOfYearRule)
-      val domVal: Int = merger.getValue(CopticChronology.dayOfMonthRule)
+      val moyVal: Int = merger.getValue(CopticChronology.monthOfYearRule).get
+      val domVal: Int = merger.getValue(CopticChronology.dayOfMonthRule).get
       if (moyVal != null && domVal != null) {
-        val year: Int = merger.getValue(this)
-        var date: CopticDate = null
-        if (merger.getContext.isStrict) date = CopticDate.of(year, moyVal, domVal)
-        else date = CopticDate.of(year, 1, 1).plusMonths(moyVal).plusMonths(-1).plusDays(domVal).plusDays(-1)
+        val year: Int = merger.getValue(this).get
+        var date: CopticDate =
+          if (merger.getContext.isStrict) CopticDate.of(year, moyVal, domVal)
+          else CopticDate.of(year, 1, 1).plusMonths(moyVal).plusMonths(-1).plusDays(domVal).plusDays(-1)
         merger.storeMerged(LocalDate.rule, date.toLocalDate)
         merger.removeProcessed(this)
         merger.removeProcessed(CopticChronology.monthOfYearRule)
@@ -172,16 +172,12 @@ object CopticChronology extends CopticChronology {
     }
 
     protected def merge(merger: CalendricalMerger): Unit = {
-      val yearVal: Int = merger.getValue(CopticChronology.yearRule)
+      val yearVal: Int = merger.getValue(CopticChronology.yearRule).get
       if (yearVal != null) {
-        val doy: Int = merger.getValue(this)
-        var date: CopticDate = null
-        if (merger.getContext.isStrict) {
-          date = CopticDate.of(yearVal, 1, 1).withDayOfYear(doy)
-        }
-        else {
-          date = CopticDate.of(yearVal, 1, 1).plusDays(doy).plusDays(-1)
-        }
+        val doy: Int = merger.getValue(this).get
+        val date: CopticDate =
+          if (merger.getContext.isStrict) CopticDate.of(yearVal, 1, 1).withDayOfYear(doy)
+          else CopticDate.of(yearVal, 1, 1).plusDays(doy).plusDays(-1)
         merger.storeMerged(LocalDate.rule, date.toLocalDate)
         merger.removeProcessed(this)
         merger.removeProcessed(CopticChronology.yearRule)
