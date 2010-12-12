@@ -47,7 +47,7 @@ object NumberPrinterParser {
   /**
    * Array of 10 to the power of n
    */
-  private[format] val EXCEED_POINTS: Array[Int] = Array[Int](0, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000)
+  private[format] val ExceedPoints: Array[Int] = Array[Int](0, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000)
 }
 
 
@@ -78,7 +78,7 @@ class NumberPrinterParser private[format](rule: DateTimeFieldRule[_], val minWid
   /** { @inheritDoc }*/
   def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = {
     var value: Int = getValue(calendrical)
-    var str: String = (if (value == Int.MinValue) "2147483648" else Integer.toString(Math.abs(value)))
+    var str: String = (if (value == Int.MinValue) "2147483648" else Integer.toString(math.abs(value)))
     if (str.length > maxWidth) {
       throw new CalendricalPrintFieldException(rule, value, maxWidth)
     }
@@ -86,7 +86,7 @@ class NumberPrinterParser private[format](rule: DateTimeFieldRule[_], val minWid
     if (value >= 0) {
       signStyle match {
         case ExceedsPad =>
-          if (minWidth < 10 && value >= NumberPrinterParser.EXCEED_POINTS(minWidth)) {
+          if (minWidth < 10 && value >= NumberPrinterParser.ExceedPoints(minWidth)) {
             appendable.append(symbols.getPositiveSignChar)
           }
         case Always =>
@@ -177,7 +177,7 @@ class NumberPrinterParser private[format](rule: DateTimeFieldRule[_], val minWid
       var pass: Int = 0
       while (pass < 2) {
         {
-          var maxEndPos: Int = Math.min(pos + effMaxWidth, length)
+          var maxEndPos: Int = math.min(pos + effMaxWidth, length)
           while (pos < maxEndPos) {
             var ch: Char = parseText.charAt(({
               pos += 1;
@@ -198,7 +198,7 @@ class NumberPrinterParser private[format](rule: DateTimeFieldRule[_], val minWid
           }
           if (subsequentWidth > 0 && pass == 0) {
             var parseLen: Int = pos - position
-            effMaxWidth = Math.max(minWidth, parseLen - subsequentWidth)
+            effMaxWidth = math.max(minWidth, parseLen - subsequentWidth)
             pos = position
             total = 0
           }

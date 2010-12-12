@@ -31,9 +31,7 @@
  */
 package javax.time.calendar.format
 
-import java.text.SimpleDateFormat
 import java.util.Locale
-import javax.time.calendar.DateTimeFieldRule
 import javax.time.calendar.ISOChronology
 import javax.time.calendar.format.DateTimeFormatterBuilder.FormatStyle
 import javax.time.calendar.format.DateTimeFormatterBuilder.SignStyle
@@ -59,10 +57,10 @@ object DateTimeFormatters {
    *
    * @return the ISO date formatter, never null
    */
-  def basicIsoDate: DateTimeFormatter = BASIC_ISO_DATE
+  def basicIsoDate: DateTimeFormatter = BasicISODate
 
   /**Singleton date formatter. */
-  private val RFC_1123_DATE_TIME: DateTimeFormatter = {
+  private val RFC1123DateTime: DateTimeFormatter = {
     (new DateTimeFormatterBuilder)
       .appendText(ISOChronology.dayOfWeekRule, TextStyle.Short)
       .appendLiteral(", ")
@@ -84,7 +82,7 @@ object DateTimeFormatters {
   }
 
   /**Singleton date formatter. */
-  private val ISO_LOCAL_TIME: DateTimeFormatter = {
+  private val ISOLocalTime: DateTimeFormatter = {
     (new DateTimeFormatterBuilder)
       .appendValue(ISOChronology.hourOfDayRule, 2)
       .appendLiteral(':')
@@ -118,7 +116,7 @@ object DateTimeFormatters {
    *
    * @return the ISO date formatter, never null
    */
-  def isoDateTime: DateTimeFormatter = ISO_DATE_TIME
+  def isoDateTime: DateTimeFormatter = ISODateTime
 
   /**
    * Returns the RFC-1123 date-time formatter.
@@ -130,12 +128,12 @@ object DateTimeFormatters {
    *
    * @return the ISO date formatter, never null
    */
-  def rfc1123: DateTimeFormatter = RFC_1123_DATE_TIME
+  def rfc1123: DateTimeFormatter = RFC1123DateTime
 
   /**Singleton date formatter. */
-  private val ISO_ZONED_DATE_TIME: DateTimeFormatter = {
+  private val ISOZonedDateTime: DateTimeFormatter = {
     (new DateTimeFormatterBuilder)
-      .append(ISO_LOCAL_DATE_TIME)
+      .append(ISOLocalDateTime)
       .appendOffsetId
       .appendLiteral('[')
       .appendZoneId
@@ -178,7 +176,7 @@ object DateTimeFormatters {
    *
    * @return the ISO date formatter, never null
    */
-  def isoOffsetDateTime: DateTimeFormatter = ISO_OFFSET_DATE_TIME
+  def isoOffsetDateTime: DateTimeFormatter = ISOOffsetDateTime
 
   /**
    * Returns a locale specific date format, which is typically of long length.
@@ -331,7 +329,7 @@ object DateTimeFormatters {
    *
    * @return the ISO date formatter, never null
    */
-  def isoTime: DateTimeFormatter = ISO_TIME
+  def isoTime: DateTimeFormatter = ISOTime
 
   /**
    * Returns a locale specific date-time format of medium length.
@@ -370,19 +368,19 @@ object DateTimeFormatters {
   }
 
   /**Singleton date formatter. */
-  private val ISO_OFFSET_TIME: DateTimeFormatter = {
+  private val ISOOffsetTime: DateTimeFormatter = {
     (new DateTimeFormatterBuilder)
       .parseCaseInsensitive
-      .append(ISO_LOCAL_TIME)
+      .append(ISOLocalTime)
       .appendOffsetId
       .toFormatter
   }
 
   /**Singleton date formatter. */
-  private val ISO_DATE: DateTimeFormatter = {
+  private val ISODate: DateTimeFormatter = {
     (new DateTimeFormatterBuilder)
       .parseCaseInsensitive
-      .append(ISO_LOCAL_DATE)
+      .append(ISOLocalDate)
       .optionalStart
       .appendOffsetId
       .optionalStart
@@ -424,19 +422,19 @@ object DateTimeFormatters {
    *
    * @return the ISO time formatter, never null
    */
-  def isoOffsetTime: DateTimeFormatter = ISO_OFFSET_TIME
+  def isoOffsetTime: DateTimeFormatter = ISOOffsetTime
 
   /**Singleton date formatter. */
-  private val ISO_OFFSET_DATE: DateTimeFormatter = {
+  private val ISOOffsetDate: DateTimeFormatter = {
     (new DateTimeFormatterBuilder)
       .parseCaseInsensitive
-      .append(ISO_LOCAL_DATE)
+      .append(ISOLocalDate)
       .appendOffsetId
       .toFormatter
   }
 
   /**Singleton date formatter. */
-  private val ISO_LOCAL_DATE: DateTimeFormatter = {
+  private val ISOLocalDate: DateTimeFormatter = {
     (new DateTimeFormatterBuilder)
       .appendValue(ISOChronology.yearRule, 4, 10, SignStyle.ExceedsPad)
       .appendLiteral('-')
@@ -458,7 +456,7 @@ object DateTimeFormatters {
    *
    * @return the ISO date formatter, never null
    */
-  def isoLocalDate: DateTimeFormatter = ISO_LOCAL_DATE
+  def isoLocalDate: DateTimeFormatter = ISOLocalDate
 
   /**
    * Returns a locale specific time format.
@@ -529,9 +527,9 @@ object DateTimeFormatters {
   def shortTime(locale: Locale): DateTimeFormatter = time(FormatStyle.Short, locale)
 
   /**Singleton date formatter. */
-  private val ISO_DATE_TIME: DateTimeFormatter = {
+  private val ISODateTime: DateTimeFormatter = {
     (new DateTimeFormatterBuilder)
-      .append(ISO_LOCAL_DATE_TIME)
+      .append(ISOLocalDateTime)
       .optionalStart
       .appendOffsetId
       .optionalStart
@@ -557,7 +555,7 @@ object DateTimeFormatters {
    *
    * @return the ISO date formatter, never null
    */
-  def isoDate: DateTimeFormatter = ISO_DATE
+  def isoDate: DateTimeFormatter = ISODate
 
   /**
    * Returns a locale specific date-time format, which is typically of long length.
@@ -575,18 +573,18 @@ object DateTimeFormatters {
   def longDateTime(locale: Locale): DateTimeFormatter = dateTime(FormatStyle.Long, locale)
 
   /**Singleton date formatter. */
-  private val ISO_LOCAL_DATE_TIME: DateTimeFormatter = {
+  private val ISOLocalDateTime: DateTimeFormatter = {
     (new DateTimeFormatterBuilder)
       .parseCaseInsensitive
-      .append(ISO_LOCAL_DATE)
+      .append(ISOLocalDate)
       .appendLiteral('T')
-      .append(ISO_LOCAL_TIME)
+      .append(ISOLocalTime)
       .toFormatter
   }
   /**Singleton date formatter. */
-  private val ISO_OFFSET_DATE_TIME: DateTimeFormatter = {
+  private val ISOOffsetDateTime: DateTimeFormatter = {
     (new DateTimeFormatterBuilder)
-      .append(ISO_LOCAL_DATE_TIME)
+      .append(ISOLocalDateTime)
       .appendOffsetId
       .toFormatter
   }
@@ -604,7 +602,7 @@ object DateTimeFormatters {
    *
    * @return the ISO time formatter, never null
    */
-  def isoLocalTime: DateTimeFormatter = ISO_LOCAL_TIME
+  def isoLocalTime: DateTimeFormatter = ISOLocalTime
 
   /**
    * Returns a locale specific time format, which is typically of long length.
@@ -636,7 +634,7 @@ object DateTimeFormatters {
    *
    * @return the ISO date formatter, never null
    */
-  def isoOffsetDate: DateTimeFormatter = ISO_OFFSET_DATE
+  def isoOffsetDate: DateTimeFormatter = ISOOffsetDate
 
   /**
    * Returns a locale specific date format of medium length.
@@ -679,7 +677,7 @@ object DateTimeFormatters {
    *
    * @return the ISO ordinal date formatter, never null
    */
-  def isoOrdinalDate: DateTimeFormatter = ISO_ORDINAL_DATE
+  def isoOrdinalDate: DateTimeFormatter = ISOOrdinalDate
 
   /**
    * Returns a locale specific date format.
@@ -701,9 +699,9 @@ object DateTimeFormatters {
   }
 
   /**Singleton date formatter. */
-  private val ISO_ORDINAL_DATE: DateTimeFormatter = null
+  private val ISOOrdinalDate: DateTimeFormatter = null
   /**Singleton date formatter. */
-  private val BASIC_ISO_DATE: DateTimeFormatter = {
+  private val BasicISODate: DateTimeFormatter = {
     (new DateTimeFormatterBuilder)
       .parseCaseInsensitive
       .appendValue(ISOChronology.yearRule, 4)
@@ -748,7 +746,7 @@ object DateTimeFormatters {
    *
    * @return the ISO week date formatter, never null
    */
-  def isoWeekDate: DateTimeFormatter = ISO_WEEK_DATE
+  def isoWeekDate: DateTimeFormatter = ISOWeekDate
 
   /**
    * Returns a locale specific time format of medium length.
@@ -766,10 +764,10 @@ object DateTimeFormatters {
   def mediumTime(locale: Locale): DateTimeFormatter = time(FormatStyle.Medium, locale)
 
   /**Singleton date formatter. */
-  private val ISO_TIME: DateTimeFormatter = {
+  private val ISOTime: DateTimeFormatter = {
     (new DateTimeFormatterBuilder)
       .parseCaseInsensitive
-      .append(ISO_LOCAL_TIME)
+      .append(ISOLocalTime)
       .optionalStart
       .appendOffsetId
       .optionalStart
@@ -811,7 +809,7 @@ object DateTimeFormatters {
    *
    * @return the ISO date formatter, never null
    */
-  def isoLocalDateTime: DateTimeFormatter = ISO_LOCAL_DATE_TIME
+  def isoLocalDateTime: DateTimeFormatter = ISOLocalDateTime
 
   /**
    * Returns the ISO date formatter that prints/parses an offset date with a zone,
@@ -833,10 +831,10 @@ object DateTimeFormatters {
    *
    * @return the ISO date formatter, never null
    */
-  def isoZonedDateTime: DateTimeFormatter = ISO_ZONED_DATE_TIME
+  def isoZonedDateTime: DateTimeFormatter = ISOZonedDateTime
 
   /**Singleton date formatter. */
-  private val ISO_WEEK_DATE: DateTimeFormatter = {
+  private val ISOWeekDate: DateTimeFormatter = {
     (new DateTimeFormatterBuilder)
       .parseCaseInsensitive
       .appendValue(ISOChronology.weekBasedYearRule, 4, 10, SignStyle.ExceedsPad)

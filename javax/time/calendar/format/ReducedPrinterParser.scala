@@ -61,7 +61,7 @@ final class ReducedPrinterParser private[format](rule: DateTimeFieldRule[_], wid
   if (baseValue > rule.getMaximumValue) {
     throw new IllegalArgumentException("The base value must be within the range of the field")
   }
-  this.range = NumberPrinterParser.EXCEED_POINTS(width)
+  this.range = NumberPrinterParser.ExceedPoints(width)
   if (((baseValue.toLong) + range) > Int.MaxValue) {
     throw new CalendricalException("Unable to add printer-parser as the range exceeds the capacity of an int")
   }

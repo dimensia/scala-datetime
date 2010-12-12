@@ -47,7 +47,7 @@ import javax.time.calendar.Chronology
  */
 object DateTimeFormatterProviderImpl {
   /**Cache of formatters. */
-  private val FORMATTER_CACHE: ConcurrentMap[String, AnyRef] = new ConcurrentHashMap[String, AnyRef](16, 0.75f, 2)
+  private val FormatterCache: ConcurrentMap[String, AnyRef] = new ConcurrentHashMap[String, AnyRef](16, 0.75f, 2)
 }
 
 class DateTimeFormatterProviderImpl extends DateTimeFormatterProvider {
@@ -67,7 +67,7 @@ class DateTimeFormatterProviderImpl extends DateTimeFormatterProvider {
       throw new IllegalArgumentException("Date and Time style must not both be null")
     }
     var key: String = chronology.getName + '|' + locale.toString + '|' + dateStyle + timeStyle
-    var cached: AnyRef = FORMATTER_CACHE.get(key)
+    var cached: AnyRef = FormatterCache.get(key)
     if (cached != null) {
       if (cached.equals("")) {
         throw new IllegalArgumentException("Unable to convert DateFormat to DateTimeFormatter")
@@ -89,10 +89,10 @@ class DateTimeFormatterProviderImpl extends DateTimeFormatterProvider {
     if (dateFormat.isInstanceOf[SimpleDateFormat]) {
       var pattern: String = (dateFormat.asInstanceOf[SimpleDateFormat]).toPattern
       var formatter: DateTimeFormatter = (new DateTimeFormatterBuilder).appendPattern(pattern).toFormatter(locale)
-      FORMATTER_CACHE.putIfAbsent(key, formatter)
+      FormatterCache.putIfAbsent(key, formatter)
       return formatter
     }
-    FORMATTER_CACHE.putIfAbsent(key, "")
+    FormatterCache.putIfAbsent(key, "")
     throw new IllegalArgumentException("Unable to convert DateFormat to DateTimeFormatter")
   }
 
