@@ -64,6 +64,23 @@ import javax.time.MathUtils
 object Period {
 
   /**
+   * A constant for a period of zero.
+   */
+  object Zero extends Period(0, 0, 0, 0, 0, 0, 0)
+
+  /**
+   * The ISO period units, trusted to not be altered.
+   */
+  private val Units: Array[PeriodUnit] = Array[PeriodUnit](
+    ISOChronology.periodYears,
+    ISOChronology.periodMonths,
+    ISOChronology.periodDays,
+    ISOChronology.periodHours,
+    ISOChronology.periodMinutes,
+    ISOChronology.periodSeconds,
+    ISOChronology.periodNanos)
+
+  /**
    * Obtains a   { @code Period } from time-based fields.
    * <p>
    * This creates an instance based on hours, minutes, seconds and nanoseconds.
@@ -74,14 +91,9 @@ object Period {
    * @param nanos the amount of nanos, may be negative
    * @return the period, never null
    */
-  def ofTimeFields(hours: Int, minutes: Int, seconds: Int, nanos: Long): Period = {
+  def ofTimeFields(hours: Int, minutes: Int, seconds: Int, nanos: Long): Period =
     of(0, 0, 0, hours, minutes, seconds, nanos)
-  }
 
-  /**
-   * The ISO period units, trusted to not be altered.
-   */
-  private val UNITS: Array[PeriodUnit] = Array[PeriodUnit](ISOChronology.periodYears, ISOChronology.periodMonths, ISOChronology.periodDays, ISOChronology.periodHours, ISOChronology.periodMinutes, ISOChronology.periodSeconds, ISOChronology.periodNanos)
   /**
    * Obtains a   { @code Period } consisting of the number of years between two dates.
    * <p>
@@ -120,7 +132,7 @@ object Period {
    * @return the period, never null
    */
   def ofYears(years: Int): Period = {
-    if (years == 0) ZERO
+    if (years == 0) Zero
     else new Period(years, 0, 0, 0, 0, 0, 0)
   }
 
@@ -131,7 +143,7 @@ object Period {
    * @return the period, never null
    */
   def ofMinutes(minutes: Int): Period = {
-    if (minutes == 0) ZERO
+    if (minutes == 0) Zero
     else new Period(0, 0, 0, 0, minutes, 0, 0)
   }
 
@@ -151,7 +163,7 @@ object Period {
    * @return the period, never null
    */
   def of(years: Int, months: Int, days: Int, hours: Int, minutes: Int, seconds: Int, nanos: Long): Period = {
-    if ((years | months | days | hours | minutes | seconds | nanos) == 0) ZERO
+    if ((years | months | days | hours | minutes | seconds | nanos) == 0) Zero
     else new Period(years, months, days, hours, minutes, seconds, nanos)
   }
 
@@ -162,7 +174,7 @@ object Period {
    * @return the period, never null
    */
   def ofDays(days: Int): Period = {
-    if (days == 0) ZERO
+    if (days == 0) Zero
     else new Period(0, 0, days, 0, 0, 0, 0)
   }
 
@@ -173,7 +185,7 @@ object Period {
    * @return the period, never null
    */
   def ofSeconds(seconds: Int): Period = {
-    if (seconds == 0) ZERO
+    if (seconds == 0) Zero
     else new Period(0, 0, 0, 0, 0, seconds, 0)
   }
 
@@ -196,7 +208,7 @@ object Period {
       return periodProvider.asInstanceOf[Period]
     }
     var periodFields: PeriodFields = PeriodFields.of(periodProvider)
-    periodFields = periodFields.toEquivalent(UNITS)
+    periodFields = periodFields.toEquivalent(Units)
     val years: Int = periodFields.getAmountInt(ISOChronology.periodYears)
     val months: Int = periodFields.getAmountInt(ISOChronology.periodMonths)
     val days: Int = periodFields.getAmountInt(ISOChronology.periodDays)
@@ -222,7 +234,7 @@ object Period {
   def of(duration: Duration): Period = {
     PeriodFields.checkNotNull(duration, "Duration must not be null")
     if (duration.isZero) {
-      return ZERO
+      return Zero
     }
     val hours: Int = MathUtils.safeToInt(duration.getSeconds / 3600)
     val amount: Int = (duration.getSeconds.asInstanceOf[Int] % 3600)
@@ -263,7 +275,7 @@ object Period {
    * @return the period, never null
    */
   def ofHours(hours: Int): Period = {
-    if (hours == 0) ZERO
+    if (hours == 0) Zero
     else new Period(0, 0, 0, hours, 0, 0, 0)
   }
 
@@ -274,7 +286,7 @@ object Period {
    * @return the period, never null
    */
   def ofMonths(months: Int): Period = {
-    if (months == 0) ZERO
+    if (months == 0) Zero
     else new Period(0, months, 0, 0, 0, 0, 0)
   }
 
@@ -285,7 +297,7 @@ object Period {
    * @return the period, never null
    */
   def ofNanos(nanos: Long): Period = {
-    if (nanos == 0) ZERO
+    if (nanos == 0) Zero
     else new Period(0, 0, 0, 0, 0, 0, nanos)
   }
 
@@ -398,11 +410,6 @@ object Period {
   }
 
   /**
-   * A constant for a period of zero.
-   */
-  object ZERO extends Period(0, 0, 0, 0, 0, 0, 0)
-
-  /**
    * Obtains a   { @code Period } consisting of the number of months between two dates.
    * <p>
    * The start date is included, but the end date is not. Only whole months count.
@@ -471,9 +478,8 @@ object Period {
    * @param seconds the amount of seconds, may be negative
    * @return the period, never null
    */
-  def of(years: Int, months: Int, days: Int, hours: Int, minutes: Int, seconds: Int): Period = {
+  def of(years: Int, months: Int, days: Int, hours: Int, minutes: Int, seconds: Int): Period =
     of(years, months, days, hours, minutes, seconds, 0)
-  }
 }
 
 /**
@@ -534,7 +540,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * @return the resolved instance
    */
   private def readResolve: AnyRef = {
-    if ((years | months | days | hours | minutes | seconds | nanos) == 0) ZERO
+    if ((years | months | days | hours | minutes | seconds | nanos) == 0) Zero
     else this
   }
 
@@ -569,7 +575,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * @return the total number of hours
    */
   def totalHoursWith24HourDays: Long = {
-    if (this == ZERO) 0
+    if (this == Zero) 0
     else days * 24L + hours + (minutes + (seconds + (nanos / 1000000000L)) / 60L) / 60L
   }
 
@@ -601,7 +607,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
       ((minutes << 12) | (minutes >>> 20)) ^
       ((days << 6) | (days >>> 26)) ^
       seconds ^
-      ((nanos.asInstanceOf[Int]) + 37)
+      ((nanos.toInt) + 37)
   }
 
   /**
@@ -742,7 +748,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * @return the total number of seconds
    */
   def totalSeconds: Long = {
-    if (this == ZERO) 0
+    if (this == Zero) 0
     else (hours * 60L + minutes) * 60L + seconds + nanos / 1000000000L
   }
 
@@ -795,8 +801,15 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * @throws ArithmeticException if the capacity of any field is exceeded
    */
   def multipliedBy(scalar: Int): Period = {
-    if (this == ZERO || scalar == 1) this
-    else of(MathUtils.safeMultiply(years, scalar), MathUtils.safeMultiply(months, scalar), MathUtils.safeMultiply(days, scalar), MathUtils.safeMultiply(hours, scalar), MathUtils.safeMultiply(minutes, scalar), MathUtils.safeMultiply(seconds, scalar), MathUtils.safeMultiply(nanos, scalar))
+    if (this == Zero || scalar == 1) this
+    else of(
+      MathUtils.safeMultiply(years, scalar),
+      MathUtils.safeMultiply(months, scalar),
+      MathUtils.safeMultiply(days, scalar),
+      MathUtils.safeMultiply(hours, scalar),
+      MathUtils.safeMultiply(minutes, scalar),
+      MathUtils.safeMultiply(seconds, scalar),
+      MathUtils.safeMultiply(nanos, scalar))
   }
 
   /**
@@ -843,7 +856,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    *
    * @return true if this period is zero-length
    */
-  def isZero: Boolean = (this == ZERO)
+  def isZero: Boolean = (this == Zero)
 
   /**
    * Gets the amount of nanoseconds of this period safely converted
@@ -871,7 +884,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * @throws ArithmeticException if the capacity of a   { @code long } is exceeded
    */
   def totalNanos: Long = {
-    if (this == ZERO) return 0
+    if (this == Zero) return 0
     val secs: Long = ((hours * 60L + minutes) * 60L + seconds)
     val otherNanos: Long = MathUtils.safeMultiply(secs, 1000000000L)
     return MathUtils.safeAdd(otherNanos, nanos)
@@ -909,8 +922,8 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * @throws ArithmeticException if the capacity of any field is exceeded
    */
   def normalizedWith24HourDays: Period = {
-    if (this == ZERO) {
-      return ZERO
+    if (this == Zero) {
+      return Zero
     }
     var years: Int = this.years
     var months: Int = this.months
@@ -997,7 +1010,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * @return the total number of minutes
    */
   def totalMinutesWith24HourDays: Long = {
-    if (this == ZERO) 0
+    if (this == Zero) 0
     else (days * 24L + hours) * 60L + minutes + (seconds + (nanos / 1000000000L)) / 60L
   }
 
@@ -1034,7 +1047,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * @throws ArithmeticException if the capacity of a   { @code long } is exceeded
    */
   def totalNanosWith24HourDays: Long = {
-    if (this == ZERO) return 0
+    if (this == Zero) return 0
     val secs: Long = (((days * 24L + hours) * 60L + minutes) * 60L + seconds)
     val otherNanos: Long = MathUtils.safeMultiply(secs, 1000000000L)
     return MathUtils.safeAdd(otherNanos, nanos)
@@ -1048,7 +1061,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
   override def toString: String = {
     var str: String = string
     if (str == null) {
-      if (this == ZERO) {
+      if (this == Zero) {
         str = "PT0S"
       }
       else {
@@ -1212,7 +1225,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * @return the total number of days
    */
   def totalDaysWith24HourDays: Long = {
-    if (this == ZERO) 0
+    if (this == Zero) 0
     else days + (hours + (minutes + (seconds + (nanos / 1000000000L)) / 60L) / 60L) / 24L
   }
 
@@ -1276,7 +1289,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * @return the total number of hours
    */
   def totalHours: Long = {
-    if (this == ZERO) 0
+    if (this == Zero) 0
     else hours + (minutes + (seconds + (nanos / 1000000000L)) / 60L) / 60L
   }
 
@@ -1311,7 +1324,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * @throws ArithmeticException if the capacity of any field is exceeded
    */
   def normalized: Period = {
-    if (this == ZERO) return ZERO
+    if (this == Zero) return Zero
     var years: Int = this.years
     var months: Int = this.months
     if (months >= 12) {
@@ -1344,7 +1357,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    */
   def dividedBy(divisor: Int): Period = {
     if (divisor == 0) throw new ArithmeticException("Cannot divide by zero")
-    else if (this == ZERO || divisor == 1) this
+    else if (this == Zero || divisor == 1) this
     else of(years / divisor, months / divisor, days / divisor, hours / divisor, minutes / divisor, seconds / divisor, nanos / divisor)
   }
 
@@ -1418,7 +1431,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * @return the total number of seconds
    */
   def totalSecondsWith24HourDays: Long = {
-    if (this == ZERO) 0
+    if (this == Zero) 0
     else ((days * 24L + hours) * 60L + minutes) * 60L + seconds + nanos / 1000000000L
   }
 
@@ -1491,7 +1504,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * @return the total number of minutes
    */
   def totalMinutes: Long = {
-    if (this == ZERO) 0
+    if (this == Zero) 0
     else hours * 60L + minutes + (seconds + (nanos / 1000000000L)) / 60L
   }
 
@@ -1522,6 +1535,13 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    */
   def plus(periodProvider: PeriodProvider): Period = {
     val other: Period = of(periodProvider)
-    of(MathUtils.safeAdd(years, other.years), MathUtils.safeAdd(months, other.months), MathUtils.safeAdd(days, other.days), MathUtils.safeAdd(hours, other.hours), MathUtils.safeAdd(minutes, other.minutes), MathUtils.safeAdd(seconds, other.seconds), MathUtils.safeAdd(nanos, other.nanos))
+    of(
+      MathUtils.safeAdd(years, other.years),
+      MathUtils.safeAdd(months, other.months),
+      MathUtils.safeAdd(days, other.days),
+      MathUtils.safeAdd(hours, other.hours),
+      MathUtils.safeAdd(minutes, other.minutes),
+      MathUtils.safeAdd(seconds, other.seconds),
+      MathUtils.safeAdd(nanos, other.nanos))
   }
 }

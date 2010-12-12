@@ -51,11 +51,11 @@ object PeriodParser extends PeriodParser{
   /**
    * The standard string representing a zero period.
    */
-  private val ZERO: String = "PT0S"
+  private val Zero: String = "PT0S"
   /**
    * Used to validate the correct sequence of tokens.
    */
-  private val TOKEN_SEQUENCE: String = "PYMDTHMS"
+  private val TokenSequence: String = "PYMDTHMS"
 
   /**
    * Parse values container created for each parse
@@ -211,8 +211,8 @@ class PeriodParser protected {
    */
   private[calendar] def parse(text: String): Period = {
     val s: String = text.toUpperCase.replace(',', '.')
-    if (Period.ZERO == s) {
-      return Period.ZERO
+    if (Period.Zero == s) {
+      return Period.Zero
     }
     if (s.length < 3 || s.charAt(0) != 'P') {
       throw new CalendricalParseException("Period could not be parsed: " + text, text, 0)
@@ -236,12 +236,12 @@ class PeriodParser protected {
 
     var i: Int = 0
     while (i < chars.length) {
-      if (tokenPos >= PeriodParser.TOKEN_SEQUENCE.length) {
+      if (tokenPos >= PeriodParser.TokenSequence.length) {
         throw new CalendricalParseException("Period could not be parsed, characters after last 'S': " + text, text, i)
       }
       var c: Char = chars(i)
       if ((c < '0' || c > '9') && c != '-' && c != '.') {
-        tokenPos = PeriodParser.TOKEN_SEQUENCE.indexOf(c, tokenPos)
+        tokenPos = PeriodParser.TokenSequence.indexOf(c, tokenPos)
         if (tokenPos < 0) {
           throw new CalendricalParseException("Period could not be parsed, invalid character '" + c + "': " + text, text, i)
         }

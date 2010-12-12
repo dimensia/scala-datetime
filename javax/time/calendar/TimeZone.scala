@@ -168,7 +168,7 @@ object TimeZone {
   /**
    * The group:region#version ID pattern.
    */
-  private val PATTERN: Pattern = Pattern.compile("(([A-Za-z0-9._-]+)[:])?([A-Za-z0-9%@~/+._-]+)([#]([A-Za-z0-9._-]+))?")
+  private val Pattern: Pattern = Pattern.compile("(([A-Za-z0-9._-]+)[:])?([A-Za-z0-9%@~/+._-]+)([#]([A-Za-z0-9._-]+))?")
 
   /**
    * A map of zone overrides to enable the older US time-zone names to be used.
@@ -206,7 +206,7 @@ object TimeZone {
    * </ul>
    * The map is unmodifiable.
    */
-  var OLD_IDS_PRE_2005: Map[String, String] = null //FIXME: Should be val
+  var OldIDsPre2005: Map[String, String] = null //FIXME: Should be val
 
   /**
    * A map of zone overrides to enable the older US time-zone names to be used.
@@ -244,7 +244,7 @@ object TimeZone {
    * </ul>
    * The map is unmodifiable.
    */
-  var OLD_IDS_POST_2005: Map[String, String] = null //FIXME: should be val
+  var OldIDsPost2005: Map[String, String] = null //FIXME: should be val
 
   //FIXME!
   var base: Map[String, String] = new HashMap[String, String]
@@ -277,12 +277,12 @@ object TimeZone {
   pre.put("EST", "America/Indianapolis")
   pre.put("MST", "America/Phoenix")
   pre.put("HST", "Pacific/Honolulu")
-  OLD_IDS_PRE_2005 = Collections.unmodifiableMap(pre)
+  OldIDsPre2005 = Collections.unmodifiableMap(pre)
   var post: Map[String, String] = new HashMap[String, String](base)
   post.put("EST", "UTC-05:00")
   post.put("MST", "UTC-07:00")
   post.put("HST", "UTC-10:00")
-  OLD_IDS_POST_2005 = Collections.unmodifiableMap(post)
+  OldIDsPost2005 = Collections.unmodifiableMap(post)
 
   /**
    * The time-zone offset for UTC, with an id of 'UTC'.
@@ -526,7 +526,7 @@ object TimeZone {
         }
       }
     }
-    var matcher: Matcher = PATTERN.matcher(zoneID)
+    var matcher: Matcher = Pattern.matcher(zoneID)
     if (matcher.matches == false) {
       throw new CalendricalException("Invalid time-zone ID: " + zoneID)
     }

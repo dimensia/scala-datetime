@@ -68,12 +68,12 @@ object Year {
   /**
    * Constant for the minimum year on the proleptic ISO calendar system.
    */
-  val MIN_YEAR: Int = Integer.MIN_VALUE + 2
+  val MinYear: Int = Int.MinValue + 2
   /**
    * Constant for the maximum year on the proleptic ISO calendar system,
    * which is the same as the maximum for year of era.
    */
-  val MAX_YEAR: Int = Integer.MAX_VALUE
+  val MaxYear: Int = Int.MaxValue
   /**
    * Obtains the current year from the specified clock.
    * <p>

@@ -180,7 +180,7 @@ object OffsetDate {
     val instant: Instant = Instant.of(instantProvider)
     ISOChronology.checkNotNull(offset, "ZoneOffset must not be null")
     val epochSecs: Long = instant.getEpochSeconds + offset.getAmountSeconds
-    val yearZeroDays: Long = MathUtils.floorDiv(epochSecs, ISOChronology.SECONDS_PER_DAY) + ISOChronology.DAYS_0000_TO_1970
+    val yearZeroDays: Long = MathUtils.floorDiv(epochSecs, ISOChronology.SecondsPerDay) + ISOChronology.Days0000To1970
     val date: LocalDate = LocalDate.ofYearZeroDays(yearZeroDays)
     new OffsetDate(date, offset)
   }
@@ -808,7 +808,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * @return the zoned date-time formed from this date and the earliest valid time for the zone, never null
    */
   def atStartOfDayInZone(zone: TimeZone): ZonedDateTime = {
-    ZonedDateTime.of(this, LocalTime.MIDNIGHT, zone, ZoneResolvers.postGapPreOverlap)
+    ZonedDateTime.of(this, LocalTime.Midnight, zone, ZoneResolvers.postGapPreOverlap)
   }
 
   /**
@@ -1003,7 +1003,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    *
    * @return the offset date-time formed from this date and the time of midnight, never null
    */
-  def atMidnight: OffsetDateTime = OffsetDateTime.of(this, LocalTime.MIDNIGHT, getOffset)
+  def atMidnight: OffsetDateTime = OffsetDateTime.of(this, LocalTime.Midnight, getOffset)
 
   /**
    * Returns a copy of this OffsetDate with a different zone offset.

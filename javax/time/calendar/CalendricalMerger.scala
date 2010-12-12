@@ -116,7 +116,7 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
   /**
    * The overflow period to be added to the resultant date/time.
    */
-  private var overflow: Period = Period.ZERO
+  private var overflow: Period = Period.Zero
   /**
    * Current iterator, updated when the state of the map is changed.
    */

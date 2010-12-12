@@ -74,10 +74,28 @@ import javax.time.calendar.OffsetDateTime
  * @author Stephen Colebourne
  */
 object ZoneRulesGroup {
+
+  /**
+   * The zone IDs.
+   * Should not be empty.
+   */
+  private val IDs: Map[String, AnyRef] = new ConcurrentHashMap[String, AnyRef](100, 0.75f, 4)
+
+  /**
+   * Version ID pattern.
+   */
+  private val PatternVersion: Pattern = Pattern.compile("[A-Za-z0-9._-]+")
+  /**
+   * The zone rule groups.
+   * Should not be empty.
+   */
+  private val Groups: ConcurrentMap[String, ZoneRulesGroup] = new ConcurrentHashMap[String, ZoneRulesGroup](16, 0.75f, 2)
+
   /**
    * Group ID pattern.
    */
-  private val PATTERN_GROUP: Pattern = Pattern.compile("[A-Za-z0-9._-]+")
+  private val PatternGroup: Pattern = Pattern.compile("[A-Za-z0-9._-]+")
+
   /**
    * Checks if the group ID is valid.
    * <p>
@@ -88,7 +106,7 @@ object ZoneRulesGroup {
    */
   def isValidGroupID(groupID: String): Boolean = {
     if (groupID == null) false
-    else GROUPS.containsKey(groupID)
+    else Groups.containsKey(groupID)
   }
 
   /**
@@ -107,10 +125,10 @@ object ZoneRulesGroup {
    * @throws CalendricalException if the provider is already registered
    */
   def registerProvider(provider: ZoneRulesDataProvider): ZoneRulesGroup = {
-    var group: ZoneRulesGroup = GROUPS.get(provider.getGroupID)
+    var group: ZoneRulesGroup = Groups.get(provider.getGroupID)
     if (group == null) {
       group = new ZoneRulesGroup(provider.getGroupID)
-      GROUPS.put(provider.getGroupID, group)
+      Groups.put(provider.getGroupID, group)
     }
     group.registerProvider0(provider)
     return group
@@ -128,7 +146,7 @@ object ZoneRulesGroup {
    * @return an unsorted, independent, modifiable list of available groups, never null
    */
   def getAvailableGroups: List[ZoneRulesGroup] = {
-    return new ArrayList[ZoneRulesGroup](GROUPS.values)
+    return new ArrayList[ZoneRulesGroup](Groups.values)
   }
 
   /**
@@ -146,9 +164,9 @@ object ZoneRulesGroup {
    */
   def getGroup(groupID: String): ZoneRulesGroup = {
     ZoneRules.checkNotNull(groupID, "Group ID must not be null")
-    var group: ZoneRulesGroup = GROUPS.get(groupID)
+    var group: ZoneRulesGroup = Groups.get(groupID)
     if (group == null) {
-      if (GROUPS.isEmpty) {
+      if (Groups.isEmpty) {
         throw new CalendricalException("Unknown time-zone group '" + groupID + "', no time-zone data files registered")
       }
       throw new CalendricalException("Unknown time-zone group '" + groupID + '\'')
@@ -156,15 +174,6 @@ object ZoneRulesGroup {
     return group
   }
 
-  /**
-   * Version ID pattern.
-   */
-  private val PATTERN_VERSION: Pattern = Pattern.compile("[A-Za-z0-9._-]+")
-  /**
-   * The zone rule groups.
-   * Should not be empty.
-   */
-  private val GROUPS: ConcurrentMap[String, ZoneRulesGroup] = new ConcurrentHashMap[String, ZoneRulesGroup](16, 0.75f, 2)
   /**
    * Gets a view of the complete set of parsable group:region IDs.
    * <p>
@@ -189,13 +198,7 @@ object ZoneRulesGroup {
    *
    * @return an unmodifiable set of parsable group:region IDs, never null
    */
-  def getParsableIDs: Set[String] = Collections.unmodifiableSet(IDS.keySet)
-
-  /**
-   * The zone IDs.
-   * Should not be empty.
-   */
-  private val IDS: Map[String, AnyRef] = new ConcurrentHashMap[String, AnyRef](100, 0.75f, 4)
+  def getParsableIDs: Set[String] = Collections.unmodifiableSet(IDs.keySet)
 }
 
 /**
@@ -209,7 +212,7 @@ final class ZoneRulesGroup(val groupID: String) {
   import ZoneRulesGroup._
 
   ZoneRules.checkNotNull(groupID, "Group ID must not be null")
-  if (PATTERN_GROUP.matcher(groupID).matches == false) {
+  if (PatternGroup.matcher(groupID).matches == false) {
     throw new CalendricalException("Invalid group ID '" + groupID + "', must match regex [A-Za-z0-9._-]+")
   }
 
@@ -346,7 +349,7 @@ final class ZoneRulesGroup(val groupID: String) {
     for (version <- provider.getVersions) {
       var versionID: String = version.getVersionID
       ZoneRules.checkNotNull(versionID, "Version ID must not be null")
-      if (PATTERN_VERSION.matcher(versionID).matches == false) {
+      if (PatternVersion.matcher(versionID).matches == false) {
         throw new CalendricalException("Invalid version ID '" + versionID + "', must match regex [A-Za-z0-9._-]+")
       }
       if (newVersions.containsKey(versionID)) {
@@ -357,9 +360,9 @@ final class ZoneRulesGroup(val groupID: String) {
     versions.set(newVersions)
     var regionIDs: Set[String] = provider.getRegionIDs
     for (regionID <- regionIDs) {
-      IDS.put(groupID + ':' + regionID, "")
+      IDs.put(groupID + ':' + regionID, "")
       if (groupID.equals("TZDB")) {
-        IDS.put(regionID, "")
+        IDs.put(regionID, "")
       }
     }
   }

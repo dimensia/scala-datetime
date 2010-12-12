@@ -80,7 +80,7 @@ object LocalDate {
     val instant: Instant = clock.instant
     val offset: ZoneOffset = clock.getZone.getRules.getOffset(instant)
     val epochSecs: Long = instant.getEpochSeconds + offset.getAmountSeconds
-    val yearZeroDays: Long = MathUtils.floorDiv(epochSecs, ISOChronology.SECONDS_PER_DAY) + ISOChronology.DAYS_0000_TO_1970
+    val yearZeroDays: Long = MathUtils.floorDiv(epochSecs, ISOChronology.SecondsPerDay) + ISOChronology.Days0000To1970
     LocalDate.ofYearZeroDays(yearZeroDays)
   }
 
@@ -202,7 +202,7 @@ object LocalDate {
    * @return the local date, never null
    * @throws IllegalCalendarFieldValueException if the modified julian days value is outside the supported range
    */
-  def ofModifiedJulianDays(mjDays: Long): LocalDate = ofYearZeroDays(mjDays + ISOChronology.DAYS_0000_TO_MJD_EPOCH)
+  def ofModifiedJulianDays(mjDays: Long): LocalDate = ofYearZeroDays(mjDays + ISOChronology.Days0000ToModifiedJulianDaysEpoch)
 
   /**
    * Converts a year zero day count to a date.
@@ -219,11 +219,11 @@ object LocalDate {
     epochDays -= 60
     var adjust: Long = 0
     if (epochDays < 0) {
-      val adjustCycles: Long = (epochDays + 1) / ISOChronology.DAYS_PER_CYCLE - 1
+      val adjustCycles: Long = (epochDays + 1) / ISOChronology.DaysPerCycle - 1
       adjust = adjustCycles * 400
-      epochDays += -adjustCycles * ISOChronology.DAYS_PER_CYCLE
+      epochDays += -adjustCycles * ISOChronology.DaysPerCycle
     }
-    var yearEst: Long = (400 * epochDays + 591) / ISOChronology.DAYS_PER_CYCLE
+    var yearEst: Long = (400 * epochDays + 591) / ISOChronology.DaysPerCycle
     var doyEst: Long = epochDays - (365 * yearEst + yearEst / 4 - yearEst / 100 + yearEst / 400)
     if (doyEst < 0) {
       ({
@@ -268,7 +268,7 @@ object LocalDate {
    * @return the local date, never null
    * @throws IllegalCalendarFieldValueException if the epoch days exceeds the supported date range
    */
-  def ofEpochDays(epochDays: Long): LocalDate = ofYearZeroDays(epochDays + ISOChronology.DAYS_0000_TO_1970)
+  def ofEpochDays(epochDays: Long): LocalDate = ofYearZeroDays(epochDays + ISOChronology.Days0000To1970)
 
   /**
    * Gets the field rule for   { @code LocalDate }.
@@ -366,7 +366,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * @return the local date-time formed from this date and the time of midnight, never null
    */
   def atMidnight: LocalDateTime = {
-    return LocalDateTime.of(this, LocalTime.MIDNIGHT)
+    return LocalDateTime.of(this, LocalTime.Midnight)
   }
 
   /**
@@ -449,7 +449,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * @return the zoned date-time formed from this date and the earliest valid time for the zone, never null
    */
   def atStartOfDayInZone(zone: TimeZone): ZonedDateTime = {
-    ZonedDateTime.of(this, LocalTime.MIDNIGHT, zone, ZoneResolvers.postGapPreOverlap)
+    ZonedDateTime.of(this, LocalTime.Midnight, zone, ZoneResolvers.postGapPreOverlap)
   }
 
   /**
@@ -869,7 +869,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    *
    * @return the Modified Julian Day equivalent to this date
    */
-  def toEpochDays: Long = toYearZeroDays - ISOChronology.DAYS_0000_TO_1970
+  def toEpochDays: Long = toYearZeroDays - ISOChronology.Days0000To1970
 
   /**
    * Returns a copy of this   { @code LocalDate } with the month-of-year altered.
@@ -1253,7 +1253,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    *
    * @return the Modified Julian Day equivalent to this date
    */
-  def toModifiedJulianDays: Long = toYearZeroDays - ISOChronology.DAYS_0000_TO_MJD_EPOCH
+  def toModifiedJulianDays: Long = toYearZeroDays - ISOChronology.Days0000ToModifiedJulianDaysEpoch
 
   /**
    * Returns a copy of this   { @code LocalDate } with the year altered.

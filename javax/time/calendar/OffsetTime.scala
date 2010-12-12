@@ -68,10 +68,10 @@ object OffsetTime {
   def ofInstant(instantProvider: InstantProvider, offset: ZoneOffset): OffsetTime = {
     val instant: Instant = Instant.of(instantProvider)
     ISOChronology.checkNotNull(offset, "ZoneOffset must not be null")
-    var secsOfDay: Long = instant.getEpochSeconds % ISOChronology.SECONDS_PER_DAY
-    secsOfDay = (secsOfDay + offset.getAmountSeconds) % ISOChronology.SECONDS_PER_DAY
+    var secsOfDay: Long = instant.getEpochSeconds % ISOChronology.SecondsPerDay
+    secsOfDay = (secsOfDay + offset.getAmountSeconds) % ISOChronology.SecondsPerDay
     if (secsOfDay < 0) {
-      secsOfDay += ISOChronology.SECONDS_PER_DAY
+      secsOfDay += ISOChronology.SecondsPerDay
     }
     val time: LocalTime = LocalTime.ofSecondOfDay(secsOfDay, instant.getNanoOfSecond)
     new OffsetTime(time, offset)

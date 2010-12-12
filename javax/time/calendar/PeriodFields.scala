@@ -169,7 +169,7 @@ object PeriodFields {
    * A constant for a period of zero.
    * This constant is independent of any unit.
    */
-  object ZERO extends PeriodFields(new TreeMap[PeriodUnit, PeriodField])
+  object Zero extends PeriodFields(new TreeMap[PeriodUnit, PeriodField])
   /**
    * Obtains a   { @code PeriodFields } from a   { @code PeriodProvider }.
    * <p>
@@ -212,7 +212,7 @@ object PeriodFields {
    * @return the created period, never null
    */
   private[calendar] def create(periodMap: TreeMap[PeriodUnit, PeriodField]): PeriodFields = {
-    if (periodMap.isEmpty) ZERO
+    if (periodMap.isEmpty) Zero
     else new PeriodFields(periodMap)
   }
 }
@@ -255,8 +255,8 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    */
   def `with`(periodProvider: PeriodProvider): PeriodFields = {
     var periods: PeriodFields = of(periodProvider)
-    if (this == ZERO) periods
-    else if (periods == ZERO) this
+    if (this == Zero) periods
+    else if (periods == Zero) this
     else {
       var copy: TreeMap[PeriodUnit, PeriodField] = clonedMap
       copy.putAll(periods.unitFieldMap)
@@ -452,7 +452,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    */
   def withZeroesRemoved: PeriodFields = {
     if (isZero) {
-      return ZERO
+      return Zero
     }
     var copy: TreeMap[PeriodUnit, PeriodField] = clonedMap
 
@@ -494,7 +494,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    */
   def plus(periodProvider: PeriodProvider): PeriodFields = {
     var periods: PeriodFields = of(periodProvider)
-    if (this == ZERO) {
+    if (this == Zero) {
       return periods
     }
     var copy: TreeMap[PeriodUnit, PeriodField] = clonedMap
@@ -618,7 +618,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    * @return the resolved instance
    */
   private def readResolve: AnyRef = {
-    if (unitFieldMap.size == 0) ZERO
+    if (unitFieldMap.size == 0) Zero
     else this
   }
 
@@ -933,7 +933,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    */
   def minus(periodProvider: PeriodProvider): PeriodFields = {
     var periods: PeriodFields = of(periodProvider)
-    if (this == ZERO) {
+    if (this == Zero) {
       return periods
     }
     var copy: TreeMap[PeriodUnit, PeriodField] = clonedMap

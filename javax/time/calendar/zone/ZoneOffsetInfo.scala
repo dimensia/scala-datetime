@@ -61,7 +61,7 @@ object ZoneOffsetInfo {
    * Applications should normally obtain an instance from   { @link ZoneRules }.
    * This constructor is intended for use by implementors of   { @code ZoneRules }.
    * <p>
-   * One, and only one, of the   { @code offset } or   { @code transition } parameters must be specified.
+   * One, and only one, of the {@code offset} or {@code transition} parameters must be specified.
    *
    * @param dateTime the local date-time that this info applies to, not null
    * @param offset the offset applicable at the date-time
@@ -73,6 +73,16 @@ object ZoneOffsetInfo {
       throw new IllegalArgumentException("One, but not both, of offset or transition must be specified")
     }
     return new ZoneOffsetInfo(dateTime, offset, transition)
+  }
+
+  def apply(dateTime: LocalDateTime, offset: ZoneOffset) = {
+    ZoneRules.checkNotNull(dateTime, "LocalDateTime must not be null")
+    new ZoneOffsetInfo(dateTime, offset, null)
+  }
+
+  def apply(dateTime: LocalDateTime, transition: ZoneOffsetTransition) = {
+    ZoneRules.checkNotNull(dateTime, "LocalDateTime must not be null")
+    new ZoneOffsetInfo(dateTime, null, transition)
   }
 }
 
@@ -113,11 +123,11 @@ final class ZoneOffsetInfo private[zone](val dateTime: LocalDateTime, val offset
    * @return true if equal
    */
   override def equals(otherInfo: AnyRef): Boolean = {
-    if (this == otherInfo) {
+    if (this eq otherInfo) {
       return true
     }
     if (otherInfo.isInstanceOf[ZoneOffsetInfo]) {
-      var info: ZoneOffsetInfo = otherInfo.asInstanceOf[ZoneOffsetInfo]
+      val info: ZoneOffsetInfo = otherInfo.asInstanceOf[ZoneOffsetInfo]
       return dateTime.equals(info.dateTime) && (if (transition != null) transition.equals(info.transition) else offset.equals(info.offset))
     }
     return false
@@ -128,9 +138,7 @@ final class ZoneOffsetInfo private[zone](val dateTime: LocalDateTime, val offset
    *
    * @return the date-time that this is the information for, not null
    */
-  def getLocalDateTime: LocalDateTime = {
-    return dateTime
-  }
+  def getLocalDateTime: LocalDateTime = dateTime
 
   /**
    * Returns a string describing this object.
@@ -138,9 +146,9 @@ final class ZoneOffsetInfo private[zone](val dateTime: LocalDateTime, val offset
    * @return a string for debugging, never null
    */
   override def toString: String = {
-    var buf: StringBuilder = new StringBuilder
+    val buf: StringBuilder = new StringBuilder
     buf.append("OffsetInfo[").append(dateTime).append(' ').append(if (isTransition) transition else offset).append(']')
-    return buf.toString
+    buf.toString
   }
 
   /**

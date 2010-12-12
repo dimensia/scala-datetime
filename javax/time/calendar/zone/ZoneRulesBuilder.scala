@@ -184,7 +184,7 @@ class ZoneRulesBuilder {
     if (dayOfMonthIndicator < -28 || dayOfMonthIndicator > 31 || dayOfMonthIndicator == 0) {
       throw new IllegalArgumentException("Day of month indicator must be between -28 and 31 inclusive excluding zero")
     }
-    if (timeEndOfDay && time.equals(LocalTime.MIDNIGHT) == false) {
+    if (timeEndOfDay && time.equals(LocalTime.Midnight) == false) {
       throw new IllegalArgumentException("Time must be midnight when end of day flag is true")
     }
     if (windowList.isEmpty) {
@@ -441,7 +441,7 @@ class ZoneRulesBuilder {
       Collections.sort(ruleList)
       Collections.sort(lastRuleList)
       if (ruleList.size == 0 && fixedSavingAmount == null) {
-        fixedSavingAmount = Period.ZERO
+        fixedSavingAmount = Period.Zero
       }
     }
 
@@ -581,7 +581,7 @@ class ZoneRulesBuilder {
     var lastTransitionRuleList: List[ZoneOffsetTransitionRule] = new ArrayList[ZoneOffsetTransitionRule](2)
     var firstWindow: ZoneRulesBuilder#TZWindow = windowList.get(0)
     var standardOffset: ZoneOffset = firstWindow.standardOffset
-    var savings: Period = Period.ZERO
+    var savings: Period = Period.Zero
     if (firstWindow.fixedSavingAmount != null) {
       savings = firstWindow.fixedSavingAmount
     }
@@ -591,7 +591,7 @@ class ZoneRulesBuilder {
       window.tidy(windowStart.getYear)
       var effectiveSavings: Period = window.fixedSavingAmount
       if (effectiveSavings == null) {
-        effectiveSavings = Period.ZERO
+        effectiveSavings = Period.Zero
         for (rule <- window.ruleList) {
           var trans: ZoneOffsetTransition = rule.toTransition(standardOffset, savings)
           if (trans.getDateTime.isAfter(windowStart)) {

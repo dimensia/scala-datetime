@@ -51,7 +51,7 @@ object Ser {
       case FZR => return FixedZoneRules.readExternal(in)
       case SZR => return StandardZoneRules.readExternal(in)
       case ZOT => return ZoneOffsetTransition.readExternal(in)
-      case ZOTRULE => return ZoneOffsetTransitionRule.readExternal(in)
+      case ZOTRule => return ZoneOffsetTransitionRule.readExternal(in)
       case _ => throw new StreamCorruptedException("Unknown serialized type")
     }
   }
@@ -63,7 +63,7 @@ object Ser {
   /**Type for ZoneOffsetTransition. */
   private[zone] val ZOT: Byte = 2
   /**Type for ZoneOffsetTransition. */
-  private[zone] val ZOTRULE: Byte = 3
+  private[zone] val ZOTRule: Byte = 3
 
   private[zone] def read(in: DataInput): AnyRef = {
     var _type: Byte = in.readByte
@@ -131,7 +131,7 @@ object Ser {
       case FZR => (obj.asInstanceOf[FixedZoneRules]).writeExternal(out)
       case SZR => (obj.asInstanceOf[StandardZoneRules]).writeExternal(out)
       case ZOT => (obj.asInstanceOf[ZoneOffsetTransition]).writeExternal(out)
-      case ZOTRULE => (obj.asInstanceOf[ZoneOffsetTransitionRule]).writeExternal(out)
+      case ZOTRule => (obj.asInstanceOf[ZoneOffsetTransitionRule]).writeExternal(out)
       case _ => throw new InvalidClassException("Unknown serialized type")
     }
   }

@@ -680,7 +680,7 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
     zone.standardOffset = parseOffset(st.nextToken)
     var savingsRule: String = parseOptional(st.nextToken)
     if (savingsRule == null) {
-      zone.fixedSavings = Period.ZERO
+      zone.fixedSavings = Period.Zero
       zone.savingsRule = null
     }
     else {
@@ -732,7 +732,7 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
     /**Whether this is midnight end of day. */
     private[zone] var endOfDay: Boolean = false
     /**The time of the cutover. */
-    private[zone] var time: LocalTime = LocalTime.MIDNIGHT
+    private[zone] var time: LocalTime = LocalTime.Midnight
     /**The day-of-month of the cutover. */
     private[zone] var dayOfMonth: Int = 1
     /**The month of the cutover. */

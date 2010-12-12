@@ -93,7 +93,7 @@ object ZoneOffsetTransitionRule {
     if (dayOfMonthIndicator < -28 || dayOfMonthIndicator > 31 || dayOfMonthIndicator == 0) {
       throw new IllegalArgumentException("Day of month indicator must be between -28 and 31 inclusive excluding zero")
     }
-    if (timeEndOfDay && time.equals(LocalTime.MIDNIGHT) == false) {
+    if (timeEndOfDay && time.equals(LocalTime.Midnight) == false) {
       throw new IllegalArgumentException("Time must be midnight when end of day flag is true")
     }
     return new ZoneOffsetTransitionRule(month, dayOfMonthIndicator, dayOfWeek, time, timeEndOfDay, timeDefnition, standardOffset, offsetBefore, offsetAfter)
@@ -172,7 +172,7 @@ final class ZoneOffsetTransitionRule(val month: MonthOfYear,
    *
    * @return the replacing object, never null
    */
-  private def writeReplace: AnyRef = new Ser(Ser.ZOTRULE, this)
+  private def writeReplace: AnyRef = new Ser(Ser.ZOTRule, this)
 
   /**
    * Gets the month of the transition.

@@ -97,8 +97,8 @@ object LocalDateTime {
    * @throws CalendarConversionException if the instant exceeds the supported date range
    */
   private[calendar] def create(localSeconds: Long, nanoOfSecond: Int): LocalDateTime = {
-    val yearZeroDays: Long = MathUtils.floorDiv(localSeconds, ISOChronology.SECONDS_PER_DAY) + ISOChronology.DAYS_0000_TO_1970
-    val secsOfDay: Int = MathUtils.floorMod(localSeconds, ISOChronology.SECONDS_PER_DAY)
+    val yearZeroDays: Long = MathUtils.floorDiv(localSeconds, ISOChronology.SecondsPerDay) + ISOChronology.Days0000To1970
+    val secsOfDay: Int = MathUtils.floorMod(localSeconds, ISOChronology.SecondsPerDay)
     val date: LocalDate = LocalDate.ofYearZeroDays(yearZeroDays)
     val time: LocalTime = LocalTime.ofSecondOfDay(secsOfDay, nanoOfSecond)
     LocalDateTime.of(date, time)
@@ -173,7 +173,7 @@ object LocalDateTime {
    */
   def ofMidnight(year: Int, monthOfYear: Int, dayOfMonth: Int): LocalDateTime = {
     val date: LocalDate = LocalDate.of(year, monthOfYear, dayOfMonth)
-    new LocalDateTime(date, LocalTime.MIDNIGHT)
+    new LocalDateTime(date, LocalTime.Midnight)
   }
 
   /**
@@ -212,7 +212,7 @@ object LocalDateTime {
    */
   def ofMidnight(dateProvider: DateProvider): LocalDateTime = {
     val date: LocalDate = LocalDate.of(dateProvider)
-    new LocalDateTime(date, LocalTime.MIDNIGHT)
+    new LocalDateTime(date, LocalTime.Midnight)
   }
 
   /**
@@ -256,7 +256,7 @@ object LocalDateTime {
    */
   def ofMidnight(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int): LocalDateTime = {
     val date: LocalDate = LocalDate.of(year, monthOfYear, dayOfMonth)
-    new LocalDateTime(date, LocalTime.MIDNIGHT)
+    new LocalDateTime(date, LocalTime.Midnight)
   }
 
   /**

@@ -51,6 +51,11 @@ import javax.time.CalendricalException
 final class CalendricalContext(val isStrict: Boolean, val checkUnusedFields: Boolean) extends Serializable {
 
   /**
+   * Whether to use a date resolver for resolving dates.
+   */
+  val dateResolver: DateResolver = null
+
+  /**
    * A hashcode for this context.
    *
    * @return a suitable hashcode
@@ -66,18 +71,13 @@ final class CalendricalContext(val isStrict: Boolean, val checkUnusedFields: Boo
    * @return true if this instance is equal to the specified context
    */
   override def equals(obj: AnyRef): Boolean = {
-    if (obj == this) true
+    if (obj eq this) true
     else if (obj.isInstanceOf[CalendricalContext]) {
       var other: CalendricalContext = obj.asInstanceOf[CalendricalContext]
       isStrict == other.isStrict && (dateResolver == other.dateResolver || (dateResolver != null && dateResolver.equals(other.dateResolver))) && checkUnusedFields == other.checkUnusedFields
     }
     else false
   }
-
-  /**
-   * Whether to use a date resolver for resolving dates.
-   */
-  val dateResolver: DateResolver = null
 
   /**
    * Resolves the year, month and day-of-month to a date using ISO chronology rules.
