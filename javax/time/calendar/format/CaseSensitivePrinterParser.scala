@@ -40,9 +40,9 @@ object CaseSensitivePrinterParser {
    *
    * @author Stephen Colebourne
    */
-  object SENSITIVE extends CaseSensitivePrinterParser
+  object Sensitive extends CaseSensitivePrinterParser
 
-  object INSENSITIVE extends CaseSensitivePrinterParser
+  object Insensitive extends CaseSensitivePrinterParser
 
 }
 
@@ -52,7 +52,7 @@ sealed class CaseSensitivePrinterParser extends DateTimePrinter with DateTimePar
 
   /**{ @inheritDoc }*/
   override def parse(context: DateTimeParseContext, parseText: String, position: Int): Int = {
-    context.setCaseSensitive(this == SENSITIVE)
+    context.setCaseSensitive(this == Sensitive)
     position
   }
 
@@ -60,7 +60,7 @@ sealed class CaseSensitivePrinterParser extends DateTimePrinter with DateTimePar
   override def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = {}
 
   /**{ @inheritDoc }*/
-  override def toString: String = "ParseCaseSensitive(" + (this == SENSITIVE) + ")"
+  override def toString: String = "ParseCaseSensitive(" + (this == Sensitive) + ")"
 
   /**{ @inheritDoc }*/
   override def isPrintDataAvailable(calendrical: Calendrical): Boolean = true

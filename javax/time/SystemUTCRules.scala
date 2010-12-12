@@ -104,21 +104,21 @@ sealed class SystemUTCRules private extends UTCRules with Serializable {
   def getName: String = "System"
 
   def getLeapSecondAdjustment(mjDay: Long): Int = {
-    var data: SystemUTCRules.Data = dataRef.get
-    var pos: Int = Arrays.binarySearch(data.dates, mjDay)
-    return if (pos > 0) data.offsets(pos) - data.offsets(pos - 1) else 0
+    val data: SystemUTCRules.Data = dataRef.get
+    val pos: Int = Arrays.binarySearch(data.dates, mjDay)
+    if (pos > 0) data.offsets(pos) - data.offsets(pos - 1) else 0
   }
 
   def getTAIOffset(mjDay: Long): Int = {
-    var data: SystemUTCRules.Data = dataRef.get
+    val data: SystemUTCRules.Data = dataRef.get
     var pos: Int = Arrays.binarySearch(data.dates, mjDay)
     pos = (if (pos < 0) ~pos else pos)
-    return if (pos > 0) data.offsets(pos - 1) else 10
+    if (pos > 0) data.offsets(pos - 1) else 10
   }
 
   def getLeapSecondDates: Array[Long] = {
-    var data: SystemUTCRules.Data = dataRef.get
-    return data.dates.clone
+    val data: SystemUTCRules.Data = dataRef.get
+    data.dates.clone
   }
 
   protected def convertToUTC(taiInstant: TAIInstant): UTCInstant = {
@@ -133,17 +133,14 @@ sealed class SystemUTCRules private extends UTCRules with Serializable {
     var nod: Long = MathUtils.floorMod(adjustedTaiSecs, SecondsPerDay) * NanosPerSecond + taiInstant.getNanoOfSecond
     var mjdNextRegionStart: Long = (if (pos + 1 < mjds.length) mjds(pos + 1) + 1 else Long.MaxValue)
     if (mjd == mjdNextRegionStart) {
-      ({
-        mjd -= 1;
-        mjd
-      })
+      mjd -= 1;
       nod = SecondsPerDay * NanosPerSecond + (nod / NanosPerSecond) * NanosPerSecond + nod % NanosPerSecond
     }
     return UTCInstant.ofModifiedJulianDays(mjd, nod, this)
   }
 }
 
-object SystemUTCRules extends SystemUTCRules{
+object SystemUTCRules extends SystemUTCRules {
 
   @SerialVersionUID(1L)
   private class Data(val dates: Array[Long], val offsets: Array[Int], val taiSeconds: Array[Long]) extends Serializable

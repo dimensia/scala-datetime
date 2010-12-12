@@ -97,7 +97,7 @@ object TZDBZoneRulesCompiler {
   /**
    * Time parser.
    */
-  private val TIME_PARSER: DateTimeFormatter = null
+  private val TimeParser: DateTimeFormatter = null
   /**
    * Outputs the file.
    */
@@ -187,8 +187,7 @@ object TZDBZoneRulesCompiler {
         }
         if ("-srcdir".equals(arg)) {
           if (baseSrcDir == null && ({
-            i += 1;
-            i - 1
+            i += 1; i - 1
           }) < args.length) {
             baseSrcDir = new File(args(i))
             //continue //todo: continue is not supported
@@ -482,7 +481,7 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
       pos = 1
     }
     var pp: ParsePosition = new ParsePosition(pos)
-    var cal: DateTimeParseContext = TZDBZoneRulesCompiler.TIME_PARSER.parse(str, pp)
+    var cal: DateTimeParseContext = TZDBZoneRulesCompiler.TimeParser.parse(str, pp)
     if (pp.getErrorIndex >= 0) {
       throw new IllegalArgumentException(str)
     }

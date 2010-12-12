@@ -231,7 +231,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    * @return this, for chaining, never null
    */
   def parseCaseSensitive: DateTimeFormatterBuilder = {
-    appendInternal(CaseSensitivePrinterParser.SENSITIVE, CaseSensitivePrinterParser.SENSITIVE)
+    appendInternal(CaseSensitivePrinterParser.Sensitive, CaseSensitivePrinterParser.Sensitive)
     this
   }
 
@@ -490,7 +490,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    * @return this, for chaining, never null
    */
   def parseCaseInsensitive: DateTimeFormatterBuilder = {
-    appendInternal(CaseSensitivePrinterParser.INSENSITIVE, CaseSensitivePrinterParser.INSENSITIVE)
+    appendInternal(CaseSensitivePrinterParser.Insensitive, CaseSensitivePrinterParser.Insensitive)
     this
   }
 
