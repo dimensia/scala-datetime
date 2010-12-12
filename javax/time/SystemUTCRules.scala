@@ -129,15 +129,15 @@ sealed class SystemUTCRules private extends UTCRules with Serializable {
     pos = (if (pos >= 0) pos else ~pos - 1)
     var taiOffset: Int = (if (pos >= 0) data.offsets(pos) else 10)
     var adjustedTaiSecs: Long = taiInstant.getTAISeconds - taiOffset
-    var mjd: Long = MathUtils.floorDiv(adjustedTaiSecs, SECS_PER_DAY) + OFFSET_MJD_TAI
-    var nod: Long = MathUtils.floorMod(adjustedTaiSecs, SECS_PER_DAY) * NANOS_PER_SECOND + taiInstant.getNanoOfSecond
+    var mjd: Long = MathUtils.floorDiv(adjustedTaiSecs, SecondsPerDay) + ModifiedJulianDaysTAIOffset
+    var nod: Long = MathUtils.floorMod(adjustedTaiSecs, SecondsPerDay) * NanosPerSecond + taiInstant.getNanoOfSecond
     var mjdNextRegionStart: Long = (if (pos + 1 < mjds.length) mjds(pos + 1) + 1 else Long.MaxValue)
     if (mjd == mjdNextRegionStart) {
       ({
         mjd -= 1;
         mjd
       })
-      nod = SECS_PER_DAY * NANOS_PER_SECOND + (nod / NANOS_PER_SECOND) * NANOS_PER_SECOND + nod % NANOS_PER_SECOND
+      nod = SecondsPerDay * NanosPerSecond + (nod / NanosPerSecond) * NanosPerSecond + nod % NanosPerSecond
     }
     return UTCInstant.ofModifiedJulianDays(mjd, nod, this)
   }
@@ -217,5 +217,5 @@ object SystemUTCRules extends SystemUTCRules{
    * @param offset the new offset after the leap
    * @return the TAI seconds
    */
-  private def tai(changeMjd: Long, offset: Int): Long = (changeMjd + 1 - UTCRules.OFFSET_MJD_TAI) * UTCRules.SECS_PER_DAY + offset
+  private def tai(changeMjd: Long, offset: Int): Long = (changeMjd + 1 - UTCRules.ModifiedJulianDaysTAIOffset) * UTCRules.SecondsPerDay + offset
 }

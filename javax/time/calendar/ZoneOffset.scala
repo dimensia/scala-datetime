@@ -71,8 +71,35 @@ import java.util.concurrent.locks.ReentrantReadWriteLock
  * @author Stephen Colebourne
  */
 object ZoneOffset {
+  /**
+   * The time-zone offset for UTC, with an id of 'Z'.
+   */
+  val UTC: ZoneOffset = ofHoursMinutesSeconds(0, 0, 0)
+
   /**Cache of time-zone offset by id. */
-  private val ID_CACHE: Map[String, ZoneOffset] = new HashMap[String, ZoneOffset]
+  private val IDCache: Map[String, ZoneOffset] = new HashMap[String, ZoneOffset]
+
+  /**Cache of time-zone offset by offset in seconds. */
+  private val SecondsCache: Map[Int, ZoneOffset] = new HashMap[Int, ZoneOffset]
+
+  /**Cache of time-zone offset by offset in seconds. */
+  private val CacheLock: ReadWriteLock = new ReentrantReadWriteLock
+
+  /**
+   * The number of seconds per minute.
+   */
+  private val SecondsPerMinute: Int = 60
+
+  /**
+   * The number of seconds per hour.
+   */
+  private val SecondsPerHour: Int = 60 * 60
+
+  /**
+   * The number of minutes per hour.
+   */
+  private val MinutesPerHour: Int = 60
+
   /**
    * Parse a two digit zero-prefixed number.
    *
@@ -94,10 +121,6 @@ object ZoneOffset {
   }
 
   /**
-   * The number of seconds per minute.
-   */
-  private val SECONDS_PER_MINUTE: Int = 60
-  /**
    * Obtains an instance of    { @code ZoneOffset } using an offset in hours.
    *
    * @param hours the time-zone offset in hours, from -18 to +18
@@ -116,33 +139,33 @@ object ZoneOffset {
    * @throws IllegalArgumentException if the offset is not in the required range
    */
   def ofTotalSeconds(totalSeconds: Int): ZoneOffset = {
-    if (Math.abs(totalSeconds) > (18 * SECONDS_PER_HOUR)) {
+    if (Math.abs(totalSeconds) > (18 * SecondsPerHour)) {
       throw new IllegalArgumentException("Zone offset not in valid range: -18:00 to +18:00")
     }
-    if (totalSeconds % (15 * SECONDS_PER_MINUTE) == 0) {
+    if (totalSeconds % (15 * SecondsPerMinute) == 0) {
       var totalSecs: Int = totalSeconds
-      CACHE_LOCK.readLock.lock
+      CacheLock.readLock.lock
       try {
-        var result: ZoneOffset = SECONDS_CACHE.get(totalSecs)
+        var result: ZoneOffset = SecondsCache.get(totalSecs)
         if (result != null) {
           return result
         }
       }
       finally {
-        CACHE_LOCK.readLock.unlock
+        CacheLock.readLock.unlock
       }
-      CACHE_LOCK.writeLock.lock
+      CacheLock.writeLock.lock
       try {
-        var result: ZoneOffset = SECONDS_CACHE.get(totalSecs)
+        var result: ZoneOffset = SecondsCache.get(totalSecs)
         if (result == null) {
           result = new ZoneOffset(totalSeconds)
-          SECONDS_CACHE.put(totalSecs, result)
-          ID_CACHE.put(result.getID, result)
+          SecondsCache.put(totalSecs, result)
+          IDCache.put(result.getID, result)
         }
         return result
       }
       finally {
-        CACHE_LOCK.writeLock.unlock
+        CacheLock.writeLock.unlock
       }
     }
     else {
@@ -158,10 +181,6 @@ object ZoneOffset {
   def rule: CalendricalRule[ZoneOffset] = Rule
 
   /**
-   * The number of minutes per hour.
-   */
-  private val MINUTES_PER_HOUR: Int = 60
-  /**
    * Calculates the total offset in seconds.
    *
    * @param hours the time-zone offset in hours, from -18 to +18
@@ -170,17 +189,8 @@ object ZoneOffset {
    * @return the total in seconds
    */
   private def totalSeconds(hours: Int, minutes: Int, seconds: Int): Int = {
-    hours * SECONDS_PER_HOUR + minutes * SECONDS_PER_MINUTE + seconds
+    hours * SecondsPerHour + minutes * SecondsPerMinute + seconds
   }
-
-  /**
-   * The time-zone offset for UTC, with an id of 'Z'.
-   */
-  val UTC: ZoneOffset = ofHoursMinutesSeconds(0, 0, 0)
-  /**
-   * The number of seconds per hour.
-   */
-  private val SECONDS_PER_HOUR: Int = 60 * 60
 
   /**
    * Validates the offset fields.
@@ -300,15 +310,15 @@ object ZoneOffset {
     if (offsetID == null) {
       throw new NullPointerException("The offset ID must not be null")
     }
-    CACHE_LOCK.readLock.lock
+    CacheLock.readLock.lock
     try {
-      var offset: ZoneOffset = ID_CACHE.get(offsetID)
+      var offset: ZoneOffset = IDCache.get(offsetID)
       if (offset != null) {
         return offset
       }
     }
     finally {
-      CACHE_LOCK.readLock.unlock
+      CacheLock.readLock.unlock
     }
     var hours: Int = 0
     var minutes: Int = 0
@@ -367,8 +377,6 @@ object ZoneOffset {
     return ofHoursMinutesSeconds(hours, minutes, 0)
   }
 
-  /**Cache of time-zone offset by offset in seconds. */
-  private val SECONDS_CACHE: Map[Int, ZoneOffset] = new HashMap[Int, ZoneOffset]
   /**
    * Obtains an instance of    { @code ZoneOffset } from a period.
    * <p>
@@ -387,10 +395,6 @@ object ZoneOffset {
     var period: Period = Period.of(periodProvider)
     return ofHoursMinutesSeconds(period.getHours, period.getMinutes, period.getSeconds)
   }
-
-  /**Cache of time-zone offset by offset in seconds. */
-  private val CACHE_LOCK: ReadWriteLock = new ReentrantReadWriteLock
-
 }
 
 /**
@@ -412,14 +416,14 @@ final class ZoneOffset private(val amountSeconds: Int) extends Calendrical with 
     else {
       var absTotalSeconds: Int = math.abs(amountSeconds)
       var buf: StringBuilder = new StringBuilder
-      var absHours: Int = absTotalSeconds / SECONDS_PER_HOUR
-      var absMinutes: Int = (absTotalSeconds / SECONDS_PER_MINUTE) % MINUTES_PER_HOUR
+      var absHours: Int = absTotalSeconds / SecondsPerHour
+      var absMinutes: Int = (absTotalSeconds / SecondsPerMinute) % MinutesPerHour
       buf.append(if (amountSeconds < 0) "-" else "+")
         .append(if (absHours < 10) "0" else "")
         .append(absHours)
         .append(if (absMinutes < 10) ":0" else ":")
         .append(absMinutes)
-      var absSeconds: Int = absTotalSeconds % SECONDS_PER_MINUTE
+      var absSeconds: Int = absTotalSeconds % SecondsPerMinute
       if (absSeconds != 0) {
         buf.append(if (absSeconds < 10) ":0" else ":").append(absSeconds)
       }
@@ -473,7 +477,7 @@ final class ZoneOffset private(val amountSeconds: Int) extends Calendrical with 
    *
    * @return the hours field of the zone offset amount, from -18 to 18
    */
-  def getHoursField: Int = amountSeconds / SECONDS_PER_HOUR
+  def getHoursField: Int = amountSeconds / SecondsPerHour
 
   /**
    * Resolves singletons.
@@ -497,7 +501,7 @@ final class ZoneOffset private(val amountSeconds: Int) extends Calendrical with 
    * @return the minutes field of the zone offset amount,
    *      from -59 to 59 where the sign matches the hours and seconds
    */
-  def getMinutesField: Int = (amountSeconds / SECONDS_PER_MINUTE) % MINUTES_PER_HOUR
+  def getMinutesField: Int = (amountSeconds / SecondsPerMinute) % MinutesPerHour
 
   /**
    * Returns a string representation of the zone offset, which is the same
@@ -544,7 +548,7 @@ final class ZoneOffset private(val amountSeconds: Int) extends Calendrical with 
    * @return the seconds field of the zone offset amount,
    *      from -59 to 59 where the sign matches the hours and minutes
    */
-  def getSecondsField: Int = amountSeconds % SECONDS_PER_MINUTE
+  def getSecondsField: Int = amountSeconds % SecondsPerMinute
 
   /**
    * Converts this offset to a period.

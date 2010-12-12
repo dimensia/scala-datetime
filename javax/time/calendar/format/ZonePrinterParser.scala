@@ -160,7 +160,7 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
     if (textStyle == null) {
       appendable.append(zone.getID)
     }
-    else if (textStyle == TextStyle.FULL) {
+    else if (textStyle == TextStyle.Full) {
       appendable.append(zone.getName)
     }
     else {

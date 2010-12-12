@@ -117,7 +117,7 @@ sealed abstract class HistoricEra(ordinal: Int) extends Calendrical {
    * @return the short text value of the BCE/CE, never null
    */
   def getShortText(locale: Locale): String =
-    HistoricChronology.standardCutover.eraRule.getText(getValue, locale, TextStyle.SHORT)
+    HistoricChronology.standardCutover.eraRule.getText(getValue, locale, TextStyle.Short)
 
   /**
    * Gets the value of the specified calendrical rule.
@@ -142,5 +142,5 @@ sealed abstract class HistoricEra(ordinal: Int) extends Calendrical {
    * @param locale the locale to use, not null
    * @return the long text value of the BCE/CE, never null
    */
-  def getText(locale: Locale): String = HistoricChronology.standardCutover.eraRule.getText(getValue, locale, TextStyle.FULL)
+  def getText(locale: Locale): String = HistoricChronology.standardCutover.eraRule.getText(getValue, locale, TextStyle.Full)
 }

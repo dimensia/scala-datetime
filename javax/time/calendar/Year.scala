@@ -344,7 +344,7 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
    * @throws CalendricalException if the maximum year is reached
    */
   def previous: Year = {
-    if (year == MIN_YEAR) throw new CalendricalException("Year is already at the minimum value")
+    if (year == MinYear) throw new CalendricalException("Year is already at the minimum value")
     else of(year - 1)
   }
 
@@ -401,7 +401,7 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
    * @throws CalendricalException if the maximum year is reached
    */
   def next: Year = {
-    if (year == MAX_YEAR) throw new CalendricalException("Year is already at the maximum value")
+    if (year == MaxYear) throw new CalendricalException("Year is already at the maximum value")
     else of(year + 1)
   }
 

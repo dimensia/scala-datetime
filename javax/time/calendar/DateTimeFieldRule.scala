@@ -240,9 +240,9 @@ object DateTimeFieldRule {
   }
 
   /**A Math context for calculating values from fractions. */
-  private val VALUE_CONTEXT: MathContext = new MathContext(0, RoundingMode.FLOOR)
+  private val ValueContext: MathContext = new MathContext(0, RoundingMode.FLOOR)
   /**A Math context for calculating fractions from values. */
-  private val FRACTION_CONTEXT: MathContext = new MathContext(9, RoundingMode.FLOOR)
+  private val FractionContext: MathContext = new MathContext(9, RoundingMode.FLOOR)
 }
 
 
@@ -377,7 +377,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
     }
     var range: Long = getMaximumValue
     range += 1;
-    val decimal: BigDecimal = fraction.multiply(new BigDecimal(range), VALUE_CONTEXT)
+    val decimal: BigDecimal = fraction.multiply(new BigDecimal(range), ValueContext)
     try {
       val value: Int = decimal.intValueExact
       checkValue(value)
@@ -571,7 +571,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
       range
     })
     val decimal: BigDecimal = new BigDecimal(value)
-    return decimal.divide(new BigDecimal(range), FRACTION_CONTEXT)
+    return decimal.divide(new BigDecimal(range), FractionContext)
   }
 
   /**

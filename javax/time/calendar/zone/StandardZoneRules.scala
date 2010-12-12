@@ -58,7 +58,7 @@ object StandardZoneRules {
   /**
    * The last year to have its transitions cached.
    */
-  private val LastCachedYear: Year = Year.of(2100)
+  private val LastCachedYear: Year = 2100
 
   /**
    * Reads the state from the stream.
@@ -192,7 +192,7 @@ final class StandardZoneRules private(private val standardTransitions: Array[Lon
     val epochSecs: Long = instant.getEpochSeconds
     if (lastRules.length > 0 && epochSecs > savingsInstantTransitions(savingsInstantTransitions.length - 1)) {
       var dt: OffsetDateTime = OffsetDateTime.ofInstant(instant, wallOffsets(wallOffsets.length - 1))
-      val transArray: Array[ZoneOffsetTransition] = findTransitionArray(dt.toYear)
+      val transArray: Array[ZoneOffsetTransition] = findTransitionArray(dt.getYear)
       return transArray.find(trans => instant.isBefore(trans.getInstant)) match {
         case Some(trans) => trans.getOffsetBefore
         case None => transArray.last.getOffsetAfter
@@ -287,7 +287,7 @@ final class StandardZoneRules private(private val standardTransitions: Array[Lon
       var dt: OffsetDateTime = OffsetDateTime.ofInstant(instant, wallOffsets(wallOffsets.length - 1))
 
       {
-        var year: Year = dt.toYear
+        var year: Int = dt.getYear
         while (true) {
           {
             var transArray: Array[ZoneOffsetTransition] = findTransitionArray(year)
@@ -296,11 +296,11 @@ final class StandardZoneRules private(private val standardTransitions: Array[Lon
                 return trans
               }
             }
-            if (year.getValue == Year.MAX_YEAR) {
+            if (year == Year.MaxYear) {
               return null
             }
           }
-          year = year.next
+          year += 1
         }
       }
     }
@@ -359,8 +359,8 @@ final class StandardZoneRules private(private val standardTransitions: Array[Lon
       var lastHistoricDT: OffsetDateTime = OffsetDateTime.ofInstant(Instant.ofEpochSeconds(lastHistoric), lastHistoricOffset)
 
       {
-        var year: Year = dt.toYear
-        while (year.getValue > lastHistoricDT.getYear) {
+        var year: Int = dt.getYear
+        while (year > lastHistoricDT.getYear) {
           var transArray: Array[ZoneOffsetTransition] = findTransitionArray(year)
 
           var i: Int = transArray.length - 1
@@ -370,7 +370,7 @@ final class StandardZoneRules private(private val standardTransitions: Array[Lon
             }
             i -= 1;
           }
-          year = year.previous
+          year -= 1
         }
       }
     }
@@ -393,8 +393,9 @@ final class StandardZoneRules private(private val standardTransitions: Array[Lon
    * @param year the year, not null
    * @return the transition array, never null
    */
-  private def findTransitionArray(year: Year): Array[ZoneOffsetTransition] = {
-    var transArray: Array[ZoneOffsetTransition] = lastRulesCache.get(year)
+  private def findTransitionArray(year: Int): Array[ZoneOffsetTransition] = {
+    val yearObj: Year = Year.of(year)
+    var transArray: Array[ZoneOffsetTransition] = lastRulesCache.get(yearObj)
     if (transArray != null) {
       return transArray
     }
@@ -403,20 +404,20 @@ final class StandardZoneRules private(private val standardTransitions: Array[Lon
 
     var i: Int = 0
     while (i < ruleArray.length) {
-      transArray(i) = ruleArray(i).createTransition(year.getValue)
+      transArray(i) = ruleArray(i).createTransition(year)
       i += 1;
     }
 
-    if (year.isBefore(StandardZoneRules.LastCachedYear)) {
-      lastRulesCache.putIfAbsent(year, transArray)
+    if (year < LastCachedYear) {
+      lastRulesCache.putIfAbsent(yearObj, transArray)
     }
     return transArray
   }
 
-  /**{ @inheritDoc }*/
+  /**{@inheritDocfindTransitionArray(Y}*/
   def getOffsetInfo(dt: LocalDateTime): ZoneOffsetInfo = {
     if (lastRules.length > 0 && dt.isAfter(savingsLocalTransitions(savingsLocalTransitions.length - 1))) {
-      var transArray: Array[ZoneOffsetTransition] = findTransitionArray(dt.toYear)
+      var transArray: Array[ZoneOffsetTransition] = findTransitionArray(dt.getYear)
       var info: ZoneOffsetInfo = null
       for (trans <- transArray) {
         info = findOffsetInfo(dt, trans)

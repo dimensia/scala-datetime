@@ -61,68 +61,80 @@ import javax.time.calendar.format.DateTimeFormatterBuilder.TextStyle
  * @author Stephen Colebourne
  */
 object MonthOfYear {
+
   /**
    * The singleton instance for the month of January.
    * This has the numeric value of  { @code 1 }.
    */
-  object JANUARY extends MonthOfYear(1)
+  object January extends MonthOfYear(1)
+
   /**
    * The singleton instance for the month of February.
    * This has the numeric value of  { @code 2 }.
    */
-  object FEBRUARY extends MonthOfYear(2)
+  object February extends MonthOfYear(2)
+
   /**
    * The singleton instance for the month of March.
    * This has the numeric value of  { @code 3 }.
    */
-  object MARCH extends MonthOfYear(3)
+  object March extends MonthOfYear(3)
+
   /**
    * The singleton instance for the month of April.
    * This has the numeric value of  { @code 4 }.
    */
-  object APRIL extends MonthOfYear(4)
+  object April extends MonthOfYear(4)
+
   /**
    * The singleton instance for the month of May.
    * This has the numeric value of  { @code 5 }.
    */
-  object MAY extends MonthOfYear(5)
+  object May extends MonthOfYear(5)
+
   /**
    * The singleton instance for the month of June.
    * This has the numeric value of  { @code 6 }.
    */
-  object JUNE extends MonthOfYear(6)
+  object June extends MonthOfYear(6)
+
   /**
    * The singleton instance for the month of July.
    * This has the numeric value of  { @code 7 }.
    */
-  object JULY extends MonthOfYear(7)
+  object July extends MonthOfYear(7)
+
   /**
    * The singleton instance for the month of August.
    * This has the numeric value of  { @code 8 }.
    */
-  object AUGUST extends MonthOfYear(8)
+  object August extends MonthOfYear(8)
+
   /**
    * The singleton instance for the month of September.
    * This has the numeric value of  { @code 9 }.
    */
-  object SEPTEMBER extends MonthOfYear(9)
+  object September extends MonthOfYear(9)
+
   /**
    * The singleton instance for the month of October.
    * This has the numeric value of  { @code 10 }.
    */
-  object OCTOBER extends MonthOfYear(10)
+  object October extends MonthOfYear(10)
+
   /**
    * The singleton instance for the month of November.
    * This has the numeric value of  { @code 11 }.
    */
-  object NOVEMBER extends MonthOfYear(11)
+  object November extends MonthOfYear(11)
+
   /**
    * The singleton instance for the month of December.
    * This has the numeric value of  { @code 12 }.
    */
-  object DECEMBER extends MonthOfYear(12)
+  object December extends MonthOfYear(12)
 
-  lazy val values = Array(JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER)
+  lazy val values = Array(January, February, March, April, May, June, July, August, September, October, November, December)
 
   /**
    * Obtains an instance of  { @code MonthOfYear } from an  { @code int } value.
@@ -140,19 +152,19 @@ object MonthOfYear {
    */
   def of(monthOfYear: Int): MonthOfYear = {
     monthOfYear match {
-      case 0 => DECEMBER //Is that a good solution or should we better fix roll to return 12 instead of 0?
-      case 1 => JANUARY
-      case 2 => FEBRUARY
-      case 3 => MARCH
-      case 4 => APRIL
-      case 5 => MAY
-      case 6 => JUNE
-      case 7 => JULY
-      case 8 => AUGUST
-      case 9 => SEPTEMBER
-      case 10 => OCTOBER
-      case 11 => NOVEMBER
-      case 12 => DECEMBER
+      case 0 => December //Is that a good solution or should we better fix roll to return 12 instead of 0?
+      case 1 => January
+      case 2 => February
+      case 3 => March
+      case 4 => April
+      case 5 => May
+      case 6 => June
+      case 7 => July
+      case 8 => August
+      case 9 => September
+      case 10 => October
+      case 11 => November
+      case 12 => December
       case _ => throw new IllegalCalendarFieldValueException(ISOChronology.monthOfYearRule, monthOfYear, 1, 12)
     }
   }
@@ -168,84 +180,84 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Calendrical {
    *
    * @return true if this instance represents January
    */
-  def isJanuary: Boolean = (this == JANUARY)
+  def isJanuary: Boolean = (this == January)
 
   /**
    * Is this instance representing February.
    *
    * @return true if this instance represents February
    */
-  def isFebruary: Boolean = (this == FEBRUARY)
+  def isFebruary: Boolean = (this == February)
 
   /**
    * Is this instance representing March.
    *
    * @return true if this instance represents March
    */
-  def isMarch: Boolean = (this == MARCH)
+  def isMarch: Boolean = (this == March)
 
   /**
    * Is this instance representing April.
    *
    * @return true if this instance represents April
    */
-  def isApril: Boolean = (this == APRIL)
+  def isApril: Boolean = (this == April)
 
   /**
    * Is this instance representing May.
    *
    * @return true if this instance represents May
    */
-  def isMay: Boolean = (this == MAY)
+  def isMay: Boolean = (this == May)
 
   /**
    * Is this instance representing June.
    *
    * @return true if this instance represents June
    */
-  def isJune: Boolean = (this == JUNE)
+  def isJune: Boolean = (this == June)
 
   /**
    * Is this instance representing July.
    *
    * @return true if this instance represents July
    */
-  def isJuly: Boolean = (this == JULY)
+  def isJuly: Boolean = (this == July)
 
   /**
    * Is this instance representing August.
    *
    * @return true if this instance represents August
    */
-  def isAugust: Boolean = (this == AUGUST)
+  def isAugust: Boolean = (this == August)
 
   /**
    * Is this instance representing September.
    *
    * @return true if this instance represents September
    */
-  def isSeptember: Boolean = (this == SEPTEMBER)
+  def isSeptember: Boolean = (this == September)
 
   /**
    * Is this instance representing October.
    *
    * @return true if this instance represents October
    */
-  def isOctober: Boolean = (this == OCTOBER)
+  def isOctober: Boolean = (this == October)
 
   /**
    * Is this instance representing November.
    *
    * @return true if this instance represents November
    */
-  def isNovember: Boolean = (this == NOVEMBER)
+  def isNovember: Boolean = (this == November)
 
   /**
    * Is this instance representing December.
    *
    * @return true if this instance represents December
    */
-  def isDecember: Boolean = (this == DECEMBER)
+  def isDecember: Boolean = (this == December)
 
   /**
    * Gets the month-of-year  { @code int } value.
@@ -315,8 +327,8 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Calendrical {
    */
   def minLengthInDays: Int = {
     this match {
-      case FEBRUARY => 28
-      case APRIL | JUNE | SEPTEMBER | NOVEMBER => 30
+      case February => 28
+      case April | June | September | November => 30
       case _ => 31
     }
   }
@@ -332,8 +344,8 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Calendrical {
    */
   def maxLengthInDays: Int = {
     this match {
-      case FEBRUARY => 29
-      case APRIL | JUNE | SEPTEMBER | NOVEMBER => 30
+      case February => 29
+      case April | June | September | November => 30
       case _ => 31
     }
   }
@@ -352,8 +364,8 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Calendrical {
    */
   def lengthInDays(leapYear: Boolean): Int = {
     this match {
-      case FEBRUARY => if (leapYear) 29 else 28
-      case APRIL | JUNE | SEPTEMBER | NOVEMBER => 30
+      case February => if (leapYear) 29 else 28
+      case April | June | September | November => 30
       case _ => 31
     }
   }
@@ -372,7 +384,7 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Calendrical {
    * @param locale the locale to use, not null
    * @return the full text value of the month-of-year, never null
    */
-  def getText(locale: Locale): String = ISOChronology.monthOfYearRule.getText(getValue, locale, TextStyle.FULL)
+  def getText(locale: Locale): String = ISOChronology.monthOfYearRule.getText(getValue, locale, TextStyle.Full)
 
   /**
    * Gets the quarter that this month falls in.
@@ -400,7 +412,7 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Calendrical {
    */
   def getMonthOfQuarter: Int = {
     val result = (ordinal % 3)
-    if(result == 0) 3 else result
+    if (result == 0) 3 else result
   }
 
   /**
@@ -417,7 +429,7 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Calendrical {
    * @param locale the locale to use, not null
    * @return the short text value of the month-of-year, never null
    */
-  def getShortText(locale: Locale): String = ISOChronology.monthOfYearRule.getText(getValue, locale, TextStyle.SHORT)
+  def getShortText(locale: Locale): String = ISOChronology.monthOfYearRule.getText(getValue, locale, TextStyle.Short)
 
   /**
    * Gets the day-of-month for last day of this month.
@@ -433,4 +445,42 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Calendrical {
   val name = this.getClass.getName
 
   def compareTo(other: MonthOfYear): Int = this.ordinal - other.ordinal
+
+  /**
+   * Gets the day-of-year for the first day of this month.
+   * <p>
+   * This returns the day-of-year that this month begins on, using the leap
+   * year flag to determine the length of February.
+   *
+   * @param leapYear  true if the length is required for a leap year
+   * @return the last day of this month, from 1 to 335
+   */
+  public int getMonthStartDayOfYear(boolean leapYear) {
+    val leap: Int = if (leapYear) 1 else 0
+    this match {
+      case January => 1
+      case February => 32
+      case March => 60 + leap
+      case April => 91 + leap
+      case May => 121 + leap
+      case June => 152 + leap
+      case July => 182 + leap
+      case August => 213 + leap
+      case September => 244 + leap
+      case October => 274 + leap
+      case November => 305 + leap
+      case December => 335 + leap
+    }
+  }
+
+  /**
+   * Gets the day-of-year for the last day of this month.
+   * <p>
+   * This returns the day-of-year that this month ends on, using the leap
+   * year flag to determine the length of February.
+   *
+   * @param leapYear  true if the length is required for a leap year
+   * @return the last day of this month, from 31 to 366
+   */
+  def getMonthEndDayOfYear(leapYear: Boolean): Int = getMonthStartDayOfYear(leapYear) + lengthInDays(leapYear) - 1;
 }

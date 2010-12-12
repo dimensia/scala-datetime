@@ -121,7 +121,7 @@ object ZoneRulesBuilder {
   /**
    * The maximum date-time.
    */
-  private val MAX_DATE_TIME: LocalDateTime = LocalDateTime.of(Year.MAX_YEAR, 12, 31, 23, 59, 59, 999999999)
+  private val MAX_DATE_TIME: LocalDateTime = LocalDateTime.of(Year.MaxYear, 12, 31, 23, 59, 59, 999999999)
 
   /**
    * Validates that the input value is not null.
@@ -276,11 +276,11 @@ class ZoneRulesBuilder {
      */
     private[zone] def toTransitionRule(standardOffset: ZoneOffset, savingsBefore: Period): ZoneOffsetTransitionRule = {
       if (dayOfMonthIndicator < 0) {
-        if (month != MonthOfYear.FEBRUARY) {
+        if (month != MonthOfYear.February) {
           dayOfMonthIndicator = month.maxLengthInDays - 6
         }
       }
-      if (timeEndOfDay && dayOfMonthIndicator > 0 && (dayOfMonthIndicator == 28 && month == MonthOfYear.FEBRUARY) == false) {
+      if (timeEndOfDay && dayOfMonthIndicator > 0 && (dayOfMonthIndicator == 28 && month == MonthOfYear.February) == false) {
         var date: LocalDate = LocalDate.of(2004, month, dayOfMonthIndicator).plusDays(1)
         month = date.getMonthOfYear
         dayOfMonthIndicator = date.getDayOfMonth
@@ -400,7 +400,7 @@ class ZoneRulesBuilder {
     }
 
     /**The latest year that the last year starts at. */
-    private var maxLastRuleStartYear: Int = Year.MIN_YEAR
+    private var maxLastRuleStartYear: Int = Year.MinYear
     /**The rules for the current window. */
     private var ruleList: List[ZoneRulesBuilder#TZRule] = new ArrayList[ZoneRulesBuilder#TZRule]
     /**
@@ -420,7 +420,7 @@ class ZoneRulesBuilder {
           addRule(lastRule.year, maxLastRuleStartYear, lastRule.month, lastRule.dayOfMonthIndicator, lastRule.dayOfWeek, lastRule.time, lastRule.timeEndOfDay, lastRule.timeDefinition, lastRule.savingAmount)
           lastRule.year = maxLastRuleStartYear + 1
         }
-        if (maxLastRuleStartYear == Year.MAX_YEAR) {
+        if (maxLastRuleStartYear == Year.MaxYear) {
           lastRuleList.clear
         }
         else {
@@ -436,7 +436,7 @@ class ZoneRulesBuilder {
           addRule(lastRule.year, endYear + 1, lastRule.month, lastRule.dayOfMonthIndicator, lastRule.dayOfWeek, lastRule.time, lastRule.timeEndOfDay, lastRule.timeDefinition, lastRule.savingAmount)
         }
         lastRuleList.clear
-        maxLastRuleStartYear = Year.MAX_YEAR
+        maxLastRuleStartYear = Year.MaxYear
       }
       Collections.sort(ruleList)
       Collections.sort(lastRuleList)
@@ -470,7 +470,7 @@ class ZoneRulesBuilder {
       }
       var lastRule: Boolean = false
       var endYear = _endYear
-      if (endYear == Year.MAX_YEAR) {
+      if (endYear == Year.MaxYear) {
         lastRule = true
         endYear = startYear
       }
@@ -586,7 +586,7 @@ class ZoneRulesBuilder {
       savings = firstWindow.fixedSavingAmount
     }
     var firstWallOffset: ZoneOffset = deduplicate(standardOffset.plus(savings))
-    var windowStart: OffsetDateTime = deduplicate(OffsetDateTime.of(Year.MIN_YEAR, 1, 1, 0, 0, firstWallOffset))
+    var windowStart: OffsetDateTime = deduplicate(OffsetDateTime.of(Year.MinYear, 1, 1, 0, 0, firstWallOffset))
     for (window <- windowList) {
       window.tidy(windowStart.getYear)
       var effectiveSavings: Period = window.fixedSavingAmount

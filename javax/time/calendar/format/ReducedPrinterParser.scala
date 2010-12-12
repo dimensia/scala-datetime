@@ -53,8 +53,8 @@ import javax.time.calendar.format.DateTimeFormatterBuilder.SignStyle
  */
 
 final class ReducedPrinterParser private[format](rule: DateTimeFieldRule[_], width: Int, baseValue: Int)
-  extends NumberPrinterParser(rule, width, width, SignStyle.NOT_NEGATIVE, 0) {
-  //super(rule, width, width, SignStyle.NOT_NEGATIVE)
+  extends NumberPrinterParser(rule, width, width, SignStyle.NotNegative, 0) {
+  //super(rule, width, width, SignStyle.NotNegative)
   if (width < 1 || width > 9) {
     throw new IllegalArgumentException("The width must be from 1 to 9 inclusive but was " + width)
   }

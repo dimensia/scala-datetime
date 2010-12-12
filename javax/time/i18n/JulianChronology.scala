@@ -83,7 +83,7 @@ object JulianChronology extends JulianChronology {
    *
    * @return the period unit for years, never null
    */
-  def periodYears: PeriodUnit = YEARS
+  def periodYears: PeriodUnit = Years
 
   /**
    * Gets the period unit for weeks.
@@ -105,12 +105,7 @@ object JulianChronology extends JulianChronology {
    *
    * @return the period unit for months, never null
    */
-  def periodMonths: PeriodUnit = MONTHS
-
-  /**
-   * The singleton instance of   { @code JulianChronology }.
-   */
-  val INSTANCE: JulianChronology = new JulianChronology
+  def periodMonths: PeriodUnit = Months
 
   /**
    * Gets the period unit for days.
@@ -134,16 +129,6 @@ object JulianChronology extends JulianChronology {
 
     private def readResolve: AnyRef = Months
   }
-
-  /**
-   * Period unit for years.
-   */
-  private val YEARS: PeriodUnit = Years
-
-  /**
-   * Period unit for months.
-   */
-  private val MONTHS: PeriodUnit = Months
 
   /**
    * Checks if the specified year is a leap year.

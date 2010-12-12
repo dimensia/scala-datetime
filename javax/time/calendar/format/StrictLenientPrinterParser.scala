@@ -39,12 +39,12 @@ object StrictLenientPrinterParser {
   /**
    * Strict parsing.
    */
-  object STRICT extends StrictLenientPrinterParser
+  object Strict extends StrictLenientPrinterParser
 
   /**
    * Lenient parsing.
    */
-  object LENIENT extends StrictLenientPrinterParser
+  object Lenient extends StrictLenientPrinterParser
 
 }
 
@@ -59,12 +59,12 @@ sealed abstract class StrictLenientPrinterParser extends DateTimePrinter with Da
 
   /**{ @inheritDoc }*/
   def parse(context: DateTimeParseContext, parseText: String, position: Int): Int = {
-    context.strict = (this == STRICT)
+    context.strict = (this == Strict)
     position
   }
 
   /**{ @inheritDoc }*/
-  override def toString: String = "ParseStrict(" + (this == STRICT) + ")"
+  override def toString: String = "ParseStrict(" + (this == Strict) + ")"
 
   /**{ @inheritDoc }*/
   override def isPrintDataAvailable(calendrical: Calendrical): Boolean = true

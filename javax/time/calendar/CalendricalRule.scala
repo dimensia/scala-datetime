@@ -139,11 +139,12 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * @param calendrical the calendrical to get the value from, not null
    * @return the value, null if unable to derive the value
    */
-  final def deriveValueFor[R](rule: CalendricalRule[R], value: T, calendrical: Calendrical): Option[R] = {
+  final def deriveValueFor[R](rule: CalendricalRule[R], value: T, calendrical: Calendrical, chronology: Chronology): Option[R] = {
     ISOChronology.checkNotNull(rule, "CalendricalRule must not be null")
     ISOChronology.checkNotNull(value, "Value must not be null")
     ISOChronology.checkNotNull(calendrical, "Calendrical must not be null")
     if (rule == this) rule.reify(value)
+    else if (rule == Chronology.rule) rule.reify(chronology)
     else rule.derive(calendrical)
   }
 
@@ -282,6 +283,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * @return true if the rules are the same
    */
   override def equals(obj: AnyRef): Boolean = {
+    if(obj eq this) true
     if (obj == null || getClass != obj.getClass) false
     else id.equals((obj.asInstanceOf[CalendricalRule[_]]).id)
   }

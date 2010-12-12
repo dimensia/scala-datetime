@@ -360,10 +360,10 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
     var str = _str
     str = str.toLowerCase
     if (matches(str, "minimum")) {
-      return Year.MIN_YEAR
+      return Year.MinYear
     }
     else if (matches(str, "maximum")) {
-      return Year.MAX_YEAR
+      return Year.MaxYear
     }
     else if (str.equals("only")) {
       return defaultYear
@@ -737,7 +737,7 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
     /**The day-of-month of the cutover. */
     private[zone] var dayOfMonth: Int = 1
     /**The month of the cutover. */
-    private[zone] var month: MonthOfYear = MonthOfYear.JANUARY
+    private[zone] var month: MonthOfYear = MonthOfYear.January
     /**Whether to adjust forwards. */
     private[zone] var adjustForwards: Boolean = true
 

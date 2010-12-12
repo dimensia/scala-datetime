@@ -104,7 +104,7 @@ object DateTimeFields {
   def of(fieldValueMap: Map[DateTimeFieldRule[_], Int]): DateTimeFields = {
     ISOChronology.checkNotNull(fieldValueMap, "Field-value map must not be null")
     if (fieldValueMap.isEmpty) {
-      return EMPTY
+      return Empty
     }
     val map: TreeMap[DateTimeFieldRule[_], Int] = createMap
     for (entry <- fieldValueMap.entrySet) {
@@ -150,7 +150,7 @@ object DateTimeFields {
   /**
    * A singleton empty    { @code DateTimeFields }, placing no restrictions on the date-time.
    */
-  val EMPTY: DateTimeFields = new DateTimeFields(createMap)
+  val Empty: DateTimeFields = new DateTimeFields(createMap)
 }
 
 /**
@@ -271,7 +271,7 @@ final class DateTimeFields private(val fieldValueMap: TreeMap[DateTimeFieldRule[
     if (clonedMap.remove(fieldRule) == null) {
       return this
     }
-    return if (clonedMap.isEmpty) EMPTY else new DateTimeFields(clonedMap)
+    return if (clonedMap.isEmpty) Empty else new DateTimeFields(clonedMap)
   }
 
   /**
@@ -344,7 +344,7 @@ final class DateTimeFields private(val fieldValueMap: TreeMap[DateTimeFieldRule[
    * @return the resolved instance
    * @throws ObjectStreamException if an error occurs
    */
-  private def readResolve: AnyRef = if (fieldValueMap.isEmpty) DateTimeFields.EMPTY else this
+  private def readResolve: AnyRef = if (fieldValueMap.isEmpty) DateTimeFields.Empty else this
 
   /**
    * Iterates through all the field rules.

@@ -74,8 +74,6 @@ import javax.time.calendar.format.DateTimeFormatterBuilder.{TextStyle, SignStyle
  * @author Stephen Colebourne
  */
 object DateTimeFormatterBuilder {
-  /**Map of letters to rules. */
-  private val RULE_MAP: Map[Char, DateTimeFieldRule[_]] = new HashMap[Char, DateTimeFieldRule[_]]
 
   /**
    * Enumeration of ways to handle the positive/negative sign.
@@ -90,35 +88,35 @@ object DateTimeFormatterBuilder {
      * In strict parsing, the sign will be rejected unless the pad width is exceeded.
      * In lenient parsing, any sign will be accepted.
      */
-    object EXCEEDS_PAD extends SignStyle
+    object ExceedsPad extends SignStyle
 
     /**
      * Style to output the sign only if the value is negative.
      * In strict parsing, the negative sign will be accepted and the positive sign rejected.
      * In lenient parsing, any sign will be accepted.
      */
-    object NORMAL extends SignStyle
+    object Normal extends SignStyle
 
     /**
      * Style to always output the sign, where zero will output '+'.
      * In strict parsing, the absence of a sign will be rejected.
      * In lenient parsing, the absence of a sign will be treated as a positive number.
      */
-    object ALWAYS extends SignStyle
+    object Always extends SignStyle
 
     /**
      * Style to never output sign, only outputting the absolute value.
      * In strict parsing, any sign will be rejected.
      * In lenient parsing, any sign will be accepted unless the width is fixed.
      */
-    object NEVER extends SignStyle
+    object Never extends SignStyle
 
     /**
      * Style to block negative values, throwing an exception on printing.
      * In strict parsing, any sign will be rejected.
      * In lenient parsing, any sign will be accepted unless the width is fixed.
      */
-    object NOT_NEGATIVE extends SignStyle
+    object NotNegative extends SignStyle
 
   }
 
@@ -135,29 +133,56 @@ object DateTimeFormatterBuilder {
      * Full text style, with the most detail.
      * An example might be 'Tuesday, April 12, 1952 AD' or '3:30:42pm PST'.
      */
-    object FULL extends FormatStyle(0)
+    object Full extends FormatStyle(0)
 
     /**
      * Long text style, with lots of detail.
      * An example might be 'January 12, 1952'.
      */
-    object LONG extends FormatStyle(1)
+    object Long extends FormatStyle(1)
 
     /**
      * Medium text style, with some detail.
      * An example might be 'Jan 12, 1952'.
      */
-    object MEDIUM extends FormatStyle(2)
+    object Medium extends FormatStyle(2)
 
     /**
      * Short text style, typically numeric.
      * An example might be '12.13.52' or '3:30pm'.
      */
-    object SHORT extends FormatStyle(3)
+    object Short extends FormatStyle(3)
 
   }
 
   abstract sealed class FormatStyle(val ordinal: Int)
+
+  /**
+   * Enumeration of the style of text output to use.
+   *
+   * @author Stephen Colebourne
+   */
+  object TextStyle {
+
+    /**
+     * Full text, typically the full description.
+     */
+    object Full extends TextStyle
+
+    /**
+     * Short text, typically an abbreviation.
+     */
+    object Short extends TextStyle
+
+    /**
+     * Narrow text, typically a single letter.
+     */
+    object Narrow extends TextStyle
+
+    lazy val values = Array(Full, Short, Narrow)
+  }
+
+  abstract sealed class TextStyle
 
   /**
    * Validates that the input value is not null.
@@ -170,32 +195,8 @@ object DateTimeFormatterBuilder {
     if (obj == null) throw new NullPointerException(errorMessage)
   }
 
-  /**
-   * Enumeration of the style of text output to use.
-   *
-   * @author Stephen Colebourne
-   */
-  object TextStyle {
-
-    /**
-     * Full text, typically the full description.
-     */
-    object FULL extends TextStyle
-
-    /**
-     * Short text, typically an abbreviation.
-     */
-    object SHORT extends TextStyle
-
-    /**
-     * Narrow text, typically a single letter.
-     */
-    object NARROW extends TextStyle
-
-    lazy val values = Array(FULL, SHORT, NARROW)
-  }
-
-  abstract sealed class TextStyle
+  /**Map of letters to rules. */
+  private val RuleMap: Map[Char, DateTimeFieldRule[_]] = new HashMap[Char, DateTimeFieldRule[_]]
 
 }
 
@@ -267,7 +268,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    * @return this, for chaining, never null
    * @throws NullPointerException if the field rule is null
    */
-  def appendText(rule: DateTimeFieldRule[_]): DateTimeFormatterBuilder = appendText(rule, TextStyle.FULL)
+  def appendText(rule: DateTimeFieldRule[_]): DateTimeFormatterBuilder = appendText(rule, TextStyle.Full)
 
   /**
    * Mark the start of an optional section.
@@ -547,14 +548,14 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
             throw new IllegalArgumentException("Fraction letter 'f' must be followed by valid fraction pattern: " + pattern)
           }
         }
-        var rule: DateTimeFieldRule[_] = RULE_MAP.get(cur)
+        var rule: DateTimeFieldRule[_] = RuleMap.get(cur)
         if (rule == null) {
           if (cur == 'z') {
             if (count < 4) {
-              appendZoneText(TextStyle.SHORT)
+              appendZoneText(TextStyle.Short)
             }
             else {
-              appendZoneText(TextStyle.FULL)
+              appendZoneText(TextStyle.Full)
             }
           }
           else if (cur == 'I') {
@@ -691,18 +692,18 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
     cur match {
       case 'x' | 'y' =>
         if (count == 2) appendValueReduced(rule, 2, 2000)
-        else if (count < 4) appendValue(rule, count, 10, SignStyle.NORMAL)
-        else appendValue(rule, count, 10, SignStyle.EXCEEDS_PAD)
+        else if (count < 4) appendValue(rule, count, 10, SignStyle.Normal)
+        else appendValue(rule, count, 10, SignStyle.ExceedsPad)
       case 'M' =>
         count match {
           case 1 => appendValue(rule)
           case 2 => appendValue(rule, 2)
-          case 3 => appendText(rule, TextStyle.SHORT)
-          case _ => appendText(rule, TextStyle.FULL)
+          case 3 => appendText(rule, TextStyle.Short)
+          case _ => appendText(rule, TextStyle.Full)
         }
       case 'a' | 'E' =>
-        if (count < 4) appendText(rule, TextStyle.SHORT)
-        else appendText(rule, TextStyle.FULL)
+        if (count < 4) appendText(rule, TextStyle.Short)
+        else appendText(rule, TextStyle.Full)
       case _ =>
         if (fraction > 0) appendFraction(rule, count, if (fraction == 1) count else 9)
         else {
@@ -735,7 +736,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    * @throws IllegalArgumentException if the widths are invalid
    */
   def appendValue(rule: DateTimeFieldRule[_], minWidth: Int, maxWidth: Int, signStyle: DateTimeFormatterBuilder.SignStyle): DateTimeFormatterBuilder = {
-    if (minWidth == maxWidth && signStyle == SignStyle.NOT_NEGATIVE) {
+    if (minWidth == maxWidth && signStyle == SignStyle.NotNegative) {
       return appendValue(rule, maxWidth)
     }
     checkNotNull(rule, "DateTimeFieldRule must not be null")
@@ -831,7 +832,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
     if (width < 1 || width > 10) {
       throw new IllegalArgumentException("The width must be from 1 to 10 inclusive but was " + width)
     }
-    val pp: NumberPrinterParser = new NumberPrinterParser(rule, width, width, SignStyle.NOT_NEGATIVE)
+    val pp: NumberPrinterParser = new NumberPrinterParser(rule, width, width, SignStyle.NotNegative)
     appendFixedWidth(width, pp)
   }
 
@@ -897,7 +898,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    * The count of pattern letters determine the format.
    * <p>
    * <b>Text</b>: If the number of pattern letters is 4 or more, the full textual form is used
-   * as per   { @link TextStyle # FULL }. Otherwise a short form is used, as per   { @link TextStyle # SHORT }.
+   * as per   { @link TextStyle # Full }. Otherwise a short form is used, as per   { @link TextStyle # Short }.
    * <p>
    * <b>Number</b>: If the count of letters is one, then the value is printed using the minimum number
    * of digits and without padding as per   { @link # appendValue ( DateTimeFieldRule ) }. Otherwise, the
@@ -919,8 +920,8 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    * For printing, this outputs the rightmost two digits. For parsing, this will parse using the
    * base value of 2000, resulting in a year within the range 2000 to 2099 inclusive.
    * If the count of letters is less than four (but not two), then the sign is only output for negative
-   * years as per   { @link SignStyle # NORMAL }.
-   * Otherwise, the sign is output if the pad width is exceeded, as per   { @link SignStyle # EXCEEDS_PAD }
+   * years as per   { @link SignStyle # Normal }.
+   * Otherwise, the sign is output if the pad width is exceeded, as per   { @link SignStyle # ExceedsPad }
    * <p>
    * <b>Month</b>: If the count of letters is 3 or greater, use the Text rules above.
    * Otherwise use the Number rules above.
@@ -979,7 +980,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    * @return this, for chaining, never null
    */
   def parseLenient: DateTimeFormatterBuilder = {
-    appendInternal(StrictLenientPrinterParser.LENIENT, StrictLenientPrinterParser.LENIENT)
+    appendInternal(StrictLenientPrinterParser.Lenient, StrictLenientPrinterParser.Lenient)
     this
   }
 
@@ -997,7 +998,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    * @return this, for chaining, never null
    */
   def parseStrict: DateTimeFormatterBuilder = {
-    appendInternal(StrictLenientPrinterParser.STRICT, StrictLenientPrinterParser.STRICT)
+    appendInternal(StrictLenientPrinterParser.Strict, StrictLenientPrinterParser.Strict)
     this
   }
 
@@ -1139,7 +1140,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    */
   def appendValue(rule: DateTimeFieldRule[_]): DateTimeFormatterBuilder = {
     checkNotNull(rule, "DateTimeFieldRule must not be null")
-    val pp: NumberPrinterParser = new NumberPrinterParser(rule, 1, 10, SignStyle.NORMAL)
+    val pp: NumberPrinterParser = new NumberPrinterParser(rule, 1, 10, SignStyle.Normal)
     active.valueParserIndex = appendInternal(pp, pp)
     this
   }

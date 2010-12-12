@@ -81,7 +81,7 @@ object ISOChronology extends ISOChronology {
    *
    * @return the period unit for months, never null
    */
-  def periodMonths: PeriodUnit = MONTHS
+  def periodMonths: PeriodUnit = Months
 
   /**
    * Period unit for seconds.
@@ -121,7 +121,7 @@ object ISOChronology extends ISOChronology {
 
   @SerialVersionUID(1L)
   private[calendar] sealed class MonthOfYearRule
-    extends DateTimeFieldRule[MonthOfYear](classOf[MonthOfYear], ISOChronology, "MonthOfYear", MONTHS, YEARS, 1, 12, true)
+    extends DateTimeFieldRule[MonthOfYear](classOf[MonthOfYear], ISOChronology, "MonthOfYear", Months, Years, 1, 12, true)
     with Serializable {
     protected def interpret(merger: CalendricalMerger, value: AnyRef): MonthOfYear = {
       //FIXME
@@ -182,7 +182,7 @@ object ISOChronology extends ISOChronology {
       map.put(10, array(Calendar.OCTOBER))
       map.put(11, array(Calendar.NOVEMBER))
       map.put(12, array(Calendar.DECEMBER))
-      textStores.put(TextStyle.FULL, new DateTimeFieldRule.TextStore(locale, map))
+      textStores.put(TextStyle.Full, new DateTimeFieldRule.TextStore(locale, map))
       array = oldSymbols.getShortMonths
       map.clear
       map.put(1, array(Calendar.JANUARY))
@@ -197,7 +197,7 @@ object ISOChronology extends ISOChronology {
       map.put(10, array(Calendar.OCTOBER))
       map.put(11, array(Calendar.NOVEMBER))
       map.put(12, array(Calendar.DECEMBER))
-      textStores.put(TextStyle.SHORT, new DateTimeFieldRule.TextStore(locale, map))
+      textStores.put(TextStyle.Short, new DateTimeFieldRule.TextStore(locale, map))
     }
   }
 
@@ -335,8 +335,8 @@ object ISOChronology extends ISOChronology {
    * @return the week-based-year
    */
   private[calendar] def getWeekBasedYearFromDate(date: LocalDate): Int = {
-    var year: Year = date.toYear
-    if (date.getMonthOfYear == MonthOfYear.JANUARY) {
+    var year: Year = Year.of(date)
+    if (date.getMonthOfYear == MonthOfYear.January) {
       var dom: Int = date.getDayOfMonth
       if (dom < 4) {
         var dow: Int = date.getDayOfWeek.getValue
@@ -345,7 +345,7 @@ object ISOChronology extends ISOChronology {
         }
       }
     }
-    else if (date.getMonthOfYear == MonthOfYear.DECEMBER) {
+    else if (date.getMonthOfYear == MonthOfYear.December) {
       var dom: Int = date.getDayOfMonth
       if (dom > 28) {
         var dow: Int = date.getDayOfWeek.getValue
@@ -381,7 +381,7 @@ object ISOChronology extends ISOChronology {
    *
    * @return the period unit for years, never null
    */
-  def periodYears: PeriodUnit = YEARS
+  def periodYears: PeriodUnit = Years
 
   private val NANO_OF_SECOND: Rule = new Rule(NANO_OF_SECOND_ORDINAL, "NanoOfSecond", NANOS, SECONDS, 0, 999999999, 999999999)
 
@@ -417,7 +417,7 @@ object ISOChronology extends ISOChronology {
       map.put(5, array(Calendar.FRIDAY))
       map.put(6, array(Calendar.SATURDAY))
       map.put(7, array(Calendar.SUNDAY))
-      textStores.put(TextStyle.FULL, new DateTimeFieldRule.TextStore(locale, map))
+      textStores.put(TextStyle.Full, new DateTimeFieldRule.TextStore(locale, map))
       array = oldSymbols.getShortWeekdays
       map.clear
       map.put(1, array(Calendar.MONDAY))
@@ -427,7 +427,7 @@ object ISOChronology extends ISOChronology {
       map.put(5, array(Calendar.FRIDAY))
       map.put(6, array(Calendar.SATURDAY))
       map.put(7, array(Calendar.SUNDAY))
-      textStores.put(TextStyle.SHORT, new DateTimeFieldRule.TextStore(locale, map))
+      textStores.put(TextStyle.Short, new DateTimeFieldRule.TextStore(locale, map))
     }
 
     protected def derive(calendrical: Calendrical): Option[DayOfWeek] = {
@@ -488,8 +488,8 @@ object ISOChronology extends ISOChronology {
    * There are 7 leap years from 1970 to 2000.
    */
   private[calendar] val DAYS_0000_TO_1970: Long = (DAYS_PER_CYCLE * 5L) - (30L * 365L + 7L)
-  private val DAY_OF_YEAR: Rule = new Rule(DAY_OF_YEAR_ORDINAL, "DayOfYear", DAYS, YEARS, 1, 366, 365)
-  private val DAY_OF_MONTH: Rule = new Rule(DAY_OF_MONTH_ORDINAL, "DayOfMonth", DAYS, MONTHS, 1, 31, 28)
+  private val DAY_OF_YEAR: Rule = new Rule(DAY_OF_YEAR_ORDINAL, "DayOfYear", DAYS, Years, 1, 366, 365)
+  private val DAY_OF_MONTH: Rule = new Rule(DAY_OF_MONTH_ORDINAL, "DayOfMonth", DAYS, Months, 1, 31, 28)
 
   /**
    * Period unit for days.
@@ -509,7 +509,7 @@ object ISOChronology extends ISOChronology {
   /**
    * Period unit for decades.
    */
-  private val DECADES: ChronoUnit = new ChronoUnit(14 * 16, "Decades", PeriodField.of(10, YEARS), Duration.ofSeconds(10L * 31556952L))
+  private val DECADES: ChronoUnit = new ChronoUnit(14 * 16, "Decades", PeriodField.of(10, Years), Duration.ofSeconds(10L * 31556952L))
 
   /**
    * Gets the rule for the day-of-month field in the ISO chronology.
@@ -567,8 +567,8 @@ object ISOChronology extends ISOChronology {
    * Period unit for eras.
    */
   private val ERAS: ChronoUnit = new ChronoUnit(17 * 16, "Eras", null, Duration.ofSeconds(31556952L * 2000000000L))
-  private val MONTH_OF_QUARTER: Rule = new Rule(MONTH_OF_QUARTER_ORDINAL, "MonthOfQuarter", MONTHS, QUARTERS, 1, 3, 3)
-  private val YEAR: Rule = new Rule(YEAR_ORDINAL, "Year", YEARS, null, Year.MIN_YEAR, Year.MAX_YEAR, Year.MAX_YEAR)
+  private val MONTH_OF_QUARTER: Rule = new Rule(MONTH_OF_QUARTER_ORDINAL, "MonthOfQuarter", Months, QUARTERS, 1, 3, 3)
+  private val YEAR: Rule = new Rule(YEAR_ORDINAL, "Year", Years, null, Year.MinYear, Year.MaxYear, Year.MaxYear)
 
   /**
    * Gets the period unit for week-based-years.
@@ -586,7 +586,7 @@ object ISOChronology extends ISOChronology {
   def periodWeekBasedYears: PeriodUnit = WEEK_BASED_YEARS
 
   private val MONTH_OF_QUARTER_ORDINAL: Int = 15 * 16
-  private val WEEK_OF_MONTH: Rule = new Rule(WEEK_OF_MONTH_ORDINAL, "WeekOfMonth", WEEKS, MONTHS, 1, 5, 4)
+  private val WEEK_OF_MONTH: Rule = new Rule(WEEK_OF_MONTH_ORDINAL, "WeekOfMonth", WEEKS, Months, 1, 5, 4)
 
   /**
    * Period unit for 12 hours half-days, used by AM/PM.
@@ -686,8 +686,8 @@ object ISOChronology extends ISOChronology {
   /**
    * Period unit for quarters.
    */
-  private val QUARTERS: ChronoUnit = new ChronoUnit(11 * 16, "Quarters", PeriodField.of(3, MONTHS), Duration.ofSeconds(31556952L / 4))
-  private val WEEK_OF_YEAR: Rule = new Rule(WEEK_OF_YEAR_ORDINAL, "WeekOfYear", WEEKS, YEARS, 1, 53, 53)
+  private val QUARTERS: ChronoUnit = new ChronoUnit(11 * 16, "Quarters", PeriodField.of(3, Months), Duration.ofSeconds(31556952L / 4))
+  private val WEEK_OF_YEAR: Rule = new Rule(WEEK_OF_YEAR_ORDINAL, "WeekOfYear", WEEKS, Years, 1, 53, 53)
 
   /**
    * Gets the rule for the second-of-day field.
@@ -702,7 +702,7 @@ object ISOChronology extends ISOChronology {
   /**
    * Constant for the maximum week-based-year.
    */
-  val MAX_WEEK_BASED_YEAR: Int = Year.MAX_YEAR
+  val MAX_WEEK_BASED_YEAR: Int = Year.MaxYear
 
   /**
    * Calculates the day-of-year from a date.
@@ -711,10 +711,7 @@ object ISOChronology extends ISOChronology {
    * @return the day-of-year
    */
   private[calendar] def getDayOfYearFromDate(date: LocalDate): Int = {
-    var moy0: Int = date.getMonthOfYear.ordinal
-    var dom: Int = date.getDayOfMonth
-    if (isLeapYear(date.getYear)) LEAP_MONTH_START(moy0) + dom
-    else STANDARD_MONTH_START(moy0) + dom
+    date.getMonthOfYear.getMonthStartDayOfYear(date.isLeapYear) + date.getDayOfMonth - 1
   }
 
   /**
@@ -733,7 +730,7 @@ object ISOChronology extends ISOChronology {
   /**
    * Constant for the minimum week-based-year.
    */
-  val MIN_WEEK_BASED_YEAR: Int = Year.MIN_YEAR
+  val MIN_WEEK_BASED_YEAR: Int = Year.MinYear
   private val YEAR_ORDINAL: Int = 17 * 16
 
   /**
@@ -824,8 +821,8 @@ object ISOChronology extends ISOChronology {
       map.put(0, array(Calendar.AM))
       map.put(1, array(Calendar.PM))
       var textStore: DateTimeFieldRule.TextStore = new DateTimeFieldRule.TextStore(locale, map)
-      textStores.put(TextStyle.FULL, textStore)
-      textStores.put(TextStyle.SHORT, textStore)
+      textStores.put(TextStyle.Full, textStore)
+      textStores.put(TextStyle.Short, textStore)
     }
 
     def convertValueToInt(value: AmPmOfDay): Int = value.getValue
@@ -1021,7 +1018,7 @@ object ISOChronology extends ISOChronology {
    */
   private[calendar] def getWeekOfWeekBasedYearFromDate(date: LocalDate): Int = {
     var wby: Int = getWeekBasedYearFromDate(date)
-    var yearStart: LocalDate = LocalDate.of(wby, MonthOfYear.JANUARY, 4)
+    var yearStart: LocalDate = LocalDate.of(wby, MonthOfYear.January, 4)
     return MathUtils.safeToInt((date.toModifiedJulianDays - yearStart.toModifiedJulianDays + yearStart.getDayOfWeek.getValue - 1) / 7 + 1)
   }
 
@@ -1047,7 +1044,7 @@ object ISOChronology extends ISOChronology {
    * Cache of units for deserialization.
    * Indices must match ordinal passed to unit constructor.
    */
-  private val UNIT_CACHE: Array[ChronoUnit] = Array[ChronoUnit](NANOS, MICROS, MILLIS, SECONDS, MINUTES, HOURS, _12_HOURS, _24_HOURS, DAYS, WEEKS, MONTHS, QUARTERS, WEEK_BASED_YEARS, YEARS, DECADES, CENTURIES, MILLENNIA, ERAS)
+  private val UNIT_CACHE: Array[ChronoUnit] = Array[ChronoUnit](NANOS, MICROS, MILLIS, SECONDS, MINUTES, HOURS, _12_HOURS, _24_HOURS, DAYS, WEEKS, Months, QUARTERS, WEEK_BASED_YEARS, Years, DECADES, CENTURIES, MILLENNIA, ERAS)
 
   /**
    * Rule implementation.
@@ -1055,7 +1052,7 @@ object ISOChronology extends ISOChronology {
   private[calendar] object QuarterOfYearRule extends QuarterOfYearRule
 
   private[calendar] sealed class QuarterOfYearRule
-    extends DateTimeFieldRule[QuarterOfYear](classOf[QuarterOfYear], ISOChronology, "QuarterOfYear", QUARTERS, YEARS, 1, 4)
+    extends DateTimeFieldRule[QuarterOfYear](classOf[QuarterOfYear], ISOChronology, "QuarterOfYear", QUARTERS, Years, 1, 4)
     with Serializable {
 
 
@@ -1083,22 +1080,19 @@ object ISOChronology extends ISOChronology {
    * @return the date, never null
    */
   private[calendar] def getDateFromDayOfYear(year: Int, dayOfYear: Int): LocalDate = {
+    dayOfYearRule.checkValue(dayOfYear)
     var leap: Boolean = isLeapYear(year)
     if (dayOfYear == 366 && leap == false) {
       throw new InvalidCalendarFieldException("DayOfYear 366 is invalid for year " + year, dayOfYearRule)
     }
 
-    var doy0: Int = dayOfYear - 1
-    var array: Array[Int] = (if (leap) LEAP_MONTH_START else STANDARD_MONTH_START)
-    var month: Int = 1
-    while (month < 12) {
-      if (doy0 < array(month)) {
-        //break //todo: break is not supported
-      }
-      month += 1;
+    var moy: MonthOfYear = MonthOfYear.of((dayOfYear - 1) / 31 + 1);
+    val monthEnd: Int = moy.getMonthEndDayOfYear(leap);
+    if (dayOfYear > monthEnd) {
+      moy = moy.next
     }
-    var moy: MonthOfYear = MonthOfYear.of(month)
-    var dom: Int = dayOfYear - array(month - 1)
+
+    val dom: Int = dayOfYear - moy.getMonthStartDayOfYear(leap) + 1
     return LocalDate.of(year, moy, dom)
   }
 
@@ -1244,7 +1238,7 @@ object ISOChronology extends ISOChronology {
               calendrical.get(yearRule) match {
                 case Some(year) => moy.lengthInDays(isLeapYear(year))
                 case None => moy.maxLengthInDays
-            }
+              }
             case None => 31
           }
         case DAY_OF_YEAR_ORDINAL =>
@@ -1255,7 +1249,7 @@ object ISOChronology extends ISOChronology {
         case WEEK_OF_MONTH_ORDINAL => {
           var year: Option[Int] = calendrical.get(yearRule)
           var moy: Option[MonthOfYear] = calendrical.get(monthOfYearRule)
-          if (year.isDefined && moy == Some(MonthOfYear.FEBRUARY)) {
+          if (year.isDefined && moy == Some(MonthOfYear.February)) {
             return if (isLeapYear(year.get)) 5 else 4
           }
           return getMaximumValue
@@ -1263,7 +1257,7 @@ object ISOChronology extends ISOChronology {
         case WEEK_OF_WEEK_BASED_YEAR_ORDINAL => {
           var date: LocalDate = calendrical.get(LocalDate.rule).getOrElse(return 53)
           date = date.withDayOfMonth(1).withMonthOfYear(1)
-          if (date.getDayOfWeek == DayOfWeek.THURSDAY || (date.getDayOfWeek == DayOfWeek.WEDNESDAY && isLeapYear(date.getYear))) {
+          if (date.getDayOfWeek == DayOfWeek.Thursday || (date.getDayOfWeek == DayOfWeek.Wednesday && isLeapYear(date.getYear))) {
             return 53
           }
           return 52
@@ -1542,7 +1536,7 @@ sealed class ISOChronology private
             throw new CalendricalRuleException("Unable to merge OffsetDate and OffsetTime as offsets differ", OffsetTime.rule)
           }
           else {
-            ot = ot.adjustLocalTime(od.getOffset)
+             ot = ot.withOffsetSameInstant(od.getOffset)
           }
         }
         merger.storeMerged(OffsetDateTime.rule, OffsetDateTime.of(od, ot, od.getOffset))

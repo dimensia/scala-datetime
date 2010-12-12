@@ -32,9 +32,7 @@
 package javax.time.calendar
 
 import java.io.Serializable
-import javax.time.CalendricalException
 import javax.time.MathUtils
-import javax.time.calendar.format.CalendricalPrintException
 import javax.time.calendar.format.DateTimeFormatter
 import javax.time.calendar.format.DateTimeFormatterBuilder
 import javax.time.calendar.format.DateTimeFormatterBuilder.SignStyle
@@ -47,13 +45,13 @@ import javax.time.calendar.format.DateTimeFormatterBuilder.SignStyle
  * quarter-of-year, can be obtained.
  * <p>
  * This class does not store or represent a day, time or time-zone.
- * Thus, for example, the value "October 2007" can be stored in a   { @code YearMonth }.
+ * Thus, for example, the value "October 2007" can be stored in a {@code YearMonth }.
  * <p>
  * The ISO-8601 calendar system is the modern civil calendar system used today
  * in most of the world. It is equivalent to the proleptic Gregorian calendar
  * system, in which todays's rules for leap years are applied for all time.
  * For most applications written today, the ISO-8601 rules are entirely suitable.
- * Any application that uses historical dates should consider using   { @code HistoricDate }.
+ * Any application that uses historical dates should consider using {@code HistoricDate }.
  * <p>
  * YearMonth is immutable and thread-safe.
  *
@@ -62,7 +60,17 @@ import javax.time.calendar.format.DateTimeFormatterBuilder.SignStyle
  */
 object YearMonth {
   /**
-   * Obtains an instance of   { @code YearMonth } from a Calendrical.
+   * Parser.
+   */
+  private val Parser: DateTimeFormatter =
+    (new DateTimeFormatterBuilder)
+      .appendValue(ISOChronology.yearRule, 4, 10, SignStyle.ExceedsPad)
+      .appendLiteral('-')
+      .appendValue(ISOChronology.monthOfYearRule, 2)
+      .toFormatter
+
+  /**
+   * Obtains an instance of {@code YearMonth } from a Calendrical.
    * <p>
    * This method will create a year-month from the Calendrical by extracting
    * the year and month-of-year fields.
@@ -77,16 +85,6 @@ object YearMonth {
     val month: MonthOfYear = ISOChronology.monthOfYearRule.getValueChecked(calendrical)
     of(year, month)
   }
-
-  /**
-   * Parser.
-   */
-  private val PARSER: DateTimeFormatter =
-    (new DateTimeFormatterBuilder)
-      .appendValue(ISOChronology.yearRule, 4, 10, SignStyle.EXCEEDS_PAD)
-      .appendLiteral('-')
-      .appendValue(ISOChronology.monthOfYearRule, 2)
-      .toFormatter
 
   /**
    * Rule implementation.
@@ -111,7 +109,7 @@ object YearMonth {
    * <p>
    * This will query the specified clock to obtain the current year-month.
    * Using this method allows the use of an alternate clock for testing.
-   * The alternate clock may be introduced using   { @link Clock dependency injection }.
+   * The alternate clock may be introduced using  {@link Clock dependency injection }.
    *
    * @param clock the clock to use, not null
    * @return the current year-month, never null
@@ -122,7 +120,7 @@ object YearMonth {
   }
 
   /**
-   * Obtains an instance of   { @code YearMonth } from a year and month.
+   * Obtains an instance of  {@code YearMonth } from a year and month.
    *
    * @param year the year to represent, from MIN_YEAR to MAX_YEAR
    * @param monthOfYear the month-of-year to represent, not null
@@ -136,7 +134,7 @@ object YearMonth {
   }
 
   /**
-   * Obtains an instance of   { @code YearMonth } from a year and month.
+   * Obtains an instance of  {@code YearMonth } from a year and month.
    *
    * @param year the year to represent, from MIN_YEAR to MAX_YEAR
    * @param monthOfYear the month-of-year to represent, from 1 (January) to 12 (December)
@@ -164,7 +162,7 @@ object YearMonth {
   def nowSystemClock: YearMonth = now(Clock.systemDefaultZone)
 
   /**
-   * Obtains an instance of   { @code YearMonth } from a text string.
+   * Obtains an instance of  {@code YearMonth } from a text string.
    * <p>
    * The following formats are accepted in ASCII:
    * <ul>
@@ -180,10 +178,10 @@ object YearMonth {
    * @return the parsed year-month, never null
    * @throws CalendricalException if the text cannot be parsed
    */
-  def parse(text: String): YearMonth = PARSER.parse(text, rule)
+  def parse(text: String): YearMonth = Parser.parse(text, rule)
 
   /**
-   * Obtains an instance of   { @code YearMonth } from a text string using a specific formatter.
+   * Obtains an instance of  {@code YearMonth } from a text string using a specific formatter.
    * <p>
    * The text is parsed using the formatter, returning a year-month.
    *
@@ -231,10 +229,10 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
   }
 
   /**
-   * Returns a copy of this   { @code YearMonth } with the specified period subtracted.
+   * Returns a copy of this  {@code YearMonth } with the specified period subtracted.
    * <p>
    * This subtracts the specified period from this year-month, returning a new year-month.
-   * Before subtraction, the period is converted to a   { @code Period } using
+   * Before subtraction, the period is converted to a  {@code Period } using
    * { @link Period # of ( PeriodProvider ) }.
    * The calculation only uses the years and months fields.
    * Other fields are ignored.
@@ -243,7 +241,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    *
    * @param periodProvider the period to subtract, not null
    * @return a { @code YearMonth } based on this year-month with the period subtracted, never null
-   * @throws CalendricalException if the specified period cannot be converted to a   { @code Period }
+   * @throws CalendricalException if the specified period cannot be converted to a  {@code Period }
    * @throws ArithmeticException if the result exceeds the supported range
    */
   def minus(periodProvider: PeriodProvider): YearMonth = {
@@ -254,10 +252,10 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
   /**
    * Gets the year field.
    * <p>
-   * This method returns the primitive   { @code int } value for the year.
+   * This method returns the primitive  {@code int } value for the year.
    * <p>
-   * Additional information about the year can be obtained via   { @link # toYear }.
-   * This returns a   { @code Year } object which includes information on whether
+   * Additional information about the year can be obtained via  {@link # toYear }.
+   * This returns a  {@code Year } object which includes information on whether
    * this is a leap year and its length in days.
    *
    * @return the year, from MIN_YEAR to MAX_YEAR
@@ -278,14 +276,14 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
   }
 
   /**
-   * Gets the month-of-year field, which is an enum   { @code MonthOfYear }.
+   * Gets the month-of-year field, which is an enum  {@code MonthOfYear }.
    * <p>
-   * This method returns the enum   { @link MonthOfYear } for the month.
-   * This avoids confusion as to what   { @code int } values mean.
-   * If you need access to the primitive   { @code int } value then the enum
-   * provides the   { @link MonthOfYear # getValue ( ) int value }.
+   * This method returns the enum  {@link MonthOfYear } for the month.
+   * This avoids confusion as to what  {@code int } values mean.
+   * If you need access to the primitive  {@code int } value then the enum
+   * provides the  {@link MonthOfYear # getValue ( ) int value }.
    * <p>
-   * Additional information can be obtained from the   { @code MonthOfYear }.
+   * Additional information can be obtained from the  {@code MonthOfYear }.
    * This includes month lengths, textual names and access to the quarter-of-year
    * and month-of-quarter values.
    *
@@ -310,7 +308,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
 
   /**
    * Rolls the month-of-year, adding the specified number of months to a copy
-   * of this   { @code YearMonth }.
+   * of this  {@code YearMonth }.
    * <p>
    * This method will add the specified number of months to the month-day,
    * rolling from December back to January if necessary.
@@ -341,7 +339,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
   }
 
   /**
-   * Gets the year field as a   { @code Year }.
+   * Gets the year field as a  {@code Year }.
    * <p>
    * This method provides access to an object representing the year field.
    * { @code Year } has methods for querying addition year-based information.
@@ -359,7 +357,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
   override def matchesCalendrical(calendrical: Calendrical): Boolean = this.equals(calendrical.get(YearMonth.rule))
 
   /**
-   * Outputs this year-month as a   { @code String } using the formatter.
+   * Outputs this year-month as a  {@code String } using the formatter.
    *
    * @param formatter the formatter to use, not null
    * @return the formatted year-month string, never null
@@ -372,7 +370,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
   }
 
   /**
-   * Returns a copy of this   { @code YearMonth } with the month-of-year altered.
+   * Returns a copy of this  {@code YearMonth } with the month-of-year altered.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -390,9 +388,9 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
   override def hashCode: Int = year ^ (month.getValue << 27)
 
   /**
-   * Outputs this year-month as a   { @code String }, such as   { @code 2007 -12 }.
+   * Outputs this year-month as a  {@code String }, such as  {@code 2007 -12 }.
    * <p>
-   * The output will be in the format   { @code yyyy -MM } :
+   * The output will be in the format  {@code yyyy -MM } :
    *
    * @return the formatted year-month, never null
    */
@@ -416,10 +414,10 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
   }
 
   /**
-   * Returns a copy of this   { @code YearMonth } with the specified period added.
+   * Returns a copy of this  {@code YearMonth } with the specified period added.
    * <p>
    * This adds the specified period to this year-month, returning a new year-month.
-   * Before addition, the period is converted to a   { @code Period } using
+   * Before addition, the period is converted to a  {@code Period } using
    * { @link Period # of ( PeriodProvider ) }.
    * The calculation only uses the years and months fields.
    * Other fields are ignored.
@@ -428,7 +426,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    *
    * @param periodProvider the period to add, not null
    * @return a { @code YearMonth } based on this year-month with the period added, never null
-   * @throws CalendricalException if the specified period cannot be converted to a   { @code Period }
+   * @throws CalendricalException if the specified period cannot be converted to a  {@code Period }
    * @throws ArithmeticException if the result exceeds the supported range
    */
   def plus(periodProvider: PeriodProvider): YearMonth = {
@@ -439,8 +437,8 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
   /**
    * Returns a date formed from this year-month at the specified day-of-month.
    * <p>
-   * This method merges   { @code this } and the specified day to form an
-   * instance of   { @code LocalDate }.
+   * This method merges  {@code this } and the specified day to form an
+   * instance of  {@code LocalDate }.
    * This method can be used as part of a chain to produce a date:
    * <pre>
    * LocalDate date = year.atMonth(month).atDay(day);
@@ -463,7 +461,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    * @param monthOfYear the month-of-year to set in the returned year-month, not null
    * @return a { @code YearMonth } based on this year-month with the requested month, never null
    */
-  def `with` (monthOfYear: MonthOfYear): YearMonth = {
+  def `with`(monthOfYear: MonthOfYear): YearMonth = {
     ISOChronology.checkNotNull(monthOfYear, "MonthOfYear must not be null")
     `with`(year, monthOfYear)
   }
@@ -473,7 +471,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    *
    * @param other the other year-month to compare to, not null
    * @return true if this is after the specified year-month
-   * @throws NullPointerException if   { @code other } is null
+   * @throws NullPointerException if  {@code other } is null
    */
   def isAfter(other: YearMonth): Boolean = compareTo(other) > 0
 
@@ -485,7 +483,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    * @param newMonth the month-of-year to represent, validated not null
    * @return the year-month, never null
    */
-  private def `with` (newYear: Int, newMonth: MonthOfYear): YearMonth = {
+  private def `with`(newYear: Int, newMonth: MonthOfYear): YearMonth = {
     if (year == newYear && month == newMonth) this
     else new YearMonth(newYear, newMonth)
   }
@@ -495,7 +493,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    *
    * @param other the other year-month to compare to, not null
    * @return the comparator value, negative if less, positive if greater
-   * @throws NullPointerException if   { @code other } is null
+   * @throws NullPointerException if  {@code other } is null
    */
   def compareTo(other: YearMonth): Int = {
     var cmp: Int = MathUtils.safeCompare(year, other.year)
@@ -504,7 +502,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
   }
 
   /**
-   * Returns a copy of this   { @code YearMonth } with the year altered.
+   * Returns a copy of this  {@code YearMonth } with the year altered.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -572,15 +570,15 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
   /**
    * Adjusts a date to have the value of this year-month, returning a new date.
    * <p>
-   * This method implements the   { @link DateAdjuster } interface.
+   * This method implements the  {@link DateAdjuster } interface.
    * It is intended that, instead of calling this method directly, it is used from
-   * an instance of   { @code LocalDate } :
+   * an instance of  {@code LocalDate } :
    * <pre>
    *   date = date.with(yearMonth);
    * </pre>
    * <p>
    * This implementation handles the case where the day-of-month is invalid for the new
-   * month and year using the   { @link DateResolvers # previousValid ( ) } resolver.
+   * month and year using the  {@link DateResolvers # previousValid ( ) } resolver.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -622,7 +620,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    *
    * @param other the other year-month to compare to, not null
    * @return true if this point is before the specified year-month
-   * @throws NullPointerException if   { @code other } is null
+   * @throws NullPointerException if  {@code other } is null
    */
   def isBefore(other: YearMonth): Boolean = compareTo(other) < 0
 

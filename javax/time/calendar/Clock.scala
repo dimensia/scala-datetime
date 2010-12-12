@@ -237,7 +237,7 @@ abstract class Clock protected {
    * @return the current year, never null
    * @throws CalendricalException if the year cannot be created
    */
-  def year: Year = today.toYear
+  def year: Year = Year.of(today)
 
   /**
    * Returns a copy of this clock with a different time-zone.

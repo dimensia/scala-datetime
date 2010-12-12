@@ -196,10 +196,10 @@ sealed abstract class QuarterOfYear(ordinal: Int) extends Calendrical {
    */
   def getFirstMonthOfQuarter: MonthOfYear = {
     this match {
-      case Q1 => MonthOfYear.JANUARY
-      case Q2 => MonthOfYear.APRIL
-      case Q3 => MonthOfYear.JULY
-      case Q4 => MonthOfYear.OCTOBER
+      case Q1 => MonthOfYear.January
+      case Q2 => MonthOfYear.April
+      case Q3 => MonthOfYear.July
+      case Q4 => MonthOfYear.October
     }
   }
 

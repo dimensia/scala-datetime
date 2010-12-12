@@ -32,9 +32,8 @@
 package javax.time
 
 import java.io.Serializable
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 import javax.time.calendar.format.CalendricalParseException
+import util.matching.Regex
 
 /**
  * An instantaneous point on the time-line measured in the TAI time-scale.
@@ -45,7 +44,7 @@ import javax.time.calendar.format.CalendricalParseException
  * <p>
  * This class is an alternative representation based on the TAI time-scale.
  * This scale is defined using atomic clocks and has proceeded in a continuous uninterrupted
- * manner since its epoch of 1958-01-01T00:00:00(TAI).
+ * manner since its epoch of {@code 1958-01-01T00:00:00(TAI)}.
  * <p>
  * As there are no leap seconds, or other discontinuities, in TAI, this time-scale
  * would make an excellent timestamp. While there are, at the time of writing, few
@@ -68,11 +67,11 @@ object TAIInstant {
   /**
    * Parse regex.
    */
-  private val PARSER: Pattern = Pattern.compile("([-]?[0-9]+)\\.([0-9]{9})s[(]TAI[)]")
+  private val Parser: Regex = """([-]?[0-9]+)\.([0-9]{9})s[(]TAI[)]""" r
   /**
    * Constant for nanos per second.
    */
-  private val NANOS_PER_SECOND: Int = 1000000000
+  private val NanosPerSecond: Int = 1000000000
   /**
    * Obtains an instance of  { @code TAIInstant } from an  { @code Instant }
    * using the system default leap second rules.
@@ -125,20 +124,15 @@ object TAIInstant {
    */
   def parse(text: String): TAIInstant = {
     Instant.checkNotNull(text, "Text to parse must not be null")
-    var matcher: Matcher = PARSER.matcher(text)
-    if (matcher.matches) {
-      try {
-        var seconds: Long = matcher.group(1).toLong
-        var nanos: Long = matcher.group(2).toLong
-        return TAIInstant.ofTAISeconds(seconds, nanos)
-      }
-      catch {
-        case ex: NumberFormatException => {
-          throw new CalendricalParseException("The text could not be parsed", text, 0, ex)
-        }
-      }
+    try {
+      val Parser(secondsString, nanosString) = text
+      return TAIInstant.ofTAISeconds(secondsString.toLong, nanosString.toLong)
+    } catch {
+      case ex: MatchError =>
+        throw new CalendricalParseException("The text could not be parsed", text, 0)
+      case ex: NumberFormatException =>
+        throw new CalendricalParseException("The text could not be parsed", text, 0, ex)
     }
-    throw new CalendricalParseException("The text could not be parsed", text, 0)
   }
 
   /**
@@ -161,9 +155,9 @@ object TAIInstant {
    * @throws IllegalArgumentException if nanoOfSecond is out of range
    */
   def ofTAISeconds(taiSeconds: Long, nanoAdjustment: Long): TAIInstant = {
-    var secs: Long = MathUtils.safeAdd(taiSeconds, MathUtils.floorDiv(nanoAdjustment, NANOS_PER_SECOND))
-    var nos: Int = MathUtils.floorMod(nanoAdjustment, NANOS_PER_SECOND)
-    return new TAIInstant(secs, nos)
+    val secs: Long = MathUtils.safeAdd(taiSeconds, MathUtils.floorDiv(nanoAdjustment, NanosPerSecond))
+    val nos: Int = MathUtils.floorMod(nanoAdjustment, NanosPerSecond)
+    new TAIInstant(secs, nos)
   }
 }
 
@@ -174,7 +168,7 @@ object TAIInstant {
  * @param nanoOfSecond the nanoseconds within the second, from 0 to 999,999,999
  */
 @SerialVersionUID(1L)
-final class TAIInstant(val seconds: Long, val nanos: Int) extends Comparable[TAIInstant] with Serializable {
+final case class TAIInstant(seconds: Long, nanos: Int) extends Comparable[TAIInstant] with Serializable {
 
   import TAIInstant._
 
@@ -189,17 +183,17 @@ final class TAIInstant(val seconds: Long, val nanos: Int) extends Comparable[TAI
    * This instance is immutable and unaffected by this method call.
    *
    * @param duration the duration to subtract, not null
-   * @return a { @code TAIInstant } based on this instant with the duration subtracted, never null
+   * @return a {@code TAIInstant} based on this instant with the duration subtracted, never null
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   def minus(duration: Duration): TAIInstant = {
-    var secsToSubtract: Long = duration.getSeconds
-    var nanosToSubtract: Int = duration.getNanoOfSecond
+    val secsToSubtract: Long = duration.getSeconds
+    val nanosToSubtract: Int = duration.getNanoOfSecond
     if ((secsToSubtract | nanosToSubtract) == 0) {
       return this
     }
-    var secs: Long = MathUtils.safeSubtract(seconds, secsToSubtract)
-    var nanoAdjustment: Long = (nanos.asInstanceOf[Long]) - nanosToSubtract
+    val secs: Long = MathUtils.safeSubtract(seconds, secsToSubtract)
+    val nanoAdjustment: Long = (nanos.asInstanceOf[Long]) - nanosToSubtract
     return ofTAISeconds(secs, nanoAdjustment)
   }
 
@@ -217,44 +211,37 @@ final class TAIInstant(val seconds: Long, val nanos: Int) extends Comparable[TAI
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   def durationUntil(taiInstant: TAIInstant): Duration = {
-    var durSecs: Long = MathUtils.safeSubtract(taiInstant.seconds, seconds)
-    var durNanos: Long = taiInstant.nanos - nanos
-    return Duration.ofSeconds(durSecs, durNanos)
+    val durSecs: Long = MathUtils.safeSubtract(taiInstant.seconds, seconds)
+    val durNanos: Long = taiInstant.nanos - nanos
+    Duration.ofSeconds(durSecs, durNanos)
   }
 
   /**
-   * Converts this instant to a  { @code UTCInstant } using the system default
+   * Converts this instant to a {@code UTCInstant} using the system default
    * leap second rules.
    * <p>
    * This method converts this instant from the TAI to the UTC time-scale using the
    * system default leap-second rules. This conversion does not lose information
    * and the UTC instant may safely be converted back to a  { @code TAIInstant }.
    *
-   * @return a { @code UTCInstant } representing the same instant using the system leap second rules, never null
+   * @return a {@code UTCInstant} representing the same instant using the system leap second rules, never null
    */
   def toUTCInstant: UTCInstant = UTCInstant.of(this, UTCRules.system)
 
   /**
-   * Checks if this instant is equal to the specified  { @code TAIInstant }.
+   * Checks if this instant is equal to the specified {@code TAIInstant}.
    *
    * @param otherInstant the other instant, null returns false
    * @return true if the other instant is equal to this one
    */
-  override def equals(otherInstant: AnyRef): Boolean = {
-    if (this == otherInstant) true
-    else if (otherInstant.isInstanceOf[TAIInstant]) {
-      val other: TAIInstant = otherInstant.asInstanceOf[TAIInstant]
-      this.seconds == other.seconds && this.nanos == other.nanos
-    }
-    else false
-  }
+  //override def equals(otherInstant: AnyRef): Boolean
 
   /**
    * Gets the number of seconds from the TAI epoch of 1958-01-01T00:00:00(TAI).
    * <p>
    * The TAI second count is a simple incrementing count of seconds where
    * second 0 is 1958-01-01T00:00:00(TAI).
-   * The nanosecond part of the day is returned by  { @code getNanosOfSecond }.
+   * The nanosecond part of the day is returned by  {@code getNanosOfSecond}.
    *
    * @return the seconds from the epoch of 1958-01-01T00:00:00(TAI)
    */
@@ -276,7 +263,7 @@ final class TAIInstant(val seconds: Long, val nanos: Int) extends Comparable[TAI
    *
    * @return a suitable hash code
    */
-  override def hashCode: Int = ((seconds ^ (seconds >>> 32)).asInstanceOf[Int]) + 51 * nanos
+  //override def hashCode: Int = ((seconds ^ (seconds >>> 32)).asInstanceOf[Int]) + 51 * nanos
 
   /**
    * Returns a copy of this instant with the specified duration added.
@@ -289,15 +276,15 @@ final class TAIInstant(val seconds: Long, val nanos: Int) extends Comparable[TAI
    * This instance is immutable and unaffected by this method call.
    *
    * @param duration the duration to add, not null
-   * @return a { @code TAIInstant } based on this instant with the duration added, never null
+   * @return a {@code TAIInstant} based on this instant with the duration added, never null
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   def plus(duration: Duration): TAIInstant = {
-    var secsToAdd: Long = duration.getSeconds
-    var nanosToAdd: Int = duration.getNanoOfSecond
+    val secsToAdd: Long = duration.getSeconds
+    val nanosToAdd: Int = duration.getNanoOfSecond
     if ((secsToAdd | nanosToAdd) == 0) return this
-    var secs: Long = MathUtils.safeAdd(seconds, secsToAdd)
-    var nanoAdjustment: Long = (nanos.asInstanceOf[Long]) + nanosToAdd
+    val secs: Long = MathUtils.safeAdd(seconds, secsToAdd)
+    val nanoAdjustment: Long = (nanos.asInstanceOf[Long]) + nanosToAdd
     return ofTAISeconds(secs, nanoAdjustment)
   }
 
@@ -310,7 +297,7 @@ final class TAIInstant(val seconds: Long, val nanos: Int) extends Comparable[TAI
    * @return the comparator value, negative if less, positive if greater
    */
   def compareTo(otherInstant: TAIInstant): Int = {
-    var cmp: Int = MathUtils.safeCompare(seconds, otherInstant.seconds)
+    val cmp: Int = MathUtils.safeCompare(seconds, otherInstant.seconds)
     if (cmp != 0) cmp
     else MathUtils.safeCompare(nanos, otherInstant.nanos)
   }
@@ -318,17 +305,17 @@ final class TAIInstant(val seconds: Long, val nanos: Int) extends Comparable[TAI
   /**
    * A string representation of this instant.
    * <p>
-   * The string is formatted as  { @code { seconds).(nanosOfSecond } s(TAI).
+   * The string is formatted as {@code {seconds).(nanosOfSecond}s(TAI).
    * At least one second digit will be present.
    * The nanoseconds will always be nine digits.
    *
    * @return a representation of this instant, never null
    */
   override def toString: String = {
-    var buf: StringBuilder = new StringBuilder
+    val buf: StringBuilder = new StringBuilder
     buf.append(seconds)
-    var pos: Int = buf.length
-    buf.append(nanos + NANOS_PER_SECOND)
+    val pos: Int = buf.length
+    buf.append(nanos + NanosPerSecond)
     buf.setCharAt(pos, '.')
     buf.append("s(TAI)")
     return buf.toString

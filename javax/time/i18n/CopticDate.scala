@@ -64,7 +64,33 @@ object CopticDate {
    * The maximum epoch day that is valid.
    * The low maximum year means that overflows don't happen.
    */
-  private val MAX_EPOCH_DAY: Int = 3652134
+  private val MaxEpochDay: Int = 3652134
+
+  /**
+   * The minimum epoch day that is valid.
+   * The avoidance of negatives makes calculation easier.
+   */
+  private val MinEpochDay: Int = 0
+
+  /**
+   * The maximum valid year.
+   * This is currently set to 9999 but may be changed to increase the valid range
+   * in a future version of the specification.
+   */
+  val MaxYear: Int = 9999
+
+  /**
+   * The minimum valid year.
+   * This is currently set to 1 but may be changed to increase the valid range
+   * in a future version of the specification.
+   */
+  val MinYear: Int = 1
+
+  /**
+   * The number of days to add to MJD to get the Coptic epoch day.
+   */
+  private val ModifiedJulianDaysToCoptic: Int = 574971
+
   /**
    * Gets the field rule for   { @code CopticDate }.
    *
@@ -72,17 +98,6 @@ object CopticDate {
    */
   def rule: CalendricalRule[CopticDate] = Rule
 
-  /**
-   * The minimum epoch day that is valid.
-   * The avoidance of negatives makes calculation easier.
-   */
-  private val MIN_EPOCH_DAY: Int = 0
-  /**
-   * The maximum valid year.
-   * This is currently set to 9999 but may be changed to increase the valid range
-   * in a future version of the specification.
-   */
-  val MAX_YEAR: Int = 9999
   /**
    * Obtains an instance of   { @code CopticDate } from the Coptic year,
    * month-of-year and day-of-month.
@@ -125,7 +140,7 @@ object CopticDate {
    * @throws IllegalCalendarFieldValueException if the year range is exceeded
    */
   private def copticDateFromEpochDays(epochDays: Int): CopticDate = {
-    if (epochDays < MIN_EPOCH_DAY || epochDays > MAX_EPOCH_DAY) {
+    if (epochDays < MinEpochDay || epochDays > MaxEpochDay) {
       throw new IllegalCalendarFieldValueException("Date exceeds supported range for CopticDate", CopticChronology.yearRule)
     }
     val year: Int = ((epochDays * 4) + 1463) / 1461
@@ -136,16 +151,6 @@ object CopticDate {
     new CopticDate(epochDays, year, month, day)
   }
 
-  /**
-   * The number of days to add to MJD to get the Coptic epoch day.
-   */
-  private val MJD_TO_COPTIC: Int = 574971
-  /**
-   * The minimum valid year.
-   * This is currently set to 1 but may be changed to increase the valid range
-   * in a future version of the specification.
-   */
-  val MIN_YEAR: Int = 1
   /**
    * Obtains an instance of   { @code CopticDate } using the previous valid algorithm.
    *
@@ -183,7 +188,7 @@ object CopticDate {
 
     protected override def derive(calendrical: Calendrical): Option[CopticDate] = {
       val ld: LocalDate = calendrical.get(LocalDate.rule).getOrElse(return None)
-      val epochDays: Long = ld.toModifiedJulianDays + MJD_TO_COPTIC
+      val epochDays: Long = ld.toModifiedJulianDays + ModifiedJulianDaysToCoptic
       return Some(copticDateFromEpochDays(epochDays.toInt))
     }
 
@@ -309,7 +314,7 @@ final class CopticDate private(val epochDays: Int, @transient year: Int, @transi
    */
   def get[T](rule: CalendricalRule[T]): Option[T] = {
     if (rule.equals(LocalDate.rule)) rule.reify(toLocalDate)
-    else rule.deriveValueFor(rule, this, this)
+    else rule.deriveValueFor(rule, this, this, CopticChronology)
   }
 
   /**
@@ -370,7 +375,7 @@ final class CopticDate private(val epochDays: Int, @transient year: Int, @transi
    *
    * @return the equivalent date in the ISO-8601 calendar system, never null
    */
-  override def toLocalDate: LocalDate = LocalDate.ofModifiedJulianDays(epochDays - MJD_TO_COPTIC)
+  override def toLocalDate: LocalDate = LocalDate.ofModifiedJulianDays(epochDays - ModifiedJulianDaysToCoptic)
 
   /**
    * Gets the Coptic day-of-year value.

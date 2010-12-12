@@ -57,7 +57,7 @@ trait CalendricalMatcher {
    * <pre>
    *  public boolean matchesCalendrical(Calendrical calendrical)   {
    *    DayOfWeek dow = calendrical.get(ISOChronology.dayOfWeekRule());
-   *    return dow != null && (dow == DayOfWeek.SATURDAY || dow == DayOfWeek.SUNDAY);
+   *    return dow != null && (dow == DayOfWeek.Saturday || dow == DayOfWeek.Sunday);
    * }
    * </pre>
    *

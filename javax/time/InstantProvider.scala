@@ -34,12 +34,12 @@ package javax.time
 /**
  * Provides access to an instant on the time-line.
  * <p>
- * { @code InstantProvider } is a simple interface that provides uniform access to any
+ * {@code InstantProvider} is a simple interface that provides uniform access to any
  * object that can provide access to an  { @code Instant }.
  * <p>
- * The implementation of  { @code InstantProvider } may be mutable.
- * For example,  { @link java.util.Date Date } is a mutable implementation of this interface.
- * The result of calling  { @link # toInstant ( ) } is always immutable.
+ * The implementation of {@code InstantProvider} may be mutable.
+ * For example,{@link java.util.Date Date} is a mutable implementation of this interface.
+ * The result of calling {@link#toInstant()} is always immutable.
  * <p>
  * When implementing an API that accepts an  { @code InstantProvider } as a parameter, it is
  * important to convert the input to a  { @code Instant } once and once only.

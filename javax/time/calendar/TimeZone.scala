@@ -794,7 +794,7 @@ abstract class TimeZone private[calendar] extends Calendrical with Serializable 
    * @return the value for the rule, null if the value cannot be returned
    */
   def get[T](rule: CalendricalRule[T]): Option[T] = {
-    if (rule.equals(ZoneOffset.rule) && isFixed) Some(rule.reify(getRules.getOffset(Instant.EPOCH)))
+    if (rule.equals(ZoneOffset.rule) && isFixed) Some(rule.reify(getRules.getOffset(Instant.Epoch)))
     else Some(rule.deriveValueFor(rule, this, this))
   }
 

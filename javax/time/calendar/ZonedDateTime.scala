@@ -135,7 +135,7 @@ object ZonedDateTime {
    * @throws CalendricalException if the resolver cannot resolve an invalid local date-time
    */
   def of(year: Int, monthOfYear: Int, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int, zone: TimeZone, resolver: ZoneResolver): ZonedDateTime = {
-    var dt: LocalDateTime = LocalDateTime.of(year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
+    val dt: LocalDateTime = LocalDateTime.of(year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
     resolve(dt, null, zone, resolver)
   }
 
@@ -154,10 +154,10 @@ object ZonedDateTime {
    * @throws CalendricalException if the result exceeds the supported range
    */
   def ofInstant(instantProvider: InstantProvider, zone: TimeZone): ZonedDateTime = {
-    var instant: Instant = Instant.of(instantProvider)
+    val instant: Instant = Instant.of(instantProvider)
     ISOChronology.checkNotNull(zone, "TimeZone must not be null")
-    var rules: ZoneRules = zone.getRules
-    var offsetDT: OffsetDateTime = OffsetDateTime.ofInstant(instant, rules.getOffset(instant))
+    val rules: ZoneRules = zone.getRules
+    val offsetDT: OffsetDateTime = OffsetDateTime.ofInstant(instant, rules.getOffset(instant))
     return new ZonedDateTime(offsetDT, zone)
   }
 
@@ -220,9 +220,9 @@ object ZonedDateTime {
   def of(dateTime: OffsetDateTime, zone: TimeZone): ZonedDateTime = {
     ISOChronology.checkNotNull(dateTime, "OffsetDateTime must not be null")
     ISOChronology.checkNotNull(zone, "TimeZone must not be null")
-    var inputOffset: ZoneOffset = dateTime.getOffset
-    var rules: ZoneRules = zone.getRules
-    var info: ZoneOffsetInfo = rules.getOffsetInfo(dateTime.toLocalDateTime)
+    val inputOffset: ZoneOffset = dateTime.getOffset
+    val rules: ZoneRules = zone.getRules
+    val info: ZoneOffsetInfo = rules.getOffsetInfo(dateTime.toLocalDateTime)
     if (info.isValidOffset(inputOffset) == false) {
       if (info.isTransition && info.getTransition.isGap) {
         throw new CalendarConversionException("The local time " + dateTime.toLocalDateTime + " does not exist in time-zone " + zone + " due to a daylight savings gap")
@@ -259,7 +259,7 @@ object ZonedDateTime {
    * @throws CalendricalException if the resolver cannot resolve an invalid local date-time
    */
   def of(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int, zone: TimeZone, resolver: ZoneResolver): ZonedDateTime = {
-    var dt: LocalDateTime = LocalDateTime.of(year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
+    val dt: LocalDateTime = LocalDateTime.of(year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
     resolve(dt, null, zone, resolver)
   }
 
@@ -307,7 +307,7 @@ object ZonedDateTime {
    * @throws CalendricalException if the resolver cannot resolve an invalid local date-time
    */
   def of(dateTimeProvider: DateTimeProvider, zone: TimeZone, resolver: ZoneResolver): ZonedDateTime = {
-    var dt: LocalDateTime = LocalDateTime.of(dateTimeProvider)
+    val dt: LocalDateTime = LocalDateTime.of(dateTimeProvider)
     resolve(dt, null, zone, resolver)
   }
 
@@ -340,9 +340,8 @@ object ZonedDateTime {
    * @return the zoned date-time, never null
    * @throws CalendricalException if the local date-time is invalid for the time-zone
    */
-  def of(dateTimeProvider: DateTimeProvider, zone: TimeZone): ZonedDateTime = {
+  def of(dateTimeProvider: DateTimeProvider, zone: TimeZone): ZonedDateTime =
     of(dateTimeProvider, zone, ZoneResolvers.strict)
-  }
 
   /**
    * Obtains an instance of   { @code ZonedDateTime } from the instant of an   { @code OffsetDateTime }.

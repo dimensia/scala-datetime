@@ -85,19 +85,19 @@ class NumberPrinterParser private[format](rule: DateTimeFieldRule[_], val minWid
     str = symbols.convertNumberToI18N(str)
     if (value >= 0) {
       signStyle match {
-        case EXCEEDS_PAD =>
+        case ExceedsPad =>
           if (minWidth < 10 && value >= NumberPrinterParser.EXCEED_POINTS(minWidth)) {
             appendable.append(symbols.getPositiveSignChar)
           }
-        case ALWAYS =>
+        case Always =>
           appendable.append(symbols.getPositiveSignChar)
       }
     }
     else {
       signStyle match {
-        case NORMAL | EXCEEDS_PAD | ALWAYS =>
+        case Normal | ExceedsPad | Always =>
           appendable.append(symbols.getNegativeSignChar)
-        case NOT_NEGATIVE =>
+        case NotNegative =>
           throw new CalendricalPrintFieldException(rule, value)
       }
     }
@@ -123,10 +123,10 @@ class NumberPrinterParser private[format](rule: DateTimeFieldRule[_], val minWid
 
   /** { @inheritDoc }*/
   override def toString: String = {
-    if (minWidth == 1 && maxWidth == 10 && signStyle == SignStyle.NORMAL) {
+    if (minWidth == 1 && maxWidth == 10 && signStyle == SignStyle.Normal) {
       return "Value(" + rule.getID + ")"
     }
-    if (minWidth == maxWidth && signStyle == SignStyle.NOT_NEGATIVE) {
+    if (minWidth == maxWidth && signStyle == SignStyle.NotNegative) {
       return "Value(" + rule.getID + "," + minWidth + ")"
     }
     return "Value(" + rule.getID + "," + minWidth + "," + maxWidth + "," + signStyle + ")"
@@ -145,23 +145,23 @@ class NumberPrinterParser private[format](rule: DateTimeFieldRule[_], val minWid
     if (sign == context.getSymbols.getPositiveSignChar) {
       positive = true
       signStyle match {
-        case ALWAYS | EXCEEDS_PAD => position += 1
+        case Always | ExceedsPad => position += 1
         case _ =>
-          if (context.isStrict || (signStyle != SignStyle.NORMAL && minWidth == maxWidth)) return ~position
+          if (context.isStrict || (signStyle != SignStyle.Normal && minWidth == maxWidth)) return ~position
             position += 1
       }
     }
     else if (sign == context.getSymbols.getNegativeSignChar) {
       negative = true
       signStyle match {
-        case ALWAYS | EXCEEDS_PAD | NORMAL=> position += 1
+        case Always | ExceedsPad | Normal=> position += 1
         case _ =>
           if (context.isStrict || minWidth == maxWidth) return ~position
             position += 1;
       }
     }
     else {
-      if (signStyle == SignStyle.ALWAYS && context.isStrict) {
+      if (signStyle == SignStyle.Always && context.isStrict) {
         return ~position
       }
     }
@@ -218,7 +218,7 @@ class NumberPrinterParser private[format](rule: DateTimeFieldRule[_], val minWid
       }
       total = -total
     }
-    else if (signStyle == SignStyle.EXCEEDS_PAD && context.isStrict) {
+    else if (signStyle == SignStyle.ExceedsPad && context.isStrict) {
       var parseLen: Int = pos - position
       if (positive) {
         if (parseLen <= minWidth) {

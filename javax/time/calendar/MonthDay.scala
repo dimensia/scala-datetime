@@ -32,9 +32,7 @@
 package javax.time.calendar
 
 import java.io.Serializable
-import javax.time.CalendricalException
 import javax.time.MathUtils
-import javax.time.calendar.format.CalendricalPrintException
 import javax.time.calendar.format.DateTimeFormatter
 import javax.time.calendar.format.DateTimeFormatterBuilder
 
@@ -63,23 +61,24 @@ import javax.time.calendar.format.DateTimeFormatterBuilder
  * @author Stephen Colebourne
  */
 object MonthDay {
-  /**
-   * Gets the field rule for the month-day.
-   *
-   * @return the field rule for the month-day, never null
-   */
-  def rule: CalendricalRule[MonthDay] = Rule
 
   /**
    * Parser.
    */
-  private val PARSER: DateTimeFormatter =
+  private val Parser: DateTimeFormatter =
     (new DateTimeFormatterBuilder)
       .appendLiteral("--")
       .appendValue(ISOChronology.monthOfYearRule, 2)
       .appendLiteral('-')
       .appendValue(ISOChronology.dayOfMonthRule, 2)
       .toFormatter
+
+  /**
+   * Gets the field rule for the month-day.
+   *
+   * @return the field rule for the month-day, never null
+   */
+  def rule: CalendricalRule[MonthDay] = Rule
 
   /**
    * Obtains an instance of    { @code MonthDay }.
@@ -138,7 +137,7 @@ object MonthDay {
    * @return the parsed month-day, never null
    * @throws CalendricalException if the text cannot be parsed
    */
-  def parse(text: String): MonthDay = PARSER.parse(text, rule)
+  def parse(text: String): MonthDay = Parser.parse(text, rule)
 
   /**
    * Obtains the current month-day from the specified clock.
@@ -318,7 +317,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
     if (date.getMonthOfYear == month && date.getDayOfMonth == day) {
       return date
     }
-    var resolved: LocalDate = resolver.resolveDate(date.getYear, month, day)
+    val resolved: LocalDate = resolver.resolveDate(date.getYear, month, day)
     ISOChronology.checkNotNull(resolved, "The implementation of DateResolver must not return null")
     return resolved
   }
@@ -379,11 +378,11 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    * Gets the month-of-year field, which is an enum    { @code MonthOfYear }.
    * <p>
    * This method returns the enum    { @link MonthOfYear } for the month.
-   * This avoids confusion as to what    { @code int } values mean.
-   * If you need access to the primitive    { @code int } value then the enum
-   * provides the    { @link MonthOfYear # getValue ( ) int value }.
+   * This avoids confusion as to what {@code int} values mean.
+   * If you need access to the primitive {@code int} value then the enum
+   * provides the {@link MonthOfYear#getValue() int value}.
    * <p>
-   * Additional information can be obtained from the    { @code MonthOfYear }.
+   * Additional information can be obtained from the {@code MonthOfYear}.
    * This includes month lengths, textual names and access to the quarter-of-year
    * and month-of-quarter values.
    *
@@ -490,7 +489,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    *
    * @param year the year to use, from MIN_YEAR to MAX_YEAR
    * @return the local date formed from this month-day and the specified year, never null
-   * @see Year # atMonthDay ( MonthDay )
+   * @see Year#atMonthDay(MonthDay)
    */
   def atYear(year: Int): LocalDate = LocalDate.of(year, month, day)
 

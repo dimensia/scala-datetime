@@ -51,15 +51,23 @@ object UTCRules extends UTCRules{
   /**
    * Constant for nanos per standard second: 1,000,000,000.
    */
-  protected[time] val NANOS_PER_SECOND: Long = 1000000000
+  protected[time] val NanosPerSecond: Long = 1000000000
+
   /**
    * Constant for the offset from MJD day 0 to the Java Epoch of 1970-01-01: 40587.
    */
-  protected[time] val OFFSET_MJD_EPOCH: Int = 40587
+  protected[time] val ModifiedJulianDaysEpochOffset: Int = 40587
+
+  /**
+   * Constant for the offset from MJD day 0 to TAI day 0 of 1958-01-01: 36204.
+   */
+  protected[time] val ModifiedJulianDaysTAIOffset: Int = 36204
+
   /**
    * Constant for number of seconds per standard day: 86,400.
    */
-  protected[time] val SECS_PER_DAY: Long = 24 * 60 * 60
+  protected[time] val SecondsPerDay: Long = 24 * 60 * 60
+
   /**
    * Gets the system default leap second rules.
    * <p>
@@ -93,10 +101,6 @@ object UTCRules extends UTCRules{
    */
   def registerSystemLeapSecond(mjDay: Long, leapAdjustment: Int): Unit = SystemUTCRules.registerLeapSecond(mjDay, leapAdjustment)
 
-  /**
-   * Constant for the offset from MJD day 0 to TAI day 0 of 1958-01-01: 36204.
-   */
-  protected[time] val OFFSET_MJD_TAI: Int = 36204
 }
 
 abstract class UTCRules protected[time] {
@@ -125,11 +129,11 @@ abstract class UTCRules protected[time] {
    * @throws ArithmeticException if the capacity is exceeded
    */
   protected[time] def convertToUTC(instant: Instant): UTCInstant = {
-    var epochDay: Long = MathUtils.floorDiv(instant.seconds, SECS_PER_DAY)
-    var mjd: Long = epochDay + OFFSET_MJD_EPOCH
-    var slsNanos: Long = MathUtils.floorMod(instant.seconds, SECS_PER_DAY) * NANOS_PER_SECOND + instant.nanos
+    var epochDay: Long = MathUtils.floorDiv(instant.seconds, SecondsPerDay)
+    var mjd: Long = epochDay + ModifiedJulianDaysEpochOffset
+    var slsNanos: Long = MathUtils.floorMod(instant.seconds, SecondsPerDay) * NanosPerSecond + instant.nanos
     var leapAdj: Int = getLeapSecondAdjustment(mjd)
-    var startSlsNanos: Long = (SECS_PER_DAY + leapAdj - 1000) * NANOS_PER_SECOND
+    var startSlsNanos: Long = (SecondsPerDay + leapAdj - 1000) * NanosPerSecond
     var utcNanos: Long = slsNanos
     if (leapAdj != 0 && slsNanos >= startSlsNanos) {
       utcNanos = startSlsNanos + ((slsNanos - startSlsNanos) * 1000) / (1000 - leapAdj)
@@ -217,15 +221,15 @@ abstract class UTCRules protected[time] {
   protected[time] def convertToInstant(utcInstant: UTCInstant): Instant = {
     var mjd: Long = utcInstant.getModifiedJulianDays
     var utcNanos: Long = utcInstant.getNanoOfDay
-    var epochDay: Long = MathUtils.safeSubtract(mjd, OFFSET_MJD_EPOCH)
-    var epochSecs: Long = MathUtils.safeMultiply(epochDay, SECS_PER_DAY)
+    var epochDay: Long = MathUtils.safeSubtract(mjd, ModifiedJulianDaysEpochOffset)
+    var epochSecs: Long = MathUtils.safeMultiply(epochDay, SecondsPerDay)
     var leapAdj: Int = getLeapSecondAdjustment(mjd)
-    var startSlsNanos: Long = (SECS_PER_DAY + leapAdj - 1000) * NANOS_PER_SECOND
+    var startSlsNanos: Long = (SecondsPerDay + leapAdj - 1000) * NanosPerSecond
     var slsNanos: Long = utcNanos
     if (leapAdj != 0 && utcNanos >= startSlsNanos) {
       slsNanos = utcNanos - leapAdj * (utcNanos - startSlsNanos) / 1000
     }
-    return Instant.ofEpochSeconds(epochSecs + slsNanos / NANOS_PER_SECOND, slsNanos % NANOS_PER_SECOND)
+    return Instant.ofEpochSeconds(epochSecs + slsNanos / NanosPerSecond, slsNanos % NanosPerSecond)
   }
 
   /**
@@ -250,9 +254,9 @@ abstract class UTCRules protected[time] {
   protected[time] def convertToTAI(utcInstant: UTCInstant): TAIInstant = {
     var mjd: Long = utcInstant.getModifiedJulianDays
     var nod: Long = utcInstant.getNanoOfDay
-    var taiUtcDaySeconds: Long = MathUtils.safeMultiply(mjd - OFFSET_MJD_TAI, SECS_PER_DAY)
-    var taiSecs: Long = MathUtils.safeAdd(taiUtcDaySeconds, nod / NANOS_PER_SECOND + getTAIOffset(mjd))
-    var nos: Int = (nod % NANOS_PER_SECOND).asInstanceOf[Int]
+    var taiUtcDaySeconds: Long = MathUtils.safeMultiply(mjd - ModifiedJulianDaysTAIOffset, SecondsPerDay)
+    var taiSecs: Long = MathUtils.safeAdd(taiUtcDaySeconds, nod / NanosPerSecond + getTAIOffset(mjd))
+    var nos: Int = (nod % NanosPerSecond).asInstanceOf[Int]
     return TAIInstant.ofTAISeconds(taiSecs, nos)
   }
 }

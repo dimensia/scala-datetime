@@ -89,7 +89,7 @@ object MathUtils {
    * @throws ArithmeticException if the result overflows an int
    */
   def safeAdd(a: Int, b: Int): Int = {
-    var sum: Int = a + b
+    val sum: Int = a + b
     if ((a ^ sum) < 0 && (a ^ b) >= 0) {
       throw new ArithmeticException("Addition overflows an int: " + a + " + " + b)
     }
@@ -114,7 +114,7 @@ object MathUtils {
     if (a == 0 || b == 0) {
       return 0
     }
-    var total: Long = a * b
+    val total: Long = a * b
     if (total / b != a || a == Long.MinValue && b == -1 || b == Long.MinValue && a == -1) {
       throw new ArithmeticException("Multiplication overflows a long: " + a + " * " + b)
     }
@@ -138,6 +138,8 @@ object MathUtils {
     return 0
   }
 
+  def ==!(a: Long, b: Long) = safeCompare(a, b)
+
   /**
    * Returns the floor division.
    * <p>
@@ -152,9 +154,7 @@ object MathUtils {
    * @param b  the divisor
    * @return the floor division
    */
-  def floorDiv(a: Long, b: Long): Long = {
-    return (if (a >= 0) a / b else ((a + 1) / b) - 1)
-  }
+  def floorDiv(a: Long, b: Long): Long = (if (a >= 0) a / b else ((a + 1) / b) - 1)
 
   /**
    * Returns the floor modulus.
@@ -169,9 +169,7 @@ object MathUtils {
    * @param b  the divisor
    * @return the floor modulus (positive)
    */
-  def floorMod(a: Int, b: Int): Int = {
-    return ((a % b) + b) % b
-  }
+  def floorMod(a: Int, b: Int): Int = ((a % b) + b) % b
 
   /**
    * Safely adds two long values.
@@ -182,12 +180,14 @@ object MathUtils {
    * @throws ArithmeticException if the result overflows a long
    */
   def safeAdd(a: Long, b: Long): Long = {
-    var sum: Long = a + b
+    val sum: Long = a + b
     if ((a ^ sum) < 0 && (a ^ b) >= 0) {
       throw new ArithmeticException("Addition overflows a long: " + a + " + " + b)
     }
     return sum
   }
+
+  def +!(a: Long, b: Long) = safeAdd(a, b)
 
   /**
    * Safely subtracts one long from another.
@@ -205,6 +205,8 @@ object MathUtils {
     return result
   }
 
+  def -!(a: Long, b: Long) = safeSubtract(a, b)
+
   /**
    * Negates the input value, throwing an exception if an overflow occurs.
    *
@@ -218,6 +220,8 @@ object MathUtils {
     }
     return -value
   }
+
+  def -!(value: Int) = safeNegate(value)
 
   /**
    * Returns the floor modulus.
@@ -283,12 +287,14 @@ object MathUtils {
         return 0L
       case 1 =>
         return a
+      case _ => {
+        var total: Long = a * b
+        if (total / b != a) {
+          throw new ArithmeticException("Multiplication overflows a long: " + a + " * " + b)
+        }
+        return total
+      }
     }
-    var total: Long = a * b
-    if (total / b != a) {
-      throw new ArithmeticException("Multiplication overflows a long: " + a + " * " + b)
-    }
-    return total
   }
 
   /**
@@ -318,7 +324,7 @@ object MathUtils {
     if (value > Int.MaxValue || value < Int.MinValue) {
       throw new ArithmeticException("Calculation overflows an int: " + value)
     }
-    return value.asInstanceOf[Int]
+    return value.toInt
   }
 
   /**
@@ -334,9 +340,7 @@ object MathUtils {
    * @param b  the divisor
    * @return the floor modulus (positive)
    */
-  def floorMod(a: Long, b: Long): Long = {
-    return ((a % b) + b) % b
-  }
+  def floorMod(a: Long, b: Long): Long = ((a % b) + b) % b
 
   /**
    * Negates the input value, throwing an exception if an overflow occurs.
@@ -375,7 +379,7 @@ object MathUtils {
    * @throws ArithmeticException if the result overflows an int
    */
   def safeMultiply(a: Int, b: Int): Int = {
-    var total: Long = a.asInstanceOf[Long] * b.asInstanceOf[Long]
+    var total: Long = a.toLong * b.toLong
     if (total < Int.MinValue || total > Int.MaxValue) {
       throw new ArithmeticException("Multiplication overflows an int: " + a + " * " + b)
     }

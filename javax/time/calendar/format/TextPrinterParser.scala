@@ -56,7 +56,7 @@ final class TextPrinterParser private[format](rule: DateTimeFieldRule[_], textSt
   extends DateTimePrinter with DateTimeParser {
 
   /** { @inheritDoc }*/
-  override def toString: String = if (textStyle == TextStyle.FULL) "Text(" + rule.getID + ")"
+  override def toString: String = if (textStyle == TextStyle.Full) "Text(" + rule.getID + ")"
   else return "Text(" + rule.getID + "," + textStyle + ")"
 
   /** { @inheritDoc }*/
@@ -125,7 +125,7 @@ final class TextPrinterParser private[format](rule: DateTimeFieldRule[_], textSt
    * @return the number printer parser for this field, never null
    */
   private def numberPrinterParser: NumberPrinterParser = {
-    if (_numberPrinterParser == null) _numberPrinterParser = new NumberPrinterParser(rule, 1, 10, SignStyle.NORMAL)
+    if (_numberPrinterParser == null) _numberPrinterParser = new NumberPrinterParser(rule, 1, 10, SignStyle.Normal)
     _numberPrinterParser
   }
 

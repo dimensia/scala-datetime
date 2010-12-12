@@ -68,7 +68,7 @@ final class StringLiteralPrinterParser private[format](private val literal: Stri
 
   /** { @inheritDoc }*/
   override def toString: String = {
-    var converted: String = literal.replace("'", "''")
+    val converted: String = literal.replace("'", "''")
     return "'" + converted + "'"
   }
 }

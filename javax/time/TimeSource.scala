@@ -193,7 +193,7 @@ object TimeSource {
    */
   def offsetSystem(offset: Duration): TimeSource = {
     Instant.checkNotNull(offset, "Duration must not be null")
-    if (offset.equals(Duration.ZERO)) SystemTimeSource
+    if (offset.equals(Duration.Zero)) SystemTimeSource
     else new TimeSource.OffsetSystemTimeSource(offset)
   }
 

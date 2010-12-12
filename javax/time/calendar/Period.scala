@@ -230,15 +230,15 @@ object Period {
   }
 
   /**
-   * Obtains a   { @code Period } from a string formatted as   { @code PnYnMnDTnHnMn.nS }.
+   * Obtains a {@code Period} from a text string such as {@code PnYnMnDTnHnMn.nS}.
    * <p>
-   * This will parse the string produced by   { @code toString ( ) } which is
-   * a subset of the ISO8601 period format   { @code PnYnMnDTnHnMn.nS }.
+   * This will parse the string produced by {@code toString()} which is
+   * a subset of the ISO8601 period format {@code PnYnMnDTnHnMn.nS}.
    * <p>
    * The string consists of a series of numbers with a suffix identifying their meaning.
    * The values, and suffixes, must be in the sequence year, month, day, hour, minute, second.
    * Any of the number/suffix pairs may be omitted providing at least one is present.
-   * If the period is zero, the value is normally represented as   { @code PT0S }.
+   * If the period is zero, the value is normally represented as {@code PT0S}.
    * The numbers must consist of ASCII digits.
    * Any of the numbers may be negative. Negative zero is not accepted.
    * The number of nanoseconds is expressed as an optional fraction of the seconds.
@@ -257,7 +257,7 @@ object Period {
   }
 
   /**
-   * Obtains a   { @code Period } from a number of hours.
+   * Obtains a {@code Period} from a number of hours.
    *
    * @param hours the amount of hours, may be negative
    * @return the period, never null
@@ -268,7 +268,7 @@ object Period {
   }
 
   /**
-   * Obtains a   { @code Period } from a number of months.
+   * Obtains a {@code Period} from a number of months.
    *
    * @param months the amount of months, may be negative
    * @return the period, never null
@@ -279,7 +279,7 @@ object Period {
   }
 
   /**
-   * Obtains a   { @code Period } from a number of nanoseconds.
+   * Obtains a {@code Period} from a number of nanoseconds.
    *
    * @param nanos the amount of nanos, may be negative
    * @return the period, never null

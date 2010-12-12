@@ -62,13 +62,40 @@ import javax.time.calendar.PeriodUnit
 object HistoricChronology {
 
   /**
+   * The start of months in a standard year.
+   */
+
+  private val StandardMonthStart: Array[Int] = Array[Int](0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334)
+
+  /**
+   * The start of months in a leap year.
+   */
+  private val LeapMonthStart: Array[Int] = Array[Int](0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335)
+
+  /**
+   * Period unit for months.
+   */
+  private object Months extends Months
+
+  /**
    * Unit class for months.
    */
   @SerialVersionUID(1L)
-  private[time] final class Months
-    extends PeriodUnit("JulianMonths", Duration.ofStandardHours(31557600L / 12L)) {
+  private[time] final class Months extends PeriodUnit("JulianMonths", Duration.ofStandardHours(31557600L / 12L)) {
+    private def readResolve: AnyRef = Months
+  }
 
-    private def readResolve: AnyRef = MONTHS
+  /**
+   * Period unit for years.
+   */
+  private object Years extends Years
+
+  /**
+   * Unit class for years.
+   */
+  @SerialVersionUID(1L)
+  private final class Years extends PeriodUnit("JulianYears", Duration.ofSeconds(31557600L)) {
+    private def readResolve: AnyRef = Years
   }
 
   /**
@@ -82,14 +109,14 @@ object HistoricChronology {
    *
    * @return the period unit for months, never null
    */
-  def periodMonths: PeriodUnit = MONTHS
+  def periodMonths: PeriodUnit = Months
 
   /**Constructor.
    * @param chrono The chronology.
    **/
   @SerialVersionUID(1L)
   private[time] final class YearRule(chrono: HistoricChronology)
-    extends DateTimeFieldRule[Int](classOf[Int], chrono, "Year", YEARS, null, -(HistoricDate.MAX_YEAR - 1), HistoricDate.MAX_YEAR) with Serializable {
+    extends DateTimeFieldRule[Int](classOf[Int], chrono, "Year", Years, null, -(HistoricDate.MaxYear - 1), HistoricDate.MaxYear) with Serializable {
 
     protected def merge(merger: CalendricalMerger): Unit = {
       (merger.getValue(chrono.monthOfYearRule), merger.getValue(chrono.dayOfMonthRule)) match {
@@ -101,7 +128,7 @@ object HistoricChronology {
               date = HistoricDate.of(year, moy, domVal)
             }
             else {
-              date = HistoricDate.of(year, MonthOfYear.JANUARY, 1).plusMonths(moy.getValue - 1).plusMonths(-1).plusDays(domVal).plusDays(-1)
+              date = HistoricDate.of(year, MonthOfYear.January, 1).plusMonths(moy.getValue - 1).plusMonths(-1).plusDays(domVal).plusDays(-1)
             }
             merger.storeMerged(LocalDate.rule, date.toLocalDate)
             merger.removeProcessed(this)
@@ -125,7 +152,7 @@ object HistoricChronology {
    **/
   @SerialVersionUID(1L)
   private[time] final class MonthOfYearRule(chrono: HistoricChronology)
-    extends DateTimeFieldRule[MonthOfYear](classOf[MonthOfYear], chrono, "MonthOfYear", MONTHS, YEARS, 1, 13) with Serializable {
+    extends DateTimeFieldRule[MonthOfYear](classOf[MonthOfYear], chrono, "MonthOfYear", Months, Years, 1, 13) with Serializable {
 
     protected def derive(calendrical: Calendrical): Option[MonthOfYear] = {
       val cd: HistoricDate = calendrical.get(HistoricDate.rule).getOrElse(return None)
@@ -138,7 +165,7 @@ object HistoricChronology {
    **/
   @SerialVersionUID(1L)
   private[time] final class DayOfMonthRule(chrono: HistoricChronology)
-    extends DateTimeFieldRule[Int](classOf[Int], chrono, "DayOfMonth", periodDays, MONTHS, 1, 30) with Serializable {
+    extends DateTimeFieldRule[Int](classOf[Int], chrono, "DayOfMonth", periodDays, Months, 1, 30) with Serializable {
     protected def derive(calendrical: Calendrical): Option[Int] = {
       val cd: HistoricDate = calendrical.get(HistoricDate.rule).getOrElse(return None)
       return Some(cd.getDayOfMonth)
@@ -162,26 +189,7 @@ object HistoricChronology {
    *
    * @return a { @code HistoricChronology }, never null
    */
-  def standardCutover: HistoricChronology = new HistoricChronology(HistoricDate.STANDARD_CUTOVER)
-
-  /**
-   * The start of months in a standard year.
-   */
-  private val STANDARD_MONTH_START: Array[Int] = Array[Int](0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334)
-  /**
-   * Period unit for years.
-   */
-  private val YEARS: PeriodUnit = new HistoricChronology.Years
-
-  /**
-   * Unit class for years.
-   */
-  @SerialVersionUID(1L)
-  private final class Years
-    extends PeriodUnit("JulianYears", Duration.ofSeconds(31557600L)) {
-
-    private def readResolve: AnyRef = YEARS
-  }
+  def standardCutover: HistoricChronology = new HistoricChronology(HistoricDate.StandardCutover)
 
   /**
    * Gets the period unit for years.
@@ -193,13 +201,7 @@ object HistoricChronology {
    *
    * @return the period unit for years, never null
    */
-  def periodYears: PeriodUnit = YEARS
-
-  /**
-   * The start of months in a leap year.
-   */
-  private val LEAP_MONTH_START: Array[Int] = Array[Int](0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335)
-
+  def periodYears: PeriodUnit = Years
 
   /**Constructor.
    * @param chrono The chronology.
@@ -235,7 +237,7 @@ object HistoricChronology {
    **/
   @SerialVersionUID(1L)
   private[time] final class DayOfYearRule(chrono: HistoricChronology)
-    extends DateTimeFieldRule[Int](classOf[Int], chrono, "DayOfYear", periodDays, YEARS, 1, 366) with Serializable {
+    extends DateTimeFieldRule[Int](classOf[Int], chrono, "DayOfYear", periodDays, Years, 1, 366) with Serializable {
     override def getMaximumValue(calendrical: Calendrical): Int = {
       val year: Int = calendrical.get(chrono.yearRule).getOrElse(return getMaximumValue)
       return if (chrono.isLeapYear(year)) 366 else 365
@@ -255,8 +257,8 @@ object HistoricChronology {
       if (yearVal != null) {
         val doy: Int = merger.getValue(this).get
         var date: HistoricDate =
-          if (merger.getContext.isStrict) HistoricDate.of(yearVal, MonthOfYear.JANUARY, 1).withDayOfYear(doy)
-          else HistoricDate.of(yearVal, MonthOfYear.JANUARY, 1).plusDays(doy).plusDays(-1)
+          if (merger.getContext.isStrict) HistoricDate.of(yearVal, MonthOfYear.January, 1).withDayOfYear(doy)
+          else HistoricDate.of(yearVal, MonthOfYear.January, 1).plusDays(doy).plusDays(-1)
         merger.storeMerged(LocalDate.rule, date.toLocalDate)
         merger.removeProcessed(this)
         merger.removeProcessed(chrono.yearRule)
@@ -315,10 +317,6 @@ object HistoricChronology {
    */
   def periodEras: PeriodUnit = ISOChronology.periodEras
 
-  /**
-   * Period unit for months.
-   */
-  private val MONTHS: PeriodUnit = new HistoricChronology.Months
   /**
    * Validates that the input value is not null.
    *
@@ -392,7 +390,7 @@ final class HistoricChronology private(cutover: LocalDate) extends Chronology wi
       return ISOChronology.isLeapYear(year)
     }
     else {
-      if (cutover.getMonthOfYear.compareTo(MonthOfYear.FEBRUARY) < 0) {
+      if (cutover.getMonthOfYear.compareTo(MonthOfYear.February) < 0) {
         return false
       }
       return false
@@ -429,8 +427,8 @@ final class HistoricChronology private(cutover: LocalDate) extends Chronology wi
   private[i18n] def getDayOfYear(date: HistoricDate): Int = {
     val moy0: Int = date.getMonthOfYear.ordinal
     val dom: Int = date.getDayOfMonth
-    if (isLeapYear(date.getYear)) LEAP_MONTH_START(moy0) + dom
-    else STANDARD_MONTH_START(moy0) + dom
+    if (isLeapYear(date.getYear)) LeapMonthStart(moy0) + dom
+    else StandardMonthStart(moy0) + dom
   }
 
   /**
@@ -446,7 +444,7 @@ final class HistoricChronology private(cutover: LocalDate) extends Chronology wi
       throw new InvalidCalendarFieldException("DayOfYear 366 is invalid for year " + year, dayOfYearRule)
     }
     val doy0: Int = dayOfYear - 1
-    val array: Array[Int] = (if (leap) LEAP_MONTH_START else STANDARD_MONTH_START)
+    val array: Array[Int] = (if (leap) LeapMonthStart else StandardMonthStart)
     var month: Int = 1
     while (month < 12) {
       {

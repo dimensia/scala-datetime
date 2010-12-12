@@ -64,13 +64,13 @@ object DateTimeFormatters {
   /**Singleton date formatter. */
   private val RFC_1123_DATE_TIME: DateTimeFormatter = {
     (new DateTimeFormatterBuilder)
-      .appendText(ISOChronology.dayOfWeekRule, TextStyle.SHORT)
+      .appendText(ISOChronology.dayOfWeekRule, TextStyle.Short)
       .appendLiteral(", ")
       .appendValue(ISOChronology.dayOfMonthRule, 2)
       .appendLiteral(' ')
-      .appendText(ISOChronology.monthOfYearRule, TextStyle.SHORT)
+      .appendText(ISOChronology.monthOfYearRule, TextStyle.Short)
       .appendLiteral(' ')
-      .appendValue(ISOChronology.yearRule, 4, 4, SignStyle.NOT_NEGATIVE)
+      .appendValue(ISOChronology.yearRule, 4, 4, SignStyle.NotNegative)
       .appendLiteral(' ')
       .appendValue(ISOChronology.hourOfDayRule, 2)
       .appendLiteral(':')
@@ -156,7 +156,7 @@ object DateTimeFormatters {
    * @param locale the locale to use, not null
    * @return the full date formatter, never null
    */
-  def fullDate(locale: Locale): DateTimeFormatter = date(FormatStyle.FULL, locale)
+  def fullDate(locale: Locale): DateTimeFormatter = date(FormatStyle.Full, locale)
 
   /**
    * Returns the ISO date formatter that prints/parses an offset date with an offset,
@@ -193,7 +193,7 @@ object DateTimeFormatters {
    * @param locale the locale to use, not null
    * @return the long date formatter, never null
    */
-  def longDate(locale: Locale): DateTimeFormatter = date(FormatStyle.LONG, locale)
+  def longDate(locale: Locale): DateTimeFormatter = date(FormatStyle.Long, locale)
 
   /**
    * Creates a formatter using the specified pattern.
@@ -249,7 +249,7 @@ object DateTimeFormatters {
    * The count of pattern letters determine the format.
    * <p>
    * <b>Text</b>: If the number of pattern letters is 4 or more, the full textual form is used
-   * as per                 { @link TextStyle # FULL }. Otherwise a short form is used, as per                 { @link TextStyle # SHORT }.
+   * as per                 { @link TextStyle # Full }. Otherwise a short form is used, as per                 { @link TextStyle # Short }.
    * <p>
    * <b>Number</b>: If the count of letters is one, then the value is printed using the minimum number
    * of digits and without padding as per                 { @link # appendValue ( DateTimeFieldRule ) }. Otherwise, the
@@ -271,8 +271,8 @@ object DateTimeFormatters {
    * For printing, this outputs the rightmost two digits. For parsing, this will parse using the
    * base value of 2000, resulting in a year within the range 2000 to 2099 inclusive.
    * If the count of letters is less than four (but not two), then the sign is only output for negative
-   * years as per                 { @link SignStyle # NORMAL }.
-   * Otherwise, the sign is output if the pad width is exceeded, as per                 { @link SignStyle # EXCEEDS_PAD }
+   * years as per                 { @link SignStyle # Normal }.
+   * Otherwise, the sign is output if the pad width is exceeded, as per                 { @link SignStyle # ExceedsPad }
    * <p>
    * <b>Month</b>: If the count of letters is 3 or greater, use the Text rules above.
    * Otherwise use the Number rules above.
@@ -346,7 +346,7 @@ object DateTimeFormatters {
    * @param locale the locale to use, not null
    * @return the medium date-time formatter, never null
    */
-  def mediumDateTime(locale: Locale): DateTimeFormatter = dateTime(FormatStyle.MEDIUM, locale)
+  def mediumDateTime(locale: Locale): DateTimeFormatter = dateTime(FormatStyle.Medium, locale)
 
   /**
    * Returns a locale specific date, time or date-time format.
@@ -405,7 +405,7 @@ object DateTimeFormatters {
    * @param locale the locale to use, not null
    * @return the short date formatter, never null
    */
-  def shortDate(locale: Locale): DateTimeFormatter = date(FormatStyle.SHORT, locale)
+  def shortDate(locale: Locale): DateTimeFormatter = date(FormatStyle.Short, locale)
 
   /**
    * Returns the ISO time formatter that prints/parses a local time, with an offset
@@ -438,7 +438,7 @@ object DateTimeFormatters {
   /**Singleton date formatter. */
   private val ISO_LOCAL_DATE: DateTimeFormatter = {
     (new DateTimeFormatterBuilder)
-      .appendValue(ISOChronology.yearRule, 4, 10, SignStyle.EXCEEDS_PAD)
+      .appendValue(ISOChronology.yearRule, 4, 10, SignStyle.ExceedsPad)
       .appendLiteral('-')
       .appendValue(ISOChronology.monthOfYearRule, 2)
       .appendLiteral('-')
@@ -492,7 +492,7 @@ object DateTimeFormatters {
    * @param locale the locale to use, not null
    * @return the short date-time formatter, never null
    */
-  def shortDateTime(locale: Locale): DateTimeFormatter = dateTime(FormatStyle.SHORT, locale)
+  def shortDateTime(locale: Locale): DateTimeFormatter = dateTime(FormatStyle.Short, locale)
 
   /**
    * Returns a locale specific date-time format, which is typically of short length.
@@ -526,7 +526,7 @@ object DateTimeFormatters {
    * @param locale the locale to use, not null
    * @return the short time formatter, never null
    */
-  def shortTime(locale: Locale): DateTimeFormatter = time(FormatStyle.SHORT, locale)
+  def shortTime(locale: Locale): DateTimeFormatter = time(FormatStyle.Short, locale)
 
   /**Singleton date formatter. */
   private val ISO_DATE_TIME: DateTimeFormatter = {
@@ -572,7 +572,7 @@ object DateTimeFormatters {
    * @param locale the locale to use, not null
    * @return the long date-time formatter, never null
    */
-  def longDateTime(locale: Locale): DateTimeFormatter = dateTime(FormatStyle.LONG, locale)
+  def longDateTime(locale: Locale): DateTimeFormatter = dateTime(FormatStyle.Long, locale)
 
   /**Singleton date formatter. */
   private val ISO_LOCAL_DATE_TIME: DateTimeFormatter = {
@@ -619,7 +619,7 @@ object DateTimeFormatters {
    * @param locale the locale to use, not null
    * @return the long time formatter, never null
    */
-  def longTime(locale: Locale): DateTimeFormatter = time(FormatStyle.LONG, locale)
+  def longTime(locale: Locale): DateTimeFormatter = time(FormatStyle.Long, locale)
 
   /**
    * Returns the ISO date formatter that prints/parses an offset date with an offset,
@@ -651,7 +651,7 @@ object DateTimeFormatters {
    * @param locale the locale to use, not null
    * @return the medium date formatter, never null
    */
-  def mediumDate(locale: Locale): DateTimeFormatter = date(FormatStyle.MEDIUM, locale)
+  def mediumDate(locale: Locale): DateTimeFormatter = date(FormatStyle.Medium, locale)
 
   /**
    * Returns a locale specific time format, which is typically of full length.
@@ -666,7 +666,7 @@ object DateTimeFormatters {
    * @param locale the locale to use, not null
    * @return the full time formatter, never null
    */
-  def fullTime(locale: Locale): DateTimeFormatter = time(FormatStyle.FULL, locale)
+  def fullTime(locale: Locale): DateTimeFormatter = time(FormatStyle.Full, locale)
 
   /**
    * Returns the ISO date formatter that prints/parses a date without an offset.
@@ -763,7 +763,7 @@ object DateTimeFormatters {
    * @param locale the locale to use, not null
    * @return the medium time formatter, never null
    */
-  def mediumTime(locale: Locale): DateTimeFormatter = time(FormatStyle.MEDIUM, locale)
+  def mediumTime(locale: Locale): DateTimeFormatter = time(FormatStyle.Medium, locale)
 
   /**Singleton date formatter. */
   private val ISO_TIME: DateTimeFormatter = {
@@ -792,7 +792,7 @@ object DateTimeFormatters {
    * @param locale the locale to use, not null
    * @return the full date-time formatter, never null
    */
-  def fullDateTime(locale: Locale): DateTimeFormatter = dateTime(FormatStyle.FULL, locale)
+  def fullDateTime(locale: Locale): DateTimeFormatter = dateTime(FormatStyle.Full, locale)
 
   /**
    * Returns the ISO date formatter that prints/parses a local date without an offset,
@@ -839,7 +839,7 @@ object DateTimeFormatters {
   private val ISO_WEEK_DATE: DateTimeFormatter = {
     (new DateTimeFormatterBuilder)
       .parseCaseInsensitive
-      .appendValue(ISOChronology.weekBasedYearRule, 4, 10, SignStyle.EXCEEDS_PAD)
+      .appendValue(ISOChronology.weekBasedYearRule, 4, 10, SignStyle.ExceedsPad)
       .appendLiteral("-W")
       .appendValue(ISOChronology
       .weekOfWeekBasedYearRule, 2)

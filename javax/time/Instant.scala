@@ -33,10 +33,8 @@ package javax.time
 
 import java.io.Serializable
 import java.util.concurrent.TimeUnit
-import javax.time.calendar.Clock
 import javax.time.calendar.OffsetDateTime
 import javax.time.calendar.ZoneOffset
-import javax.time.calendar.format.CalendricalParseException
 
 /**
  * An instantaneous point on the time-line.
@@ -56,7 +54,7 @@ import javax.time.calendar.format.CalendricalParseException
  * measured using an    { @code int }. The nanosecond part will always be between
  * 0 and 999,999,999 representing the nanosecond part of the second.
  * <p>
- * The seconds are measured from the standard Java epoch of 1970-01-01T00:00:00Z.
+ * The seconds are measured from the standard Java epoch of {@code 1970-01-01T00:00:00Z}.
  * Instants on the time-line after the epoch are positive, earlier are negative.
  *
  * <h4>Time-scale</h4>
@@ -73,11 +71,11 @@ import javax.time.calendar.format.CalendricalParseException
  * times after 23:43:19 on a day with a removed leap second.
  * <p>
  * The UTC-SLS conversion only matters to users of this class with high precision requirements.
- * To keep full track of an instant using an accurate time-scale use the    { @link UTCInstant } or
- * { @link TAIInstant } class.
+ * To keep full track of an instant using an accurate time-scale use the {@link UTCInstant} or
+ * {@link TAIInstant} class.
  * For most applications, the behavior where each day has exactly 84000 seconds is the desired one.
  * The UTC-SLS time-scale is also used for all human-scale date-time classes,
- * such as    { @code OffsetDateTime } and    { @code ZonedDateTime }.
+ * such as {@code OffsetDateTime} and {@code ZonedDateTime}.
  * <p>
  * The standard Java epoch of 1970 is prior to the introduction of whole leap seconds into UTC in 1972.
  * As such, the Time Framework for Java needs to define what the 1970 epoch actually means.
@@ -86,7 +84,7 @@ import javax.time.calendar.format.CalendricalParseException
  * This differs from an accurate UTC implementation, but is relatively easy to handle if accuracy is required.
  * <p>
  * Operations to add or subtract durations will ignore leap seconds.
- * Use    { @code UTCInstant } or    { @code TAIInstant } if accurate duration calculations are required.
+ * Use {@code UTCInstant} or {@code TAIInstant} if accurate duration calculations are required.
  * <p>
  * Instant is immutable and thread-safe.
  *
@@ -103,9 +101,7 @@ object Instant {
    * @param epochSeconds the number of seconds from the epoch of 1970-01-01T00:00:00Z
    * @return an instant, never null
    */
-  def ofEpochSeconds(epochSeconds: Long): Instant = {
-    return create(epochSeconds, 0)
-  }
+  def ofEpochSeconds(epochSeconds: Long): Instant = create(epochSeconds, 0)
 
   /**
    * Obtains the current instant from the specified clock.
@@ -120,13 +116,13 @@ object Instant {
    */
   def now(timeSource: TimeSource): Instant = {
     checkNotNull(timeSource, "TimeSource must not be null")
-    return of(timeSource.instant)
+    of(timeSource.instant)
   }
 
   /**
    * BigInteger constant for a billion.
    */
-  private[time] val BILLION: BigInt = BigInt(NANOS_PER_SECOND)
+  private[time] val Billion: BigInt = BigInt(NanosPerSecond)
   /**
    * Obtains an instance of    { @code Instant } using nanoseconds from the
    * epoch of 1970-01-01T00:00:00Z.
@@ -137,9 +133,9 @@ object Instant {
    * @return an instant, never null
    */
   def ofEpochNanos(epochNanos: Long): Instant = {
-    var secs: Long = MathUtils.floorDiv(epochNanos, NANOS_PER_SECOND)
-    var nos: Int = MathUtils.floorMod(epochNanos, NANOS_PER_SECOND)
-    return create(secs, nos)
+    val secs: Long = MathUtils.floorDiv(epochNanos, NanosPerSecond)
+    val nos: Int = MathUtils.floorMod(epochNanos, NanosPerSecond)
+    create(secs, nos)
   }
 
   /**
@@ -162,23 +158,20 @@ object Instant {
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   def ofEpochSeconds(epochSeconds: Long, nanoAdjustment: Long): Instant = {
-    var secs: Long = MathUtils.safeAdd(epochSeconds, MathUtils.floorDiv(nanoAdjustment, NANOS_PER_SECOND))
-    var nos: Int = MathUtils.floorMod(nanoAdjustment, NANOS_PER_SECOND)
+    val secs: Long = MathUtils.safeAdd(epochSeconds, MathUtils.floorDiv(nanoAdjustment, NanosPerSecond))
+    val nos: Int = MathUtils.floorMod(nanoAdjustment, NanosPerSecond)
     return create(secs, nos)
   }
 
   /**
-   * Obtains an instance of    { @code Instant } using seconds and nanoseconds.
+   * Obtains an instance of {@code Instant} using seconds and nanoseconds.
    *
    * @param seconds the length of the duration in seconds
    * @param nanoOfSecond the nano-of-second, from 0 to 999,999,999
    */
-  private def create(seconds: Long, nanoOfSecond: Int): Instant = {
-    if ((seconds | nanoOfSecond) == 0) {
-      return EPOCH
-    }
-    return new Instant(seconds, nanoOfSecond)
-  }
+  private def create(seconds: Long, nanoOfSecond: Int): Instant =
+    if ((seconds | nanoOfSecond) == 0) Epoch
+    else new Instant(seconds, nanoOfSecond)
 
   /**
    * Obtains an instance of    { @code Instant } using nanoseconds from the
@@ -194,7 +187,7 @@ object Instant {
    */
   def ofEpochNanos(epochNanos: BigInt): Instant = {
     checkNotNull(epochNanos, "Nanos must not be null")
-    var divRem: (BigInt, BigInt) = epochNanos /% BILLION
+    var divRem: (BigInt, BigInt) = epochNanos /% Billion
     if (divRem._1.bitLength > 63) {
       throw new ArithmeticException("Exceeds capacity of Duration: " + epochNanos)
     }
@@ -220,11 +213,8 @@ object Instant {
   /**
    * Constant for the 1970-01-01T00:00:00Z epoch instant.
    */
-  val EPOCH: Instant = new Instant(0, 0)
-  /**
-   * Serialization version.
-   */
-  private final val serialVersionUID: Long = 1L
+  val Epoch: Instant = new Instant(0, 0)
+
   /**
    * Obtains an instance of    { @code Instant } using milliseconds from the
    * epoch of 1970-01-01T00:00:00Z.
@@ -243,8 +233,8 @@ object Instant {
   /**
    * Obtains an instance of    { @code Instant } by parsing a string.
    * <p>
-   * This will parse the string produced by    { @link # toString ( ) } which is
-   * the ISO-8601 format    { @code yyyy -MM-ddTHH:mm:ss.SSSSSSSSSZ }.
+   * This will parse the string produced by {@link #toString()} which is
+   * the ISO-8601 format {@code yyyy -MM-ddTHH:mm:ss.SSSSSSSSSZ}.
    * The numbers must be ASCII numerals.
    * The seconds are mandatory, but the fractional seconds are optional.
    * There must be no more than 9 digits after the decimal point.
@@ -253,7 +243,7 @@ object Instant {
    *
    * @param text the text to parse, not null
    * @return an instant, never null
-   * @throws CalendricalParseException if the text cannot be parsed to an    { @code Instant }
+   * @throws CalendricalParseException if the text cannot be parsed to an {@code Instant}
    */
   def parse(text: String): Instant = {
     Instant.checkNotNull(text, "Text to parse must not be null")
@@ -261,11 +251,11 @@ object Instant {
   }
 
   /**
-   * Obtains an instance of    { @code Instant } using seconds from the
+   * Obtains an instance of {@code Instant} using seconds from the
    * epoch of 1970-01-01T00:00:00Z.
    * <p>
-   * The seconds and nanoseconds are extracted from the specified    { @code BigDecimal }.
-   * If the decimal is larger than    { @code Long.MaxValue } or has more than 9 decimal
+   * The seconds and nanoseconds are extracted from the specified {@code BigDecimal}.
+   * If the decimal is larger than {@code Long.MaxValue} or has more than 9 decimal
    * places then an exception is thrown.
    *
    * @param epochSeconds the number of seconds, up to scale 9
@@ -281,19 +271,19 @@ object Instant {
   /**
    * Obtains the current instant from the system clock in the default time-zone.
    * <p>
-   * This will query the system clock time-source to obtain the current time.
+   * This will query the {@link TimeSource#system() system time-source} to obtain the current instant.
    * <p>
    * Using this method will prevent the ability to use an alternate clock for testing
    * because the clock is hard-coded.
    *
    * @return the current instant using the system clock, never null
    */
-  def nowSystemClock: Instant = now(TimeSource.system)
+  def now: Instant = now(TimeSource.system)
 
   /**
    * Constant for nanos per second.
    */
-  private val NANOS_PER_SECOND: Int = 1000000000
+  private val NanosPerSecond: Int = 1000000000
   /**
    * Validates that the input value is not null.
    *
@@ -307,13 +297,14 @@ object Instant {
 }
 
 /**
- * Constructs an instance of    { @code Instant } using seconds from the epoch of
+ * Constructs an instance of {@code Instant} using seconds from the epoch of
  * 1970-01-01T00:00:00Z and nanosecond fraction of second.
  *
  * @param epochSeconds the number of seconds from the epoch
  * @param nanos the nanoseconds within the second, must be positive
  */
-final class Instant private(val seconds: Long, val nanos: Int) extends InstantProvider with Comparable[Instant] with Serializable {
+@SerialVersionUID(1L)
+final case class Instant private(seconds: Long, nanos: Int) extends InstantProvider with Comparable[Instant] with Serializable {
 
   import Instant._
 
@@ -351,7 +342,7 @@ final class Instant private(val seconds: Long, val nanos: Int) extends InstantPr
    *
    * @return a suitable hash code
    */
-  override def hashCode: Int = ((seconds ^ (seconds >>> 32)).asInstanceOf[Int]) + 51 * nanos
+  //override def hashCode: Int = ((seconds ^ (seconds >>> 32)).asInstanceOf[Int]) + 51 * nanos
 
   /**
    * Converts this instant to the number of seconds from the epoch
@@ -376,8 +367,8 @@ final class Instant private(val seconds: Long, val nanos: Int) extends InstantPr
       return this
     }
     var epochSecs: Long = MathUtils.safeAdd(seconds, secondsToAdd)
-    epochSecs = MathUtils.safeAdd(epochSecs, nanosToAdd / NANOS_PER_SECOND)
-    var nanosToAddResult = nanosToAdd % NANOS_PER_SECOND
+    epochSecs = MathUtils.safeAdd(epochSecs, nanosToAdd / NanosPerSecond)
+    var nanosToAddResult = nanosToAdd % NanosPerSecond
     var nanoAdjustment: Long = nanos + nanosToAddResult
     return ofEpochSeconds(epochSecs, nanoAdjustment)
   }
@@ -402,7 +393,7 @@ final class Instant private(val seconds: Long, val nanos: Int) extends InstantPr
    *
    * @return the number of nanoseconds since the epoch of 1970-01-01T00:00:00Z, never null
    */
-  def toEpochNanos: BigInt = BigInt(seconds) * BILLION + BigInt(nanos)
+  def toEpochNanos: BigInt = BigInt(seconds) * Billion + BigInt(nanos)
 
   /**
    * Checks if this instant is before the specified instant.
@@ -534,7 +525,7 @@ final class Instant private(val seconds: Long, val nanos: Int) extends InstantPr
    *
    * @return the resolved instance, never null
    */
-  private def readResolve: AnyRef = if ((seconds | nanos) == 0) EPOCH else this
+  private def readResolve: AnyRef = if ((seconds | nanos) == 0) Epoch else this
 
   /**
    * Returns a copy of this instant with the specified duration in nanoseconds subtracted.
@@ -565,8 +556,8 @@ final class Instant private(val seconds: Long, val nanos: Int) extends InstantPr
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   def toEpochMillisLong: Long = {
-    var millis: Long = MathUtils.safeMultiply(seconds, 1000)
-    return millis + nanos / 1000000
+    val millis: Long = MathUtils.safeMultiply(seconds, 1000)
+    millis + nanos / 1000000
   }
 
   /**
@@ -577,16 +568,7 @@ final class Instant private(val seconds: Long, val nanos: Int) extends InstantPr
    * @param otherInstant the other instant, null returns false
    * @return true if the other instant is equal to this one
    */
-  override def equals(otherInstant: AnyRef): Boolean = {
-    if (this == otherInstant) {
-      return true
-    }
-    if (otherInstant.isInstanceOf[Instant]) {
-      var other: Instant = otherInstant.asInstanceOf[Instant]
-      return this.seconds == other.seconds && this.nanos == other.nanos
-    }
-    return false
-  }
+  //override def equals(otherInstant: AnyRef): Boolean
 
   /**
    * Returns a copy of this instant with the specified duration in milliseconds added.

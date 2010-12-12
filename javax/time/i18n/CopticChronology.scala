@@ -86,7 +86,7 @@ object CopticChronology extends CopticChronology {
 
   @SerialVersionUID(1L)
   private sealed class YearRule private
-    extends DateTimeFieldRule[Int](classOf[Int], CopticChronology, "Year", YEARS, null, CopticDate.MIN_YEAR, CopticDate.MAX_YEAR) with Serializable {
+    extends DateTimeFieldRule[Int](classOf[Int], CopticChronology, "Year", Years, null, CopticDate.MinYear, CopticDate.MaxYear) with Serializable {
 
     private def readResolve: AnyRef = YearRule
 
@@ -123,7 +123,7 @@ object CopticChronology extends CopticChronology {
    *
    * @return the period unit for years, never null
    */
-  def periodYears: PeriodUnit = YEARS
+  def periodYears: PeriodUnit = Years
 
   /**
    * Gets the rule for the day-of-year field in the Coptic chronology.
@@ -143,7 +143,7 @@ object CopticChronology extends CopticChronology {
    *
    * @return the period unit for months, never null
    */
-  def periodMonths: PeriodUnit = MONTHS
+  def periodMonths: PeriodUnit = Months
 
   /**
    * Rule implementation.
@@ -152,7 +152,7 @@ object CopticChronology extends CopticChronology {
 
   @SerialVersionUID(1L)
   private sealed class DayOfYearRule private
-    extends DateTimeFieldRule[Int](classOf[Int], CopticChronology, "DayOfYear", periodDays, YEARS, 1, 366) with Serializable {
+    extends DateTimeFieldRule[Int](classOf[Int], CopticChronology, "DayOfYear", periodDays, Years, 1, 366) with Serializable {
     override def getMaximumValue(calendrical: Calendrical): Int = {
       calendrical.get(CopticChronology.yearRule) match {
         case None => getMaximumValue
@@ -193,7 +193,7 @@ object CopticChronology extends CopticChronology {
 
   @SerialVersionUID(1L)
   private sealed class MonthOfYearRule private
-    extends DateTimeFieldRule[Int](classOf[Int], CopticChronology, "MonthOfYear", MONTHS, YEARS, 1, 13)
+    extends DateTimeFieldRule[Int](classOf[Int], CopticChronology, "MonthOfYear", Months, Years, 1, 13)
     with Serializable {
     private def readResolve: AnyRef = MonthOfYearRule
 
@@ -204,11 +204,6 @@ object CopticChronology extends CopticChronology {
       }
     }
   }
-
-  /**
-   * Period unit for years.
-   */
-  private val YEARS: PeriodUnit = Years
 
   object Years extends Years
 
@@ -261,7 +256,7 @@ object CopticChronology extends CopticChronology {
 
   @SerialVersionUID(1L)
   private sealed class DayOfMonthRule private
-    extends DateTimeFieldRule[Int](classOf[Int], CopticChronology, "DayOfMonth", periodDays, MONTHS, 1, 30) with Serializable {
+    extends DateTimeFieldRule[Int](classOf[Int], CopticChronology, "DayOfMonth", periodDays, Months, 1, 30) with Serializable {
     private def readResolve: AnyRef = DayOfMonthRule
 
     override def getMaximumValue(calendrical: Calendrical): Int = {
@@ -302,11 +297,6 @@ object CopticChronology extends CopticChronology {
    * @return true if the year is a leap year
    */
   def isLeapYear(year: Int): Boolean = ((year % 4) == 3)
-
-  /**
-   * Period unit for months.
-   */
-  private val MONTHS: PeriodUnit = Months
 
   object Months extends Months
 

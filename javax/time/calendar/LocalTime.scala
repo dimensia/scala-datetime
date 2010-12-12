@@ -141,9 +141,9 @@ object LocalTime {
   /**Nanos per second. */
   private val NANOS_PER_SECOND: Long = 1000000000L
   /**Seconds per hour. */
-  private val SECONDS_PER_HOUR: Int = SECONDS_PER_MINUTE * MINUTES_PER_HOUR
+  private val SECONDS_PER_HOUR: Int = SecondsPerMinute * MinutesPerHour
   /**Seconds per day. */
-  private val SECONDS_PER_DAY: Int = SECONDS_PER_HOUR * HOURS_PER_DAY
+  private val SECONDS_PER_DAY: Int = SecondsPerHour * HOURS_PER_DAY
   /**
    * Obtains an instance of    { @code LocalTime } from an hour and minute.
    * <p>
@@ -225,7 +225,7 @@ object LocalTime {
   }
 
   /**Nanos per hour. */
-  private val NANOS_PER_HOUR: Long = NANOS_PER_MINUTE * MINUTES_PER_HOUR
+  private val NANOS_PER_HOUR: Long = NANOS_PER_MINUTE * MinutesPerHour
   /**
    * Obtains an instance of    { @code LocalTime } from a second-of-day value.
    * <p>
@@ -238,10 +238,10 @@ object LocalTime {
   def ofSecondOfDay(_secondOfDay: Long): LocalTime = {
     var secondOfDay = _secondOfDay
     ISOChronology.secondOfDayRule.checkValue(secondOfDay)
-    val hours: Int = (secondOfDay / SECONDS_PER_HOUR).toInt
-    secondOfDay -= hours * SECONDS_PER_HOUR
-    val minutes: Int = (secondOfDay / SECONDS_PER_MINUTE).toInt
-    secondOfDay -= minutes * SECONDS_PER_MINUTE
+    val hours: Int = (secondOfDay / SecondsPerHour).toInt
+    secondOfDay -= hours * SecondsPerHour
+    val minutes: Int = (secondOfDay / SecondsPerMinute).toInt
+    secondOfDay -= minutes * SecondsPerMinute
     return create(hours, minutes, secondOfDay.toInt, 0)
   }
 
@@ -257,9 +257,9 @@ object LocalTime {
   def nowSystemClock: LocalTime = now(Clock.systemDefaultZone)
 
   /**Minutes per day. */
-  private val MINUTES_PER_DAY: Int = MINUTES_PER_HOUR * HOURS_PER_DAY
+  private val MINUTES_PER_DAY: Int = MinutesPerHour * HOURS_PER_DAY
   /**Nanos per minute. */
-  private val NANOS_PER_MINUTE: Long = NANOS_PER_SECOND * SECONDS_PER_MINUTE
+  private val NANOS_PER_MINUTE: Long = NanosPerSecond * SecondsPerMinute
   /**
    * Obtains an instance of    { @code LocalTime } from a time provider.
    * <p>
@@ -301,8 +301,8 @@ object LocalTime {
     nanoOfDay -= hours * NANOS_PER_HOUR
     val minutes: Int = (nanoOfDay / NANOS_PER_MINUTE).toInt
     nanoOfDay -= minutes * NANOS_PER_MINUTE
-    val seconds: Int = (nanoOfDay / NANOS_PER_SECOND).toInt
-    nanoOfDay -= seconds * NANOS_PER_SECOND
+    val seconds: Int = (nanoOfDay / NanosPerSecond).toInt
+    nanoOfDay -= seconds * NanosPerSecond
     create(hours, minutes, seconds, nanoOfDay.toInt)
   }
 
@@ -325,10 +325,10 @@ object LocalTime {
     var secondOfDay = _secondOfDay
     ISOChronology.secondOfDayRule.checkValue(secondOfDay)
     ISOChronology.nanoOfSecondRule.checkValue(nanoOfSecond)
-    val hours: Int = (secondOfDay / SECONDS_PER_HOUR).toInt
-    secondOfDay -= hours * SECONDS_PER_HOUR
-    val minutes: Int = (secondOfDay / SECONDS_PER_MINUTE).toInt
-    secondOfDay -= minutes * SECONDS_PER_MINUTE
+    val hours: Int = (secondOfDay / SecondsPerHour).toInt
+    secondOfDay -= hours * SecondsPerHour
+    val minutes: Int = (secondOfDay / SecondsPerMinute).toInt
+    secondOfDay -= minutes * SecondsPerMinute
     return create(hours, minutes, secondOfDay.toInt, nanoOfSecond)
   }
 
@@ -525,9 +525,9 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
     var newNofd: Long = ((nanos % NANOS_PER_DAY) + nofd + NANOS_PER_DAY) % NANOS_PER_DAY
     if (nofd == newNofd) return this
     val newHour: Int = (newNofd / NANOS_PER_HOUR).asInstanceOf[Int]
-    val newMinute: Int = ((newNofd / NANOS_PER_MINUTE) % MINUTES_PER_HOUR).toInt
-    val newSecond: Int = ((newNofd / NANOS_PER_SECOND) % SECONDS_PER_MINUTE).toInt
-    val newNano: Int = (newNofd % NANOS_PER_SECOND).toInt
+    val newMinute: Int = ((newNofd / NANOS_PER_MINUTE) % MinutesPerHour).toInt
+    val newSecond: Int = ((newNofd / NanosPerSecond) % SecondsPerMinute).toInt
+    val newNano: Int = (newNofd % NanosPerSecond).toInt
     return create(newHour, newMinute, newSecond, newNano)
   }
 
@@ -590,7 +590,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   private def plusWithOverflow(hours: Int, minutes: Int, seconds: Int, nanos: Long, sign: Int): LocalTime.Overflow = {
     var totDays: Int = (nanos / NANOS_PER_DAY).asInstanceOf[Int] + seconds / SECONDS_PER_DAY + minutes / MINUTES_PER_DAY + hours / HOURS_PER_DAY
     totDays *= sign
-    var totNanos: Long = nanos % NANOS_PER_DAY + (seconds % SECONDS_PER_DAY) * NANOS_PER_SECOND + (minutes % MINUTES_PER_DAY) * NANOS_PER_MINUTE + (hours % HOURS_PER_DAY) * NANOS_PER_HOUR
+    var totNanos: Long = nanos % NANOS_PER_DAY + (seconds % SECONDS_PER_DAY) * NanosPerSecond + (minutes % MINUTES_PER_DAY) * NANOS_PER_MINUTE + (hours % HOURS_PER_DAY) * NANOS_PER_HOUR
     if (totNanos == 0) {
       return new LocalTime.Overflow(this, totDays)
     }
@@ -656,7 +656,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
     val periodMinutes: Long = period.getMinutes
     val periodSeconds: Long = period.getSeconds
     val periodNanos: Long = period.getNanos
-    val totNanos: Long = periodNanos % NANOS_PER_DAY + (periodSeconds % SECONDS_PER_DAY) * NANOS_PER_SECOND + (periodMinutes % MINUTES_PER_DAY) * NANOS_PER_MINUTE + (periodHours % HOURS_PER_DAY) * NANOS_PER_HOUR
+    val totNanos: Long = periodNanos % NANOS_PER_DAY + (periodSeconds % SECONDS_PER_DAY) * NanosPerSecond + (periodMinutes % MINUTES_PER_DAY) * NANOS_PER_MINUTE + (periodHours % HOURS_PER_DAY) * NANOS_PER_HOUR
     minusNanos(totNanos)
   }
 
@@ -761,7 +761,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
     val periodMinutes: Long = period.getMinutes
     val periodSeconds: Long = period.getSeconds
     val periodNanos: Long = period.getNanos
-    val totNanos: Long = periodNanos % NANOS_PER_DAY + (periodSeconds % SECONDS_PER_DAY) * NANOS_PER_SECOND + (periodMinutes % MINUTES_PER_DAY) * NANOS_PER_MINUTE + (periodHours % HOURS_PER_DAY) * NANOS_PER_HOUR
+    val totNanos: Long = periodNanos % NANOS_PER_DAY + (periodSeconds % SECONDS_PER_DAY) * NanosPerSecond + (periodMinutes % MINUTES_PER_DAY) * NANOS_PER_MINUTE + (periodHours % HOURS_PER_DAY) * NANOS_PER_HOUR
     plusNanos(totNanos)
   }
 
@@ -783,8 +783,8 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    * @return the second-of-day equivalent to this time
    */
   def toSecondOfDay: Int = {
-    var total: Int = hour * SECONDS_PER_HOUR
-    total += minute * SECONDS_PER_MINUTE
+    var total: Int = hour * SecondsPerHour
+    total += minute * SecondsPerMinute
     total += second
     total
   }
@@ -846,12 +846,12 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    */
   def minusSeconds(seconds: Long): LocalTime = {
     if (seconds == 0) return this
-    var sofd: Int = hour * SECONDS_PER_HOUR + minute * SECONDS_PER_MINUTE + second
+    var sofd: Int = hour * SecondsPerHour + minute * SecondsPerMinute + second
     var newSofd: Int = (-(seconds % SECONDS_PER_DAY).toInt + sofd + SECONDS_PER_DAY) % SECONDS_PER_DAY
     if (sofd == newSofd) return this
-    val newHour: Int = newSofd / SECONDS_PER_HOUR
-    val newMinute: Int = (newSofd / SECONDS_PER_MINUTE) % MINUTES_PER_HOUR
-    val newSecond: Int = newSofd % SECONDS_PER_MINUTE
+    val newHour: Int = newSofd / SecondsPerHour
+    val newMinute: Int = (newSofd / SecondsPerMinute) % MinutesPerHour
+    val newSecond: Int = newSofd % SecondsPerMinute
     return create(newHour, newMinute, newSecond, nano)
   }
 
@@ -868,11 +868,11 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    */
   def plusMinutes(minutes: Long): LocalTime = {
     if (minutes == 0) return this
-    var mofd: Int = hour * MINUTES_PER_HOUR + minute
+    var mofd: Int = hour * MinutesPerHour + minute
     var newMofd: Int = ((minutes % MINUTES_PER_DAY).toInt + mofd + MINUTES_PER_DAY) % MINUTES_PER_DAY
     if (mofd == newMofd) return this
-    val newHour: Int = newMofd / MINUTES_PER_HOUR
-    val newMinute: Int = newMofd % MINUTES_PER_HOUR
+    val newHour: Int = newMofd / MinutesPerHour
+    val newMinute: Int = newMofd % MinutesPerHour
     return create(newHour, newMinute, second, nano)
   }
 
@@ -938,11 +938,11 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    */
   def minusMinutes(minutes: Long): LocalTime = {
     if (minutes == 0) return this
-    var mofd: Int = hour * MINUTES_PER_HOUR + minute
+    var mofd: Int = hour * MinutesPerHour + minute
     var newMofd: Int = (-(minutes % MINUTES_PER_DAY).toInt + mofd + MINUTES_PER_DAY) % MINUTES_PER_DAY
     if (mofd == newMofd) return this
-    val newHour: Int = newMofd / MINUTES_PER_HOUR
-    val newMinute: Int = newMofd % MINUTES_PER_HOUR
+    val newHour: Int = newMofd / MinutesPerHour
+    val newMinute: Int = newMofd % MinutesPerHour
     return create(newHour, newMinute, second, nano)
   }
 
@@ -1059,7 +1059,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   def toNanoOfDay: Long = {
     var total: Long = hour * NANOS_PER_HOUR
     total += minute * NANOS_PER_MINUTE
-    total += second * NANOS_PER_SECOND
+    total += second * NanosPerSecond
     total += nano
     total
   }
@@ -1077,12 +1077,12 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    */
   def plusSeconds(seconds: Long): LocalTime = {
     if (seconds == 0) return this
-    var sofd: Int = hour * SECONDS_PER_HOUR + minute * SECONDS_PER_MINUTE + second
+    var sofd: Int = hour * SecondsPerHour + minute * SecondsPerMinute + second
     var newSofd: Int = ((seconds % SECONDS_PER_DAY).toInt + sofd + SECONDS_PER_DAY) % SECONDS_PER_DAY
     if (sofd == newSofd) return this
-    val newHour: Int = newSofd / SECONDS_PER_HOUR
-    val newMinute: Int = (newSofd / SECONDS_PER_MINUTE) % MINUTES_PER_HOUR
-    val newSecond: Int = newSofd % SECONDS_PER_MINUTE
+    val newHour: Int = newSofd / SecondsPerHour
+    val newMinute: Int = (newSofd / SecondsPerMinute) % MinutesPerHour
+    val newSecond: Int = newSofd % SecondsPerMinute
     return create(newHour, newMinute, newSecond, nano)
   }
 
@@ -1103,9 +1103,9 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
     var newNofd: Long = (-(nanos % NANOS_PER_DAY) + nofd + NANOS_PER_DAY) % NANOS_PER_DAY
     if (nofd == newNofd) return this
     val newHour: Int = (newNofd / NANOS_PER_HOUR).toInt
-    val newMinute: Int = ((newNofd / NANOS_PER_MINUTE) % MINUTES_PER_HOUR).toInt
-    val newSecond: Int = ((newNofd / NANOS_PER_SECOND) % SECONDS_PER_MINUTE).toInt
-    val newNano: Int = (newNofd % NANOS_PER_SECOND).toInt
+    val newMinute: Int = ((newNofd / NANOS_PER_MINUTE) % MinutesPerHour).toInt
+    val newSecond: Int = ((newNofd / NanosPerSecond) % SecondsPerMinute).toInt
+    val newNano: Int = (newNofd % NanosPerSecond).toInt
     return create(newHour, newMinute, newSecond, newNano)
   }
 }

@@ -353,7 +353,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    * @throws ArithmeticException if the calculation overflows
    */
   def toEstimatedDuration: Duration = {
-    var dur: Duration = Duration.ZERO
+    var dur: Duration = Duration.Zero
     for (field <- this) {
       dur = dur.plus(field.toEstimatedDuration)
     }

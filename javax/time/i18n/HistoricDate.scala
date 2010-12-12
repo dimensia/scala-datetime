@@ -59,6 +59,17 @@ import javax.time.calendar.MonthOfYear
  * @author Stephen Colebourne
  */
 object HistoricDate {
+
+  /**
+   * The maximum valid year of era.
+   * This is currently set to 999,999,999 but may be changed to increase
+   * the valid range in a future version of the specification.
+   */
+  val MaxYear: Int = 999999999
+  /**
+   * The standard cutover date between the Julian and Gregorian calendar system of 1582-10-15.
+   */
+  val StandardCutover: LocalDate = LocalDate.of(1582, 10, 15)
   /**
    * Obtains an instance of   { @code HistoricDate } from a calendrical.
    * <p>
@@ -71,16 +82,6 @@ object HistoricDate {
    */
   def of(calendrical: Calendrical): HistoricDate = rule.getValueChecked(calendrical)
 
-  /**
-   * The maximum valid year of era.
-   * This is currently set to 999,999,999 but may be changed to increase
-   * the valid range in a future version of the specification.
-   */
-  val MAX_YEAR: Int = 999999999
-  /**
-   * The standard cutover date between the Julian and Gregorian calendar system of 1582-10-15.
-   */
-  val STANDARD_CUTOVER: LocalDate = LocalDate.of(1582, 10, 15)
   /**
    * Obtains an instance of   { @code LocalDate } from a year, month and day
    * using the standard cutover of 1582-10-15.
@@ -95,7 +96,7 @@ object HistoricDate {
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
   def of(historicYear: Int, monthOfYear: MonthOfYear, dayOfMonth: Int): HistoricDate = {
-    of(STANDARD_CUTOVER, historicYear, monthOfYear, dayOfMonth)
+    of(StandardCutover, historicYear, monthOfYear, dayOfMonth)
   }
 
   /**
@@ -382,7 +383,7 @@ final class HistoricDate private[i18n](val chrono: HistoricChronology, @transien
    */
   def get[T](rule: CalendricalRule[T]): Option[T] = {
     if (rule.equals(LocalDate.rule)) rule.reify(toLocalDate)
-    else rule.deriveValueFor(rule, this, this)
+    else rule.deriveValueFor(rule, this, this, chrono)
   }
 
   /**
