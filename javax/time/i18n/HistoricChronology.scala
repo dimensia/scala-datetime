@@ -81,7 +81,7 @@ object HistoricChronology {
    * Unit class for months.
    */
   @SerialVersionUID(1L)
-  private[time] final class Months extends PeriodUnit("JulianMonths", Duration.ofStandardHours(31557600L / 12L)) {
+  private[time] sealed class Months extends PeriodUnit("JulianMonths", Duration.ofStandardHours(31557600L / 12L)) {
     private def readResolve: AnyRef = Months
   }
 
@@ -94,7 +94,7 @@ object HistoricChronology {
    * Unit class for years.
    */
   @SerialVersionUID(1L)
-  private final class Years extends PeriodUnit("JulianYears", Duration.ofSeconds(31557600L)) {
+  private[time] sealed class Years extends PeriodUnit("JulianYears", Duration.ofSeconds(31557600L)) {
     private def readResolve: AnyRef = Years
   }
 

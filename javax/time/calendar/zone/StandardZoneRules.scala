@@ -58,7 +58,7 @@ object StandardZoneRules {
   /**
    * The last year to have its transitions cached.
    */
-  private val LastCachedYear: Year = 2100
+  private val LastCachedYear: Int = 2100
 
   /**
    * Reads the state from the stream.
@@ -108,8 +108,8 @@ object StandardZoneRules {
     val standardTransitions = standardOffsetTransitionList.map(_.toEpochSeconds)
     val standardOffsets = baseStandardOffset +: standardOffsetTransitionList.map(_.getOffset)
 
-    val savingsLocalTransitions: Array[LocalDateTime] = transitionList.flatMap(buildTransitions)
-    val wallOffsets: Array[ZoneOffset] = baseWallOffset +: transitionList.map(_.getOffsetAfter)
+    val savingsLocalTransitions: Array[LocalDateTime] = transitionList.flatMap(buildTransitions).toArray
+    val wallOffsets: Array[ZoneOffset] = baseWallOffset +: transitionList.map(_.getOffsetAfter).toArray
     val savingsInstantTransitions: Array[Long] = transitionList.map(_.getInstant.getEpochSeconds).toArray
 
     new StandardZoneRules(standardTransitions, standardOffsets, savingsInstantTransitions, wallOffsets, lastRules.toArray)
@@ -135,8 +135,8 @@ object StandardZoneRules {
   }
 
   private def buildTransitions(transition: ZoneOffsetTransition) = {
-    if (transition.isGap) Seq(transition.getDateTime.toLocalDateTime, transition.getDateTimeAfter.toLocalDateTime)
-    else Seq(transition.getDateTimeAfter.toLocalDateTime, transition.getDateTime.toLocalDateTime)
+    if (transition.isGap) Buffer(transition.getDateTime.toLocalDateTime, transition.getDateTimeAfter.toLocalDateTime)
+    else Buffer(transition.getDateTimeAfter.toLocalDateTime, transition.getDateTime.toLocalDateTime)
   }
 
 }
@@ -408,13 +408,13 @@ final class StandardZoneRules private(private val standardTransitions: Array[Lon
       i += 1;
     }
 
-    if (year < LastCachedYear) {
+    if (year < StandardZoneRules.LastCachedYear) {
       lastRulesCache.putIfAbsent(yearObj, transArray)
     }
     return transArray
   }
 
-  /**{@inheritDocfindTransitionArray(Y}*/
+  /**{@inheritDoc findTransitionArray(Y}*/
   def getOffsetInfo(dt: LocalDateTime): ZoneOffsetInfo = {
     if (lastRules.length > 0 && dt.isAfter(savingsLocalTransitions(savingsLocalTransitions.length - 1))) {
       var transArray: Array[ZoneOffsetTransition] = findTransitionArray(dt.getYear)

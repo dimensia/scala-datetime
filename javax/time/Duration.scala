@@ -834,8 +834,8 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
    * @throws ArithmeticException if the length exceeds the capacity of a {@code long}
    */
   def toNanosLong: Long = {
-    var millis: Long = MathUtils.safeMultiply(seconds, 1000000000)
-    millis = MathUtils.safeAdd(millis, nanos)
+    val millis: Long = MathUtils.safeMultiply(seconds, 1000000000)
+    MathUtils.safeAdd(millis, nanos)
   }
 
   /**
@@ -852,8 +852,8 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
    * @throws ArithmeticException if the length exceeds the capacity of a {@code long}
    */
   def toMillisLong: Long = {
-    var millis: Long = MathUtils.safeMultiply(seconds, 1000)
-    millis = MathUtils.safeAdd(millis, nanos / 1000000)
+    val millis: Long = MathUtils.safeMultiply(seconds, 1000)
+    MathUtils.safeAdd(millis, nanos / 1000000)
   }
 
   /**
