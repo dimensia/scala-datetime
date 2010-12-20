@@ -86,6 +86,8 @@ object YearMonth {
     of(year, month)
   }
 
+  def apply(calendrical: Calendrical): YearMonth = of(calendrical)
+
   /**
    * Rule implementation.
    */
@@ -96,8 +98,8 @@ object YearMonth {
     extends CalendricalRule[YearMonth](classOf[YearMonth], ISOChronology, "YearMonth", ISOChronology.periodMonths, null)
     with Serializable {
     protected override def derive(calendrical: Calendrical): Option[YearMonth] = {
-      var year: Int = calendrical.get(ISOChronology.yearRule).getOrElse(return None)
-      var moy: MonthOfYear = calendrical.get(ISOChronology.monthOfYearRule).getOrElse(return None)
+      val year: Int = calendrical.get(ISOChronology.yearRule).getOrElse(return None)
+      val moy: MonthOfYear = calendrical.get(ISOChronology.monthOfYearRule).getOrElse(return None)
       return Some(YearMonth.of(year, moy))
     }
 
@@ -133,6 +135,8 @@ object YearMonth {
     new YearMonth(year, monthOfYear)
   }
 
+  def apply(year: Int, monthOfYear: MonthOfYear): YearMonth = of(year, monthOfYear)
+
   /**
    * Obtains an instance of  {@code YearMonth } from a year and month.
    *
@@ -142,6 +146,8 @@ object YearMonth {
    * @throws IllegalCalendarFieldValueException if either field value is invalid
    */
   def of(year: Int, monthOfYear: Int): YearMonth = of(year, MonthOfYear.of(monthOfYear))
+
+  def apply(year: Int, monthOfYear: Int): YearMonth = of(year, monthOfYear)
 
   /**
    * Gets the field rule for the year-month.
@@ -223,7 +229,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
     if (date.getYear == year && date.getMonthOfYear == month) {
       return date
     }
-    var resolved: LocalDate = resolver.resolveDate(year, month, date.getDayOfMonth)
+    val resolved: LocalDate = resolver.resolveDate(year, month, date.getDayOfMonth)
     ISOChronology.checkNotNull(resolved, "The implementation of DateResolver must not return null")
     return resolved
   }
@@ -333,9 +339,10 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    */
   def get[T](rule: CalendricalRule[T]): Option[T] = {
     ISOChronology.checkNotNull(rule, "CalendricalRule must not be null")
-    if (rule.equals(ISOChronology.yearRule)) return Some(rule.reify(year))
-    if (rule.equals(ISOChronology.monthOfYearRule)) return Some(rule.reify(month))
-    return Some(rule.deriveValueFor(rule, this, this))
+    if (rule.equals(ISOChronology.yearRule)) return rule.reify(year)
+    if (rule.equals(ISOChronology.monthOfYearRule)) return rule.reify(month)
+//    return Some(rule.deriveValueFor(rule, this, this, ISOChronology))     //FIXME
+    return None
   }
 
   /**
@@ -395,17 +402,13 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    * @return the formatted year-month, never null
    */
   override def toString: String = {
-    var yearValue: Int = year
-    var monthValue: Int = month.getValue
-    var absYear: Int = Math.abs(yearValue)
-    var buf: StringBuilder = new StringBuilder(9)
+    val yearValue: Int = year
+    val monthValue: Int = month.getValue
+    val absYear: Int = math.abs(yearValue)
+    val buf: StringBuilder = new StringBuilder(9)
     if (absYear < 1000) {
-      if (yearValue < 0) {
-        buf.append(yearValue - 10000).deleteCharAt(1)
-      }
-      else {
-        buf.append(yearValue + 10000).deleteCharAt(0)
-      }
+      if (yearValue < 0) buf.append(yearValue - 10000).deleteCharAt(1)
+      else buf.append(yearValue + 10000).deleteCharAt(0)
     }
     else {
       buf.append(yearValue)

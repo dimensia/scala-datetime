@@ -129,7 +129,7 @@ object LocalDate {
 
   @SerialVersionUID(1L)
   private[calendar] sealed class Rule
-    extends CalendricalRule[LocalDate](classOf[LocalDate], ISOChronology, "LocalDate", ISOChronology.periodDays, null) with Serializable {
+          extends CalendricalRule[LocalDate](classOf[LocalDate], ISOChronology, "LocalDate", ISOChronology.periodDays, null) with Serializable {
 
     protected override def derive(calendrical: Calendrical): Option[LocalDate] = {
       val ldt: LocalDateTime = calendrical.get(LocalDateTime.rule).getOrElse(return None)
@@ -307,7 +307,7 @@ object LocalDate {
  * @param dayOfMonth the day-of-month to represent, valid for year-month, from 1 to 31
  */
 final class LocalDate private(val year: Int, val month: MonthOfYear, val day: Int)
-  extends Calendrical with DateProvider with CalendricalMatcher with DateAdjuster with Comparable[LocalDate] with Serializable {
+        extends Calendrical with DateProvider with CalendricalMatcher with DateAdjuster with Comparable[LocalDate] with Serializable {
   /**
    * Resolves the date, handling incorrectly implemented resolvers.
    *
@@ -423,8 +423,8 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
     val newYear: Int = ISOChronology.yearRule.checkValue(MathUtils.floorDiv(calcMonths, 12))
     val newMonth: MonthOfYear = MonthOfYear.of(MathUtils.floorMod(calcMonths, 12) + 1)
     val newMonthLen: Int = newMonth.lengthInDays(ISOChronology.isLeapYear(newYear))
-    val newDay: Int = Math.min(day, newMonthLen)
-    if (periodDays < 0 && day > newMonthLen) periodDays = Math.min(periodDays + (day - newMonthLen), 0)
+    val newDay: Int = math.min(day, newMonthLen)
+    if (periodDays < 0 && day > newMonthLen) periodDays = math.min(periodDays + (day - newMonthLen), 0)
     return LocalDate.of(newYear, newMonth, newDay).plusDays(periodDays)
   }
 
@@ -490,7 +490,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
     val yearValue: Int = year
     val monthValue: Int = month.getValue
     val dayValue: Int = day
-    val absYear: Int = Math.abs(yearValue)
+    val absYear: Int = math.abs(yearValue)
     val buf: StringBuilder = new StringBuilder(10)
     if (absYear < 1000) {
       if (yearValue < 0) {
@@ -994,7 +994,8 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
    */
-  def get[T](rule: CalendricalRule[T]): Option[T] = Some(rule.deriveValueFor(rule, this, this))
+  //  def get[T](rule: CalendricalRule[T]): Option[T] = Some(rule.deriveValueFor(rule, this, this, ISOChronology))  //FIXME
+  def get[T](rule: CalendricalRule[T]): Option[T] = None
 
   /**
    * Gets the chronology that this date uses, which is the ISO calendar system.
@@ -1117,8 +1118,8 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
     val newYear: Int = ISOChronology.yearRule.checkValue(MathUtils.floorDiv(calcMonths, 12))
     val newMonth: MonthOfYear = MonthOfYear.of(MathUtils.floorMod(calcMonths, 12) + 1)
     val newMonthLen: Int = newMonth.lengthInDays(ISOChronology.isLeapYear(newYear))
-    val newDay: Int = Math.min(day, newMonthLen)
-    if (periodDays > 0 && day > newMonthLen) periodDays = Math.max(periodDays - (day - newMonthLen), 0)
+    val newDay: Int = math.min(day, newMonthLen)
+    if (periodDays > 0 && day > newMonthLen) periodDays = math.max(periodDays - (day - newMonthLen), 0)
     return LocalDate.of(newYear, newMonth, newDay).minusDays(periodDays)
   }
 

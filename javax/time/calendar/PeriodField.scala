@@ -40,16 +40,16 @@ import javax.time.MathUtils
 /**
  * A period of time measured using a single unit, such as '3 Days' or '65 Seconds'.
  * <p>
- * { @code PeriodField } is an immutable period that stores an amount of human-scale
+ * {@code PeriodField} is an immutable period that stores an amount of human-scale
  * time for a single unit. For example, humans typically measure periods of time
  * in units of years, months, days, hours, minutes and seconds. These concepts are
- * defined by instances of   { @link PeriodUnit } in the chronology classes. This class
+ * defined by instances of {@link PeriodUnit} in the chronology classes. This class
  * allows an amount to be specified for one of the units, such as '3 Days' or '65 Seconds'.
  * <p>
  * Basic mathematical operations are provided - plus(), minus(), multipliedBy(),
  * dividedBy(), negated() and abs(), all of which return a new instance.
  * <p>
- * { @code PeriodField } can store rules of any kind which makes it usable with
+ * {@code PeriodField} can store rules of any kind which makes it usable with
  * any calendar system.
  * <p>
  * PeriodField is immutable and thread-safe.
@@ -58,13 +58,13 @@ import javax.time.MathUtils
  */
 object PeriodField {
   /**
-   * Obtains a   { @code PeriodField } from an amount and unit.
+   * Obtains a {@code PeriodField} from an amount and unit.
    * <p>
    * The parameters represent the two parts of a phrase like '6 Days'.
    *
    * @param amount the amount of the period, measured in terms of the unit, positive or negative
    * @param unit the unit that the period is measured in, not null
-   * @return the { @code PeriodField } instance, never null
+   * @return the {@code PeriodField} instance, never null
    */
   def of(amount: Long, unit: PeriodUnit): PeriodField = {
     PeriodFields.checkNotNull(unit, "PeriodUnit must not be null")
@@ -110,6 +110,8 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
    * @throws ArithmeticException if the calculation overflows
    */
   def multipliedBy(scalar: Long): PeriodField = withAmount(MathUtils.safeMultiply(amount, scalar))
+
+  def *(scalar: Long): PeriodField = multipliedBy(scalar)
 
   /**
    * Returns a copy of this period with a different unit.
@@ -229,6 +231,8 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
    */
   def minus(amount: Long): PeriodField = withAmount(MathUtils.safeSubtract(this.amount, amount))
 
+  def -(amount: Long): PeriodField = minus(amount)
+
   /**
    * Converts this period to a   { @code PeriodFields }.
    * <p>
@@ -271,7 +275,7 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
    * @return true if this period is the same as that specified
    */
   override def equals(obj: AnyRef): Boolean = {
-    if (this == obj) true
+    if (this eq obj) true
     else if (obj.isInstanceOf[PeriodField]) {
       val other: PeriodField = obj.asInstanceOf[PeriodField]
       this.amount == other.amount && this.unit.equals(other.unit)
@@ -282,16 +286,18 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
   /**
    * Returns a copy of this period with the amount divided by the specified divisor.
    * <p>
-   * This uses the   { @code / } operator and integer division to provide the result.
+   * This uses the {@code /} operator and integer division to provide the result.
    * For example, the result of '11 Days' divided by 4 is '2 Days'.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param divisor the value to divide by, positive or negative
-   * @return a { @code PeriodField } based on this period divided by the specified divisor, never null
+   * @return a {@code PeriodField} based on this period divided by the specified divisor, never null
    * @throws ArithmeticException if the divisor is zero
    */
   def dividedBy(divisor: Long): PeriodField = withAmount(amount / divisor)
+
+  def /(divisor: Long): PeriodField = dividedBy(divisor)
 
   /**
    * Converts this period to an equivalent in <i>one</i> of the units specified.
@@ -330,6 +336,8 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
    * @throws ArithmeticException if the calculation overflows
    */
   def plus(amount: Long): PeriodField = withAmount(MathUtils.safeAdd(this.amount, amount))
+
+  def +(amount: Long): PeriodField = plus(amount)
 
   /**
    * Returns a string representation of this period, such as '6 Days'.
@@ -372,6 +380,8 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
     return plus(period.getAmount)
   }
 
+  def +(period: PeriodField): PeriodField = plus(period)
+
   /**
    * Returns a copy of this period with the specified period subtracted.
    * <p>
@@ -389,6 +399,8 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
     }
     return minus(period.getAmount)
   }
+
+  def -(period: PeriodField): PeriodField = minus(period)
 
   /**
    * Estimates the duration of this period.

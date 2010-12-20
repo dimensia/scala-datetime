@@ -314,7 +314,8 @@ final class CopticDate private(val epochDays: Int, @transient year: Int, @transi
    */
   def get[T](rule: CalendricalRule[T]): Option[T] = {
     if (rule.equals(LocalDate.rule)) rule.reify(toLocalDate)
-    else rule.deriveValueFor(rule, this, this, CopticChronology)
+//    else rule.deriveValueFor(rule, this, this, CopticChronology)  //FIXME
+    else None
   }
 
   /**
@@ -338,7 +339,7 @@ final class CopticDate private(val epochDays: Int, @transient year: Int, @transi
     val yearValue: Int = getYear
     val monthValue: Int = getMonthOfYear
     val dayValue: Int = getDayOfMonth
-    val absYear: Int = Math.abs(yearValue)
+    val absYear: Int = math.abs(yearValue)
     val buf: StringBuilder = new StringBuilder(12)
     if (absYear < 1000) buf.append(yearValue + 10000).deleteCharAt(0)
     else buf.append(yearValue)

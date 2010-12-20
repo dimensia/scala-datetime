@@ -607,7 +607,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
   def convertIntToValue(value: Int): T = {
     //FIXME
     checkValue(value)
-    return reify(value).getOrElse(throw new IllegalCalendarFieldValueException)
+    return reify(value).getOrElse(throw new IllegalCalendarFieldValueException(null, null))
   }
 
   /**

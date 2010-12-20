@@ -79,8 +79,8 @@ sealed class SystemUTCRules private extends UTCRules with Serializable {
     if (leapAdjustment != -1 && leapAdjustment != 1) {
       throw new IllegalArgumentException("Leap adjustment must be -1 or 1")
     }
-    var data: SystemUTCRules.Data = dataRef.get
-    var pos: Int = Arrays.binarySearch(data.dates, mjDay)
+    val data: SystemUTCRules.Data = dataRef.get
+    val pos: Int = Arrays.binarySearch(data.dates, mjDay)
     var currentAdj: Int = if (pos > 0) data.offsets(pos) - data.offsets(pos - 1) else 0
     if (currentAdj == leapAdjustment) {
       return
@@ -88,14 +88,14 @@ sealed class SystemUTCRules private extends UTCRules with Serializable {
     if (mjDay <= data.dates(data.dates.length - 1)) {
       throw new IllegalArgumentException("Date must be after the last configured leap second date")
     }
-    var dates: Array[Long] = Arrays.copyOf(data.dates, data.dates.length + 1)
-    var offsets: Array[Int] = Arrays.copyOf(data.offsets, data.offsets.length + 1)
-    var taiSeconds: Array[Long] = Arrays.copyOf(data.taiSeconds, data.taiSeconds.length + 1)
-    var offset: Int = offsets(offsets.length - 2) + leapAdjustment
+    val dates: Array[Long] = Arrays.copyOf(data.dates, data.dates.length + 1)
+    val offsets: Array[Int] = Arrays.copyOf(data.offsets, data.offsets.length + 1)
+    val taiSeconds: Array[Long] = Arrays.copyOf(data.taiSeconds, data.taiSeconds.length + 1)
+    val offset: Int = offsets(offsets.length - 2) + leapAdjustment
     dates(dates.length - 1) = mjDay
     offsets(offsets.length - 1) = offset
     taiSeconds(taiSeconds.length - 1) = tai(mjDay, offset)
-    var newData: SystemUTCRules.Data = new SystemUTCRules.Data(dates, offsets, taiSeconds)
+    val newData: SystemUTCRules.Data = new SystemUTCRules.Data(dates, offsets, taiSeconds)
     if (dataRef.compareAndSet(data, newData) == false) {
       throw new ConcurrentModificationException("Unable to update leap second rules as they have already been updated")
     }
@@ -122,13 +122,13 @@ sealed class SystemUTCRules private extends UTCRules with Serializable {
   }
 
   protected def convertToUTC(taiInstant: TAIInstant): UTCInstant = {
-    var data: SystemUTCRules.Data = dataRef.get
-    var mjds: Array[Long] = data.dates
-    var tais: Array[Long] = data.taiSeconds
+    val data: SystemUTCRules.Data = dataRef.get
+    val mjds: Array[Long] = data.dates
+    val tais: Array[Long] = data.taiSeconds
     var pos: Int = Arrays.binarySearch(tais, taiInstant.getTAISeconds)
     pos = (if (pos >= 0) pos else ~pos - 1)
-    var taiOffset: Int = (if (pos >= 0) data.offsets(pos) else 10)
-    var adjustedTaiSecs: Long = taiInstant.getTAISeconds - taiOffset
+    val taiOffset: Int = (if (pos >= 0) data.offsets(pos) else 10)
+    val adjustedTaiSecs: Long = taiInstant.getTAISeconds - taiOffset
     var mjd: Long = MathUtils.floorDiv(adjustedTaiSecs, SecondsPerDay) + ModifiedJulianDaysTAIOffset
     var nod: Long = MathUtils.floorMod(adjustedTaiSecs, SecondsPerDay) * NanosPerSecond + taiInstant.getNanoOfSecond
     var mjdNextRegionStart: Long = (if (pos + 1 < mjds.length) mjds(pos + 1) + 1 else Long.MaxValue)
@@ -155,32 +155,32 @@ object SystemUTCRules extends SystemUTCRules {
       throw new CalendricalException("LeapSeconds.txt resource missing")
     }
     try {
-      var reader: BufferedReader = new BufferedReader(new InputStreamReader(in, "UTF-8"))
-      var leaps: java.util.Map[Long, Int] = new java.util.TreeMap[Long, Int]
+      val reader: BufferedReader = new BufferedReader(new InputStreamReader(in, "UTF-8"))
+      val leaps: java.util.Map[Long, Int] = new java.util.TreeMap[Long, Int]
       while (true) {
         var line: String = reader.readLine
         if (line != null) {
           line = line.trim
           if (line.length > 0 && line.charAt(0) != '#') {
-            var split: Array[String] = line.split(" ")
+            val split: Array[String] = line.split(" ")
             if (split.length != 2) {
               throw new CalendricalException("LeapSeconds.txt has invalid line format")
             }
-            var date: LocalDate = LocalDate.parse(split(0))
-            var offset: Int = Integer.parseInt(split(1))
+            val date: LocalDate = LocalDate.parse(split(0))
+            val offset: Int = Integer.parseInt(split(1))
             leaps.put(date.toModifiedJulianDays, offset)
           }
         }
       }
-      var dates: Array[Long] = new Array[Long](leaps.size)
-      var offsets: Array[Int] = new Array[Int](leaps.size)
-      var taiSeconds: Array[Long] = new Array[Long](leaps.size)
+      val dates: Array[Long] = new Array[Long](leaps.size)
+      val offsets: Array[Int] = new Array[Int](leaps.size)
+      val taiSeconds: Array[Long] = new Array[Long](leaps.size)
       var i: Int = 0
       for (entry <- leaps.entrySet) {
         var changeMjd: Long = entry.getKey - 1
         var offset: Int = entry.getValue
         if (i > 0) {
-          var adjust: Int = offset - offsets(i - 1)
+          val adjust: Int = offset - offsets(i - 1)
           if (adjust < -1 || adjust > 1) {
             throw new CalendricalException("Leap adjustment must be -1 or 1")
           }

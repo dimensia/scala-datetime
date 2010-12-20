@@ -115,6 +115,8 @@ object Year {
     new Year(isoYear)
   }
 
+  def apply(isoYear: Int): Year = of(isoYear)
+
   /**
    * Obtains an instance of   { @code Year } from a calendrical.
    * <p>
@@ -126,6 +128,8 @@ object Year {
    * @throws UnsupportedRuleException if the year cannot be obtained
    */
   def of(calendrical: Calendrical): Year = Year.of(rule.getInt(calendrical))
+
+  def apply(calendrical: Calendrical): Year = of(calendrical)
 
   /**
    * Obtains the current year from the system clock in the default time-zone.
@@ -187,8 +191,8 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
    * @return true if the calendrical matches, false otherwise
    */
   override def matchesCalendrical(calendrical: Calendrical): Boolean = {
-    var calValue: Int = calendrical.get(rule)
-    calValue != null && calValue == getValue
+    val calValue: Option[Int] = calendrical.get(rule)
+    calValue != None && calValue == getValue
   }
 
   /**
@@ -298,6 +302,8 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
     plusYears(period.getYears)
   }
 
+  def +(periodProvider: PeriodProvider): Year = plus(periodProvider)
+
   /**
    * Returns the next leap year after the current year.
    * The definition of a leap year is specified in   { @link # isLeap ( ) }.
@@ -358,7 +364,8 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
    */
-  def get[T](rule: CalendricalRule[T]): Option[T] = Some(rule.deriveValueFor(rule, year, this))
+  //  def get[T](rule: CalendricalRule[T]): Option[T] = Some(rule.deriveValueFor(rule, year, this, ISOChronology))  //FIXME
+  def get[T](rule: CalendricalRule[T]): Option[T] = None
 
   /**
    * Adjusts a date to have the value of this year, using a resolver to
@@ -445,6 +452,8 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
     val period: Period = Period.of(periodProvider)
     minusYears(period.getYears)
   }
+
+  def -(periodProvider: PeriodProvider): Year = minus(periodProvider)
 
   /**
    * Compares this year to another year.

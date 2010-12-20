@@ -73,14 +73,14 @@ object TAIInstant {
    */
   private val NanosPerSecond: Int = 1000000000
   /**
-   * Obtains an instance of  { @code TAIInstant } from an  { @code Instant }
+   * Obtains an instance of  {@code TAIInstant} from an  {@code Instant}
    * using the system default leap second rules.
    * <p>
    * Converting a UTC-SLS instant to a TAI instant requires leap second rules.
    * This method uses the latest available system rules.
    * The conversion first maps from UTC-SLS to UTC, then converts to TAI.
    * <p>
-   * Conversion from an  { @code Instant } will not be completely accurate near
+   * Conversion from an  {@code Instant} will not be completely accurate near
    * a leap second in accordance with UTC-SLS.
    *
    * @param instant the instant to convert, not null
@@ -89,8 +89,10 @@ object TAIInstant {
    */
   def of(instant: Instant): TAIInstant = UTCInstant.of(instant).toTAIInstant
 
+  def apply(instant: Instant): TAIInstant = of(instant)
+
   /**
-   * Obtains an instance of  { @code TAIInstant } from a  { @code UTCInstant }.
+   * Obtains an instance of  {@code TAIInstant} from a  {@code UTCInstant}.
    * <p>
    * Converting a UTC instant to a TAI instant requires leap second rules.
    * This method uses the rules held in within the UTC instant.
@@ -105,12 +107,14 @@ object TAIInstant {
    */
   def of(instant: UTCInstant): TAIInstant = instant.toTAIInstant
 
+  def apply(instant: UTCInstant): TAIInstant = of(instant)
+
   /**
-   * Obtains an instance of  { @code TAIInstant } from a text string.
+   * Obtains an instance of  {@code TAIInstant} from a text string.
    * <p>
    * The following format is accepted in ASCII:
    * <ul>
-   * <li> { @code { seconds).(nanosOfSecond } s(TAI)
+   * <li> {@code {seconds).(nanosOfSecond}s(TAI)
    * </ul>
    * The accepted format is strict.
    * The seconds part must contain only numbers and a possible leading negative sign.

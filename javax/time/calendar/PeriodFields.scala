@@ -76,7 +76,7 @@ object PeriodFields {
    * @throws NullPointerException if the object is null
    */
   private[calendar] def checkNotNull(obj: AnyRef, errorMessage: String): Unit = {
-    if (obj == null) throw new NullPointerException(errorMessage)
+    if (obj eq null) throw new NullPointerException(errorMessage)
   }
 
   /**
@@ -87,7 +87,7 @@ object PeriodFields {
    */
   def of(period: PeriodField): PeriodFields = {
     checkNotNull(period, "PeriodField must not be null")
-    var internalMap: TreeMap[PeriodUnit, PeriodField] = createMap
+    val internalMap: TreeMap[PeriodUnit, PeriodField] = createMap
     internalMap.put(period.getUnit, period)
     return create(internalMap)
   }
@@ -103,7 +103,7 @@ object PeriodFields {
    */
   def of(amount: Long, unit: PeriodUnit): PeriodFields = {
     checkNotNull(unit, "PeriodUnit must not be null")
-    var internalMap: TreeMap[PeriodUnit, PeriodField] = createMap
+    val internalMap: TreeMap[PeriodUnit, PeriodField] = createMap
     internalMap.put(unit, PeriodField.of(amount, unit))
     return create(internalMap)
   }
@@ -119,7 +119,7 @@ object PeriodFields {
    */
   def of(periods: Array[PeriodField]): PeriodFields = {
     checkNotNull(periods, "PeriodField array must not be null")
-    var internalMap: TreeMap[PeriodUnit, PeriodField] = createMap
+    val internalMap: TreeMap[PeriodUnit, PeriodField] = createMap
     for (period <- periods) {
       checkNotNull(period, "PeriodField array must not contain null")
       if (internalMap.put(period.getUnit, period) != null) {
@@ -153,11 +153,11 @@ object PeriodFields {
     if (periodProviders.length == 1) {
       return of(periodProviders(0))
     }
-    var map: TreeMap[PeriodUnit, PeriodField] = createMap
+    val map: TreeMap[PeriodUnit, PeriodField] = createMap
     for (periodProvider <- periodProviders) {
-      var periods: PeriodFields = of(periodProvider)
+      val periods: PeriodFields = of(periodProvider)
       for (period <- periods.unitFieldMap.values) {
-        var old: PeriodField = map.get(period.getUnit)
+        val old: PeriodField = map.get(period.getUnit)
         period = (if (old != null) old.plus(period) else period)
         map.put(period.getUnit, period)
       }
@@ -170,6 +170,7 @@ object PeriodFields {
    * This constant is independent of any unit.
    */
   object Zero extends PeriodFields(new TreeMap[PeriodUnit, PeriodField])
+
   /**
    * Obtains a   { @code PeriodFields } from a   { @code PeriodProvider }.
    * <p>
@@ -181,7 +182,7 @@ object PeriodFields {
    */
   def of(periodProvider: PeriodProvider): PeriodFields = {
     checkNotNull(periodProvider, "PeriodProvider must not be null")
-    var result: PeriodFields = periodProvider.toPeriodFields
+    val result: PeriodFields = periodProvider.toPeriodFields
     checkNotNull(result, "PeriodProvider implementation must not return null")
     return result
   }
@@ -198,7 +199,7 @@ object PeriodFields {
    */
   def of(duration: Duration): PeriodFields = {
     checkNotNull(duration, "Duration must not be null")
-    var internalMap: TreeMap[PeriodUnit, PeriodField] = createMap
+    val internalMap: TreeMap[PeriodUnit, PeriodField] = createMap
     internalMap.put(ISOChronology.periodSeconds, PeriodField.of(duration.getSeconds, ISOChronology.periodSeconds))
     internalMap.put(ISOChronology.periodNanos, PeriodField.of(duration.getNanoOfSecond, ISOChronology.periodNanos))
     return create(internalMap)
@@ -218,15 +219,15 @@ object PeriodFields {
 }
 
 
-  /**
-   * Constructs an instance using a pre-built map.
-   * The map must not be used by the calling code after calling the constructor.
-   *
-   * @param periodMap the map of periods to represent, not null and safe to assign
-   */
+/**
+ * Constructs an instance using a pre-built map.
+ * The map must not be used by the calling code after calling the constructor.
+ *
+ * @param periodMap the map of periods to represent, not null and safe to assign
+ */
 @SerialVersionUID(1L)
 sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodField])
-  extends PeriodProvider with Iterable[PeriodField] with Serializable {
+        extends PeriodProvider with Iterable[PeriodField] with Serializable {
 
   import PeriodFields._
 
@@ -258,7 +259,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
     if (this == Zero) periods
     else if (periods == Zero) this
     else {
-      var copy: TreeMap[PeriodUnit, PeriodField] = clonedMap
+      val copy: TreeMap[PeriodUnit, PeriodField] = clonedMap
       copy.putAll(periods.unitFieldMap)
       create(copy)
     }
@@ -316,8 +317,8 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
     if (amount == 0 && contains(unit)) {
       return this
     }
-    var copy: TreeMap[PeriodUnit, PeriodField] = clonedMap
-    var old: PeriodField = copy.get(unit)
+    val copy: TreeMap[PeriodUnit, PeriodField] = clonedMap
+    val old: PeriodField = copy.get(unit)
     copy.put(unit, if (old != null) old.minus(amount) else PeriodField.of(amount, unit).negated)
     return create(copy)
   }
@@ -331,7 +332,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
     if (unitFieldMap.size == 0) {
       return "[]"
     }
-    var buf: StringBuilder = new StringBuilder
+    val buf: StringBuilder = new StringBuilder
     buf.append('[')
     for (field <- this) {
       buf.append(field.toString).append(',').append(' ')
@@ -379,9 +380,9 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
     if (amount == 0 && contains(unit)) {
       return this
     }
-    var copy: TreeMap[PeriodUnit, PeriodField] = clonedMap
-    var old: PeriodField = copy.get(unit)
-    var field: PeriodField = (if (old != null) old.plus(amount) else PeriodField.of(amount, unit))
+    val copy: TreeMap[PeriodUnit, PeriodField] = clonedMap
+    val old: PeriodField = copy.get(unit)
+    val field: PeriodField = (if (old != null) old.plus(amount) else PeriodField.of(amount, unit))
     copy.put(unit, field)
     return create(copy)
   }
@@ -414,7 +415,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
     if (scalar == 1 || isZero) {
       return this
     }
-    var copy: TreeMap[PeriodUnit, PeriodField] = createMap
+    val copy: TreeMap[PeriodUnit, PeriodField] = createMap
     for (field <- this) {
       copy.put(field.getUnit, field.multipliedBy(scalar))
     }
@@ -454,15 +455,10 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
     if (isZero) {
       return Zero
     }
-    var copy: TreeMap[PeriodUnit, PeriodField] = clonedMap
-
-    {
-      var it: Iterator[PeriodField] = copy.values.iterator
-      while (it.hasNext) {
-        if (it.next.isZero) {
-          it.remove
-        }
-      }
+    val copy: TreeMap[PeriodUnit, PeriodField] = clonedMap
+    val it: Iterator[PeriodField] = copy.values.iterator
+    while (it.hasNext) {
+      if (it.next.isZero) it.remove
     }
     return create(copy)
   }
@@ -493,13 +489,13 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    * @throws ArithmeticException if the calculation overflows
    */
   def plus(periodProvider: PeriodProvider): PeriodFields = {
-    var periods: PeriodFields = of(periodProvider)
+    val periods: PeriodFields = of(periodProvider)
     if (this == Zero) {
       return periods
     }
-    var copy: TreeMap[PeriodUnit, PeriodField] = clonedMap
+    val copy: TreeMap[PeriodUnit, PeriodField] = clonedMap
     for (period <- periods.unitFieldMap.values) {
-      var old: PeriodField = copy.get(period.getUnit)
+      val old: PeriodField = copy.get(period.getUnit)
       period = (if (old != null) old.plus(period) else period)
       copy.put(period.getUnit, period)
     }
@@ -527,7 +523,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    * @throws ArithmeticException if the amount is too large to be returned in an int
    */
   def getAmountInt(unit: PeriodUnit): Int = {
-    var field: PeriodField = get(unit)
+    val field: PeriodField = get(unit)
     if (field == null) {
       return 0
     }
@@ -582,7 +578,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
     if (unitFieldMap.containsKey(unit) == false) {
       return this
     }
-    var copy: TreeMap[PeriodUnit, PeriodField] = clonedMap
+    val copy: TreeMap[PeriodUnit, PeriodField] = clonedMap
     copy.remove(unit)
     return create(copy)
   }
@@ -599,7 +595,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
   override def equals(obj: AnyRef): Boolean = {
     if (this == obj) true
     else if (obj.isInstanceOf[PeriodFields]) {
-      var other: PeriodFields = obj.asInstanceOf[PeriodFields]
+      val other: PeriodFields = obj.asInstanceOf[PeriodFields]
       unitFieldMap.equals(other.unitFieldMap)
     }
     else false
@@ -683,12 +679,12 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    */
   def retainConvertible(units: Array[PeriodUnit]): PeriodFields = {
     checkNotNull(units, "PeriodUnit array must not be null")
-    var copy: TreeMap[PeriodUnit, PeriodField] = clonedMap
+    val copy: TreeMap[PeriodUnit, PeriodField] = clonedMap
 
     {
-      var it: Iterator[PeriodUnit] = copy.keySet.iterator
+      val it: Iterator[PeriodUnit] = copy.keySet.iterator
       while (it.hasNext) {
-        var loopUnit: PeriodUnit = it.next
+        val loopUnit: PeriodUnit = it.next
         for (unit <- units) {
           checkNotNull(unit, "PeriodUnit array must not contain null")
           if (loopUnit.isConvertibleTo(unit)) {
@@ -762,10 +758,10 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    */
   def toEquivalent(units: Array[PeriodUnit]): PeriodFields = {
     checkNotNull(units, "PeriodUnit array must not be null")
-    var map: TreeMap[PeriodUnit, PeriodField] = createMap
+    val map: TreeMap[PeriodUnit, PeriodField] = createMap
     for (period <- unitFieldMap.values) {
       period = period.toEquivalent(units)
-      var old: PeriodField = map.get(period.getUnit)
+      val old: PeriodField = map.get(period.getUnit)
       period = (if (old != null) old.plus(period) else period)
       map.put(period.getUnit, period)
     }
@@ -786,8 +782,8 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    */
   def retain(units: Array[PeriodUnit]): PeriodFields = {
     checkNotNull(units, "PeriodUnit array must not be null")
-    var copy: TreeMap[PeriodUnit, PeriodField] = clonedMap
-    var unitList: List[PeriodUnit] = Arrays.asList(units: _*)
+    val copy: TreeMap[PeriodUnit, PeriodField] = clonedMap
+    val unitList: List[PeriodUnit] = Arrays.asList(units: _*)
     if (unitList.contains(null)) {
       throw new NullPointerException("PeriodUnit array must not contain null")
     }
@@ -820,14 +816,14 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
   def normalizedTo(units: Array[PeriodUnit]): PeriodFields = {
     checkNotNull(units, "PeriodUnit array must not be null")
     var result: PeriodFields = this
-    var targetUnits: TreeSet[PeriodUnit] = new TreeSet[PeriodUnit](Collections.reverseOrder)
+    val targetUnits: TreeSet[PeriodUnit] = new TreeSet[PeriodUnit](Collections.reverseOrder)
     targetUnits.addAll(Arrays.asList(units).asInstanceOf[List[PeriodUnit]])
     for (loopUnit <- unitFieldMap.keySet) {
       for (targetUnit <- targetUnits) {
         if (targetUnits.contains(loopUnit) == false) {
-          var conversion: PeriodField = loopUnit.getEquivalentPeriod(targetUnit)
+          val conversion: PeriodField = loopUnit.getEquivalentPeriod(targetUnit)
           if (conversion != null) {
-            var amount: Long = result.getAmount(loopUnit)
+            val amount: Long = result.getAmount(loopUnit)
             result = result.plus(conversion.multipliedBy(amount)).without(loopUnit)
             break //todo: break is not supported
           }
@@ -841,10 +837,10 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
         for (targetUnit <- targetUnits) {
           for (loopUnit <- result.unitFieldMap.keySet) {
             if (targetUnit.equals(loopUnit) == false) {
-              var conversion: PeriodField = targetUnit.getEquivalentPeriod(loopUnit)
+              val conversion: PeriodField = targetUnit.getEquivalentPeriod(loopUnit)
               if (conversion != null) {
-                var convertAmount: Long = conversion.getAmount
-                var amount: Long = result.getAmount(loopUnit)
+                val convertAmount: Long = conversion.getAmount
+                val amount: Long = result.getAmount(loopUnit)
                 if (amount >= convertAmount || amount <= -convertAmount) {
                   result = result.`with`(amount % convertAmount, loopUnit).plus(amount / convertAmount, targetUnit)
                   process = (units.length > 2)
@@ -907,11 +903,11 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    * @return a { @code PeriodFields } based on this period with the specified period overlaid, never null
    */
   def `with`(amount: Long, unit: PeriodUnit): PeriodFields = {
-    var existing: PeriodField = get(unit)
+    val existing: PeriodField = get(unit)
     if (existing != null && existing.getAmount == amount) {
       return this
     }
-    var copy: TreeMap[PeriodUnit, PeriodField] = clonedMap
+    val copy: TreeMap[PeriodUnit, PeriodField] = clonedMap
     copy.put(unit, PeriodField.of(amount, unit))
     return create(copy)
   }
@@ -960,7 +956,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
     if (divisor == 1 || isZero) {
       return this
     }
-    var copy: TreeMap[PeriodUnit, PeriodField] = createMap
+    val copy: TreeMap[PeriodUnit, PeriodField] = createMap
     for (field <- this) {
       copy.put(field.getUnit, field.dividedBy(divisor))
     }

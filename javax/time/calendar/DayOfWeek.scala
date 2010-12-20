@@ -37,21 +37,21 @@ import javax.time.calendar.format.DateTimeFormatterBuilder.TextStyle
 /**
  * A day-of-week, such as 'Tuesday'.
  * <p>
- * { @code DayOfWeek } is an enum representing the 7 days of the week -
+ * {@code DayOfWeek} is an enum representing the 7 days of the week -
  * Monday, Tuesday, Wednesday, Thursday, Friday, Saturday and Sunday.
  * <p>
- * The calendrical framework requires date-time fields to have an {@code int } value.
- * The {@code int } value follows the ISO-8601 standard, from 1 (Monday) to 7 (Sunday).
- * It is recommended that applications use the enum rather than the {@code int } value
+ * The calendrical framework requires date-time fields to have an {@code int} value.
+ * The {@code int} value follows the ISO-8601 standard, from 1 (Monday) to 7 (Sunday).
+ * It is recommended that applications use the enum rather than the {@code int} value
  * to ensure code clarity.
  * <p>
- * <b>Do not use {@code ordinal()} to obtain the numeric representation of {@code DayOfWeek }.
+ * <b>Do not use {@code ordinal()} to obtain the numeric representation of {@code DayOfWeek}.
  * Use {@code getValue()} instead.</b>
  * <p>
  * This enum represents a common concept that is found in many calendar systems.
  * As such, this enum may be used by any calendar system that has the day-of-week
  * concept with a seven day week where the names are equivalent to those defined.
- * Note that the implementation of {@link DateTimeFieldRule } for day-of-week may
+ * Note that the implementation of {@link DateTimeFieldRule} for day-of-week may
  * vary by calendar system.
  * <p>
  * DayOfWeek is an immutable and thread-safe enum.
@@ -60,49 +60,56 @@ import javax.time.calendar.format.DateTimeFormatterBuilder.TextStyle
  * @author Stephen Colebourne
  */
 object DayOfWeek {
+
   /**
    * The singleton instance for the day-of-week of Monday.
-   * This has the numeric value of {@code 1 }.
+   * This has the numeric value of {@code 1}.
    */
   object Monday extends DayOfWeek(1)
+
   /**
    * The singleton instance for the day-of-week of Tuesday.
-   * This has the numeric value of {@code 2 }.
+   * This has the numeric value of {@code 2}.
    */
   object Tuesday extends DayOfWeek(2)
+
   /**
    * The singleton instance for the day-of-week of Wednesday.
-   * This has the numeric value of {@code 3 }.
+   * This has the numeric value of {@code 3}.
    */
   object Wednesday extends DayOfWeek(3)
-/**
+
+  /**
    * The singleton instance for the day-of-week of Thursday.
-   * This has the numeric value of {@code 4 }.
+   * This has the numeric value of {@code 4}.
    */
   object Thursday extends DayOfWeek(4)
+
   /**
    * The singleton instance for the day-of-week of Friday.
-   * This has the numeric value of {@code 5 }.
+   * This has the numeric value of {@code 5}.
    */
   object Friday extends DayOfWeek(5)
+
   /**
    * The singleton instance for the day-of-week of Saturday.
-   * This has the numeric value of {@code 6 }.
+   * This has the numeric value of {@code 6}.
    */
   object Saturday extends DayOfWeek(6)
-/**
+
+  /**
    * The singleton instance for the day-of-week of Sunday.
-   * This has the numeric value of {@code 7 }.
+   * This has the numeric value of {@code 7}.
    */
   object Sunday extends DayOfWeek(7)
 
   lazy val values = Array(Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday)
 
   /**
-   * Returns the {@code DayOfWeek } instance that corresponds to the first
-   * day-of-week for a given {@code locale }.
+   * Returns the {@code DayOfWeek} instance that corresponds to the first
+   * day-of-week for a given {@code locale}.
    * <p>
-   * If there is no information for a locale, {@code Monday } is returned.
+   * If there is no information for a locale, {@code Monday} is returned.
    *
    * @param locale the locale to use, not null
    * @return the DayOfWeek singleton, never null
@@ -114,14 +121,14 @@ object DayOfWeek {
   }
 
   /**
-   * Obtains an instance of {@code DayOfWeek } from an {@code int } value.
+   * Obtains an instance of {@code DayOfWeek} from an {@code int} value.
    * <p>
-   * { @code DayOfWeek } is an enum representing the 7 days of the week.
-   * This factory allows the enum to be obtained from the {@code int } value.
-   * The {@code int } value follows the ISO-8601 standard, from 1 (Monday) to 7 (Sunday).
+   * {@code DayOfWeek} is an enum representing the 7 days of the week.
+   * This factory allows the enum to be obtained from the {@code int} value.
+   * The {@code Int} value follows the ISO-8601 standard, from 1 (Monday) to 7 (Sunday).
    * <p>
    * An exception is thrown if the value is invalid. The exception uses the
-   * { @link ISOChronology } day-of-week rule to indicate the failed rule.
+   * {@link ISOChronology} day-of-week rule to indicate the failed rule.
    *
    * @param dayOfWeek the day-of-week to represent, from 1 (Monday) to 7 (Sunday)
    * @return the DayOfWeek singleton, never null
@@ -140,6 +147,8 @@ object DayOfWeek {
       case _ => throw new IllegalCalendarFieldValueException(ISOChronology.dayOfWeekRule, dayOfWeek, 1, 7)
     }
   }
+
+  def apply(dayOfWeek: Int): DayOfWeek = of(dayOfWeek)
 }
 
 sealed abstract class DayOfWeek(val ordinal: Int) extends Calendrical {
@@ -182,13 +191,13 @@ sealed abstract class DayOfWeek(val ordinal: Int) extends Calendrical {
   /**
    * Gets the full textual representation of this day-of-week, such as 'Monday' or 'Friday'.
    * <p>
-   * This method is notionally specific to {@link ISOChronology } as it uses
+   * This method is notionally specific to {@link ISOChronology} as it uses
    * the day-of-week rule to obtain the text. However, it is expected that
    * the text will be equivalent for all day-of-week rules, thus this aspect
    * of the implementation should be irrelevant to applications.
    * <p>
    * If there is no textual mapping for the locale, then the ISO-8601
-   * { @link # getValue ( ) value } is returned as per {@link Integer # toString ( ) }.
+   * { @link # getValue ( ) value} is returned as per {@link Integer # toString ( )}.
    *
    * @param locale the locale to use, not null
    * @return the full text value of the day-of-week, never null
@@ -198,13 +207,13 @@ sealed abstract class DayOfWeek(val ordinal: Int) extends Calendrical {
   /**
    * Gets the short textual representation of this day-of-week, such as 'Mon' or 'Fri'.
    * <p>
-   * This method is notionally specific to {@link ISOChronology } as it uses
+   * This method is notionally specific to {@link ISOChronology} as it uses
    * the day-of-week rule to obtain the text. However, it is expected that
    * the text will be equivalent for all day-of-week rules, thus this aspect
    * of the implementation should be irrelevant to applications.
    * <p>
    * If there is no textual mapping for the locale, then the ISO-8601
-   * { @link # getValue ( ) value } is returned as per {@link Integer # toString ( ) }.
+   * { @link # getValue ( ) value} is returned as per {@link Integer # toString ( )}.
    *
    * @param locale the locale to use, not null
    * @return the short text value of the day-of-week, never null
@@ -264,7 +273,7 @@ sealed abstract class DayOfWeek(val ordinal: Int) extends Calendrical {
    * Gets the value of the specified calendrical rule.
    * <p>
    * This returns the one of the day-of-week values if the type of the rule
-   * is {@code DayOfWeek }. Other rules will return {@code null }.
+   * is {@code DayOfWeek}. Other rules will return {@code null}.
    *
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
@@ -275,7 +284,7 @@ sealed abstract class DayOfWeek(val ordinal: Int) extends Calendrical {
   }
 
   /**
-   * Gets the day-of-week {@code int } value.
+   * Gets the day-of-week {@code int} value.
    * <p>
    * The values are numbered following the ISO-8601 standard,
    * from 1 (Monday) to 7 (Sunday).

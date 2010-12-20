@@ -31,9 +31,10 @@
  */
 package javax.time.calendar
 
+import java.io.Serializable
+
 /**
- * A calendar system, consisting of rules controlling the passage of human-scale
- * time.
+ * A calendar system, consisting of rules controlling the passage of human-scale time.
  * <p>
  * Calendar systems describe a set of fields that can be used to describe time
  * in a human-scale. Typical fields include year, month-of-year and day-of-month.
@@ -42,23 +43,54 @@ package javax.time.calendar
  * fields which are supported in the vast majority of calendar systems.
  * Subclasses will provide the full set of fields for that calendar system.
  * <p>
- * The default chronology is   { @link ISOChronology ISO8601 } which is the
+ * The default chronology is {@link ISOChronology ISO8601} which is the
  * <i>de facto</i> world calendar today.
  * <p>
  * Chronology is an abstract class and must be implemented with care to
  * ensure other classes in the framework operate correctly.
  * All instantiable subclasses must be final, immutable and thread-safe.
  * Wherever possible subclasses should be singletons with no public constructor.
- * It is recommended that subclasses implement   { @code Serializable }
+ * It is recommended that subclasses implement {@code Serializable}
  *
  * @author Stephen Colebourne
  */
+object Chronology {
+  /**
+   * Gets the rule for {@code Chronology}.
+   *
+   * @return the rule for the chronology, never null
+   */
+  def rule: CalendricalRule[Chronology] = Rule
+
+  /**
+   * Rule implementation.
+   */
+  private[calendar] object Rule extends Rule
+
+  private[calendar] sealed class Rule private
+          extends CalendricalRule[Chronology](classOf[Chronology], ISOChronology, "Chronology", null, null) with Serializable {
+    private def readResolve: AnyRef = Rule
+  }
+
+}
 
 /**
  * Restrictive constructor.
  */
-abstract class Chronology protected() {
-
+@SerialVersionUID(1L)
+abstract class Chronology protected extends Calendrical {
+  /**
+   * Gets the value of the specified calendrical rule.
+   * <p>
+   * This method queries the value of the specified calendrical rule.
+   * If the value cannot be returned for the rule from this offset then
+   * {@code null} will be returned.
+   *
+   * @param rule  the rule to use, not null
+   * @return the value for the rule, null if the value cannot be returned
+   */
+  //  def get[T](rule: Calendrical[T]): Option[T] = rule.deriveValueFor(rule, this, this, this)  //FIXME
+  def get[T](rule: Calendrical[T]): Option[T] = None
 
   /**
    * Returns a textual description of the chronology.
@@ -71,9 +103,10 @@ abstract class Chronology protected() {
    * Gets the name of the chronology.
    * <p>
    * The name should not have the suffix 'Chronology'.
-   * For example, the name of   { @link ISOChronology } is 'ISO'.
+   * For example, the name of {@link ISOChronology} is 'ISO'.
    *
    * @return the name of the chronology, never null
    */
   def getName: String
 }
+

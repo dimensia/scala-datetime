@@ -119,20 +119,20 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
   /**
    * Derives the value of the specified rule from a calendrical.
    * <p>
-   * This method is provided for implementations of   { @link Calendrical # get }
+   * This method is provided for implementations of {@link Calendrical#get}
    * and is rarely called directly by application code. It is used when the
    * calendrical has its own rule, and this method is called on the rule of the
-   * calendrical implementation, not the rule passed into the   { @code get } method.
+   * calendrical implementation, not the rule passed into the   {@code get} method.
    * <pre>
-   *   public <T> T get(CalendricalRule<T> rule)   {
+   *   public <T> T get(CalendricalRule<T> rule) {
    *     return IMPLEMENTATION_RULE.deriveValueFor(rule, this, this);
    * }
    * </pre>
-   * The last parameter in the code snippet above is always   { @code this }, however
-   * the second parameter may be a different representation, for example in   { @link Year # get }.
+   * The last parameter in the code snippet above is always {@code this}, however
+   * the second parameter may be a different representation, for example in   {@link Year#get}.
    * <p>
    * If this rule and the specified rule are the same, then the value is returned.
-   * Otherwise, an attempt is made to   { @link # derive } the field value.
+   * Otherwise, an attempt is made to   {@link #derive} the field value.
    *
    * @param rule the rule to retrieve, not null
    * @param value the value to return if this rule is the specified rule, not null
@@ -305,7 +305,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
   final def reify(value: Any): Option[T] = {
     if (value == null) None
     else if (reified.isInstance(value)) Some(value.asInstanceOf[T])
-    else throw new ClassCastException("Value of type " + value.asInstanceOf[AnyRef].getClass.getName + " cannot be cast to type " + reified.getName)
+    else throw new ClassCastException("Value of type " + value.getClass.getName + " cannot be cast to type " + reified.getName)
   }
 
   /**
@@ -418,9 +418,9 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * this field if this method is called.
    * <p>
    * If the override successfully merged some fields then the following must be performed.
-   * The merged field must be stored using   { @link CalendricalMerger # storeMerged }.
+   * The merged field must be stored using {@link CalendricalMerger # storeMerged }.
    * Each field used in the merge must be marked as being used by calling
-   * { @link CalendricalMerger # removeProcessed }.
+   * { @link CalendricalMerger # removeProcessed}.
    * <p>
    * An example to merge two fields into one - hour of AM/PM and AM/PM:
    * <pre>

@@ -187,7 +187,7 @@ object Instant {
    */
   def ofEpochNanos(epochNanos: BigInt): Instant = {
     checkNotNull(epochNanos, "Nanos must not be null")
-    var divRem: (BigInt, BigInt) = epochNanos /% Billion
+    val divRem: (BigInt, BigInt) = epochNanos /% Billion
     if (divRem._1.bitLength > 63) {
       throw new ArithmeticException("Exceeds capacity of Duration: " + epochNanos)
     }
@@ -205,10 +205,12 @@ object Instant {
    */
   def of(instantProvider: InstantProvider): Instant = {
     checkNotNull(instantProvider, "InstantProvider must not be null")
-    var provided: Instant = instantProvider.toInstant
+    val provided: Instant = instantProvider.toInstant
     checkNotNull(provided, "The implementation of InstantProvider must not return null")
     return provided
   }
+
+  def apply(instantProvider: InstantProvider): Instant = of(instantProvider)
 
   /**
    * Constant for the 1970-01-01T00:00:00Z epoch instant.
@@ -368,8 +370,8 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
     }
     var epochSecs: Long = MathUtils.safeAdd(seconds, secondsToAdd)
     epochSecs = MathUtils.safeAdd(epochSecs, nanosToAdd / NanosPerSecond)
-    var nanosToAddResult = nanosToAdd % NanosPerSecond
-    var nanoAdjustment: Long = nanos + nanosToAddResult
+    val nanosToAddResult = nanosToAdd % NanosPerSecond
+    val nanoAdjustment: Long = nanos + nanosToAddResult
     return ofEpochSeconds(epochSecs, nanoAdjustment)
   }
 
@@ -435,13 +437,13 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   def minus(duration: Duration): Instant = {
-    var secsToSubtract: Long = duration.getSeconds
-    var nanosToSubtract: Int = duration.getNanoOfSecond
+    val secsToSubtract: Long = duration.getSeconds
+    val nanosToSubtract: Int = duration.getNanoOfSecond
     if ((secsToSubtract | nanosToSubtract) == 0) {
       return this
     }
-    var secs: Long = MathUtils.safeSubtract(seconds, secsToSubtract)
-    var nanoAdjustment: Long = (nanos.asInstanceOf[Long]) - nanosToSubtract
+    val secs: Long = MathUtils.safeSubtract(seconds, secsToSubtract)
+    val nanoAdjustment: Long = (nanos.asInstanceOf[Long]) - nanosToSubtract
     return ofEpochSeconds(secs, nanoAdjustment)
   }
 
@@ -515,7 +517,7 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
    * @throws NullPointerException if otherInstant is null
    */
   def compareTo(otherInstant: Instant): Int = {
-    var cmp: Int = MathUtils.safeCompare(seconds, otherInstant.seconds)
+    val cmp: Int = MathUtils.safeCompare(seconds, otherInstant.seconds)
     if (cmp != 0) cmp
     else MathUtils.safeCompare(nanos, otherInstant.nanos)
   }

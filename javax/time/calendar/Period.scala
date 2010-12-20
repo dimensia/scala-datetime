@@ -148,26 +148,6 @@ object Period {
   }
 
   /**
-   * Obtains a   { @code Period } from date-based and time-based fields.
-   * <p>
-   * This creates an instance based on years, months, days, hours, minutes, seconds and nanoseconds.
-   * The resulting period will have normalized seconds and nanoseconds.
-   *
-   * @param years the amount of years, may be negative
-   * @param months the amount of months, may be negative
-   * @param days the amount of days, may be negative
-   * @param hours the amount of hours, may be negative
-   * @param minutes the amount of minutes, may be negative
-   * @param seconds the amount of seconds, may be negative
-   * @param nanos the amount of nanos, may be negative
-   * @return the period, never null
-   */
-  def of(years: Int, months: Int, days: Int, hours: Int, minutes: Int, seconds: Int, nanos: Long): Period = {
-    if ((years | months | days | hours | minutes | seconds | nanos) == 0) Zero
-    else new Period(years, months, days, hours, minutes, seconds, nanos)
-  }
-
-  /**
    * Obtains a   { @code Period } from a number of days.
    *
    * @param days the amount of days, may be negative
@@ -466,7 +446,7 @@ object Period {
   def of(amount: Int, unit: PeriodUnit): Period = of(PeriodFields.of(amount, unit))
 
   /**
-   * Obtains a   { @code Period } from date-based and time-based fields.
+   * Obtains a {@code Period} from date-based and time-based fields.
    * <p>
    * This creates an instance based on years, months, days, hours, minutes and seconds.
    *
@@ -478,8 +458,28 @@ object Period {
    * @param seconds the amount of seconds, may be negative
    * @return the period, never null
    */
-  def of(years: Int, months: Int, days: Int, hours: Int, minutes: Int, seconds: Int): Period =
-    of(years, months, days, hours, minutes, seconds, 0)
+//  def of(years: Int, months: Int, days: Int, hours: Int, minutes: Int, seconds: Int): Period =
+//    of(years, months, days, hours, minutes, seconds, 0)
+
+  /**
+   * Obtains a   { @code Period } from date-based and time-based fields.
+   * <p>
+   * This creates an instance based on years, months, days, hours, minutes, seconds and nanoseconds.
+   * The resulting period will have normalized seconds and nanoseconds.
+   *
+   * @param years the amount of years, may be negative
+   * @param months the amount of months, may be negative
+   * @param days the amount of days, may be negative
+   * @param hours the amount of hours, may be negative
+   * @param minutes the amount of minutes, may be negative
+   * @param seconds the amount of seconds, may be negative
+   * @param nanos the amount of nanos, may be negative
+   * @return the period, never null
+   */
+  def of(years: Int = 0, months: Int = 0, days: Int = 0, hours: Int = 0, minutes: Int = 0, seconds: Int = 0, nanos: Long = 0): Period = {
+    if ((years | months | days | hours | minutes | seconds | nanos) == 0) Zero
+    else new Period(years, months, days, hours, minutes, seconds, nanos)
+  }
 }
 
 /**
@@ -498,6 +498,20 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
   extends PeriodProvider with Serializable {
 
   import Period._
+
+  /**
+   * The cached toString value.
+   */
+  @volatile
+  @transient
+  private var string: String = null
+
+  /**
+   * The cached PeriodFields.
+   */
+  @volatile
+  @transient
+  private var periodFields: PeriodFields = null
 
   /**
    * Gets the amount of years of this period, if any.
@@ -966,13 +980,6 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
   def plusNanos(nanos: Long): Period = withNanos(MathUtils.safeAdd(this.nanos, nanos))
 
   /**
-   * The cached PeriodFields.
-   */
-  @volatile
-  @transient
-  private var periodFields: PeriodFields = null
-
-  /**
    * Returns a copy of this period with the specified number of nanoseconds subtracted.
    * <p>
    * This method will only affect the the nanoseconds field.
@@ -1293,12 +1300,6 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
     else hours + (minutes + (seconds + (nanos / 1000000000L)) / 60L) / 60L
   }
 
-  /**
-   * The cached toString value.
-   */
-  @volatile
-  @transient
-  private var string: String = null
 
   /**
    * Returns a copy of this period with all amounts normalized to the

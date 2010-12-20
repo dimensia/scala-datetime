@@ -102,7 +102,7 @@ object CopticChronology extends CopticChronology {
       val domVal: Int = merger.getValue(CopticChronology.dayOfMonthRule).get
       if (moyVal != null && domVal != null) {
         val year: Int = merger.getValue(this).get
-        var date: CopticDate =
+        val date: CopticDate =
           if (merger.getContext.isStrict) CopticDate.of(year, moyVal, domVal)
           else CopticDate.of(year, 1, 1).plusMonths(moyVal).plusMonths(-1).plusDays(domVal).plusDays(-1)
         merger.storeMerged(LocalDate.rule, date.toLocalDate)

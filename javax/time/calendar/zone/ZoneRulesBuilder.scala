@@ -121,7 +121,7 @@ object ZoneRulesBuilder {
   /**
    * The maximum date-time.
    */
-  private val MAX_DATE_TIME: LocalDateTime = LocalDateTime.of(Year.MaxYear, 12, 31, 23, 59, 59, 999999999)
+  private val MaxDateTime: LocalDateTime = LocalDateTime.of(Year.MaxYear, 12, 31, 23, 59, 59, 999999999)
 
   /**
    * Validates that the input value is not null.
@@ -414,8 +414,8 @@ class ZoneRulesBuilder {
       if (lastRuleList.size == 1) {
         throw new IllegalStateException("Cannot have only one rule defined as being forever")
       }
-      if (windowEnd.equals(MAX_DATE_TIME)) {
-        maxLastRuleStartYear = Math.max(maxLastRuleStartYear, windowStartYear) + 1
+      if (windowEnd.equals(MaxDateTime)) {
+        maxLastRuleStartYear = math.max(maxLastRuleStartYear, windowStartYear) + 1
         for (lastRule <- lastRuleList) {
           addRule(lastRule.year, maxLastRuleStartYear, lastRule.month, lastRule.dayOfMonthIndicator, lastRule.dayOfWeek, lastRule.time, lastRule.timeEndOfDay, lastRule.timeDefinition, lastRule.savingAmount)
           lastRule.year = maxLastRuleStartYear + 1
@@ -476,10 +476,10 @@ class ZoneRulesBuilder {
       }
       var year: Int = startYear
       while (year <= endYear) {
-        var rule: ZoneRulesBuilder#TZRule = new TZRule(year, month, dayOfMonthIndicator, dayOfWeek, time, timeEndOfDay, timeDefinition, savingAmount)
+        val rule: ZoneRulesBuilder#TZRule = new TZRule(year, month, dayOfMonthIndicator, dayOfWeek, time, timeEndOfDay, timeDefinition, savingAmount)
         if (lastRule) {
           lastRuleList.add(rule)
-          maxLastRuleStartYear = Math.max(startYear, maxLastRuleStartYear)
+          maxLastRuleStartYear = math.max(startYear, maxLastRuleStartYear)
         }
         else {
           ruleList.add(rule)
@@ -497,7 +497,7 @@ class ZoneRulesBuilder {
      * @return true if the window is only a standard offset
      */
     private[zone] def isSingleWindowStandardOffset: Boolean = {
-      return windowEnd.equals(MAX_DATE_TIME) && timeDefinition == TimeDefinition.WALL && fixedSavingAmount == null && lastRuleList.isEmpty && ruleList.isEmpty
+      return windowEnd.equals(MaxDateTime) && timeDefinition == TimeDefinition.WALL && fixedSavingAmount == null && lastRuleList.isEmpty && ruleList.isEmpty
     }
 
     /**
@@ -668,5 +668,5 @@ class ZoneRulesBuilder {
    * @throws IllegalStateException if a forever window has already been added
    */
   def addWindowForever(standardOffset: ZoneOffset): ZoneRulesBuilder =
-    addWindow(standardOffset, MAX_DATE_TIME, TimeDefinition.WALL)
+    addWindow(standardOffset, MaxDateTime, TimeDefinition.WALL)
 }

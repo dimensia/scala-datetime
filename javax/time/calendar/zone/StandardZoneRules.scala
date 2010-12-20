@@ -120,18 +120,18 @@ object StandardZoneRules {
             savingsInstantTransitions: Array[Long],
             wallOffsets: Array[ZoneOffset],
             lastRules: Array[ZoneOffsetTransitionRule]) = {
-    var localTransitionList: List[LocalDateTime] = new ArrayList[LocalDateTime]
+    val localTransitionList: List[LocalDateTime] = new ArrayList[LocalDateTime]
     var savingsLocalTransitions: Buffer[LocalDateTime] = Buffer()
 
     for (i <- 0 until savingsInstantTransitions.length) {
-      var before: ZoneOffset = wallOffsets(i)
-      var after: ZoneOffset = wallOffsets(i + 1)
-      var odt: OffsetDateTime = OffsetDateTime.ofEpochSeconds(savingsInstantTransitions(i), before)
+      val before: ZoneOffset = wallOffsets(i)
+      val after: ZoneOffset = wallOffsets(i + 1)
+      val odt: OffsetDateTime = OffsetDateTime.ofEpochSeconds(savingsInstantTransitions(i), before)
       val transitions: ZoneOffsetTransition = new ZoneOffsetTransition(odt, after)
       savingsLocalTransitions ++= buildTransitions(transitions).flatten
     }
 
-    new StandardZoneRules(standardTransitions, standardOffsets, savingsInstantTransitions, wallOffsets, lastRules, savingsLocalTransitions)
+    new StandardZoneRules(standardTransitions, standardOffsets, savingsInstantTransitions, wallOffsets, lastRules, savingsLocalTransitions.toArray)
   }
 
   private def buildTransitions(transition: ZoneOffsetTransition) = {
@@ -158,7 +158,7 @@ final class StandardZoneRules private(private val standardTransitions: Array[Lon
                                       private val wallOffsets: Array[ZoneOffset],
                                       private val lastRules: Array[ZoneOffsetTransitionRule],
                                       @transient savingsLocalTransitions: Array[LocalDateTime])
-  extends ZoneRules with Serializable {
+        extends ZoneRules with Serializable {
 
   /**
    * The map of recent transitions.
@@ -191,7 +191,7 @@ final class StandardZoneRules private(private val standardTransitions: Array[Lon
     val instant: Instant = Instant.of(instantProvider)
     val epochSecs: Long = instant.getEpochSeconds
     if (lastRules.length > 0 && epochSecs > savingsInstantTransitions(savingsInstantTransitions.length - 1)) {
-      var dt: OffsetDateTime = OffsetDateTime.ofInstant(instant, wallOffsets(wallOffsets.length - 1))
+      val dt: OffsetDateTime = OffsetDateTime.ofInstant(instant, wallOffsets(wallOffsets.length - 1))
       val transArray: Array[ZoneOffsetTransition] = findTransitionArray(dt.getYear)
       return transArray.find(trans => instant.isBefore(trans.getInstant)) match {
         case Some(trans) => trans.getOffsetBefore
@@ -278,41 +278,30 @@ final class StandardZoneRules private(private val standardTransitions: Array[Lon
    * @return the next transition after the specified instant, null if this is after the last transition
    */
   def nextTransition(instantProvider: InstantProvider): ZoneOffsetTransition = {
-    var instant: Instant = Instant.of(instantProvider)
-    var epochSecs: Long = instant.getEpochSeconds
+    val instant: Instant = Instant.of(instantProvider)
+    val epochSecs: Long = instant.getEpochSeconds
     if (epochSecs >= savingsInstantTransitions(savingsInstantTransitions.length - 1)) {
-      if (lastRules.length == 0) {
-        return null
-      }
-      var dt: OffsetDateTime = OffsetDateTime.ofInstant(instant, wallOffsets(wallOffsets.length - 1))
+      if (lastRules.length == 0) return null
+      val dt: OffsetDateTime = OffsetDateTime.ofInstant(instant, wallOffsets(wallOffsets.length - 1))
 
-      {
-        var year: Int = dt.getYear
-        while (true) {
-          {
-            var transArray: Array[ZoneOffsetTransition] = findTransitionArray(year)
-            for (trans <- transArray) {
-              if (instant.isBefore(trans.getInstant)) {
-                return trans
-              }
-            }
-            if (year == Year.MaxYear) {
-              return null
-            }
-          }
-          year += 1
+      var year: Int = dt.getYear
+      while (true) {
+
+        val transArray: Array[ZoneOffsetTransition] = findTransitionArray(year)
+        for (trans <- transArray) {
+          if (instant.isBefore(trans.getInstant)) return trans
         }
+        if (year == Year.MaxYear) return null
+
+        year += 1
       }
+
     }
     var index: Int = Arrays.binarySearch(savingsInstantTransitions, epochSecs)
-    if (index < 0) {
-      index = -index - 1
-    }
-    else {
-      index += 1
-    }
-    var transitionInstant: Instant = Instant.ofEpochSeconds(savingsInstantTransitions(index))
-    var trans: OffsetDateTime = OffsetDateTime.ofInstant(transitionInstant, wallOffsets(index))
+    if (index < 0) index = -index - 1
+    else index += 1
+    val transitionInstant: Instant = Instant.ofEpochSeconds(savingsInstantTransitions(index))
+    val trans: OffsetDateTime = OffsetDateTime.ofInstant(transitionInstant, wallOffsets(index))
     return new ZoneOffsetTransition(trans, wallOffsets(index + 1))
   }
 
@@ -347,40 +336,35 @@ final class StandardZoneRules private(private val standardTransitions: Array[Lon
    * @return the previous transition after the specified instant, null if this is before the first transition
    */
   def previousTransition(instantProvider: InstantProvider): ZoneOffsetTransition = {
-    var instant: Instant = Instant.of(instantProvider)
+    val instant: Instant = Instant.of(instantProvider)
     var epochSecs: Long = instant.getEpochSeconds
     if (instant.getNanoOfSecond > 0 && epochSecs < Long.MaxValue) {
       epochSecs += 1
     }
-    var lastHistoric: Long = savingsInstantTransitions(savingsInstantTransitions.length - 1)
+    val lastHistoric: Long = savingsInstantTransitions(savingsInstantTransitions.length - 1)
     if (lastRules.length > 0 && epochSecs > lastHistoric) {
-      var lastHistoricOffset: ZoneOffset = wallOffsets(wallOffsets.length - 1)
-      var dt: OffsetDateTime = OffsetDateTime.ofInstant(instant, lastHistoricOffset)
-      var lastHistoricDT: OffsetDateTime = OffsetDateTime.ofInstant(Instant.ofEpochSeconds(lastHistoric), lastHistoricOffset)
+      val lastHistoricOffset: ZoneOffset = wallOffsets(wallOffsets.length - 1)
+      val dt: OffsetDateTime = OffsetDateTime.ofInstant(instant, lastHistoricOffset)
+      val lastHistoricDT: OffsetDateTime = OffsetDateTime.ofInstant(Instant.ofEpochSeconds(lastHistoric), lastHistoricOffset)
 
-      {
-        var year: Int = dt.getYear
-        while (year > lastHistoricDT.getYear) {
-          var transArray: Array[ZoneOffsetTransition] = findTransitionArray(year)
+      var year: Int = dt.getYear
+      while (year > lastHistoricDT.getYear) {
+        val transArray: Array[ZoneOffsetTransition] = findTransitionArray(year)
 
-          var i: Int = transArray.length - 1
-          while (i >= 0) {
-            if (instant.isAfter(transArray(i).getInstant)) {
-              return transArray(i)
-            }
-            i -= 1;
+        var i: Int = transArray.length - 1
+        while (i >= 0) {
+          if (instant.isAfter(transArray(i).getInstant)) {
+            return transArray(i)
           }
-          year -= 1
+          i -= 1;
         }
+        year -= 1
       }
     }
     var index: Int = Arrays.binarySearch(savingsInstantTransitions, epochSecs)
-    if (index < 0) {
-      index = -index - 1
-    }
-    if (index <= 0) {
-      return null
-    }
+    if (index < 0) index = -index - 1
+    if (index <= 0) return null
+
     val transitionInstant: Instant = Instant.ofEpochSeconds(savingsInstantTransitions(index - 1))
     val trans: OffsetDateTime = OffsetDateTime.ofInstant(transitionInstant, wallOffsets(index - 1))
     return new ZoneOffsetTransition(trans, wallOffsets(index))
@@ -399,7 +383,7 @@ final class StandardZoneRules private(private val standardTransitions: Array[Lon
     if (transArray != null) {
       return transArray
     }
-    var ruleArray: Array[ZoneOffsetTransitionRule] = lastRules
+    val ruleArray: Array[ZoneOffsetTransitionRule] = lastRules
     transArray = new Array[ZoneOffsetTransition](ruleArray.length)
 
     var i: Int = 0
@@ -417,7 +401,7 @@ final class StandardZoneRules private(private val standardTransitions: Array[Lon
   /**{@inheritDoc findTransitionArray(Y}*/
   def getOffsetInfo(dt: LocalDateTime): ZoneOffsetInfo = {
     if (lastRules.length > 0 && dt.isAfter(savingsLocalTransitions(savingsLocalTransitions.length - 1))) {
-      var transArray: Array[ZoneOffsetTransition] = findTransitionArray(dt.getYear)
+      val transArray: Array[ZoneOffsetTransition] = findTransitionArray(dt.getYear)
       var info: ZoneOffsetInfo = null
       for (trans <- transArray) {
         info = findOffsetInfo(dt, trans)
@@ -438,10 +422,10 @@ final class StandardZoneRules private(private val standardTransitions: Array[Lon
       index += 1;
     }
     if ((index & 1) == 0) {
-      var dtBefore: LocalDateTime = savingsLocalTransitions(index)
-      var dtAfter: LocalDateTime = savingsLocalTransitions(index + 1)
-      var offsetBefore: ZoneOffset = wallOffsets(index / 2)
-      var offsetAfter: ZoneOffset = wallOffsets(index / 2 + 1)
+      val dtBefore: LocalDateTime = savingsLocalTransitions(index)
+      val dtAfter: LocalDateTime = savingsLocalTransitions(index + 1)
+      val offsetBefore: ZoneOffset = wallOffsets(index / 2)
+      val offsetAfter: ZoneOffset = wallOffsets(index / 2 + 1)
       if (offsetAfter.getAmountSeconds > offsetBefore.getAmountSeconds) {
         return new ZoneOffsetInfo(dt, null, new ZoneOffsetTransition(OffsetDateTime.of(dtBefore, offsetBefore), offsetAfter))
       }
@@ -477,8 +461,8 @@ final class StandardZoneRules private(private val standardTransitions: Array[Lon
   def getTransitions: Buffer[ZoneOffsetTransition] = {
     var list: Buffer[ZoneOffsetTransition] = Buffer[ZoneOffsetTransition]()
     for (i <- 0 until savingsInstantTransitions.length) {
-      var instant: Instant = Instant.ofEpochSeconds(savingsInstantTransitions(i))
-      var trans: OffsetDateTime = OffsetDateTime.ofInstant(instant, wallOffsets(i))
+      val instant: Instant = Instant.ofEpochSeconds(savingsInstantTransitions(i))
+      val trans: OffsetDateTime = OffsetDateTime.ofInstant(instant, wallOffsets(i))
       list += new ZoneOffsetTransition(trans, wallOffsets(i + 1))
     }
     list

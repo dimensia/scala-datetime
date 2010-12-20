@@ -31,9 +31,7 @@
  */
 package javax.time.calendar
 
-import java.io.IOException
 import java.io.ObjectInputStream
-import java.io.ObjectStreamException
 import java.io.Serializable
 import java.io.StreamCorruptedException
 import java.util.Collections
@@ -206,7 +204,8 @@ object TimeZone {
    * </ul>
    * The map is unmodifiable.
    */
-  var OldIDsPre2005: Map[String, String] = null //FIXME: Should be val
+  var OldIDsPre2005: Map[String, String] = null
+  //FIXME: Should be val
 
   /**
    * A map of zone overrides to enable the older US time-zone names to be used.
@@ -244,7 +243,8 @@ object TimeZone {
    * </ul>
    * The map is unmodifiable.
    */
-  var OldIDsPost2005: Map[String, String] = null //FIXME: should be val
+  var OldIDsPost2005: Map[String, String] = null
+  //FIXME: should be val
 
   //FIXME!
   var base: Map[String, String] = new HashMap[String, String]
@@ -427,7 +427,7 @@ object TimeZone {
 
     def getRulesValidFor(dateTime: OffsetDateTime): ZoneRules = {
       ISOChronology.checkNotNull(dateTime, "OffsetDateTime must not be null")
-      var group: ZoneRulesGroup = getGroup
+      val group: ZoneRulesGroup = getGroup
       if (isFloatingVersion) group.getRules(regionID, group.getLatestVersionIDValidFor(regionID, dateTime))
       else group.getRulesValidFor(regionID, versionID, dateTime)
     }
@@ -438,7 +438,7 @@ object TimeZone {
     }
 
     def getRules: ZoneRules = {
-      var group: ZoneRulesGroup = getGroup
+      val group: ZoneRulesGroup = getGroup
       if (isFloatingVersion) group.getRules(regionID, group.getLatestVersionID(regionID))
       else group.getRules(regionID, versionID)
     }
@@ -493,19 +493,21 @@ object TimeZone {
 
   @SerialVersionUID(1L)
   private[calendar] sealed class Rule
-    extends CalendricalRule[TimeZone](classOf[TimeZone], ISOChronology, "TimeZone", null, null)
-    with Serializable {
+          extends CalendricalRule[TimeZone](classOf[TimeZone], ISOChronology, "TimeZone", null, null)
+          with Serializable {
 
     protected override def derive(calendrical: Calendrical): Option[TimeZone] = {
-      val zdt: ZonedDateTime = calendrical.get(ZonedDateTime.rule)
-      if (zdt != null) Some(zdt.getZone) else None
+      calendrical.get(ZonedDateTime.rule) match {
+        case Some(zdt) => Some(zdt.getZone)
+        case None => None
+      }
     }
 
     private def readResolve: AnyRef = Rule
   }
 
   /**
-   * Obtains an instance of     { @code TimeZone } from an identifier.
+   * Obtains an instance of {@code TimeZone} from an identifier.
    *
    * @param zoneID the time-zone identifier, not null
    * @param checkAvailable whether to check if the time-zone ID is available
@@ -526,17 +528,17 @@ object TimeZone {
         }
       }
     }
-    var matcher: Matcher = Pattern.matcher(zoneID)
+    val matcher: Matcher = Pattern.matcher(zoneID)
     if (matcher.matches == false) {
       throw new CalendricalException("Invalid time-zone ID: " + zoneID)
     }
     var groupID: String = matcher.group(2)
-    var regionID: String = matcher.group(3)
+    val regionID: String = matcher.group(3)
     var versionID: String = matcher.group(5)
     groupID = (if (groupID != null) groupID else "TZDB")
     versionID = (if (versionID != null) versionID else "")
     if (checkAvailable) {
-      var group: ZoneRulesGroup = ZoneRulesGroup.getGroup(groupID)
+      val group: ZoneRulesGroup = ZoneRulesGroup.getGroup(groupID)
       if (versionID.length == 0) {
         if (group.isValidRegionID(regionID) == false) {
           throw new CalendricalException("Unknown time-zone region: " + groupID + ':' + regionID)
@@ -794,8 +796,9 @@ abstract class TimeZone private[calendar] extends Calendrical with Serializable 
    * @return the value for the rule, null if the value cannot be returned
    */
   def get[T](rule: CalendricalRule[T]): Option[T] = {
-    if (rule.equals(ZoneOffset.rule) && isFixed) Some(rule.reify(getRules.getOffset(Instant.Epoch)))
-    else Some(rule.deriveValueFor(rule, this, this))
+    if (rule.equals(ZoneOffset.rule) && isFixed) rule.reify(getRules.getOffset(Instant.Epoch))
+    //    else Some(rule.deriveValueFor(rule, this, this))   //FIMXE
+    else None
   }
 
   /**

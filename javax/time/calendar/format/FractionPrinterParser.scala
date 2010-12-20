@@ -52,7 +52,7 @@ import javax.time.calendar.DateTimeFieldRule
  * @param maxWidth the maximum width to output, from 0 to 9
  */
 final class FractionPrinterParser private[format](val rule: DateTimeFieldRule[_], val minWidth: Int, val maxWidth: Int)
-  extends DateTimePrinter with DateTimeParser {
+        extends DateTimePrinter with DateTimeParser {
 
   /**{ @inheritDoc }*/
   override def toString: String = "Fraction(" + rule.getID + "," + minWidth + "," + maxWidth + ")"
@@ -65,17 +65,10 @@ final class FractionPrinterParser private[format](val rule: DateTimeFieldRule[_]
       if (minWidth > 0) {
         appendable.append(symbols.getDecimalPointChar)
 
-        {
-          var i: Int = 0
-          while (i < minWidth) {
-            {
-              appendable.append(symbols.getZeroChar)
-            }
-            ({
-              i += 1;
-              i
-            })
-          }
+        var i: Int = 0
+        while (i < minWidth) {
+          appendable.append(symbols.getZeroChar)
+          i += 1;
         }
       }
     }

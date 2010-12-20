@@ -125,7 +125,8 @@ sealed abstract class QuarterOfYear(ordinal: Int) extends Calendrical {
    */
   def get[T](rule: CalendricalRule[T]): Option[T] = {
     if (rule.getReifiedType != classOf[QuarterOfYear]) None
-    else Some(rule.reify(this))
+//    else Some(rule.reify(this))      //FIXME
+    else None
   }
 
   /**

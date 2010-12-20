@@ -218,7 +218,7 @@ object Duration {
   def ofStandardHours(hours: Long): Duration = create(MathUtils.safeMultiply(hours, 3600), 0)
 
   /**
-   * Obtains an instance of     { @code Duration } using seconds and nanoseconds.
+   * Obtains an instance of {@code Duration} using seconds and nanoseconds.
    *
    * @param seconds the length of the duration in seconds, positive or negative
    * @param nanoAdjustment the nanosecond adjustment within the second, from 0 to 999,999,999
@@ -402,7 +402,7 @@ object Duration {
    *
    * @param seconds the number of seconds, positive or negative
    * @param nanoAdjustment the nanosecond adjustment to the number of seconds, positive or negative
-   * @return a { @code Duration }, never null
+   * @return a {@code Duration}, never null
    * @throws ArithmeticException if the adjustment causes the seconds to exceed the capacity of     { @code Duration }
    */
   def ofSeconds(seconds: Long, nanoAdjustment: Long): Duration = {

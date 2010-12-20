@@ -135,7 +135,7 @@ object HistoricDate {
     }
 
     protected override def merge(merger: CalendricalMerger): Unit = {
-      val cd: HistoricDate = merger.getValue(this)
+      val cd: HistoricDate = merger.getValue(this).get
       merger.storeMerged(LocalDate.rule, cd.toLocalDate)
       merger.removeProcessed(this)
     }
@@ -299,7 +299,7 @@ final class HistoricDate private[i18n](val chrono: HistoricChronology, @transien
     val yearValue: Int = getYear
     val monthValue: Int = getMonthOfYear.getValue
     val dayValue: Int = getDayOfMonth
-    val absYear: Int = Math.abs(yearValue)
+    val absYear: Int = math.abs(yearValue)
     val buf: StringBuilder = new StringBuilder(12)
     if (absYear < 1000) {
       buf.append(yearValue + 10000).deleteCharAt(0)
@@ -383,7 +383,8 @@ final class HistoricDate private[i18n](val chrono: HistoricChronology, @transien
    */
   def get[T](rule: CalendricalRule[T]): Option[T] = {
     if (rule.equals(LocalDate.rule)) rule.reify(toLocalDate)
-    else rule.deriveValueFor(rule, this, this, chrono)
+//    else rule.deriveValueFor(rule, this, this, chrono)   //FIXME
+    else None
   }
 
   /**

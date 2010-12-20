@@ -455,7 +455,7 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Calendrical {
    * @param leapYear  true if the length is required for a leap year
    * @return the last day of this month, from 1 to 335
    */
-  public int getMonthStartDayOfYear(boolean leapYear) {
+  def getMonthStartDayOfYear(leapYear: Boolean): Int = {
     val leap: Int = if (leapYear) 1 else 0
     this match {
       case January => 1
