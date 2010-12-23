@@ -1545,4 +1545,6 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
       MathUtils.safeAdd(seconds, other.seconds),
       MathUtils.safeAdd(nanos, other.nanos))
   }
+
+  def +(periodProvider: PeriodProvider): Period = plus(periodProvider)
 }

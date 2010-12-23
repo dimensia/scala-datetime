@@ -422,7 +422,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
 
   /**
    * Returns a copy of this OffsetDateTime with the month-of-year altered.
-   * If the resulting {@code OffsetDateTime} is invalid, it will be resolved using {@link DateResolvers # previousValid()}.
+   * If the resulting {@code OffsetDateTime} is invalid, it will be resolved using {@link DateResolvers#previousValid()}.
    * The offset does not affect the calculation and will be the same in the result.
    * <p>
    * This method does the same as {@code withMonthOfYear ( monthOfYear, DateResolvers.previousValid ( ) )}.
@@ -437,7 +437,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
 
   /**
    * Returns a copy of this OffsetDateTime with the month-of-year altered.
-   * If the resulting {@code OffsetDateTime} is invalid, it will be resolved using {@link DateResolvers # previousValid()}.
+   * If the resulting {@code OffsetDateTime} is invalid, it will be resolved using {@link DateResolvers#previousValid()}.
    * The offset does not affect the calculation and will be the same in the result.
    * <p>
    * This method does the same as {@code with ( monthOfYear, DateResolvers.previousValid ( ) )}.
@@ -540,7 +540,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * This method returns the enum {@link DayOfWeek} for the day-of-week.
    * This avoids confusion as to what {@code int} values mean.
    * If you need access to the primitive {@code int} value then the enum
-   * provides the {@link DayOfWeek # getValue ( ) int value}.
+   * provides the {@link DayOfWeek#getValue ( ) int value}.
    * <p>
    * Additional information can be obtained from the {@code DayOfWeek}.
    * This includes textual names of the values.
@@ -649,10 +649,10 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * <p>
    * This subtracts the specified period from this date-time, returning a new date-time.
    * Before addition, the period is converted to a {@code Period} using the
-   * {@link Period # of ( PeriodProvider )}.
+   * {@link Period#of ( PeriodProvider )}.
    * <p>
    * The detailed rules for the subtraction have some complexity due to variable length months.
-   * See {@link LocalDateTime # minus ( PeriodProvider )} for details.
+   * See {@link LocalDateTime#minus ( PeriodProvider )} for details.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -668,7 +668,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
 
   /**
    * Returns a copy of this OffsetDateTime with the year altered.
-   * If the resulting {@code OffsetDateTime} is invalid, it will be resolved using {@link DateResolvers # previousValid()}.
+   * If the resulting {@code OffsetDateTime} is invalid, it will be resolved using {@link DateResolvers#previousValid()}.
    * The offset does not affect the calculation and will be the same in the result.
    * <p>
    * This method does the same as {@code withYear ( year, DateResolvers.previousValid ( ) )}.
@@ -694,10 +694,10 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * <p>
    * This adds the specified period to this date-time, returning a new date-time.
    * Before addition, the period is converted to a {@code Period} using the
-   * {@link Period # of ( PeriodProvider )}.
+   * {@link Period#of ( PeriodProvider )}.
    * <p>
    * The detailed rules for the addition have some complexity due to variable length months.
-   * See {@link LocalDateTime # plus ( PeriodProvider )} for details.
+   * See {@link LocalDateTime#plus ( PeriodProvider )} for details.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -710,6 +710,8 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
     val newDT: LocalDateTime = dateTime.plus(periodProvider)
     (if (newDT == dateTime) this else new OffsetDateTime(newDT, offset))
   }
+
+  def +(periodProvider: PeriodProvider): OffsetDateTime = plus(periodProvider)
 
   /**
    * Converts this date-time to a {@code LocalTime}.
@@ -832,13 +834,13 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * local time-line exists. As a result, this method can only convert the date-time
    * to the same time if the time-zone rules permit it. If not then a similar time is returned.
    * <p>
-   * This method uses the {@link ZoneResolvers # postTransition ( ) post transition} rules
+   * This method uses the {@link ZoneResolvers#postTransition ( ) post transition} rules
    * to determine what to do when a gap or overlap occurs. These rules select the
    * date-time immediately after a gap and the later offset in overlaps.
    * <p>
    * Finer control over gaps and overlaps is available in two ways.
    * If you simply want to use the earlier offset at overlaps then call
-   * {@link ZonedDateTime # withEarlierOffsetAtOverlap()} immediately after this method.
+   * {@link ZonedDateTime#withEarlierOffsetAtOverlap()} immediately after this method.
    * Alternately, pass a specific resolver to {@link #atZoneSimilarLocal ( TimeZone, ZoneResolver )}.
    * <p>
    * To create a zoned date-time at the same instant irrespective of the local time-line,
@@ -968,7 +970,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * This method returns the enum {@link MonthOfYear} for the month.
    * This avoids confusion as to what {@code int} values mean.
    * If you need access to the primitive {@code int} value then the enum
-   * provides the {@link MonthOfYear # getValue ( ) int value}.
+   * provides the {@link MonthOfYear#getValue ( ) int value}.
    * <p>
    * Additional information can be obtained from the {@code MonthOfYear}.
    * This includes month lengths, textual names and access to the quarter-of-year

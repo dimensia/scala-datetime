@@ -59,7 +59,7 @@ object DateTimeFormatSymbols {
    * installed
    * {@link java.text.spi.DateTimeFormatSymbolsProvider DateTimeFormatSymbolsProvider }
    * implementations. It must contain at least a {@code Locale }
-   * instance equal to {@link java.util.Locale # US Locale.US}.
+   * instance equal to {@link java.util.Locale#US Locale.US}.
    *
    * @return an array of locales for which localized
    * {@code DateTimeFormatSymbols} instances are available

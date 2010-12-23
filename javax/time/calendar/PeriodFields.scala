@@ -174,7 +174,7 @@ object PeriodFields {
   /**
    * Obtains a {@code PeriodFields} from a {@code PeriodProvider}.
    * <p>
-   * This method provides null-checking around {@link PeriodProvider # toPeriodFields()}.
+   * This method provides null-checking around {@link PeriodProvider#toPeriodFields()}.
    *
    * @param periodProvider the provider to create from, not null
    * @return the {@code PeriodFields} instance, never null
@@ -502,6 +502,8 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
     return create(copy)
   }
 
+  def +(periodProvider: PeriodProvider): PeriodFields = plus(periodProvider)
+
   /**
    * Returns a copy of this period with each amount in this period negated.
    *
@@ -744,7 +746,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    * This means that an amount in a smaller unit cannot be converted to an amount in a larger unit.
    * If you need to do this, call {@link #normalized()} before calling this method.
    * <p>
-   * This method uses {@link PeriodField # toEquivalent ( PeriodUnit...)} and as such,
+   * This method uses {@link PeriodField#toEquivalent ( PeriodUnit...)} and as such,
    * it is recommended to specify the units from largest to smallest.
    * <p>
    * For example, '3 Hours' can normally be converted to both minutes and seconds.

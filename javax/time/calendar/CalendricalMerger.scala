@@ -281,7 +281,7 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
    * possible from this set of fields. Ideally the outcome will be a date, time
    * or both, however there may be insufficient information to achieve this.
    * <p>
-   * The process repeatedly calls the field rule {@link CalendricalRule # merge merge }
+   * The process repeatedly calls the field rule {@link CalendricalRule#merge merge }
    * method to perform the merge on each individual field. Sometimes two or
    * more fields will combine to form a more significant field. Sometimes they
    * will combine to form a date or time. The process stops when there no more

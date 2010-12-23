@@ -355,7 +355,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
   /**
    * Returns a local date-time formed from this date at the time of midnight.
    * <p>
-   * This merges the two objects - {@code this} and {@link LocalTime # MIDNIGHT} -
+   * This merges the two objects - {@code this} and {@link LocalTime#MIDNIGHT} -
    * to form an instance of {@code LocalDateTime}.
    * <p>
    * This instance is immutable and unaffected by this method call.
@@ -371,10 +371,10 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * <p>
    * This adds the specified period to this date, returning a new date.
    * Before addition, the period is converted to a date-based {@code Period} using
-   * {@link Period # ofDateFields ( PeriodProvider )}.
+   * {@link Period#ofDateFields ( PeriodProvider )}.
    * That factory ignores any time-based ISO fields, thus adding a time-based
    * period to this date will have no effect. If you want to take time fields into
-   * account, call {@link Period # normalizedWith24HourDays()} on the input period.
+   * account, call {@link Period#normalizedWith24HourDays()} on the input period.
    * <p>
    * The detailed rules for the addition have some complexity due to variable length months.
    * The goal is to match the code for {@code plusYears ( ).plusMonths ( ).plusDays()} in most cases.
@@ -435,10 +435,10 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * local time-line exists. When this method converts the date to a date-time it
    * adjusts the time and offset as necessary to ensure that the time is as early
    * as possible on the date, which is typically midnight. Internally this is
-   * achieved using a {@link ZoneResolvers # postGapPreOverlap ( ) zone resolver}.
+   * achieved using a {@link ZoneResolvers#postGapPreOverlap ( ) zone resolver}.
    * <p>
    * To convert to a specific time in a given time-zone call {@link #atTime ( LocalTime ) }
-   * followed by {@link LocalDateTime # atZone ( TimeZone )}. Note that the resolver used
+   * followed by {@link LocalDateTime#atZone ( TimeZone )}. Note that the resolver used
    * by {@code atZone()} is different to that used here (it chooses the later
    * offset in an overlap, whereas this method chooses the earlier offset).
    * <p>
@@ -751,7 +751,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * @param months the months to subtract, may be negative
    * @return a {@code LocalDate} based on this date with the months subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
-   * @see # minusMonths ( long, javax.time.calendar.DateResolver )
+   * @see#minusMonths ( long, javax.time.calendar.DateResolver )
    */
   def minusMonths(months: Long): LocalDate = minusMonths(months, DateResolvers.previousValid)
 
@@ -834,7 +834,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * @param years the years to subtract, may be negative
    * @return a {@code LocalDate} based on this date with the years subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
-   * @see # minusYears ( long, javax.time.calendar.DateResolver )
+   * @see#minusYears ( long, javax.time.calendar.DateResolver )
    */
   def minusYears(years: Long): LocalDate = minusYears(years, DateResolvers.previousValid)
 
@@ -848,7 +848,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
 
   /**
    * Returns a copy of this {@code LocalDate} with the month-of-year altered.
-   * If the resulting date is invalid, it will be resolved using {@link DateResolvers # previousValid()}.
+   * If the resulting date is invalid, it will be resolved using {@link DateResolvers#previousValid()}.
    * <p>
    * This method does the same as {@code withMonthOfYear ( monthOfYear, DateResolvers.previousValid ( ) )}.
    * <p>
@@ -893,7 +893,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * This method returns the enum {@link MonthOfYear} for the month.
    * This avoids confusion as to what {@code int} values mean.
    * If you need access to the primitive {@code int} value then the enum
-   * provides the {@link MonthOfYear # getValue ( ) int value}.
+   * provides the {@link MonthOfYear#getValue ( ) int value}.
    * <p>
    * Additional information can be obtained from the {@code MonthOfYear}.
    * This includes month lengths, textual names and access to the quarter-of-year
@@ -1154,7 +1154,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
 
   /**
    * Returns a copy of this {@code LocalDate} with the month-of-year altered.
-   * If the resulting date is invalid, it will be resolved using {@link DateResolvers # previousValid()}.
+   * If the resulting date is invalid, it will be resolved using {@link DateResolvers#previousValid()}.
    * <p>
    * This method does the same as {@code with ( monthOfYear, DateResolvers.previousValid ( ) )}.
    * <p>
@@ -1186,7 +1186,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * @param years the years to add, may be negative
    * @return a {@code LocalDate} based on this date with the years added, never null
    * @throws CalendricalException if the result exceeds the supported date range
-   * @see # plusYears ( long, javax.time.calendar.DateResolver )
+   * @see#plusYears ( long, javax.time.calendar.DateResolver )
    */
   def plusYears(years: Long): LocalDate = plusYears(years, DateResolvers.previousValid)
 
@@ -1196,7 +1196,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * This method returns the enum {@link DayOfWeek} for the day-of-week.
    * This avoids confusion as to what {@code int} values mean.
    * If you need access to the primitive {@code int} value then the enum
-   * provides the {@link DayOfWeek # getValue ( ) int value}.
+   * provides the {@link DayOfWeek#getValue ( ) int value}.
    * <p>
    * Additional information can be obtained from the {@code DayOfWeek}.
    * This includes textual names of the values.
@@ -1259,7 +1259,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
 
   /**
    * Returns a copy of this {@code LocalDate} with the year altered.
-   * If the resulting date is invalid, it will be resolved using {@link DateResolvers # previousValid()}.
+   * If the resulting date is invalid, it will be resolved using {@link DateResolvers#previousValid()}.
    * <p>
    * This method does the same as {@code withYear ( year, DateResolvers.previousValid ( ) )}.
    * <p>

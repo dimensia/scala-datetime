@@ -64,7 +64,7 @@ import javax.time.TimeSource
  * }
  * </pre>
  * This approach allows alternate time-source implementations, such as
- * {@link TimeSource # fixed} to be used during testing.
+ * {@link TimeSource#fixed} to be used during testing.
  *
  * <h4>Implementation notes</h4>
  * {@code Clock} is an abstract class and must be implemented with care
@@ -97,7 +97,7 @@ object Clock {
    * Gets a clock that obtains the current date and time using the system millisecond
    * clock and the default time-zone.
    * <p>
-   * The time-source wraps {@link System # currentTimeMillis()}, thus it has
+   * The time-source wraps {@link System#currentTimeMillis()}, thus it has
    * at best millisecond resolution.
    * <p>
    * Using this method hard codes a dependency to the default time-zone into your application.
@@ -130,7 +130,7 @@ object Clock {
    * Gets a clock that obtains the current date and time using the system millisecond
    * clock and the specified time-zone.
    * <p>
-   * The time-source wraps {@link System # currentTimeMillis()}, thus it has
+   * The time-source wraps {@link System#currentTimeMillis()}, thus it has
    * at best millisecond resolution.
    *
    * @param zone the time-zone to use to convert to date-times, not null
@@ -300,7 +300,7 @@ abstract class Clock protected {
    * <p>
    * The instant returned by this method will vary according to the implementation.
    * For example, the time-source returned by {@link #system ( TimeZone )} will return
-   * an instant based on {@link System # currentTimeMillis()}.
+   * an instant based on {@link System#currentTimeMillis()}.
    * <p>
    * Normally, this method will not throw an exception.
    * However, one possible implementation would be to obtain the time from a

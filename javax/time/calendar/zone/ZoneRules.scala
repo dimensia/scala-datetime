@@ -140,7 +140,7 @@ abstract class ZoneRules protected {
    * The third case, a gap in the local time-line, cannot be returned by this
    * method as an instant will always represent a valid point and cannot be in a gap.
    * The returned object provides information about the offset or overlap and it
-   * is vital to check {@link ZoneOffsetInfo # isTransition()} to handle the overlap.
+   * is vital to check {@link ZoneOffsetInfo#isTransition()} to handle the overlap.
    *
    * @param instant the instant to find the offset information for, not null
    * @return the offset information, never null
@@ -308,7 +308,7 @@ abstract class ZoneRules protected {
    * autumn cutover from daylight savings. There are two valid offsets during the overlap.</li>
    * </ul>
    * The returned object provides this information and it is vital to check
-   * {@link ZoneOffsetInfo # isTransition()} to handle the gap or overlap.
+   * {@link ZoneOffsetInfo#isTransition()} to handle the gap or overlap.
    *
    * @param dateTime the date-time to find the offset information for, not null
    * @return the offset information, never null

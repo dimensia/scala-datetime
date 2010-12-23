@@ -417,7 +417,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    *
    * @param year the year to validate, an out of range value returns false
    * @return true if the year is valid for this month-day
-   * @see Year # isValidMonthDay ( MonthDay )
+   * @see Year#isValidMonthDay ( MonthDay )
    */
   def isValidYear(year: Int): Boolean = (day == 29 && month.isFebruary && ISOChronology.isLeapYear(year) == false) == false
 

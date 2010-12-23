@@ -428,7 +428,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
 
   /**
    * Returns a copy of this {@code LocalDateTime} with the month-of-year altered.
-   * If the resulting {@code LocalDateTime} is invalid, it will be resolved using {@link DateResolvers # previousValid()}.
+   * If the resulting {@code LocalDateTime} is invalid, it will be resolved using {@link DateResolvers#previousValid()}.
    * The time does not affect the calculation and will be the same in the result.
    * <p>
    * This method does the same as {@code withMonthOfYear ( monthOfYear, DateResolvers.previousValid ( ) )}.
@@ -508,7 +508,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @param years the years to add, may be negative
    * @return a {@code LocalDateTime} based on this date-time with the period added, never null
    * @throws CalendricalException if the result exceeds the supported date range
-   * @see # plusYears ( int, javax.time.calendar.DateResolver )
+   * @see#plusYears ( int, javax.time.calendar.DateResolver )
    */
   def plusYears(years: Int): LocalDateTime = {
     val newDate: LocalDate = date.plusYears(years)
@@ -572,7 +572,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * This method returns the enum {@link MonthOfYear} for the month.
    * This avoids confusion as to what {@code int} values mean.
    * If you need access to the primitive {@code int} value then the enum
-   * provides the {@link MonthOfYear # getValue ( ) int value}.
+   * provides the {@link MonthOfYear#getValue ( ) int value}.
    * <p>
    * Additional information can be obtained from the {@code MonthOfYear}.
    * This includes month lengths, textual names and access to the quarter-of-year
@@ -603,7 +603,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @param years the years to subtract, may be negative
    * @return a {@code LocalDateTime} based on this date-time with the years subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
-   * @see # minusYears ( int, javax.time.calendar.DateResolver )
+   * @see#minusYears ( int, javax.time.calendar.DateResolver )
    */
   def minusYears(years: Int): LocalDateTime = {
     val newDate: LocalDate = date.minusYears(years)
@@ -650,12 +650,12 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * <p>
    * Time-zone rules, such as daylight savings, mean that not every time on the
    * local time-line exists. When this method converts the date to a date-time it adjusts
-   * the time and offset according to the {@link ZoneResolvers # postTransition()} rules.
+   * the time and offset according to the {@link ZoneResolvers#postTransition()} rules.
    * This selects the date-time immediately after a gap and the later offset in overlaps.
    * <p>
    * Finer control over gaps and overlaps is available in two ways.
    * If you simply want to use the earlier offset at overlaps then call
-   * {@link ZonedDateTime # withEarlierOffsetAtOverlap()} immediately after this method.
+   * {@link ZonedDateTime#withEarlierOffsetAtOverlap()} immediately after this method.
    * Alternately, pass a specific resolver to {@link #atZone ( TimeZone, ZoneResolver )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
@@ -781,7 +781,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
 
   /**
    * Returns a copy of this {@code LocalDateTime} with the year altered.
-   * If the resulting {@code LocalDateTime} is invalid, it will be resolved using {@link DateResolvers # previousValid()}.
+   * If the resulting {@code LocalDateTime} is invalid, it will be resolved using {@link DateResolvers#previousValid()}.
    * The time does not affect the calculation and will be the same in the result.
    * <p>
    * This method does the same as {@code withYear ( year, DateResolvers.previousValid ( ) )}.
@@ -796,7 +796,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
 
   /**
    * Returns a copy of this {@code LocalDateTime} with the month-of-year altered.
-   * If the resulting {@code LocalDateTime} is invalid, it will be resolved using {@link DateResolvers # previousValid()}.
+   * If the resulting {@code LocalDateTime} is invalid, it will be resolved using {@link DateResolvers#previousValid()}.
    * The time does not affect the calculation and will be the same in the result.
    * <p>
    * This method does the same as {@code with ( monthOfYear, DateResolvers.previousValid ( ) )}.
@@ -984,7 +984,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * <p>
    * This adds the specified period to this date-time, returning a new date-time.
    * Before addition, the period is converted to a {@code Period} using
-   * {@link Period # of ( PeriodProvider )}.
+   * {@link Period#of ( PeriodProvider )}.
    * <p>
    * The detailed rules for the addition effectively treat the date and time parts of
    * this date-time completely separately during the calculation.
@@ -992,9 +992,9 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * The rules are expressed in four steps:
    * <ol>
    * <li>Add the date part of the period to the date part of this date-time
-   * using {@link LocalDate # plus ( PeriodProvider )} - which has some complex rules</li>
+   * using {@link LocalDate#plus ( PeriodProvider )} - which has some complex rules</li>
    * <li>Add the time part of the period to the time part of this date-time using
-   * {@link LocalTime # plusWithOverflow ( int, int, int, long ) < / li >
+   * {@link LocalTime#plusWithOverflow ( int, int, int, long ) < / li >
    * <li>Add the overflow days from the time calculation to the calculated date</li>
    * <li>Combine the new date and time parts to form the result</li>
    * </ol>
@@ -1003,7 +1003,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * For example, adding 5 hours will always result in a date-time one hour later
    * than adding 4 hours. However, another effect of the definition is that adding
    * 24 hour periods is not the same as adding 1 day periods. See the rules of
-   * {@link LocalDate # plus ( PeriodProvider ) date addition} to understand why.
+   * {@link LocalDate#plus ( PeriodProvider ) date addition} to understand why.
    * <p>
    * For example, this table shows what happens when for various inputs and periods:
    * <pre>
@@ -1267,7 +1267,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * <p>
    * This subtracts the specified period from this date-time, returning a new date-time.
    * Before subtraction, the period is converted to a {@code Period} using
-   * {@link Period # of ( PeriodProvider )}.
+   * {@link Period#of ( PeriodProvider )}.
    * <p>
    * The detailed rules for the subtraction effectively treat the date and time parts of
    * this date-time completely separately during the calculation.
@@ -1275,9 +1275,9 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * The rules are expressed in four steps:
    * <ol>
    * <li>Subtract the date part of the period from the date part of this date-time
-   * using {@link LocalDate # minus ( PeriodProvider )} - which has some complex rules</li>
+   * using {@link LocalDate#minus ( PeriodProvider )} - which has some complex rules</li>
    * <li>Subtract the time part of the period from the time part of this date-time using
-   * {@link LocalTime # minusWithOverflow ( int, int, int, long ) < / li >
+   * {@link LocalTime#minusWithOverflow ( int, int, int, long ) < / li >
    * <li>Subtract the overflow days from the time calculation from the calculated date</li>
    * <li>Combine the new date and time parts to form the result</li>
    * </ol>
@@ -1286,7 +1286,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * For example, subtracting 5 hours will always result in a date-time one hour earlier
    * than adding 4 hours. However, another effect of the definition is that subtracting
    * 24 hour periods is not the same as subtracting 1 day periods. See the rules of
-   * {@link LocalDate # minus ( PeriodProvider ) date subtraction} to understand why.
+   * {@link LocalDate#minus ( PeriodProvider ) date subtraction} to understand why.
    * <p>
    * For example, this table shows what happens when for various inputs and periods:
    * <pre>
@@ -1390,7 +1390,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @param months the months to add, may be negative
    * @return a {@code LocalDateTime} based on this date-time with the months added, never null
    * @throws CalendricalException if the result exceeds the supported date range
-   * @see # plusMonths ( int, javax.time.calendar.DateResolver )
+   * @see#plusMonths ( int, javax.time.calendar.DateResolver )
    */
   def plusMonths(months: Int): LocalDateTime = {
     val newDate: LocalDate = date.plusMonths(months)
@@ -1441,7 +1441,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * This method returns the enum {@link DayOfWeek} for the day-of-week.
    * This avoids confusion as to what {@code int} values mean.
    * If you need access to the primitive {@code int} value then the enum
-   * provides the {@link DayOfWeek # getValue ( ) int value}.
+   * provides the {@link DayOfWeek#getValue ( ) int value}.
    * <p>
    * Additional information can be obtained from the {@code DayOfWeek}.
    * This includes textual names of the values.
@@ -1591,7 +1591,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @param months the months to subtract, may be negative
    * @return a {@code LocalDateTime} based on this date-time with the months subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
-   * @see # minusMonths ( int, javax.time.calendar.DateResolver )
+   * @see#minusMonths ( int, javax.time.calendar.DateResolver )
    */
   def minusMonths(months: Int): LocalDateTime = {
     val newDate: LocalDate = date.minusMonths(months)

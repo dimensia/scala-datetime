@@ -336,7 +336,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * More control is available using {@link #getTextStore}.
    * <p>
    * If there is no textual mapping, then the value is returned as per
-   * {@link Integer # toString()}. Note that this is different to what occurs
+   * {@link Integer#toString()}. Note that this is different to what occurs
    * in printing /parsing, where a more advanced localized conversion from
    * int to String is used.
    *
@@ -358,7 +358,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * It can only be returned if {@link #isFixedValueSet()} returns true and the
    * {@link #getMinimumValue()} returns zero.
    * The value is obtained by calculation from the field range and a rounding
-   * mode of {@link RoundingMode # FLOOR FLOOR}.
+   * mode of {@link RoundingMode#FLOOR FLOOR}.
    * <p>
    * For example, the fractional second-of-minute of 0.25 would be converted to 15,
    * assuming the standard definition of 60 seconds in a minute.
@@ -547,7 +547,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * It can only be returned if {@link #isFixedValueSet()} returns true and the
    * {@link #getMinimumValue()} returns zero.
    * The fraction is obtained by calculation from the field range using 9 decimal
-   * places and a rounding mode of {@link RoundingMode # FLOOR FLOOR}.
+   * places and a rounding mode of {@link RoundingMode#FLOOR FLOOR}.
    * <p>
    * For example, the second-of-minute value of 15 would be returned as 0.25,
    * assuming the standard definition of 60 seconds in a minute.

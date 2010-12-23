@@ -65,7 +65,7 @@ import javax.time.calendar.zone.ZoneRulesGroup
  * For example, the 'TZDB' group use the format     { year} { letter}, such as '2009b'.
  * <p>
  * In combination, a unique ID is created expressing the time-zone, formed from
- * { groupID} :    { regionID} #    { versionID}.
+ * { groupID} :    { regionID}#   { versionID}.
  * <p>
  * The version can be set to an empty string. This represents the "floating version".
  * The floating version will always choose the latest applicable set of rules.
@@ -559,9 +559,9 @@ object TimeZone {
    * <p>
    * Six forms of identifier are recognized:
    * <ul>
-   * <li> {@code    { groupID} :    { regionID} #    { versionID} } - full
+   * <li> {@code    { groupID} :    { regionID}#   { versionID} } - full
    * <li> {@code    { groupID} :    { regionID} } - implies the floating version
-   * <li> {@code    { regionID} #    { versionID} } - implies 'TZDB' group and specific version
+   * <li> {@code    { regionID}#   { versionID} } - implies 'TZDB' group and specific version
    * <li> {@code    { regionID} } - implies 'TZDB' group and the floating version
    * <li> {@code UTC    { offset} } - fixed time-zone
    * <li> {@code GMT    { offset} } - fixed time-zone
@@ -586,7 +586,7 @@ object TimeZone {
    * <p>
    * The alternate format is for fixed time-zones, where the offset never changes over time.
    * A fixed time-zone is returned if the first three characters are 'UTC' or 'GMT' and
-   * the remainder of the ID is a valid format for {@link ZoneOffset # of ( String )}.
+   * the remainder of the ID is a valid format for {@link ZoneOffset#of ( String )}.
    * The result will have a normalized time-zone ID of 'UTC    { offset} ', or just 'UTC' if the offset is zero.
    * <p>
    * Note that it is intended that fixed offset time-zones are rarely used. Applications should use
@@ -608,9 +608,9 @@ abstract class TimeZone private[calendar] extends Calendrical with Serializable 
    * Gets the unique time-zone ID.
    * <p>
    * The unique key is created from the group ID, version ID and region ID.
-   * The format is     { groupID} :    { regionID} #    { versionID}.
+   * The format is     { groupID} :    { regionID}#   { versionID}.
    * If the group is 'TZDB' then the     { groupID} : is omitted.
-   * If the version is floating, then the #    { versionID} is omitted.
+   * If the version is floating, then the#   { versionID} is omitted.
    * Fixed time-zones will only output the region ID.
    *
    * @return the time-zone unique ID, never null

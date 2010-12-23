@@ -190,7 +190,7 @@ sealed abstract class QuarterOfYear(ordinal: Int) extends Calendrical {
    * Q3 will return July.<br />
    * Q4 will return October.
    * <p>
-   * To obtain the other two months of the quarter, simply use {@link MonthOfYear # next()}
+   * To obtain the other two months of the quarter, simply use {@link MonthOfYear#next()}
    * on the returned month.
    *
    * @return the first month in the quarter, never null

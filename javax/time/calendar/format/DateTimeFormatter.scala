@@ -222,7 +222,7 @@ final class DateTimeFormatter private[format](symbols: DateTimeFormatSymbols, pr
    * <p>
    * Although Appendable methods throw an IOException, this method does not.
    * Instead, any IOException is wrapped in a runtime exception.
-   * See {@link CalendricalPrintException # rethrowIOException()} for a means
+   * See {@link CalendricalPrintException#rethrowIOException()} for a means
    * to extract the IOException.
    *
    * @param calendrical the calendrical to print, not null

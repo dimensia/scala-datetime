@@ -280,7 +280,7 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
    * <p>
    * This adds the specified period to this time, returning a new time.
    * Before addition, the period is converted to a time-based {@code Period} using
-   * {@link Period # ofTimeFields ( PeriodProvider )}.
+   * {@link Period#ofTimeFields ( PeriodProvider )}.
    * That factory ignores any date-based ISO fields, thus adding a date-based
    * period to this time will have no effect.
    * <p>
@@ -294,6 +294,8 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
     val newTime: LocalTime = time.plus(periodProvider)
     if (newTime == this.time) this else new OffsetTime(newTime, offset)
   }
+
+  def +(periodProvider: PeriodProvider): OffsetTime = plus(periodProvider)
 
   /**
    * Returns a copy of this {@code OffsetTime} with the specified period in hours subtracted.
@@ -662,7 +664,7 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
    * <p>
    * This subtracts the specified period from this time, returning a new time.
    * Before subtraction, the period is converted to a time-based {@code Period} using
-   * {@link Period # ofTimeFields ( PeriodProvider )}.
+   * {@link Period#ofTimeFields ( PeriodProvider )}.
    * That factory ignores any date-based ISO fields, thus subtracting a date-based
    * period to this time will have no effect.
    * <p>

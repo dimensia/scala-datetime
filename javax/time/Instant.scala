@@ -189,7 +189,7 @@ object Instant {
    * Obtains an instance of {@code Instant} using nanoseconds from the
    * epoch of 1970-01-01T00:00:00Z.
    * <p>
-   * The seconds and nanoseconds are extracted from the specified {@code BigInteger}.
+   * The seconds and nanoseconds are extracted from the specified {@code BigInt}.
    * If the resulting seconds value is larger than {@code Long.MaxValue} then an
    * exception is thrown.
    *
@@ -209,7 +209,7 @@ object Instant {
   /**
    * Obtains an instance of {@code Instant} from a provider of instants.
    * <p>
-   * In addition to calling {@link InstantProvider # toInstant()} this method
+   * In addition to calling {@link InstantProvider#toInstant()} this method
    * also checks the validity of the result of the provider.
    *
    * @param instantProvider a provider of instant information, not null
@@ -394,7 +394,7 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
 
   /**
    * Converts this instant to the number of nanoseconds from the epoch
-   * of 1970-01-01T00:00:00Z expressed as a {@code BigInteger}.
+   * of 1970-01-01T00:00:00Z expressed as a {@code BigInt}.
    *
    * @return the number of nanoseconds since the epoch of 1970-01-01T00:00:00Z, never null
    */

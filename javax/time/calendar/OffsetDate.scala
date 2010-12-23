@@ -302,7 +302,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * @param years the years to add, may be negative
    * @return an {@code OffsetDate} based on this date with the years added, never null
    * @throws CalendricalException if the result exceeds the supported date range
-   * @see # plusYears ( int, javax.time.calendar.DateResolver )
+   * @see#plusYears ( int, javax.time.calendar.DateResolver )
    */
   def plusYears(years: Int): OffsetDate = `with`(date.plusYears(years), offset)
 
@@ -346,7 +346,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
 
   /**
    * Returns a copy of this {@code OffsetDate} with the year altered.
-   * If the resulting date is invalid, it will be resolved using {@link DateResolvers # previousValid()}.
+   * If the resulting date is invalid, it will be resolved using {@link DateResolvers#previousValid()}.
    * The offset does not affect the calculation and will be the same in the result.
    * <p>
    * This method does the same as {@code withYear ( year, DateResolvers.previousValid ( ) )}.
@@ -403,13 +403,13 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * <p>
    * This adds the specified period to this date, returning a new date.
    * Before addition, the period is converted to a date-based {@code Period} using
-   * {@link Period # ofDateFields ( PeriodProvider )}.
+   * {@link Period#ofDateFields ( PeriodProvider )}.
    * That factory ignores any time-based ISO fields, thus adding a time-based
    * period to this date will have no effect. If you want to take time fields into
-   * account, call {@link Period # normalizedWith24HourDays()} on the input period.
+   * account, call {@link Period#normalizedWith24HourDays()} on the input period.
    * <p>
    * The detailed rules for the addition have some complexity due to variable length months.
-   * See {@link LocalDate # plus ( PeriodProvider )} for details.
+   * See {@link LocalDate#plus ( PeriodProvider )} for details.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -419,6 +419,8 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def plus(periodProvider: PeriodProvider): OffsetDate = `with`(date.plus(periodProvider), offset)
+
+  def +(periodProvider: PeriodProvider): OffsetDate = plus(periodProvider)
 
   /**
    * Is this date after the specified date.
@@ -485,13 +487,13 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * <p>
    * This subtracts the specified period from this date, returning a new date.
    * Before subtraction, the period is converted to a date-based {@code Period} using
-   * {@link Period # ofDateFields ( PeriodProvider )}.
+   * {@link Period#ofDateFields ( PeriodProvider )}.
    * That factory ignores any time-based ISO fields, thus adding a time-based
    * period to this date will have no effect. If you want to take time fields into
-   * account, call {@link Period # normalizedWith24HourDays()} on the input period.
+   * account, call {@link Period#normalizedWith24HourDays()} on the input period.
    * <p>
    * The detailed rules for the subtraction have some complexity due to variable length months.
-   * See {@link LocalDate # minus ( PeriodProvider )} for details.
+   * See {@link LocalDate#minus ( PeriodProvider )} for details.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -523,7 +525,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * @param months the months to add, may be negative
    * @return an {@code OffsetDate} based on this date with the months added, never null
    * @throws CalendricalException if the result exceeds the supported date range
-   * @see # plusMonths ( int, javax.time.calendar.DateResolver )
+   * @see#plusMonths ( int, javax.time.calendar.DateResolver )
    */
   def plusMonths(months: Int): OffsetDate = `with`(date.plusMonths(months), offset)
 
@@ -604,7 +606,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * @param months the months to subtract, may be negative
    * @return an {@code OffsetDate} based on this date with the months subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
-   * @see # minusMonths ( int, javax.time.calendar.DateResolver )
+   * @see#minusMonths ( int, javax.time.calendar.DateResolver )
    */
   def minusMonths(months: Int): OffsetDate = `with`(date.minusMonths(months), offset)
 
@@ -619,7 +621,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
 
   /**
    * Returns a copy of this {@code OffsetDate} with the month-of-year altered.
-   * If the resulting date is invalid, it will be resolved using {@link DateResolvers # previousValid()}.
+   * If the resulting date is invalid, it will be resolved using {@link DateResolvers#previousValid()}.
    * The offset does not affect the calculation and will be the same in the result.
    * <p>
    * This method does the same as {@code with ( monthOfYear, DateResolvers.previousValid ( ) )}.
@@ -775,7 +777,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * @param years the years to subtract, may be negative
    * @return an {@code OffsetDate} based on this date with the years subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
-   * @see # minusYears ( int, javax.time.calendar.DateResolver )
+   * @see#minusYears ( int, javax.time.calendar.DateResolver )
    */
   def minusYears(years: Int): OffsetDate = `with`(date.minusYears(years), offset)
 
@@ -796,10 +798,10 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * local time-line exists. When this method converts the date to a date-time it
    * adjusts the time and offset as necessary to ensure that the time is as early
    * as possible on the date, which is typically midnight. Internally this is
-   * achieved using the {@link ZoneResolvers # postGapPreOverlap ( ) zone resolver}.
+   * achieved using the {@link ZoneResolvers#postGapPreOverlap ( ) zone resolver}.
    * <p>
    * To convert to a specific time in a given time-zone call {@link #atTime ( LocalTime ) }
-   * followed by {@link OffsetDateTime # atZoneSimilarLocal ( TimeZone )}. Note that the resolver
+   * followed by {@link OffsetDateTime#atZoneSimilarLocal ( TimeZone )}. Note that the resolver
    * used by {@code atZoneSimilarLocal()} is different to that used here (it chooses
    * the later offset in an overlap, whereas this method chooses the earlier offset).
    * <p>
@@ -869,7 +871,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * This method returns the enum {@link DayOfWeek} for the day-of-week.
    * This avoids confusion as to what {@code int} values mean.
    * If you need access to the primitive {@code int} value then the enum
-   * provides the {@link DayOfWeek # getValue ( ) int value}.
+   * provides the {@link DayOfWeek#getValue ( ) int value}.
    * <p>
    * Additional information can be obtained from the {@code DayOfWeek}.
    * This includes textual names of the values.
@@ -915,7 +917,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
 
   /**
    * Returns a copy of this {@code OffsetDate} with the month-of-year altered.
-   * If the resulting date is invalid, it will be resolved using {@link DateResolvers # previousValid()}.
+   * If the resulting date is invalid, it will be resolved using {@link DateResolvers#previousValid()}.
    * The offset does not affect the calculation and will be the same in the result.
    * <p>
    * This method does the same as {@code withMonthOfYear ( monthOfYear, DateResolvers.previousValid ( ) )}.
@@ -971,7 +973,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * This method returns the enum {@link MonthOfYear} for the month.
    * This avoids confusion as to what {@code int} values mean.
    * If you need access to the primitive {@code int} value then the enum
-   * provides the {@link MonthOfYear # getValue ( ) int value}.
+   * provides the {@link MonthOfYear#getValue ( ) int value}.
    * <p>
    * Additional information can be obtained from the {@code MonthOfYear}.
    * This includes month lengths, textual names and access to the quarter-of-year
@@ -1001,7 +1003,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
   /**
    * Returns an offset date-time formed from this date at the time of midnight.
    * <p>
-   * This merges the two objects - {@code this} and {@link LocalTime # MIDNIGHT} -
+   * This merges the two objects - {@code this} and {@link LocalTime#MIDNIGHT} -
    * to form an instance of {@code OffsetDateTime}.
    * <p>
    * This instance is immutable and unaffected by this method call.

@@ -103,7 +103,7 @@ object TimeSource {
 
   /**
    * Implementation of a time-source that always returns the latest time from
-   * {@link System # currentTimeMillis()}.
+   * {@link System#currentTimeMillis()}.
    */
   private[time] object SystemTimeSource extends SystemTimeSource
 
@@ -179,7 +179,7 @@ object TimeSource {
    * Gets a time-source that obtains the current instant using the system
    * millisecond clock and adjusts by a fixed offset.
    * <p>
-   * The time-source wraps {@link System # currentTimeMillis()}, thus it has
+   * The time-source wraps {@link System#currentTimeMillis()}, thus it has
    * at best millisecond resolution.
    * <p>
    * The final instant is adjusted by adding the offset.
@@ -249,7 +249,7 @@ abstract class TimeSource protected() {
    * <p>
    * The instant returned by this method will vary according to the implementation.
    * For example, the time-source returned by {@link #system()} will return
-   * an instant based on {@link System # currentTimeMillis()}.
+   * an instant based on {@link System#currentTimeMillis()}.
    * <p>
    * Normally, this method will not throw an exception.
    * However, one possible implementation would be to obtain the time from a
@@ -286,7 +286,7 @@ abstract class TimeSource protected() {
    * <p>
    * The instant returned by this method will vary according to the implementation.
    * For example, the time-source returned by {@link #system()} will return
-   * {@link System # currentTimeMillis()}.
+   * {@link System#currentTimeMillis()}.
    * <p>
    * This method is provided for backwards compatibility.
    * New code should use classes such as <code>Instant</code> to represent an instant

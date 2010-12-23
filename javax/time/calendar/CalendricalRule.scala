@@ -87,7 +87,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
   /**
    * Derives the value of this rule from a calendrical.
    * <p>
-   * This method is provided for implementations of {@link Calendrical # get }
+   * This method is provided for implementations of {@link Calendrical#get }
    * and is rarely called directly by application code. It is used when the
    * calendrical has its own values but does not have its own rule.
    * <pre>
@@ -168,7 +168,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * from month-of-year.
    * <p>
    * The implementation only needs to derive the value based on its immediate parents.
-   * The use of {@link Calendrical # get} will extract any further parents on demand.
+   * The use of {@link Calendrical#get} will extract any further parents on demand.
    * <p>
    * A typical implementation of this method obtains the parent value and performs a calculation.
    * For example, here is a simple implementation for the quarter-of-year field:
@@ -373,7 +373,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * <p>
    * This implements the {@link Comparator} interface and allows any two
    * {@code Calendrical} implementations to be compared using this rule.
-   * The comparison is based on the result of calling {@link Calendrical # get }
+   * The comparison is based on the result of calling {@link Calendrical#get }
    * on each calendrical, and comparing those values.
    * <p>
    * For example, to sort a list into year order when the list may contain any
@@ -418,9 +418,9 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * this field if this method is called.
    * <p>
    * If the override successfully merged some fields then the following must be performed.
-   * The merged field must be stored using {@link CalendricalMerger # storeMerged}.
+   * The merged field must be stored using {@link CalendricalMerger#storeMerged}.
    * Each field used in the merge must be marked as being used by calling
-   * {@link CalendricalMerger # removeProcessed}.
+   * {@link CalendricalMerger#removeProcessed}.
    * <p>
    * An example to merge two fields into one - hour of AM/PM and AM/PM:
    * <pre>

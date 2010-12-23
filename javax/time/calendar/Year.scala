@@ -226,7 +226,7 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
    * </pre>
    * <p>
    * This implementation handles the case where the date represents February 29 and
-   * this is not a leap year using the {@link DateResolvers # previousValid()} resolver.
+   * this is not a leap year using the {@link DateResolvers#previousValid()} resolver.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -283,7 +283,7 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
    * <p>
    * This adds the specified period to this year, returning a new year.
    * Before addition, the period is converted to a {@code Period} using
-   * {@link Period # of ( PeriodProvider )}.
+   * {@link Period#of ( PeriodProvider )}.
    * The calculation simply adds the amount of years from the specified period.
    * ISO fields other than years are ignored.
    * <p>
@@ -434,7 +434,7 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
    * <p>
    * This subtracts the specified period from this year, returning a new year.
    * Before subtraction, the period is converted to a {@code Period} using
-   * {@link Period # of ( PeriodProvider )}.
+   * {@link Period#of ( PeriodProvider )}.
    * The calculation simply adds the amount of years from the specified period.
    * ISO fields other than years are ignored.
    * <p>

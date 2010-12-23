@@ -118,7 +118,7 @@ abstract class PeriodUnit private[calendar](@transient val name: String, @transi
    * A derived unit is created as a multiple of a smaller unit.
    * For example, an ISO year period can be derived as 12 ISO month periods.
    * <p>
-   * The estimated duration is calculated using {@link PeriodField # toEstimatedDuration()}.
+   * The estimated duration is calculated using {@link PeriodField#toEstimatedDuration()}.
    * <p>
    * This method is typically only used when writing a {@link Chronology}.
    *

@@ -147,7 +147,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a full length date format.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter#withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate full
    * length date format for that new locale.
    *
@@ -184,7 +184,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a long length date format.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter#withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate long
    * length date format for that new locale.
    *
@@ -200,7 +200,7 @@ object DateTimeFormatters {
    * For example, {@code d MMM yyyy} will format 2008-12-03 as '3 Dec 2008'.
    * <p>
    * The returned formatter will use the default locale, but this can be changed
-   * using {@link DateTimeFormatter # withLocale ( Locale )}.
+   * using {@link DateTimeFormatter#withLocale ( Locale )}.
    * <p>
    * All letters 'A' to 'Z' and 'a' to 'z' are reserved as pattern letters.
    * The following pattern letters are defined:
@@ -247,7 +247,7 @@ object DateTimeFormatters {
    * The count of pattern letters determine the format.
    * <p>
    * <b>Text</b>: If the number of pattern letters is 4 or more, the full textual form is used
-   * as per {@link TextStyle # Full}. Otherwise a short form is used, as per {@link TextStyle # Short}.
+   * as per {@link TextStyle#Full}. Otherwise a short form is used, as per {@link TextStyle#Short}.
    * <p>
    * <b>Number</b>: If the count of letters is one, then the value is printed using the minimum number
    * of digits and without padding as per {@link #appendValue ( DateTimeFieldRule )}. Otherwise, the
@@ -265,12 +265,12 @@ object DateTimeFormatters {
    * 'mmfss' outputs the minute followed by exactly 2 digits representing the second.
    * <p>
    * <b>Year</b>: The count of letters determines the minimum field width below which padding is used.
-   * If the count of letters is two, then a {@link DateTimeFormatterBuilder # appendValueReduced reduced} two digit form is used.
+   * If the count of letters is two, then a {@link DateTimeFormatterBuilder#appendValueReduced reduced} two digit form is used.
    * For printing, this outputs the rightmost two digits. For parsing, this will parse using the
    * base value of 2000, resulting in a year within the range 2000 to 2099 inclusive.
    * If the count of letters is less than four (but not two), then the sign is only output for negative
-   * years as per {@link SignStyle # Normal}.
-   * Otherwise, the sign is output if the pad width is exceeded, as per {@link SignStyle # ExceedsPad }
+   * years as per {@link SignStyle#Normal}.
+   * Otherwise, the sign is output if the pad width is exceeded, as per {@link SignStyle#ExceedsPad }
    * <p>
    * <b>Month</b>: If the count of letters is 3 or greater, use the Text rules above.
    * Otherwise use the Number rules above.
@@ -307,7 +307,7 @@ object DateTimeFormatters {
    * @param pattern the pattern to use, not null
    * @return the formatter based on the pattern, never null
    * @throws IllegalArgumentException if the pattern is invalid
-   * @see DateTimeFormatterBuilder # appendPattern ( String )
+   * @see DateTimeFormatterBuilder#appendPattern ( String )
    */
   def pattern(pattern: String): DateTimeFormatter = (new DateTimeFormatterBuilder).appendPattern(pattern).toFormatter
 
@@ -337,7 +337,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a medium length date-time format.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter#withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate medium
    * length date-time format for that new locale.
    *
@@ -352,7 +352,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a date, time or date-time.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter#withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate
    * format for that new locale.
    *
@@ -396,7 +396,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a short length date format.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter#withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate short
    * length date format for that new locale.
    *
@@ -464,7 +464,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a time.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter#withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate
    * time format for that new locale.
    *
@@ -483,7 +483,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a short length date-time format.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter#withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate short
    * length date-time format for that new locale.
    *
@@ -498,7 +498,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a date-time.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter#withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate
    * date-time format for that new locale.
    *
@@ -517,7 +517,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a short length time format.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter#withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate short
    * length time format for that new locale.
    *
@@ -563,7 +563,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a long length date-time format.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter#withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate long
    * length date-time format for that new locale.
    *
@@ -610,7 +610,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a long length time format.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter#withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate long
    * length time format for that new locale.
    *
@@ -642,7 +642,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a medium length date format.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter#withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate medium
    * length date format for that new locale.
    *
@@ -657,7 +657,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a full length time format.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter#withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate full
    * length time format for that new locale.
    *
@@ -685,7 +685,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a date.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter#withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate
    * date format for that new locale.
    *
@@ -724,13 +724,13 @@ object DateTimeFormatters {
    * See {@link #pattern ( String )} for details of the pattern.
    * <p>
    * The returned formatter will use the specified locale, but this can be changed
-   * using {@link DateTimeFormatter # withLocale ( Locale )}.
+   * using {@link DateTimeFormatter#withLocale ( Locale )}.
    *
    * @param pattern the pattern to use, not null
    * @param locale the locale to use, not null
    * @return the formatter based on the pattern, never null
    * @throws IllegalArgumentException if the pattern is invalid
-   * @see DateTimeFormatterBuilder # appendPattern ( String )
+   * @see DateTimeFormatterBuilder#appendPattern ( String )
    */
   def pattern(pattern: String, locale: Locale): DateTimeFormatter =
     (new DateTimeFormatterBuilder).appendPattern(pattern).toFormatter(locale)
@@ -754,7 +754,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a medium length time format.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter#withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate medium
    * length time format for that new locale.
    *
@@ -783,7 +783,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a full length date-time format.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter#withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate full
    * length date-time format for that new locale.
    *

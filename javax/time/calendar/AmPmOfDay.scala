@@ -125,7 +125,7 @@ sealed abstract class AmPmOfDay(ordinal: Int) extends Calendrical {
    * of the implementation should be irrelevant to applications.
    * <p>
    * If there is no textual mapping for the locale, then the value is
-   * returned as per {@link Integer # toString()}.
+   * returned as per {@link Integer#toString()}.
    *
    * @param locale the locale to use, not null
    * @return the short text value of the AM/PM, never null
@@ -141,7 +141,7 @@ sealed abstract class AmPmOfDay(ordinal: Int) extends Calendrical {
    * of the implementation should be irrelevant to applications.
    * <p>
    * If there is no textual mapping for the locale, then the value is
-   * returned as per {@link Integer # toString()}.
+   * returned as per {@link Integer#toString()}.
    *
    * @param locale the locale to use, not null
    * @return the long text value of the AM/PM, never null

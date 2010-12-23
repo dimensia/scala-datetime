@@ -239,7 +239,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    * <p>
    * This subtracts the specified period from this year-month, returning a new year-month.
    * Before subtraction, the period is converted to a  {@code Period} using
-   * {@link Period # of ( PeriodProvider )}.
+   * {@link Period#of ( PeriodProvider )}.
    * The calculation only uses the years and months fields.
    * Other fields are ignored.
    * <p>
@@ -287,7 +287,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    * This method returns the enum  {@link MonthOfYear} for the month.
    * This avoids confusion as to what  {@code int} values mean.
    * If you need access to the primitive  {@code int} value then the enum
-   * provides the  {@link MonthOfYear # getValue ( ) int value}.
+   * provides the  {@link MonthOfYear#getValue ( ) int value}.
    * <p>
    * Additional information can be obtained from the  {@code MonthOfYear}.
    * This includes month lengths, textual names and access to the quarter-of-year
@@ -421,7 +421,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    * <p>
    * This adds the specified period to this year-month, returning a new year-month.
    * Before addition, the period is converted to a  {@code Period} using
-   * {@link Period # of ( PeriodProvider )}.
+   * {@link Period#of ( PeriodProvider )}.
    * The calculation only uses the years and months fields.
    * Other fields are ignored.
    * <p>
@@ -436,6 +436,8 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
     val period: Period = Period.of(periodProvider)
     plusMonths(period.totalMonths)
   }
+
+  def +(periodProvider: PeriodProvider): YearMonth = plus(periodProvider)
 
   /**
    * Returns a date formed from this year-month at the specified day-of-month.
@@ -452,7 +454,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    * @param dayOfMonth the day-of-month to use, from 1 to 31
    * @return the date formed from this year-month and the specified day, never null
    * @throws InvalidCalendarFieldException when the day is invalid for the year-month
-   * @see # isValidDay ( int )
+   * @see#isValidDay ( int )
    */
   def atDay(dayOfMonth: Int): LocalDate = LocalDate.of(year, month, dayOfMonth)
 
@@ -581,7 +583,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    * </pre>
    * <p>
    * This implementation handles the case where the day-of-month is invalid for the new
-   * month and year using the  {@link DateResolvers # previousValid()} resolver.
+   * month and year using the  {@link DateResolvers#previousValid()} resolver.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *

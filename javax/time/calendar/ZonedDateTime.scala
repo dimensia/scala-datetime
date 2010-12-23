@@ -134,7 +134,9 @@ object ZonedDateTime {
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    * @throws CalendricalException if the resolver cannot resolve an invalid local date-time
    */
-  def of(year: Int, monthOfYear: Int, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int, zone: TimeZone, resolver: ZoneResolver): ZonedDateTime = {
+  def of(year: Int, monthOfYear: Int, dayOfMonth: Int,
+         hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int,
+         zone: TimeZone, resolver: ZoneResolver = ZoneResolvers.strict): ZonedDateTime = {
     val dt: LocalDateTime = LocalDateTime.of(year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
     resolve(dt, null, zone, resolver)
   }
@@ -186,7 +188,7 @@ object ZonedDateTime {
    * <p>
    * The offset ID is the normalized form as defined in {@link ZoneOffset}.
    * <p>
-   * The zone ID is the normalized form as defined in {@link TimeZone # getID()}.
+   * The zone ID is the normalized form as defined in {@link TimeZone#getID()}.
    *
    * @param text the text to parse such as '2007-12-03T10:15:30+01:00[Europe/Paris]', not null
    * @return the parsed zoned date-time, never null
@@ -258,37 +260,11 @@ object ZonedDateTime {
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    * @throws CalendricalException if the resolver cannot resolve an invalid local date-time
    */
-  def of(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int, zone: TimeZone, resolver: ZoneResolver): ZonedDateTime = {
+  def of(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int,
+         hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int,
+         zone: TimeZone, resolver: ZoneResolver = ZoneResolvers.strict): ZonedDateTime = {
     val dt: LocalDateTime = LocalDateTime.of(year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
     resolve(dt, null, zone, resolver)
-  }
-
-  /**
-   * Obtains an instance of {@code ZonedDateTime} from year, month,
-   * day, hour, minute, second, nanosecond and time-zone
-   * where the date-time must be valid for the time-zone.
-   * <p>
-   * The day must be valid for the year and month or an exception will be thrown.
-   * <p>
-   * The local date-time must be valid for the time-zone.
-   * If the time is invalid for the zone, due to either being a gap or an overlap,
-   * then an exception will be thrown.
-   *
-   * @param year the year to represent, from MIN_YEAR to MAX_YEAR
-   * @param monthOfYear the month-of-year to represent, not null
-   * @param dayOfMonth the day-of-month to represent, from 1 to 31
-   * @param hourOfDay the hour-of-day to represent, from 0 to 23
-   * @param minuteOfHour the minute-of-hour to represent, from 0 to 59
-   * @param secondOfMinute the second-of-minute to represent, from 0 to 59
-   * @param nanoOfSecond the nano-of-second to represent, from 0 to 999,999,999
-   * @param zone the time-zone, not null
-   * @return the zoned date-time, never null
-   * @throws IllegalCalendarFieldValueException if the value of any field is out of range
-   * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
-   * @throws CalendricalException if the local date-time is invalid for the time-zone
-   */
-  def of(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int, zone: TimeZone): ZonedDateTime = {
-    of(year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond, zone, ZoneResolvers.strict)
   }
 
   /**
@@ -306,7 +282,7 @@ object ZonedDateTime {
    * @return the zoned date-time, never null
    * @throws CalendricalException if the resolver cannot resolve an invalid local date-time
    */
-  def of(dateTimeProvider: DateTimeProvider, zone: TimeZone, resolver: ZoneResolver): ZonedDateTime = {
+  def of(dateTimeProvider: DateTimeProvider, zone: TimeZone, resolver: ZoneResolver = ZoneResolvers.strict): ZonedDateTime = {
     val dt: LocalDateTime = LocalDateTime.of(dateTimeProvider)
     resolve(dt, null, zone, resolver)
   }
@@ -326,22 +302,6 @@ object ZonedDateTime {
     ISOChronology.checkNotNull(zone, "TimeZone must not be null")
     ZonedDateTime.ofInstant(Instant.ofEpochSeconds(epochSeconds, 0), zone)
   }
-
-  /**
-   * Obtains an instance of {@code ZonedDateTime} from a local date-time
-   * where the date-time must be valid for the time-zone.
-   * <p>
-   * This factory creates a {@code ZonedDateTime} from a date-time and time-zone.
-   * If the time is invalid for the zone, due to either being a gap or an overlap,
-   * then an exception will be thrown.
-   *
-   * @param dateTimeProvider the date-time provider to use, not null
-   * @param zone the time-zone, not null
-   * @return the zoned date-time, never null
-   * @throws CalendricalException if the local date-time is invalid for the time-zone
-   */
-  def of(dateTimeProvider: DateTimeProvider, zone: TimeZone): ZonedDateTime =
-    of(dateTimeProvider, zone, ZoneResolvers.strict)
 
   /**
    * Obtains an instance of {@code ZonedDateTime} from the instant of an {@code OffsetDateTime}.
@@ -395,52 +355,6 @@ object ZonedDateTime {
   }
 
   /**
-   * Obtains an instance of {@code ZonedDateTime} from year, month,
-   * day, hour, minute, second, nanosecond and time-zone
-   * where the date-time must be valid for the time-zone.
-   * <p>
-   * The day must be valid for the year and month or an exception will be thrown.
-   * <p>
-   * The local date-time must be valid for the time-zone.
-   * If the time is invalid for the zone, due to either being a gap or an overlap,
-   * then an exception will be thrown.
-   *
-   * @param year the year to represent, from MIN_YEAR to MAX_YEAR
-   * @param monthOfYear the month-of-year to represent, from 1 (January) to 12 (December)
-   * @param dayOfMonth the day-of-month to represent, from 1 to 31
-   * @param hourOfDay the hour-of-day to represent, from 0 to 23
-   * @param minuteOfHour the minute-of-hour to represent, from 0 to 59
-   * @param secondOfMinute the second-of-minute to represent, from 0 to 59
-   * @param nanoOfSecond the nano-of-second to represent, from 0 to 999,999,999
-   * @param zone the time-zone, not null
-   * @return the zoned date-time, never null
-   * @throws IllegalCalendarFieldValueException if the value of any field is out of range
-   * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
-   * @throws CalendricalException if the local date-time is invalid for the time-zone
-   */
-  def of(year: Int, monthOfYear: Int, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int, zone: TimeZone): ZonedDateTime = {
-    of(year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond, zone, ZoneResolvers.strict)
-  }
-
-  /**
-   * Obtains an instance of {@code ZonedDateTime} from a local date and time
-   * where the date-time must be valid for the time-zone.
-   * <p>
-   * This factory creates a {@code ZonedDateTime} from a date, time and time-zone.
-   * If the time is invalid for the zone, due to either being a gap or an overlap,
-   * then an exception will be thrown.
-   *
-   * @param dateProvider the date provider to use, not null
-   * @param timeProvider the time provider to use, not null
-   * @param zone the time-zone, not null
-   * @return the zoned date-time, never null
-   * @throws CalendricalException if the local date-time is invalid for the time-zone
-   */
-  def of(dateProvider: DateProvider, timeProvider: TimeProvider, zone: TimeZone): ZonedDateTime = {
-    of(dateProvider, timeProvider, zone, ZoneResolvers.strict)
-  }
-
-  /**
    * Obtains the current date-time from the system clock in the default time-zone.
    * <p>
    * This will query the system clock in the default time-zone to obtain the current time.
@@ -469,8 +383,8 @@ object ZonedDateTime {
    * @return the zoned date-time, never null
    * @throws CalendricalException if the resolver cannot resolve an invalid local date-time
    */
-  def of(dateProvider: DateProvider, timeProvider: TimeProvider, zone: TimeZone, resolver: ZoneResolver): ZonedDateTime = {
-    var dt: LocalDateTime = LocalDateTime.of(dateProvider, timeProvider)
+  def of(dateProvider: DateProvider, timeProvider: TimeProvider, zone: TimeZone, resolver: ZoneResolver = ZoneResolvers.strict): ZonedDateTime = {
+    val dt: LocalDateTime = LocalDateTime.of(dateProvider, timeProvider)
     resolve(dt, null, zone, resolver)
   }
 
@@ -525,7 +439,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * For example, 2008-12-31 plus one day would result in the 2009-01-01.
    * <p>
    * If the adjustment results in a date-time that is invalid, then the
-   * {@link ZoneResolvers # retainOffset()} resolver is used.
+   * {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -544,7 +458,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * <p>
    * This method changes the time-zone and retains the local date-time.
    * The local date-time is only changed if it is invalid for the new zone.
-   * In that case, the {@link ZoneResolvers # retainOffset ( ) retain offset} resolver is used.
+   * In that case, the {@link ZoneResolvers#retainOffset ( ) retain offset} resolver is used.
    * <p>
    * To change the zone and adjust the local date-time,
    * use {@link #withZoneSameInstant ( TimeZone )}.
@@ -595,7 +509,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * the second field to zero.
    * <p>
    * If the adjustment results in a date-time that is invalid, then the
-   * {@link ZoneResolvers # retainOffset()} resolver is used.
+   * {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -615,7 +529,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * This method returns the enum {@link MonthOfYear} for the month.
    * This avoids confusion as to what {@code int} values mean.
    * If you need access to the primitive {@code int} value then the enum
-   * provides the {@link MonthOfYear # getValue ( ) int value}.
+   * provides the {@link MonthOfYear#getValue ( ) int value}.
    * <p>
    * Additional information can be obtained from the {@code MonthOfYear}.
    * This includes month lengths, textual names and access to the quarter-of-year
@@ -636,7 +550,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * Returns a copy of this {@code ZonedDateTime} with the nano-of-second value altered.
    * <p>
    * If the adjustment results in a date-time that is invalid, then the
-   * {@link ZoneResolvers # retainOffset()} resolver is used.
+   * {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -659,7 +573,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * For example, 2008-12-31 minus one day would result in the 2009-01-01.
    * <p>
    * If the adjustment results in a date-time that is invalid, then the
-   * {@link ZoneResolvers # retainOffset()} resolver is used.
+   * {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -676,7 +590,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * Returns a copy of this {@code ZonedDateTime} with the time values altered.
    * <p>
    * If the adjustment results in a date-time that is invalid, then the
-   * {@link ZoneResolvers # retainOffset()} resolver is used.
+   * {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -701,7 +615,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
   /**
    * Returns a copy of this {@code ZonedDateTime} with the specified duration subtracted.
    * <p>
-   * This method {@link PeriodFields # toDuration ( ) converts} the period to a duration
+   * This method {@link PeriodFields#toDuration ( ) converts} the period to a duration
    * based on the {@code ISOChronology} seconds and nanoseconds units.
    * The duration is then subtracted from the {@link #toInstant ( ) instant} equivalent of this instance.
    * <p>
@@ -755,7 +669,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * <li>Add the input years to the year field</li>
    * <li>Check if the resulting date would be invalid</li>
    * <li>Adjust the day-of-month to the last valid day if necessary</li>
-   * <li>Resolve the date-time using {@link ZoneResolvers # retainOffset()} </li>
+   * <li>Resolve the date-time using {@link ZoneResolvers#retainOffset()} </li>
    * </ol>
    * <p>
    * For example, 2008-02-29 (leap year) minus one year would result in the
@@ -781,7 +695,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * <li>Add the input years to the year field</li>
    * <li>Check if the resulting date would be invalid</li>
    * <li>Adjust the day-of-month to the last valid day if necessary</li>
-   * <li>Resolve the date-time using {@link ZoneResolvers # retainOffset()} </li>
+   * <li>Resolve the date-time using {@link ZoneResolvers#retainOffset()} </li>
    * </ol>
    * <p>
    * For example, 2008-02-29 (leap year) plus one year would result in the
@@ -813,7 +727,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * to note that the change in duration was only 1 hour.
    * <p>
    * If the adjustment results in a date-time that is invalid, then the
-   * {@link ZoneResolvers # retainOffset()} resolver is used.
+   * {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -830,7 +744,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * Returns a copy of this {@code ZonedDateTime} with the year value altered.
    * <p>
    * If the adjustment results in a date-time that is invalid, then the
-   * {@link ZoneResolvers # retainOffset()} resolver is used.
+   * {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -847,7 +761,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * Returns a copy of this {@code ZonedDateTime} with the second-of-minute value altered.
    * <p>
    * If the adjustment results in a date-time that is invalid, then the
-   * {@link ZoneResolvers # retainOffset()} resolver is used.
+   * {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -903,7 +817,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * Returns a copy of this {@code ZonedDateTime} with the specified period in nanoseconds subtracted.
    * <p>
    * If the adjustment results in a date-time that is invalid, then the
-   * {@link ZoneResolvers # retainOffset()} resolver is used.
+   * {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -925,9 +839,9 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * @return true if this point is equal to the specified date-time
    */
   override def equals(other: AnyRef): Boolean = {
-    if (this == other) true
+    if (this eq other) true
     else if (other.isInstanceOf[ZonedDateTime]) {
-      var zonedDateTime: ZonedDateTime = other.asInstanceOf[ZonedDateTime]
+      val zonedDateTime: ZonedDateTime = other.asInstanceOf[ZonedDateTime]
       dateTime.equals(zonedDateTime.dateTime) && zone.equals(zonedDateTime.zone)
     }
     else false
@@ -957,7 +871,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * Returns a copy of this {@code ZonedDateTime} with the specified period in minutes added.
    * <p>
    * If the adjustment results in a date-time that is invalid, then the
-   * {@link ZoneResolvers # retainOffset()} resolver is used.
+   * {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -978,7 +892,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * A more complex adjuster might set the time to end of the working day.
    * <p>
    * If the adjusted date results in a date-time that is invalid, then the
-   * {@link ZoneResolvers # retainOffset()} resolver is used.
+   * {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -997,32 +911,6 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * @return the number of seconds from the epoch of 1970-01-01T00:00:00Z
    */
   def toEpochSeconds: Long = dateTime.toEpochSeconds
-
-  /**
-   * Returns a copy of this {@code ZonedDateTime} with the specified period added.
-   * <p>
-   * This adds the specified period to this date-time, returning a new date-time.
-   * Before addition, the period is converted to a {@code Period} using the
-   * {@link Period # of ( PeriodProvider )}.
-   * <p>
-   * The addition occurs based on the local date-time.
-   * After the calculation, the local date-time may be in a gap or overlap.
-   * If so, then the {@link ZoneResolvers # retainOffset()} resolver is used.
-   * <p>
-   * The detailed rules for the addition have some complexity due to variable length months.
-   * See {@link LocalDateTime # plus ( PeriodProvider )} for details.
-   * <p>
-   * See {@link #plusDuration ( PeriodProvider )} for a similar method that performs
-   * the addition in a different manner, taking into account gaps and overlaps.
-   * <p>
-   * This instance is immutable and unaffected by this method call.
-   *
-   * @param periodProvider the period to add, not null
-   * @return a {@code ZonedDateTime} based on this date-time with the period added, never null
-   * @throws CalendricalException if the specified period cannot be converted to a {@code Period }
-   * @throws CalendricalException if the result exceeds the supported range
-   */
-  def plus(periodProvider: PeriodProvider): ZonedDateTime = plus(periodProvider, ZoneResolvers.retainOffset)
 
   /**
    * Converts this {@code ZonedDateTime} to a {@code OffsetDate}.
@@ -1048,7 +936,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * Returns a copy of this {@code ZonedDateTime} with the minute-of-hour value altered.
    * <p>
    * If the adjustment results in a date-time that is invalid, then the
-   * {@link ZoneResolvers # retainOffset()} resolver is used.
+   * {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -1065,7 +953,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * Returns a copy of this {@code ZonedDateTime} with the day-of-year altered.
    * <p>
    * If the adjustment results in a date-time that is invalid, then the
-   * {@link ZoneResolvers # retainOffset()} resolver is used.
+   * {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -1083,7 +971,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * Returns a copy of this {@code ZonedDateTime} with the specified period in nanoseconds added.
    * <p>
    * If the adjustment results in a date-time that is invalid, then the
-   * {@link ZoneResolvers # retainOffset()} resolver is used.
+   * {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -1101,14 +989,14 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * <p>
    * This subtracts the specified period from this date-time, returning a new date-time.
    * Before subtraction, the period is converted to a {@code Period} using the
-   * {@link Period # of ( PeriodProvider )}.
+   * {@link Period#of ( PeriodProvider )}.
    * <p>
    * The subtraction occurs based on the local date-time.
    * After the calculation, the local date-time may be in a gap or overlap.
    * If so, then the specified resolver is used.
    * <p>
    * The detailed rules for the subtraction have some complexity due to variable length months.
-   * See {@link LocalDateTime # minus ( PeriodProvider )} for details.
+   * See {@link LocalDateTime#minus ( PeriodProvider )} for details.
    * <p>
    * See {@link #minusDuration ( PeriodProvider )} for a similar method that performs
    * the subtraction in a different manner, taking into account gaps and overlaps.
@@ -1135,7 +1023,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * <li>Add the input months to the month-of-year field</li>
    * <li>Check if the resulting date would be invalid</li>
    * <li>Adjust the day-of-month to the last valid day if necessary</li>
-   * <li>Resolve the date-time using {@link ZoneResolvers # retainOffset()} </li>
+   * <li>Resolve the date-time using {@link ZoneResolvers#retainOffset()} </li>
    * </ol>
    * <p>
    * For example, 2007-03-31 minus one month would result in the invalid date
@@ -1238,14 +1126,14 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * <p>
    * This adds the specified period to this date-time, returning a new date-time.
    * Before addition, the period is converted to a {@code Period} using the
-   * {@link Period # of ( PeriodProvider )}.
+   * {@link Period#of ( PeriodProvider )}.
    * <p>
    * The addition occurs based on the local date-time.
    * After the calculation, the local date-time may be in a gap or overlap.
    * If so, then the specified resolver is used.
    * <p>
    * The detailed rules for the addition have some complexity due to variable length months.
-   * See {@link LocalDateTime # plus ( PeriodProvider )} for details.
+   * See {@link LocalDateTime#plus ( PeriodProvider )} for details.
    * <p>
    * See {@link #plusDuration ( PeriodProvider )} for a similar method that performs
    * the addition in a different manner, taking into account gaps and overlaps.
@@ -1257,12 +1145,14 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * @throws CalendricalException if the specified period cannot be converted to a {@code Period }
    * @throws CalendricalException if the result exceeds the supported range
    */
-  def plus(periodProvider: PeriodProvider, resolver: ZoneResolver): ZonedDateTime = {
+  def plus(periodProvider: PeriodProvider, resolver: ZoneResolver = ZoneResolvers.retainOffset): ZonedDateTime = {
     ISOChronology.checkNotNull(periodProvider, "PeriodProvider must not be null")
     ISOChronology.checkNotNull(resolver, "ZoneResolver must not be null")
     var newDT: LocalDateTime = dateTime.toLocalDateTime.plus(periodProvider)
     return (if (newDT == dateTime.toLocalDateTime) this else resolve(newDT, this, zone, resolver))
   }
+
+  def +(periodProvider: PeriodProvider): ZonedDateTime = plus(periodProvider)
 
   /**
    * Converts this {@code ZonedDateTime} to an {@code Instant}.
@@ -1281,7 +1171,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * For example, 2008-12-31 minus one week would result in the 2009-01-07.
    * <p>
    * If the adjustment results in a date-time that is invalid, then the
-   * {@link ZoneResolvers # retainOffset()} resolver is used.
+   * {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -1415,7 +1305,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * Returns a copy of this {@code ZonedDateTime} with the day-of-month value altered.
    * <p>
    * If the adjustment results in a date-time that is invalid, then the
-   * {@link ZoneResolvers # retainOffset()} resolver is used.
+   * {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -1460,7 +1350,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * <p>
    * The rules provide the information on how the zone offset changes over time.
    * This usually includes historical and future information.
-   * The rules are determined using {@link TimeZone # getRulesValidFor ( OffsetDateTime ) }
+   * The rules are determined using {@link TimeZone#getRulesValidFor ( OffsetDateTime ) }
    * which finds the best matching set of rules for this date-time.
    * <p>
    * This method can throw an exception if the time-zone is invalid for this JVM.
@@ -1474,7 +1364,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
   /**
    * Returns a copy of this {@code ZonedDateTime} with the specified duration added.
    * <p>
-   * This method {@link PeriodFields # toDuration ( ) converts} the period to a duration
+   * This method {@link PeriodFields#toDuration ( ) converts} the period to a duration
    * based on the {@code ISOChronology} seconds and nanoseconds units.
    * The duration is then added to the {@link #toInstant ( ) instant} equivalent of this instance.
    * <p>
@@ -1502,7 +1392,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * Returns a copy of this {@code ZonedDateTime} with the specified period in seconds subtracted.
    * <p>
    * If the adjustment results in a date-time that is invalid, then the
-   * {@link ZoneResolvers # retainOffset()} resolver is used.
+   * {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -1547,7 +1437,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * Returns a copy of this {@code ZonedDateTime} with the specified period in seconds added.
    * <p>
    * If the adjustment results in a date-time that is invalid, then the
-   * {@link ZoneResolvers # retainOffset()} resolver is used.
+   * {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -1564,7 +1454,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * Returns a copy of this {@code ZonedDateTime} with the time values altered.
    * <p>
    * If the adjustment results in a date-time that is invalid, then the
-   * {@link ZoneResolvers # retainOffset()} resolver is used.
+   * {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -1594,7 +1484,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * to note that the change in duration was only 1 hour.
    * <p>
    * If the adjustment results in a date-time that is invalid, then the
-   * {@link ZoneResolvers # retainOffset()} resolver is used.
+   * {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -1617,7 +1507,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * For example, 2008-12-31 plus one week would result in the 2009-01-07.
    * <p>
    * If the adjustment results in a date-time that is invalid, then the
-   * {@link ZoneResolvers # retainOffset()} resolver is used.
+   * {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -1634,7 +1524,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * Returns a copy of this {@code ZonedDateTime} with the specified period in minutes subtracted.
    * <p>
    * If the adjustment results in a date-time that is invalid, then the
-   * {@link ZoneResolvers # retainOffset()} resolver is used.
+   * {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -1662,7 +1552,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * <li>Add the input months to the month-of-year field</li>
    * <li>Check if the resulting date would be invalid</li>
    * <li>Adjust the day-of-month to the last valid day if necessary</li>
-   * <li>Resolve the date-time using {@link ZoneResolvers # retainOffset()} </li>
+   * <li>Resolve the date-time using {@link ZoneResolvers#retainOffset()} </li>
    * </ol>
    * <p>
    * For example, 2007-03-31 plus one month would result in the invalid date
@@ -1685,14 +1575,14 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * <p>
    * This subtracts the specified period from this date-time, returning a new date-time.
    * Before subtraction, the period is converted to a {@code Period} using the
-   * {@link Period # of ( PeriodProvider )}.
+   * {@link Period#of ( PeriodProvider )}.
    * <p>
    * The subtraction occurs based on the local date-time.
    * After the calculation, the local date-time may be in a gap or overlap.
-   * If so, then the {@link ZoneResolvers # retainOffset()} resolver is used.
+   * If so, then the {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * The detailed rules for the subtraction have some complexity due to variable length months.
-   * See {@link LocalDateTime # minus ( PeriodProvider )} for details.
+   * See {@link LocalDateTime#minus ( PeriodProvider )} for details.
    * <p>
    * See {@link #minusDuration ( PeriodProvider )} for a similar method that performs
    * the subtraction in a different manner, taking into account gaps and overlaps.
@@ -1745,7 +1635,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * Returns a copy of this {@code ZonedDateTime} with the month-of-year value altered.
    * <p>
    * If the adjustment results in a date-time that is invalid, then the
-   * {@link ZoneResolvers # retainOffset()} resolver is used.
+   * {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -1764,7 +1654,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * This method returns the enum {@link DayOfWeek} for the day-of-week.
    * This avoids confusion as to what {@code int} values mean.
    * If you need access to the primitive {@code int} value then the enum
-   * provides the {@link DayOfWeek # getValue ( ) int value}.
+   * provides the {@link DayOfWeek#getValue ( ) int value}.
    * <p>
    * Additional information can be obtained from the {@code DayOfWeek}.
    * This includes textual names of the values.
@@ -1785,7 +1675,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * Returns a copy of this {@code ZonedDateTime} with the date values altered.
    * <p>
    * If the adjustment results in a date-time that is invalid, then the
-   * {@link ZoneResolvers # retainOffset()} resolver is used.
+   * {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * This method will return a new instance with the same time fields,
    * but altered date fields.
@@ -1812,7 +1702,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * A more complex adjuster might set the date to the last day of the month.
    * <p>
    * If the adjusted date results in a date-time that is invalid, then the
-   * {@link ZoneResolvers # retainOffset()} resolver is used.
+   * {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -1871,7 +1761,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * Returns a copy of this {@code ZonedDateTime} with the hour-of-day value altered.
    * <p>
    * If the adjustment results in a date-time that is invalid, then the
-   * {@link ZoneResolvers # retainOffset()} resolver is used.
+   * {@link ZoneResolvers#retainOffset()} resolver is used.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *

@@ -379,7 +379,7 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Calendrical {
    * of the implementation should be irrelevant to applications.
    * <p>
    * If there is no textual mapping for the locale, then the value is
-   * returned as per {@link Integer # toString()}.
+   * returned as per {@link Integer#toString()}.
    *
    * @param locale the locale to use, not null
    * @return the full text value of the month-of-year, never null
@@ -424,7 +424,7 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Calendrical {
    * of the implementation should be irrelevant to applications.
    * <p>
    * If there is no textual mapping for the locale, then the value is
-   * returned as per {@link Integer # toString()}.
+   * returned as per {@link Integer#toString()}.
    *
    * @param locale the locale to use, not null
    * @return the short text value of the month-of-year, never null

@@ -381,7 +381,7 @@ object ZoneOffset {
    * Obtains an instance of {@code ZoneOffset} from a period.
    * <p>
    * This creates an offset from the specified period, converting using
-   * {@link Period # of ( PeriodProvider )}.
+   * {@link Period#of ( PeriodProvider )}.
    * Only the hour, minute and second fields from the period are used - other fields are ignored.
    * The sign of the hours, minutes and seconds components must match.
    * Thus, if the hours is negative, the minutes and seconds must be negative or zero.
@@ -593,7 +593,7 @@ final class ZoneOffset private(val amountSeconds: Int) extends Calendrical with 
    * Returns a copy of this offset with the specified period added.
    * <p>
    * This adds the amount in hours, minutes and seconds from the specified period to this offset.
-   * This converts the period using {@link Period # of ( PeriodProvider )}.
+   * This converts the period using {@link Period#of ( PeriodProvider )}.
    * Only the hour, minute and second fields from the period are used - other fields are ignored.
    * <p>
    * This instance is immutable and unaffected by this method call.
@@ -609,4 +609,6 @@ final class ZoneOffset private(val amountSeconds: Int) extends Calendrical with 
     val combined: Period = thisPeriod.plus(otherPeriod).normalized
     of(combined)
   }
+
+  def +(periodProvider: PeriodProvider): ZoneOffset = plus(periodProvider)
 }

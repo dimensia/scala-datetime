@@ -200,7 +200,7 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
    * Converts this period to an equivalent in the specified unit.
    * <p>
    * This converts this period to one measured in the specified unit.
-   * This uses {@link PeriodUnit # getEquivalentPeriod ( PeriodUnit )} to lookup
+   * This uses {@link PeriodUnit#getEquivalentPeriod ( PeriodUnit )} to lookup
    * the equivalent period for the unit.
    * <p>
    * For example, '3 Hours' could be converted to '180 Minutes'.

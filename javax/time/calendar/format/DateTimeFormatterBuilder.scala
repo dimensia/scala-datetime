@@ -618,7 +618,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    * <p>
    * The fractional value of the field will be output including the
    * preceeding decimal point. The preceeding value is not output.
-   * The fraction is obtained using {@link DateTimeFieldRule # convertIntToFraction}.
+   * The fraction is obtained using {@link DateTimeFieldRule#convertIntToFraction}.
    * <p>
    * The width of the output fraction can be controlled. Setting the
    * minimum width to zero will cause no output to be generated.
@@ -898,7 +898,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    * The count of pattern letters determine the format.
    * <p>
    * <b>Text</b>: If the number of pattern letters is 4 or more, the full textual form is used
-   * as per {@link TextStyle # Full}. Otherwise a short form is used, as per {@link TextStyle # Short}.
+   * as per {@link TextStyle#Full}. Otherwise a short form is used, as per {@link TextStyle#Short}.
    * <p>
    * <b>Number</b>: If the count of letters is one, then the value is printed using the minimum number
    * of digits and without padding as per {@link #appendValue ( DateTimeFieldRule )}. Otherwise, the
@@ -920,8 +920,8 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    * For printing, this outputs the rightmost two digits. For parsing, this will parse using the
    * base value of 2000, resulting in a year within the range 2000 to 2099 inclusive.
    * If the count of letters is less than four (but not two), then the sign is only output for negative
-   * years as per {@link SignStyle # Normal}.
-   * Otherwise, the sign is output if the pad width is exceeded, as per {@link SignStyle # ExceedsPad }
+   * years as per {@link SignStyle#Normal}.
+   * Otherwise, the sign is output if the pad width is exceeded, as per {@link SignStyle#ExceedsPad }
    * <p>
    * <b>Month</b>: If the count of letters is 3 or greater, use the Text rules above.
    * Otherwise use the Number rules above.

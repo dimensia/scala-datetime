@@ -57,6 +57,11 @@ import javax.time.{MathUtils, Duration}
 object ISOChronology extends ISOChronology {
 
   /**
+   * Period unit for nanoseconds.
+   */
+  private val Nanos: ChronoUnit = new ChronoUnit(0 * 16, "Nanos", null, Duration.ofNanos(1))
+
+  /**
    * Period unit for microseconds.
    */
   private val Micros: ChronoUnit = new ChronoUnit(1 * 16, "Micros", PeriodField.of(1000, Nanos), Duration.ofNanos(1000))
@@ -72,9 +77,19 @@ object ISOChronology extends ISOChronology {
   private val Seconds: ChronoUnit = new ChronoUnit(3 * 16, "Seconds", PeriodField.of(1000, Millis), Duration.ofSeconds(1))
 
   /**
+   * Period unit for minutes.
+   */
+  private val Minutes: ChronoUnit = new ChronoUnit(4 * 16, "Minutes", PeriodField.of(60, Seconds), Duration.ofSeconds(60))
+
+  /**
    * Period unit for hours.
    */
   private val Hours: ChronoUnit = new ChronoUnit(5 * 16, "Hours", PeriodField.of(60, Minutes), Duration.ofSeconds(60 * 60))
+
+  /**
+   * Period unit for 12 hours half-days, used by AM/PM.
+   */
+  private val _12Hours: ChronoUnit = new ChronoUnit(6 * 16, "12Hours", PeriodField.of(12, Hours), Duration.ofSeconds(12 * 60 * 60))
 
   /**
    * Period unit for 24 hour fixed length days.
@@ -92,9 +107,39 @@ object ISOChronology extends ISOChronology {
   private val Weeks: ChronoUnit = new ChronoUnit(9 * 16, "Weeks", PeriodField.of(7, Days), Duration.ofSeconds(7L * 86400L))
 
   /**
+   * Period unit for months.
+   */
+  private val Months: ChronoUnit = new ChronoUnit(10 * 16, "Months", null, Duration.ofSeconds(31556952L / 12L))
+
+  /**
+   * Period unit for quarters.
+   */
+  private val Quarters: ChronoUnit = new ChronoUnit(11 * 16, "Quarters", PeriodField.of(3, Months), Duration.ofSeconds(31556952L / 4))
+
+  /**
+   * Period unit for years.
+   */
+  private val Years: ChronoUnit = new ChronoUnit(13 * 16, "Years", PeriodField.of(4, Quarters), Duration.ofSeconds(31556952L))
+
+  /**
    * Period unit for decades.
    */
   private val Decades: ChronoUnit = new ChronoUnit(14 * 16, "Decades", PeriodField.of(10, Years), Duration.ofSeconds(10L * 31556952L))
+
+  /**
+   * Period unit for centuries.
+   */
+  private val Centuries: ChronoUnit = new ChronoUnit(15 * 16, "Centuries", PeriodField.of(10, Decades), Duration.ofSeconds(100L * 31556952L))
+
+  /**
+   * Period unit for millennia.
+   */
+  private val Millennia: ChronoUnit = new ChronoUnit(16 * 16, "Millennia", PeriodField.of(10, Centuries), Duration.ofSeconds(1000L * 31556952L))
+
+  /**
+   * Period unit for eras.
+   */
+  private val Eras: ChronoUnit = new ChronoUnit(17 * 16, "Eras", null, Duration.ofSeconds(31556952L * 2000000000L))
 
   /**
    * Gets the period unit for nanoseconds.
@@ -109,6 +154,19 @@ object ISOChronology extends ISOChronology {
    * @return the period unit for nanoseconds, never null
    */
   def periodNanos: PeriodUnit = Nanos
+
+  /**
+   * Gets the period unit for seconds.
+   * <p>
+   * The period unit defines the concept of a period of a second.
+   * <p>
+   * The equivalent period and estimated duration are equal to 1000 milliseconds.
+   * <p>
+   * See {@link #secondOfMinuteRule()} for the main date-time field.
+   *
+   * @return the period unit for seconds, never null
+   */
+  def periodSeconds: PeriodUnit = Seconds
 
   /**
    * Gets the period unit for weeks of 7 days.
@@ -185,11 +243,15 @@ object ISOChronology extends ISOChronology {
    */
   def nanoOfSecondRule: DateTimeFieldRule[Int] = NanoOfSecondRule
 
+  private val NanoOfSecondRule: Rule = new Rule(NanoOfSecondOrdinal, "NanoOfSecond", Nanos, Seconds, 0, 999999999, 999999999)
+
   private val MilliOfSecondOrdinal: Int = 1 * 16
 
   private val MinuteOfHourOrdinal: Int = 5 * 16
 
   private val MilliOfDayRule: Rule = new Rule(MilliOfDayOrdinal, "MilliOfDay", Millis, Days, 0, 86399999, 86399999)
+
+  private val ClockHourOfAmPmOrdinal: Int = 6 * 16
 
   /**
    * Rule implementation.
@@ -304,7 +366,6 @@ object ISOChronology extends ISOChronology {
 
   private val WeekOfMonthOrdinal: Int = 12 * 16
 
-
   private val SecondOfDayRule: Rule = new Rule(SecondOfDayOrdinal, "SecondOfDay", Seconds, Days, 0, 86399, 86399)
 
   private val WeekOfWeekBasedYearRule: Rule = new Rule(WeekOfWeekBasedYearOrdinal, "WeekOfWeekBasedYear", Weeks, WeekBasedYears, 1, 53, 52)
@@ -329,6 +390,19 @@ object ISOChronology extends ISOChronology {
    * @return the rule for the clock-hour-of-day field, never null
    */
   def clockHourOfDayRule: DateTimeFieldRule[Int] = ClockHourOfDayRule
+
+  /**
+   * Gets the rule for the week-based-year field in the ISO chronology.
+   * <p>
+   * This field is the year that results from calculating weeks with the ISO-8601 algorithm.
+   * See {@link #weekOfWeekBasedYearRule ( ) week of week-based-year} for details.
+   * <p>
+   * The week-based-year will either be 52 or 53 weeks long, depending on the
+   * result of the algorithm for a particular date.
+   *
+   * @return the rule for the week-based-year field, never null
+   */
+  def weekBasedYearRule: DateTimeFieldRule[Int] = WeekBasedYearRule
 
   private val WeekBasedYearRule: Rule = new Rule(WeekBasedYearOrdinal, "WeekBasedYear", WeekBasedYears, null, MinWeekBasedRule, MaxWeekBasedYear, MaxWeekBasedYear)
 
@@ -366,6 +440,8 @@ object ISOChronology extends ISOChronology {
    */
   def yearRule: DateTimeFieldRule[Int] = YearRule
 
+  private val YearRule: Rule = new Rule(YearOrdinal, "Year", Years, null, Year.MinYear, Year.MaxYear, Year.MaxYear)
+
   /**
    * Calculates the week-based-year.
    *
@@ -394,21 +470,6 @@ object ISOChronology extends ISOChronology {
     }
     year.getValue
   }
-
-  /**
-   * Gets the rule for the week-based-year field in the ISO chronology.
-   * <p>
-   * This field is the year that results from calculating weeks with the ISO-8601 algorithm.
-   * See {@link #weekOfWeekBasedYearRule ( ) week of week-based-year} for details.
-   * <p>
-   * The week-based-year will either be 52 or 53 weeks long, depending on the
-   * result of the algorithm for a particular date.
-   *
-   * @return the rule for the week-based-year field, never null
-   */
-  def weekBasedYearRule: DateTimeFieldRule[Int] = WeekBasedYearRule
-
-  private val NanoOfSecondRule: Rule = new Rule(NanoOfSecondOrdinal, "NanoOfSecond", Nanos, Seconds, 0, 999999999, 999999999)
 
   /**
    * The number of seconds in one day.
@@ -474,8 +535,6 @@ object ISOChronology extends ISOChronology {
     def convertValueToInt(value: DayOfWeek): Int = value.getValue
   }
 
-  private val ClockHourOfAmPmOrdinal: Int = 6 * 16
-
   /**
    * Gets the rule for the hour-of-day field.
    * <p>
@@ -508,8 +567,6 @@ object ISOChronology extends ISOChronology {
    * There are 7 leap years from 1970 to 2000.
    */
   private[calendar] val Days0000To1970: Long = (DaysPerCycle * 5L) - (30L * 365L + 7L)
-  private val DayOfYearRule: Rule = new Rule(DayOfYearOrdinal, "DayOfYear", Days, Years, 1, 366, 365)
-  private val DayOfMonthRule: Rule = new Rule(DayOfMonthOrdinal, "DayOfMonth", Days, Months, 1, 31, 28)
 
   /**
    * Gets the rule for the day-of-year field in the ISO chronology.
@@ -521,6 +578,8 @@ object ISOChronology extends ISOChronology {
    */
   def dayOfYearRule: DateTimeFieldRule[Int] = DayOfYearRule
 
+  private val DayOfYearRule: Rule = new Rule(DayOfYearOrdinal, "DayOfYear", Days, Years, 1, 366, 365)
+
   /**
    * Gets the rule for the day-of-month field in the ISO chronology.
    * <p>
@@ -531,6 +590,9 @@ object ISOChronology extends ISOChronology {
    * @return the rule for the day-of-month field, never null
    */
   def dayOfMonthRule: DateTimeFieldRule[Int] = DayOfMonthRule
+
+  private val DayOfMonthRule: Rule = new Rule(DayOfMonthOrdinal, "DayOfMonth", Days, Months, 1, 31, 28)
+
 
   private val ClockHourOfAmPm: Rule = new Rule(ClockHourOfAmPmOrdinal, "ClockHourOfAmPm", Hours, _12Hours, 1, 12, 12)
 
@@ -568,13 +630,7 @@ object ISOChronology extends ISOChronology {
 
   private val WeekOfYearOrdinal: Int = 14 * 16
   private val SecondOfMinuteOrdinal: Int = 3 * 16
-
-  /**
-   * Period unit for eras.
-   */
-  private val Eras: ChronoUnit = new ChronoUnit(17 * 16, "Eras", null, Duration.ofSeconds(31556952L * 2000000000L))
   private val MonthOfQuarterRule: Rule = new Rule(MonthOfQuarterOrdinal, "MonthOfQuarter", Months, Quarters, 1, 3, 3)
-  private val YearRule: Rule = new Rule(YearOrdinal, "Year", Years, null, Year.MinYear, Year.MaxYear, Year.MaxYear)
 
   /**
    * Gets the period unit for week-based-years.
@@ -593,11 +649,6 @@ object ISOChronology extends ISOChronology {
 
   private val MonthOfQuarterOrdinal: Int = 15 * 16
   private val WeekOfMonthRule: Rule = new Rule(WeekOfMonthOrdinal, "WeekOfMonth", Weeks, Months, 1, 5, 4)
-
-  /**
-   * Period unit for 12 hours half-days, used by AM/PM.
-   */
-  private val _12Hours: ChronoUnit = new ChronoUnit(6 * 16, "12Hours", PeriodField.of(12, Hours), Duration.ofSeconds(12 * 60 * 60))
 
   /**
    * Gets the period unit for microseconds.
@@ -689,10 +740,6 @@ object ISOChronology extends ISOChronology {
    */
   def milliOfDayRule: DateTimeFieldRule[Int] = MilliOfDayRule
 
-  /**
-   * Period unit for quarters.
-   */
-  private val Quarters: ChronoUnit = new ChronoUnit(11 * 16, "Quarters", PeriodField.of(3, Months), Duration.ofSeconds(31556952L / 4))
   private val WeekOfYearRule: Rule = new Rule(WeekOfYearOrdinal, "WeekOfYear", Weeks, Years, 1, 53, 53)
 
   /**
@@ -739,23 +786,6 @@ object ISOChronology extends ISOChronology {
   val MinWeekBasedRule: Int = Year.MinYear
   private val YearOrdinal: Int = 17 * 16
 
-  /**
-   * Gets the period unit for seconds.
-   * <p>
-   * The period unit defines the concept of a period of a second.
-   * <p>
-   * The equivalent period and estimated duration are equal to 1000 milliseconds.
-   * <p>
-   * See {@link #secondOfMinuteRule()} for the main date-time field.
-   *
-   * @return the period unit for seconds, never null
-   */
-  def periodSeconds: PeriodUnit = Seconds
-
-  /**
-   * Period unit for months.
-   */
-  private val Months: ChronoUnit = new ChronoUnit(10 * 16, "Months", null, Duration.ofSeconds(31556952L / 12L))
   private val DayOfYearOrdinal: Int = 11 * 16
 
   /**
@@ -859,11 +889,6 @@ object ISOChronology extends ISOChronology {
   }
 
   private val ClockHourOfDayRule: Rule = new Rule(ClockHourOfDayOrdinal, "ClockHourOfDay", Hours, Days, 1, 24, 24)
-
-  /**
-   * Period unit for millennia.
-   */
-  private val Millennia: ChronoUnit = new ChronoUnit(16 * 16, "Millennia", PeriodField.of(10, Centuries), Duration.ofSeconds(1000L * 31556952L))
   private val SecondOfMinuteRule: Rule = new Rule(SecondOfMinuteOrdinal, "SecondOfMinute", Seconds, Minutes, 0, 59, 59)
 
   /**
@@ -901,10 +926,6 @@ object ISOChronology extends ISOChronology {
    */
   def weekOfWeekBasedYearRule: DateTimeFieldRule[Int] = WeekOfWeekBasedYearRule
 
-  /**
-   * Period unit for years.
-   */
-  private val Years: ChronoUnit = new ChronoUnit(13 * 16, "Years", PeriodField.of(4, Quarters), Duration.ofSeconds(31556952L))
   /**
    * Gets the period unit for minutes of 60 seconds.
    * <p>
@@ -973,11 +994,6 @@ object ISOChronology extends ISOChronology {
   def monthOfYearRule: DateTimeFieldRule[MonthOfYear] = MonthOfYearRule
 
   /**
-   * Period unit for nanoseconds.
-   */
-  private val Nanos: ChronoUnit = new ChronoUnit(0 * 16, "Nanos", null, Duration.ofNanos(1))
-
-  /**
    * Checks if the specified year is a leap year according to the ISO calendar system rules.
    * <p>
    * The ISO calendar system applies the current rules for leap years across the whole time-line.
@@ -1004,11 +1020,6 @@ object ISOChronology extends ISOChronology {
   private val RuleCache: Array[Rule] = Array[Rule](NanoOfSecondRule, MilliOfSecondRule, MilliOfDayRule, SecondOfMinuteRule, SecondOfDayRule, MinuteOfHourRule, ClockHourOfAmPm, HourOfAmPmRule, ClockHourOfDayRule, HourOfDayRule, DayOfMonthRule, DayOfYearRule, WeekOfMonthRule, WeekOfWeekBasedYearRule, WeekOfYearRule, MonthOfQuarterRule, WeekBasedYearRule, YearRule)
 
   /**
-   * Period unit for minutes.
-   */
-  private val Minutes: ChronoUnit = new ChronoUnit(4 * 16, "Minutes", PeriodField.of(60, Seconds), Duration.ofSeconds(60))
-
-  /**
    * Gets the rule for the minute-of-hour field.
    * <p>
    * This field counts minutes sequentially from the start of the hour.
@@ -1029,11 +1040,6 @@ object ISOChronology extends ISOChronology {
     val yearStart: LocalDate = LocalDate.of(wby, MonthOfYear.January, 4)
     MathUtils.safeToInt((date.toModifiedJulianDays - yearStart.toModifiedJulianDays + yearStart.getDayOfWeek.getValue - 1) / 7 + 1)
   }
-
-  /**
-   * Period unit for centuries.
-   */
-  private val Centuries: ChronoUnit = new ChronoUnit(15 * 16, "Centuries", PeriodField.of(10, Decades), Duration.ofSeconds(100L * 31556952L))
 
   /**
    * Gets the rule for the week-of-year field in the ISO chronology.

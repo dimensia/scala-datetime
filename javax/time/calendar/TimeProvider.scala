@@ -49,7 +49,7 @@ package javax.time.calendar
  * mutable and changes in value between two calls to {@code toLocalTime()}.
  * <p>
  * The recommended way to convert a TimeProvider to a LocalTime is using
- * {@link LocalTime # of ( TimeProvider )} as this method provides additional null checking.
+ * {@link LocalTime#of ( TimeProvider )} as this method provides additional null checking.
  * <p>
  * It is recommended that this interface should only be implemented by classes
  * that provide time information to at least minute precision.

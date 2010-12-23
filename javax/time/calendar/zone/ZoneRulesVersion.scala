@@ -51,7 +51,7 @@ trait ZoneRulesVersion {
   /**
    * Gets the zone rules for the specified region ID.
    * <p>
-   * The region ID should be one of those returned by {@code # getRegionIDs()}.
+   * The region ID should be one of those returned by {@code#getRegionIDs()}.
    *
    * @param regionID the region ID, not null
    * @return the matched zone rules, null if not found

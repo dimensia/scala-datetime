@@ -111,7 +111,7 @@ sealed abstract class HistoricEra(ordinal: Int) extends Calendrical {
    * Gets the short textual representation of this BCE/CE, such as 'BCE' or 'CE'.
    * <p>
    * If there is no textual mapping for the locale, then the value is
-   * returned as per {@link Integer # toString()}.
+   * returned as per {@link Integer#toString()}.
    *
    * @param locale the locale to use, not null
    * @return the short text value of the BCE/CE, never null
@@ -137,7 +137,7 @@ sealed abstract class HistoricEra(ordinal: Int) extends Calendrical {
    * Gets the short textual representation of this day-of-week, such as 'BCE' or 'CE'.
    * <p>
    * If there is no textual mapping for the locale, then the value is
-   * returned as per {@link Integer # toString()}.
+   * returned as per {@link Integer#toString()}.
    *
    * @param locale the locale to use, not null
    * @return the long text value of the BCE/CE, never null
