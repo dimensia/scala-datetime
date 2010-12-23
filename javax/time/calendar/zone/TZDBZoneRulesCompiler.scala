@@ -49,7 +49,6 @@ import java.util.SortedMap
 import java.util.StringTokenizer
 import java.util.TreeMap
 import java.util.TreeSet
-import java.util.Map.Entry
 import java.util.jar.JarOutputStream
 import java.util.zip.ZipEntry
 import javax.time.calendar.DateAdjusters
@@ -63,7 +62,6 @@ import javax.time.calendar.Period
 import javax.time.calendar.Year
 import javax.time.calendar.ZoneOffset
 import javax.time.calendar.format.DateTimeFormatter
-import javax.time.calendar.format.DateTimeFormatterBuilder
 import javax.time.calendar.format.DateTimeParseContext
 import javax.time.calendar.zone.ZoneRulesBuilder.TimeDefinition
 
@@ -102,10 +100,10 @@ object TZDBZoneRulesCompiler {
    * Outputs the file.
    */
   private def outputFile(dstFile: File, version: String, builtZones: SortedMap[String, ZoneRules]): Unit = {
-    var loopAllBuiltZones: Map[String, SortedMap[String, ZoneRules]] = new TreeMap[String, SortedMap[String, ZoneRules]]
+    val loopAllBuiltZones: Map[String, SortedMap[String, ZoneRules]] = new TreeMap[String, SortedMap[String, ZoneRules]]
     loopAllBuiltZones.put(version, builtZones)
-    var loopAllRegionIds: Set[String] = new TreeSet[String](builtZones.keySet)
-    var loopAllRules: Set[ZoneRules] = new HashSet[ZoneRules](builtZones.values)
+    val loopAllRegionIds: Set[String] = new TreeSet[String](builtZones.keySet)
+    val loopAllRules: Set[ZoneRules] = new HashSet[ZoneRules](builtZones.values)
     outputFile(dstFile, loopAllBuiltZones, loopAllRegionIds, loopAllRules)
   }
 
