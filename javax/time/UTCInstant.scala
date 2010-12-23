@@ -31,7 +31,6 @@
  */
 package javax.time
 
-import java.io.Serializable
 import javax.time.calendar.LocalDate
 import javax.time.UTCRules._
 

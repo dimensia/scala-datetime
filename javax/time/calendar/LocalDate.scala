@@ -31,7 +31,6 @@
  */
 package javax.time.calendar
 
-import java.io.Serializable
 import javax.time.CalendricalException
 import javax.time.Instant
 import javax.time.MathUtils

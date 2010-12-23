@@ -31,8 +31,6 @@
  */
 package javax.time.calendar
 
-import java.io.Serializable
-
 /**
  * A calendar system, consisting of rules controlling the passage of human-scale time.
  * <p>

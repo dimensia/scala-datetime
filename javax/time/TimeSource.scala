@@ -31,8 +31,6 @@
  */
 package javax.time
 
-import java.io.Serializable
-
 /**
  * A source providing access to the current instant.
  * <p>

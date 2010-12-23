@@ -32,7 +32,6 @@
 package javax.time.calendar
 
 import java.io.ObjectInputStream
-import java.io.Serializable
 import java.io.StreamCorruptedException
 import java.util.Collections
 import java.util.HashMap

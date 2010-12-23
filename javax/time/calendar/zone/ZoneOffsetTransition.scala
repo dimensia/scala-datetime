@@ -33,7 +33,6 @@ package javax.time.calendar.zone
 
 import java.io.DataInput
 import java.io.DataOutput
-import java.io.Serializable
 import javax.time.Instant
 import javax.time.calendar.LocalDateTime
 import javax.time.calendar.OffsetDateTime

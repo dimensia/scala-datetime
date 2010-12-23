@@ -31,7 +31,7 @@
  */
 package javax.time
 
-import java.io.Serializable
+
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeUnit._
 import javax.time.calendar.format.CalendricalParseException

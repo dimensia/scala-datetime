@@ -31,7 +31,6 @@
  */
 package javax.time
 
-import java.io.Serializable
 import java.util.concurrent.TimeUnit
 import javax.time.calendar.OffsetDateTime
 import javax.time.calendar.ZoneOffset
@@ -234,9 +233,9 @@ object Instant {
    * @return an instant, never null
    */
   def ofEpochMillis(epochMillis: Long): Instant = {
-    var secs: Long = MathUtils.floorDiv(epochMillis, 1000)
-    var mos: Int = MathUtils.floorMod(epochMillis, 1000)
-    return create(secs, mos * 1000000)
+    val secs: Long = MathUtils.floorDiv(epochMillis, 1000)
+    val mos: Int = MathUtils.floorMod(epochMillis, 1000)
+    create(secs, mos * 1000000)
   }
 
   /**

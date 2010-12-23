@@ -31,8 +31,6 @@
  */
 package javax.time.calendar
 
-import java.io.Serializable
-
 /**
  * Provides common implementations of {@code DateResolver}.
  * <p>

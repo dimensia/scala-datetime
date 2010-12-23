@@ -31,7 +31,6 @@
  */
 package javax.time.calendar
 
-import java.io.Serializable
 import javax.time.Instant
 import javax.time.MathUtils
 import javax.time.calendar.format.DateTimeFormatter

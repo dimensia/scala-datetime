@@ -31,7 +31,6 @@
  */
 package javax.time.calendar
 
-import java.io.Serializable
 import java.util.Arrays
 import javax.time.CalendricalException
 import javax.time.Duration

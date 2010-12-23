@@ -31,8 +31,6 @@
  */
 package javax.time.calendar
 
-import java.io.Serializable
-
 /**
  * Context for aspects of date-time calculations that frequently change.
  *

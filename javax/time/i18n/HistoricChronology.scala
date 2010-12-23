@@ -31,7 +31,6 @@
  */
 package javax.time.i18n
 
-import java.io.Serializable
 import javax.time.Duration
 import javax.time.calendar.Calendrical
 import javax.time.calendar.CalendricalMerger
