@@ -226,7 +226,7 @@ object OffsetDate {
  * @param offset the zone offset, validated as not null
  */
 @SerialVersionUID(-3618963189L)
-final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Calendrical with DateProvider with CalendricalMatcher with DateAdjuster with Comparable[OffsetDate] with Serializable {
+final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Calendrical with DateProvider with CalendricalMatcher with DateAdjuster with Ordered[OffsetDate] with Serializable {
   if (date == null) throw new NullPointerException("The date must not be null")
   if (offset == null) throw new NullPointerException("The zone offset must not be null")
 
@@ -850,7 +850,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * @return the comparator value, negative if less, positive if greater
    * @throws NullPointerException if {@code other} is null
    */
-  def compareTo(other: OffsetDate): Int = {
+  def compare(other: OffsetDate): Int = {
     if (offset.equals(other.offset)) date.compareTo(other.date)
     else {
       val thisDT: LocalDateTime = LocalDateTime.ofMidnight(getYear, getMonthOfYear, getDayOfMonth)

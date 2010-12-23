@@ -417,7 +417,7 @@ object LocalDateTime {
  * @param date the date part of the date-time, not null
  * @param time the time part of the date-time, not null
  */
-final class LocalDateTime private(val date: LocalDate, val time: LocalTime) extends Calendrical with DateTimeProvider with Comparable[LocalDateTime] with CalendricalMatcher with DateAdjuster with TimeAdjuster with Serializable {
+final class LocalDateTime private(val date: LocalDate, val time: LocalTime) extends Calendrical with DateTimeProvider with Ordered[LocalDateTime] with CalendricalMatcher with DateAdjuster with TimeAdjuster with Serializable {
   /**
    * Gets the second-of-minute field.
    *
@@ -471,7 +471,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @return the comparator value, negative if less, positive if greater
    * @throws NullPointerException if {@code other} is null
    */
-  def compareTo(other: LocalDateTime): Int = {
+  def compare(other: LocalDateTime): Int = {
     var cmp: Int = date.compareTo(other.date)
     if (cmp == 0) {
       cmp = time.compareTo(other.time)

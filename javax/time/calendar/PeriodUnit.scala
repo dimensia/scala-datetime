@@ -93,7 +93,7 @@ object PeriodUnit {
  */
 @SerialVersionUID(1L)
 abstract class PeriodUnit private[calendar](@transient val name: String, @transient val equivalentPeriods: List[PeriodField], @transient val estimatedDuration: Duration, @transient hashCode: Int)
-  extends Comparable[PeriodUnit] with Serializable {
+  extends Ordered[PeriodUnit] with Serializable {
   ISOChronology.checkNotNull(name, "Name must not be null")
 
   import PeriodUnit._
@@ -179,7 +179,7 @@ abstract class PeriodUnit private[calendar](@transient val name: String, @transi
    * For those units which can be derived ultimately from nanoseconds, the
    * estimated duration will be accurate. For other units, it will be an estimate.
    * <p>
-   * One key use for the estimated duration is to implement {@link Comparable}.
+   * One key use for the estimated duration is to implement {@link Ordered}.
    *
    * @return the estimate of the duration in seconds, never null
    */
@@ -219,7 +219,7 @@ abstract class PeriodUnit private[calendar](@transient val name: String, @transi
    * @return the comparator result, negative if less, positive if greater, zero if equal
    * @throws NullPointerException if other is null
    */
-  def compareTo(other: PeriodUnit): Int = {
+  def compare(other: PeriodUnit): Int = {
     var cmp: Int = estimatedDuration.compareTo(other.estimatedDuration)
     if (cmp == 0) {
       cmp = name.compareTo(other.name)

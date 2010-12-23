@@ -402,7 +402,7 @@ object ZoneOffset {
  * @param amountSeconds the total time-zone offset in seconds, from -64800 to +64800
  */
 @SerialVersionUID(1L)
-final class ZoneOffset private(val amountSeconds: Int) extends Calendrical with Comparable[ZoneOffset] with Serializable {
+final class ZoneOffset private(val amountSeconds: Int) extends Calendrical with Ordered[ZoneOffset] with Serializable {
 
   import ZoneOffset._
 
@@ -573,7 +573,7 @@ final class ZoneOffset private(val amountSeconds: Int) extends Calendrical with 
    * @return the comparator value, negative if less, postive if greater
    * @throws NullPointerException if {@code other} is null
    */
-  def compareTo(other: ZoneOffset): Int = other.amountSeconds - amountSeconds
+  def compare(other: ZoneOffset): Int = other.amountSeconds - amountSeconds
 
   /**
    * Checks if this instance is equal to the specified offset, comparing

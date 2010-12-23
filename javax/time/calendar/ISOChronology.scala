@@ -897,7 +897,7 @@ object ISOChronology extends ISOChronology {
   private[calendar] sealed class ChronoUnit(val ordinal: Int, name: String, equivalentPeriod: PeriodField, estimatedDuration: Duration)
           extends PeriodUnit(name, equivalentPeriod, estimatedDuration) {
 
-    def compareTo(other: PeriodUnit): Int = {
+    def compare(other: PeriodUnit): Int = {
       if (other.isInstanceOf[ChronoUnit]) ordinal - (other.asInstanceOf[ChronoUnit]).ordinal
       else super.compareTo(other)
     }
@@ -1240,7 +1240,7 @@ object ISOChronology extends ISOChronology {
 
     private def readResolve: AnyRef = RuleCache(ordinal / 16)
 
-    def compareTo(other: CalendricalRule[Int]): Int = {
+    def compare(other: CalendricalRule[Int]): Int = {
       if (other.isInstanceOf[Rule]) ordinal - (other.asInstanceOf[Rule]).ordinal
       else super.compareTo(other)
     }

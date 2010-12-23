@@ -444,7 +444,7 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Calendrical {
 
   val name = this.getClass.getName
 
-  def compareTo(other: MonthOfYear): Int = this.ordinal - other.ordinal
+  def compare(other: MonthOfYear): Int = this.ordinal - other.ordinal
 
   /**
    * Gets the day-of-year for the first day of this month.

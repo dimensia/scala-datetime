@@ -458,7 +458,7 @@ object LocalTime {
 @SerialVersionUID(1L)
 final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte, val nano: Int)
         extends Calendrical with TimeProvider with CalendricalMatcher
-        with TimeAdjuster with Comparable[LocalTime] with Serializable {
+        with TimeAdjuster with Ordered[LocalTime] with Serializable {
 
   import LocalTime._
 
@@ -704,7 +704,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    * @return the comparator value, negative if less, positive if greater
    * @throws NullPointerException if {@code other} is null
    */
-  def compareTo(other: LocalTime): Int = {
+  def compare(other: LocalTime): Int = {
     var cmp: Int = MathUtils.safeCompare(hour, other.hour)
     if (cmp == 0) {
       cmp = MathUtils.safeCompare(minute, other.minute)

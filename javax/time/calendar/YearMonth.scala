@@ -210,7 +210,7 @@ object YearMonth {
  * @param monthOfYear the month-of-year to represent, not null
  */
 @SerialVersionUID(1L)
-final class YearMonth private(val year: Int, val month: MonthOfYear) extends Calendrical with CalendricalMatcher with DateAdjuster with Comparable[YearMonth] with Serializable {
+final class YearMonth private(val year: Int, val month: MonthOfYear) extends Calendrical with CalendricalMatcher with DateAdjuster with Ordered[YearMonth] with Serializable {
   /**
    * Adjusts a date to have the value of this year-month, using a resolver to
    * handle the case when the day-of-month becomes invalid.
@@ -499,7 +499,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    * @return the comparator value, negative if less, positive if greater
    * @throws NullPointerException if  {@code other} is null
    */
-  def compareTo(other: YearMonth): Int = {
+  def compare(other: YearMonth): Int = {
     var cmp: Int = MathUtils.safeCompare(year, other.year)
     if (cmp == 0) cmp = month.compareTo(other.month)
     return cmp

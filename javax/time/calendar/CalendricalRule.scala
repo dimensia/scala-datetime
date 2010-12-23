@@ -43,7 +43,7 @@ import javax.time.CalendricalException
  * Each rule uses an underlying type to represent the data.
  * This is captured in the generic type of the rule.
  * The underlying type is reified and made available via {@link #getReifiedType()}.
- * It is expected, but not enforced, that the underlying type is {@link Comparable}.
+ * It is expected, but not enforced, that the underlying type is {@link Ordered}.
  * <p>
  * CalendricalRule is an abstract class and must be implemented with care to
  * ensure other classes in the framework operate correctly.
@@ -68,7 +68,7 @@ import javax.time.CalendricalException
  */
 @SerialVersionUID(1L)
 abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chronology, name: String, periodUnit: PeriodUnit, periodRange: PeriodUnit)
-  extends Comparable[CalendricalRule[T]] with Comparator[Calendrical] with Serializable {
+  extends Ordered[CalendricalRule[T]] with Comparator[Calendrical] with Serializable {
   if (reified == null) {
     throw new NullPointerException("Reified class must not be null")
   }
@@ -207,7 +207,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * This is captured in the generic type of the rule.
    * Since the generic implementation is Java is limited to the compiler, the
    * underlying type has been reified and made available through this method.
-   * It is expected, but not enforced, that the underlying type is {@link Comparable}.
+   * It is expected, but not enforced, that the underlying type is {@link Ordered}.
    *
    * @return the reified type of values of the rule, never null
    */
@@ -242,7 +242,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * @return the comparator result, negative if less, positive if greater, zero if equal
    * @throws NullPointerException if other is null
    */
-  def compareTo(other: CalendricalRule[T]): Int = {
+  def compare(other: CalendricalRule[T]): Int = {
     if (this.getPeriodUnit == null) {
       if (other.getPeriodUnit == null) {
         return getID.compareTo(other.getID)
@@ -385,7 +385,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * If the value of this rule cannot be obtained from a calendrical, then
    * an exception is thrown.
    * <p>
-   * If the underlying type of this rule does not implement {@link Comparable }
+   * If the underlying type of this rule does not implement {@link Ordered }
    * then an exception will be thrown.
    *
    * @param cal1 the first calendrical to compare, not null
@@ -396,8 +396,8 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * @throws IllegalArgumentException if this rule cannot be extracted from either input parameter
    */
   def compare(cal1: Calendrical, cal2: Calendrical): Int = {
-    var value1: Comparable[_] = cal1.get(this).asInstanceOf[Comparable[_]]
-    var value2: Comparable[_] = cal2.get(this).asInstanceOf[Comparable[_]]
+    var value1: Ordered[_] = cal1.get(this).asInstanceOf[Ordered[_]]
+    var value2: Ordered[_] = cal2.get(this).asInstanceOf[Ordered[_]]
     if (value1 == null || value2 == null) {
       throw new IllegalArgumentException("Unable to compare as Calendrical does not provide rule: " + getName)
     }

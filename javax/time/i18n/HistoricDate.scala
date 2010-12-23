@@ -160,7 +160,7 @@ object HistoricDate {
  * @param day the day-of-month to represent, valid
  */
 final class HistoricDate private[i18n](val chrono: HistoricChronology, @transient val year: Int, @transient val month: MonthOfYear, @transient val day: Int)
-  extends DateProvider with Calendrical with Comparable[HistoricDate] with Serializable {
+  extends DateProvider with Calendrical with Ordered[HistoricDate] with Serializable {
 
   import HistoricDate._
 
@@ -207,7 +207,7 @@ final class HistoricDate private[i18n](val chrono: HistoricChronology, @transien
    * @param otherDate the other date instance to compare to, not null
    * @return the comparator value, negative if less, positive if greater
    */
-  def compareTo(otherDate: HistoricDate): Int = {
+  def compare(otherDate: HistoricDate): Int = {
     var cmp: Int = toLocalDate.compareTo(otherDate.toLocalDate)
     if (cmp == 0) cmp = chrono.getCutover.compareTo(otherDate.chrono.getCutover)
     return cmp

@@ -225,7 +225,7 @@ object MonthDay {
  * @param dayOfMonth the day-of-month to represent, validated from 1 to 29-31
  */
 @SerialVersionUID(-254395108L)
-final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical with CalendricalMatcher with DateAdjuster with Comparable[MonthDay] with Serializable {
+final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical with CalendricalMatcher with DateAdjuster with Ordered[MonthDay] with Serializable {
 
   import MonthDay._
 
@@ -331,7 +331,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    * @return the comparator value, negative if less, positive if greater
    * @throws NullPointerException if {@code other} is null
    */
-  def compareTo(other: MonthDay): Int = {
+  def compare(other: MonthDay): Int = {
     var cmp: Int = month.compareTo(other.month)
     if (cmp == 0) cmp = MathUtils.safeCompare(day, other.day)
     cmp

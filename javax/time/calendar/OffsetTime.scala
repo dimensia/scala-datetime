@@ -244,7 +244,7 @@ object OffsetTime {
  */
 @SerialVersionUID(-1751032571L)
 final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
-  extends TimeProvider with Calendrical with Comparable[OffsetTime] with Serializable with CalendricalMatcher with TimeAdjuster {
+  extends TimeProvider with Calendrical with Ordered[OffsetTime] with Serializable with CalendricalMatcher with TimeAdjuster {
   if (time == null) throw new NullPointerException("The time must not be null")
   if (offset == null) throw new NullPointerException("The zone offset must not be null")
 
@@ -497,7 +497,7 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
    * @return the comparator value, negative if less, postive if greater
    * @throws NullPointerException if {@code other} is null
    */
-  def compareTo(other: OffsetTime): Int = {
+  def compare(other: OffsetTime): Int = {
     if (offset.equals(other.offset)) {
       return time.compareTo(other.time)
     }

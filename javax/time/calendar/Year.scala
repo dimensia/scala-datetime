@@ -149,7 +149,7 @@ object Year {
  * @param year the year to represent
  */
 @SerialVersionUID(1L)
-final class Year private(val year: Int) extends Calendrical with Comparable[Year] with Serializable with DateAdjuster with CalendricalMatcher {
+final class Year private(val year: Int) extends Calendrical with Ordered[Year] with Serializable with DateAdjuster with CalendricalMatcher {
 
   import Year._
 
@@ -461,7 +461,7 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
    * @return the comparator value, negative if less, positive if greater
    * @throws NullPointerException if {@code other} is null
    */
-  def compareTo(other: Year): Int = MathUtils.safeCompare(year, other.year)
+  def compare(other: Year): Int = MathUtils.safeCompare(year, other.year)
 
   /**
    * A hash code for this year.

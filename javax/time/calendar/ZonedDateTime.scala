@@ -410,7 +410,7 @@ object ZonedDateTime {
  */
 @SerialVersionUID(-456761901L)
 final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZone)
-  extends InstantProvider with DateTimeProvider with Calendrical with CalendricalMatcher with Comparable[ZonedDateTime] with Serializable {
+  extends InstantProvider with DateTimeProvider with Calendrical with CalendricalMatcher with Ordered[ZonedDateTime] with Serializable {
 
   import ZonedDateTime._
 
@@ -1606,7 +1606,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * @return the comparator value, negative if less, positive if greater
    * @throws NullPointerException if {@code other} is null
    */
-  def compareTo(other: ZonedDateTime): Int = {
+  def compare(other: ZonedDateTime): Int = {
     var compare: Int = dateTime.compareTo(other.dateTime)
     if (compare == 0) {
       compare = zone.getID.compareTo(other.zone.getID)

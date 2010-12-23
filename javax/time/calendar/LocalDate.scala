@@ -303,7 +303,7 @@ object LocalDate {
  * @param dayOfMonth the day-of-month to represent, valid for year-month, from 1 to 31
  */
 final class LocalDate private(val year: Int, val month: MonthOfYear, val day: Int)
-  extends Calendrical with DateProvider with CalendricalMatcher with DateAdjuster with Comparable[LocalDate] with Serializable {
+  extends Calendrical with DateProvider with CalendricalMatcher with DateAdjuster with Ordered[LocalDate] with Serializable {
   /**
    * Resolves the date, handling incorrectly implemented resolvers.
    *
@@ -1213,7 +1213,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * @return the comparator value, negative if less, positive if greater
    * @throws NullPointerException if {@code other} is null
    */
-  def compareTo(other: LocalDate): Int = {
+  def compare(other: LocalDate): Int = {
     var cmp: Int = MathUtils.safeCompare(year, other.year)
     if (cmp == 0) {
       cmp = month.compareTo(other.month)

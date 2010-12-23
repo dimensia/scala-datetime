@@ -206,7 +206,7 @@ object CopticDate {
  */
 @SerialVersionUID(1L)
 final class CopticDate private(val epochDays: Int, @transient year: Int, @transient month: Int, @transient day: Int)
-  extends DateProvider with Calendrical with Comparable[CopticDate] with Serializable {
+  extends DateProvider with Calendrical with Ordered[CopticDate] with Serializable {
 
   import CopticDate._
 
@@ -485,5 +485,5 @@ final class CopticDate private(val epochDays: Int, @transient year: Int, @transi
    * @return the comparator value, negative if less, positive if greater
    * @throws NullPointerException if otherDay is null
    */
-  def compareTo(otherDate: CopticDate): Int = MathUtils.safeCompare(epochDays, otherDate.epochDays)
+  def compare(otherDate: CopticDate): Int = MathUtils.safeCompare(epochDays, otherDate.epochDays)
 }

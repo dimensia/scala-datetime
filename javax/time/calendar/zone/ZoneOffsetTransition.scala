@@ -97,7 +97,7 @@ object ZoneOffsetTransition {
  */
 @SerialVersionUID(1L)
 final class ZoneOffsetTransition private[zone](val transition: OffsetDateTime, offsetAfter: ZoneOffset)
-  extends Comparable[ZoneOffsetTransition] with Serializable {
+  extends Ordered[ZoneOffsetTransition] with Serializable {
 
 
   /**
@@ -122,7 +122,7 @@ final class ZoneOffsetTransition private[zone](val transition: OffsetDateTime, o
    * @param transition the transition to compare to, not null
    * @return the comparator value, negative if less, positive if greater
    */
-  def compareTo(transition: ZoneOffsetTransition): Int = this.getInstant.compareTo(transition.getInstant)
+  def compare(transition: ZoneOffsetTransition): Int = this.getInstant.compareTo(transition.getInstant)
 
   /**
    * Writes the state to the stream.

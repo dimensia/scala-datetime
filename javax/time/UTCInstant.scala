@@ -219,7 +219,7 @@ object UTCInstant {
  */
 
 @SerialVersionUID(1L)
-final case class UTCInstant(mjDay: Long, nanos: Long, rules: UTCRules) extends Comparable[UTCInstant] with Serializable {
+final case class UTCInstant(mjDay: Long, nanos: Long, rules: UTCRules) extends Ordered[UTCInstant] with Serializable {
 
   /**
    * Compares this instant to another based on the time-line, then the name
@@ -233,7 +233,7 @@ final case class UTCInstant(mjDay: Long, nanos: Long, rules: UTCRules) extends C
    * @param otherInstant the other instant to compare to, not null
    * @return the comparator value, negative if less, positive if greater
    */
-  def compareTo(otherInstant: UTCInstant): Int = {
+  def compare(otherInstant: UTCInstant): Int = {
     val cmp: Int = MathUtils.safeCompare(mjDay, otherInstant.mjDay)
     if (cmp != 0) cmp
     else MathUtils.safeCompare(nanos, otherInstant.nanos)

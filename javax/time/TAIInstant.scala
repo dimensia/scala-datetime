@@ -171,7 +171,7 @@ object TAIInstant {
  * @param nanoOfSecond the nanoseconds within the second, from 0 to 999,999,999
  */
 @SerialVersionUID(1L)
-final case class TAIInstant(seconds: Long, nanos: Int) extends Comparable[TAIInstant] with Serializable {
+final case class TAIInstant(seconds: Long, nanos: Int) extends Ordered[TAIInstant] with Serializable {
 
   import TAIInstant._
 
@@ -299,7 +299,7 @@ final case class TAIInstant(seconds: Long, nanos: Int) extends Comparable[TAIIns
    * @param otherInstant the other instant to compare to, not null
    * @return the comparator value, negative if less, positive if greater
    */
-  def compareTo(otherInstant: TAIInstant): Int = {
+  def compare(otherInstant: TAIInstant): Int = {
     val cmp: Int = MathUtils.safeCompare(seconds, otherInstant.seconds)
     if (cmp != 0) cmp
     else MathUtils.safeCompare(nanos, otherInstant.nanos)

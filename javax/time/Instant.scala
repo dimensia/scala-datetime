@@ -308,7 +308,7 @@ object Instant {
  * @param nanos the nanoseconds within the second, must be positive
  */
 @SerialVersionUID(1L)
-final case class Instant private(seconds: Long, nanos: Int) extends InstantProvider with Comparable[Instant] with Serializable {
+final case class Instant private(seconds: Long, nanos: Int) extends InstantProvider with Ordered[Instant] with Serializable {
 
   import Instant._
 
@@ -518,7 +518,7 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
    * @return the comparator value, negative if less, positive if greater
    * @throws NullPointerException if otherInstant is null
    */
-  def compareTo(otherInstant: Instant): Int = {
+  def compare(otherInstant: Instant): Int = {
     val cmp: Int = MathUtils.safeCompare(seconds, otherInstant.seconds)
     if (cmp != 0) cmp
     else MathUtils.safeCompare(nanos, otherInstant.nanos)

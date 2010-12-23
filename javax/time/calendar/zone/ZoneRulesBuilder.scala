@@ -266,7 +266,7 @@ class ZoneRulesBuilder {
                              var timeEndOfDay: Boolean,
                              var timeDefinition: ZoneRulesBuilder.TimeDefinition,
                              var savingAmount: Period)
-    extends Comparable[ZoneRulesBuilder#TZRule] {
+    extends Ordered[ZoneRulesBuilder#TZRule] {
     /**
      * Converts this to a transition rule.
      *
@@ -326,7 +326,7 @@ class ZoneRulesBuilder {
     }
 
     /**{ @inheritDoc}. */
-    def compareTo(other: ZoneRulesBuilder#TZRule): Int = {
+    def compare(other: ZoneRulesBuilder#TZRule): Int = {
       var cmp: Int = year - other.year
       cmp = (if (cmp == 0) month.compareTo(other.month) else cmp)
       cmp = (if (cmp == 0) dayOfMonthIndicator - other.dayOfMonthIndicator else cmp)

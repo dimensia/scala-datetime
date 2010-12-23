@@ -79,7 +79,7 @@ object PeriodField {
  * @param unit the unit that the period is measured in, validated not null
  */
 @SerialVersionUID(1L)
-final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends PeriodProvider with Comparable[PeriodField] with Serializable {
+final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends PeriodProvider with Ordered[PeriodField] with Serializable {
   /**
    * Gets the amount of this period, converted to an {@code int}.
    * <p>
@@ -189,7 +189,7 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
    * @param otherPeriod the other period to compare to, not null
    * @return the comparator value, negative if less, positive if greater
    */
-  def compareTo(otherPeriod: PeriodField): Int = {
+  def compare(otherPeriod: PeriodField): Int = {
     val cmp: Int = unit.compareTo(otherPeriod.unit)
     if (cmp != 0) cmp
     else MathUtils.safeCompare(amount, otherPeriod.amount)

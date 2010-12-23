@@ -423,7 +423,7 @@ object Duration {
  * @param nanos the nanoseconds within the second, from 0 to 999,999,999
  */
 @SerialVersionUID(1L)
-final case class Duration private(seconds: Long, nanos: Int) extends Comparable[Duration] with Serializable {
+final case class Duration private(seconds: Long, nanos: Int) extends Ordered[Duration] with Serializable {
 
   import Duration._
 
@@ -864,7 +864,7 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
    * @param otherDuration the other duration to compare to, not null
    * @return the comparator value, negative if less, positive if greater
    */
-  def compareTo(otherDuration: Duration): Int = {
+  def compare(otherDuration: Duration): Int = {
     val cmp: Int = MathUtils.safeCompare(seconds, otherDuration.seconds)
     if (cmp != 0) return cmp
     return MathUtils.safeCompare(nanos, otherDuration.nanos)
