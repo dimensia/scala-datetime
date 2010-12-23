@@ -1,7 +1,10 @@
 My Scala Date&Time Experiment
 
-Goals: Perfect Scala integration (Pattern matching, case classes, implicits, Builders & Factories, dafault and names parameters, etc. ...)
+Goals: 
+ - Perfect Scala integration (Pattern matching, case classes, implicits, Builders & Factories, dafault and names parameters, etc. ...).
+ - Code shall be Scala only to be reasonably platform-independent.
 
+Status:
  - Currently nothing works. If you need something useable NOW, this is not the place to look.
  - The source code is based on the Date&Time library (JSR-310) and was translated to Scala 
    (mostly automatic, with quite some help from IntelliJ's "Convert Java to Scala" functionality).
