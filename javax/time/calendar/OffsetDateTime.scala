@@ -169,19 +169,6 @@ object OffsetDateTime {
   def rule: CalendricalRule[OffsetDateTime] = Rule
 
   /**
-   * Obtains the current date-time from the system clock in the default time-zone.
-   * <p>
-   * This will query the system clock in the default time-zone to obtain the current time.
-   * The offset will be set based on the time-zone in the system clock.
-   * <p>
-   * Using this method will prevent the ability to use an alternate clock for testing
-   * because the clock is hard-coded.
-   *
-   * @return the current date-time using the system clock, never null
-   */
-  def now: OffsetDateTime = now(Clock.systemDefaultZone)
-
-  /**
    * Obtains an instance of {@code OffsetDateTime} from year, month and
    * day with the time set to midnight at the start of day.
    * <p>
@@ -269,7 +256,7 @@ object OffsetDateTime {
    * @param clock the clock to use, not null
    * @return the current date-time, never null
    */
-  def now(clock: Clock): OffsetDateTime = {
+  def now(clock: Clock = Clock.systemDefaultZone): OffsetDateTime = {
     ISOChronology.checkNotNull(clock, "Clock must not be null")
     val now: Instant = clock.instant
     ofInstant(now, clock.getZone.getRules.getOffset(clock.instant))
@@ -1597,7 +1584,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @return true if this point is equal to the specified date-time
    */
   override def equals(other: AnyRef): Boolean = {
-    if (this == other) true
+    if (this eq other) true
     else if (other.isInstanceOf[OffsetDateTime]) {
       val offsetDateTime: OffsetDateTime = other.asInstanceOf[OffsetDateTime]
       dateTime.equals(offsetDateTime.dateTime) && offset.equals(offsetDateTime.offset)

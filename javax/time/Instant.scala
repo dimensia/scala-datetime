@@ -408,7 +408,7 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
    * @return true if this instant is before the specified instant
    * @throws NullPointerException if otherInstant is null
    */
-  def isBefore(otherInstant: Instant): Boolean = compareTo(otherInstant) < 0
+  def isBefore(otherInstant: Instant): Boolean = this < otherInstant
 
   /**
    * Returns a copy of this duration with the specified duration subtracted.
@@ -603,7 +603,7 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
    * @return true if this instant is after the specified instant
    * @throws NullPointerException if otherInstant is null
    */
-  def isAfter(otherInstant: Instant): Boolean = compareTo(otherInstant) > 0
+  def isAfter(otherInstant: Instant): Boolean = this > after
 
   /**
    * Returns a copy of this instant with the specified duration added.

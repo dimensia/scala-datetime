@@ -149,30 +149,30 @@ object Clock {
   @SerialVersionUID(1L)
   private[Clock] final class TimeSourceClock(val timeSource: TimeSource, val zone: TimeZone) extends Clock with Serializable {
 
-    /** {@inheritDoc} */
+    /**{@inheritDoc}*/
     override def getZone: TimeZone = zone
 
-    /** {@inheritDoc} */
+    /**{@inheritDoc}*/
     override def toString: String = "TimeSourceClock[" + timeSource + ", " + zone + ']'
 
-    /** {@inheritDoc} */
+    /**{@inheritDoc}*/
     override def withSource(timeSource: TimeSource): Clock = {
       ISOChronology.checkNotNull(timeSource, "TimeSource must not be null")
       if (timeSource.equals(this.timeSource)) this
       else new Clock.TimeSourceClock(timeSource, zone)
     }
 
-    /** {@inheritDoc} */
+    /**{@inheritDoc}*/
     override def getSource: TimeSource = timeSource
 
-    /** {@inheritDoc} */
+    /**{@inheritDoc}*/
     override def withZone(zone: TimeZone): Clock = {
       ISOChronology.checkNotNull(zone, "TimeZone must not be null")
       if (zone.equals(this.zone)) this
       else new Clock.TimeSourceClock(timeSource, zone)
     }
 
-    /** {@inheritDoc} */
+    /**{@inheritDoc}*/
     override def hashCode: Int = {
       var hash: Int = 7
       hash = 41 * hash + timeSource.hashCode
@@ -180,7 +180,7 @@ object Clock {
       return hash
     }
 
-    /** {@inheritDoc} */
+    /**{@inheritDoc}*/
     override def equals(obj: AnyRef): Boolean = {
       if (obj == this) {
         return true

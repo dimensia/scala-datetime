@@ -185,7 +185,8 @@ object TZDBZoneRulesCompiler {
         }
         if ("-srcdir".equals(arg)) {
           if (baseSrcDir == null && ({
-            i += 1; i - 1
+            i += 1;
+            i - 1
           }) < args.length) {
             baseSrcDir = new File(args(i))
             //continue //todo: continue is not supported

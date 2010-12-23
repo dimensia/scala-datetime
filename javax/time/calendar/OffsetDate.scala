@@ -63,8 +63,8 @@ object OffsetDate {
 
   @SerialVersionUID(1L)
   private[calendar] sealed class Rule
-          extends CalendricalRule[OffsetDate](classOf[OffsetDate], ISOChronology, "OffsetDate", ISOChronology.periodDays, null)
-          with Serializable {
+    extends CalendricalRule[OffsetDate](classOf[OffsetDate], ISOChronology, "OffsetDate", ISOChronology.periodDays, null)
+    with Serializable {
 
     protected override def derive(calendrical: Calendrical): Option[OffsetDate] = {
       val odt: Option[OffsetDateTime] = calendrical.get(OffsetDateTime.rule)
@@ -102,7 +102,7 @@ object OffsetDate {
    * @param clock the clock to use, not null
    * @return the current date, never null
    */
-  def now(clock: Clock): OffsetDate = {
+  def now(clock: Clock = Clock.systemDefaultZone): OffsetDate = {
     ISOChronology.checkNotNull(clock, "Clock must not be null")
     val now: Instant = clock.instant
     return ofInstant(now, clock.getZone.getRules.getOffset(clock.instant))
@@ -155,19 +155,6 @@ object OffsetDate {
     ISOChronology.checkNotNull(formatter, "DateTimeFormatter must not be null")
     formatter.parse(text, rule)
   }
-
-  /**
-   * Obtains the current date from the system clock in the default time-zone.
-   * <p>
-   * This will query the system clock in the default time-zone to obtain the current date - today.
-   * The offset will be set based on the time-zone in the system clock.
-   * <p>
-   * Using this method will prevent the ability to use an alternate clock for testing
-   * because the clock is hard-coded.
-   *
-   * @return the current date using the system clock, never null
-   */
-  def now: OffsetDate = now(Clock.systemDefaultZone)
 
   /**
    * Obtains an instance of {@code OffsetDate} from an {@code InstantProvider}.
@@ -278,7 +265,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * @return true if this point is before the specified date
    * @throws NullPointerException if {@code other} is null
    */
-  def isBefore(other: OffsetDate): Boolean = compareTo(other) < 0
+  def isBefore(other: OffsetDate): Boolean = this < other
 
   /**
    * Returns a copy of this OffsetDate with the specified period in years added.
@@ -301,7 +288,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * @param years the years to add, may be negative
    * @return an {@code OffsetDate} based on this date with the years added, never null
    * @throws CalendricalException if the result exceeds the supported date range
-   * @see#plusYears ( int, javax.time.calendar.DateResolver )
+   * @see# p l u s Y e a r s ( int, javax.time.calendar.DateResolver )
    */
   def plusYears(years: Int): OffsetDate = `with`(date.plusYears(years), offset)
 
@@ -428,7 +415,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * @return true if this is after the specified date
    * @throws NullPointerException if {@code other} is null
    */
-  def isAfter(other: OffsetDate): Boolean = compareTo(other) > 0
+  def isAfter(other: OffsetDate): Boolean = this > other
 
   /**
    * Returns a copy of this OffsetDate with the specified number of days subtracted.
@@ -524,7 +511,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * @param months the months to add, may be negative
    * @return an {@code OffsetDate} based on this date with the months added, never null
    * @throws CalendricalException if the result exceeds the supported date range
-   * @see#plusMonths ( int, javax.time.calendar.DateResolver )
+   * @see# p l u s M o n t h s ( int, javax.time.calendar.DateResolver )
    */
   def plusMonths(months: Int): OffsetDate = `with`(date.plusMonths(months), offset)
 
@@ -605,7 +592,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * @param months the months to subtract, may be negative
    * @return an {@code OffsetDate} based on this date with the months subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
-   * @see#minusMonths ( int, javax.time.calendar.DateResolver )
+   * @see# m i n u s M o n t h s ( int, javax.time.calendar.DateResolver )
    */
   def minusMonths(months: Int): OffsetDate = `with`(date.minusMonths(months), offset)
 
@@ -720,7 +707,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * @return true if this point is equal to the specified date
    */
   override def equals(other: AnyRef): Boolean = {
-    if (this == other) true
+    if (this eq other) true
     else if (other.isInstanceOf[OffsetDate]) {
       val zonedDate: OffsetDate = other.asInstanceOf[OffsetDate]
       date.equals(zonedDate.date) && offset.equals(zonedDate.offset)
@@ -776,7 +763,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * @param years the years to subtract, may be negative
    * @return an {@code OffsetDate} based on this date with the years subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
-   * @see#minusYears ( int, javax.time.calendar.DateResolver )
+   * @see# m i n u s Y e a r s ( int, javax.time.calendar.DateResolver )
    */
   def minusYears(years: Int): OffsetDate = `with`(date.minusYears(years), offset)
 
@@ -826,8 +813,8 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
    */
-//  def get[T](rule: CalendricalRule[T]): Option[T] = Some(rule.deriveValueFor(rule, this, this, ISOChronology))  /FIXME
-    def get[T](rule: CalendricalRule[T]): Option[T] = None
+  //  def get[T](rule: CalendricalRule[T]): Option[T] = Some(rule.deriveValueFor(rule, this, this, ISOChronology))  /FIXME
+  def get[T](rule: CalendricalRule[T]): Option[T] = None
 
   /**
    * Compares this date to another date based on the UTC equivalent dates

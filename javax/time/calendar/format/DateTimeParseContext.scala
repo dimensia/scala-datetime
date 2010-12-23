@@ -85,45 +85,6 @@ final class DateTimeParseContext(val symbols: DateTimeFormatSymbols) {
   calendricals.add(new DateTimeParseContext.Parsed)
 
   /**
-   * Ends the parsing of an optional segment of the input.
-   *
-   * @param successful whether the optional segment was successfully parsed
-   */
-  def endOptional(successful: Boolean): Unit = {
-    if (successful) calendricals.remove(calendricals.size - 2)
-    else calendricals.remove(calendricals.size - 1)
-  }
-
-  /**
-   * Gets the formatting symbols.
-   *
-   * @return the formatting symbols, never null
-   */
-  def getSymbols: DateTimeFormatSymbols = symbols
-
-  /**
-   * Returns a string version of the context for debugging.
-   *
-   * @return a string representation of the context date, never null
-   */
-  override def toString: String = currentCalendrical.toString
-
-  /**
-   * Sets the parsed value associated with the specified rule.
-   * <p>
-   * The value stored may be out of range for the rule and of any type -
-   * no checks are performed.
-   *
-   * @param rule the rule to set in the rule-value map, not null
-   * @param value the value to set in the rule-value map, not null
-   */
-  def setParsed(rule: CalendricalRule[_], value: AnyRef): Unit = {
-    DateTimeFormatter.checkNotNull(rule, "CalendricalRule must not be null")
-    DateTimeFormatter.checkNotNull(value, "Value must not be null")
-    currentCalendrical.values.put(rule, value)
-  }
-
-  /**
    * Whether to parse using strict rules.
    */
   var strict: Boolean = true
@@ -185,6 +146,45 @@ final class DateTimeParseContext(val symbols: DateTimeFormatSymbols) {
    * @return a new independent merger with the parsed rule-value map, never null
    */
   def toCalendricalMerger: CalendricalMerger = new CalendricalMerger(new CalendricalContext(true, true), currentCalendrical.values)
+
+  /**
+   * Ends the parsing of an optional segment of the input.
+   *
+   * @param successful whether the optional segment was successfully parsed
+   */
+  def endOptional(successful: Boolean): Unit = {
+    if (successful) calendricals.remove(calendricals.size - 2)
+    else calendricals.remove(calendricals.size - 1)
+  }
+
+  /**
+   * Gets the formatting symbols.
+   *
+   * @return the formatting symbols, never null
+   */
+  def getSymbols: DateTimeFormatSymbols = symbols
+
+  /**
+   * Returns a string version of the context for debugging.
+   *
+   * @return a string representation of the context date, never null
+   */
+  override def toString: String = currentCalendrical.toString
+
+  /**
+   * Sets the parsed value associated with the specified rule.
+   * <p>
+   * The value stored may be out of range for the rule and of any type -
+   * no checks are performed.
+   *
+   * @param rule the rule to set in the rule-value map, not null
+   * @param value the value to set in the rule-value map, not null
+   */
+  def setParsed(rule: CalendricalRule[_], value: AnyRef): Unit = {
+    DateTimeFormatter.checkNotNull(rule, "CalendricalRule must not be null")
+    DateTimeFormatter.checkNotNull(value, "Value must not be null")
+    currentCalendrical.values.put(rule, value)
+  }
 
   /**
    * Gets the currently active calendrical.

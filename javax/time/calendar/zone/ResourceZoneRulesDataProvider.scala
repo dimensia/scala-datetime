@@ -63,10 +63,10 @@ object ResourceZoneRulesDataProvider {
    * ResourceZoneRulesVersion is thread-safe and immutable.
    */
   /**Constructor. */
-  private[zone] class ResourceZoneRulesVersion (val provider: ResourceZoneRulesDataProvider,
-                                                            val versionID: String,
-                                                            val regionArray: Array[String],
-                                                            val ruleIndices: Array[Short])
+  private[zone] class ResourceZoneRulesVersion(val provider: ResourceZoneRulesDataProvider,
+                                               val versionID: String,
+                                               val regionArray: Array[String],
+                                               val ruleIndices: Array[Short])
     extends ZoneRulesVersion {
     def getZoneRules(regionID: String): ZoneRules = {
       var index: Int = Arrays.binarySearch(regionArray.asInstanceOf[Array[Object]], regionID)

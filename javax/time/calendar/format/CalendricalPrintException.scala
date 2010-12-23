@@ -59,7 +59,7 @@ class CalendricalPrintException(message: String, throwable: Throwable = null)
    * <pre>
    * try   {
    *   printer.print(writer, dateTime);
-   *} catch (CalendricalFormatException ex)   {
+   * } catch (CalendricalFormatException ex)   {
    *   ex.rethrowIOException();
    *   // if code reaches here exception was caused by date-time issues
    * }

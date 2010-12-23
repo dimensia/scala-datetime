@@ -40,17 +40,6 @@ import java.util.Locale
  * @author Stephen Colebourne
  */
 object DateTimeFormatSymbols {
-  /**
-   * Gets the {@code DateFormatSymbols} instance for the default
-   * locale. This method provides access to {@code DateFormatSymbols }
-   * instances for locales supported by the Java runtime itself as well as for
-   * those supported by installed
-   * {@link java.text.spi.DateFormatSymbolsProvider DateFormatSymbolsProvider }
-   * implementations.
-   *
-   * @return a {@code DateTimeFormatSymbols} instance.
-   */
-  def getInstance: DateTimeFormatSymbols = getInstance(Locale.getDefault)
 
   /**
    * Returns an array of all locales for which the {@code getInstance }
@@ -78,7 +67,7 @@ object DateTimeFormatSymbols {
    * @return a {@code DateTimeFormatSymbols} instance
    * @throws NullPointerException if {@code locale} is null
    */
-  def getInstance(locale: Locale): DateTimeFormatSymbols = {
+  def getInstance(locale: Locale = Locale.getDefault): DateTimeFormatSymbols = {
     DateTimeFormatter.checkNotNull(locale, "Locale must not be null")
     val symbols: DateFormatSymbols = new DateFormatSymbols(locale)
     return new DateTimeFormatSymbols(locale, symbols)
@@ -145,11 +134,11 @@ final class DateTimeFormatSymbols private(locale: Locale) {
     }
     val diff: Int = getZeroChar - '0'
     val array: Array[Char] = numericText.toCharArray
-      var i: Int = 0
-      while (i < array.length) {
-          array(i) = (array(i) + diff).toChar
-          i += 1;
-      }
+    var i: Int = 0
+    while (i < array.length) {
+      array(i) = (array(i) + diff).toChar
+      i += 1;
+    }
     return new String(array)
   }
 

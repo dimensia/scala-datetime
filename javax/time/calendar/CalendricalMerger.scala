@@ -144,7 +144,7 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
     if (oldValue.isDefined) {
       if (oldValue.get.equals(value) == false) {
         throw new InvalidCalendarFieldException("Merge resulted in two different values, " + value + " and " + oldValue.get + ", for " + rule.getID + " given input " + inputMap, rule);
-     } else {
+      } else {
         return // no change
       }
     }

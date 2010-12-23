@@ -157,7 +157,7 @@ final class StandardZoneRules private(private val standardTransitions: Array[Lon
                                       private val wallOffsets: Array[ZoneOffset],
                                       private val lastRules: Array[ZoneOffsetTransitionRule],
                                       @transient savingsLocalTransitions: Array[LocalDateTime])
-        extends ZoneRules with Serializable {
+  extends ZoneRules with Serializable {
 
   /**
    * The map of recent transitions.

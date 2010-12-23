@@ -120,8 +120,8 @@ object ZonePrinterParser {
   private def prepareParser(availableIDs: Set[String]): ZonePrinterParser.SubstringTree = {
     val ids: List[String] = availableIDs.toList
 
-//    def comparator(str1: String, str2: String): Int = if (str1.length == str2.length) str1.compareTo(str2) else str1.length - str2.length
-//    ids.sortWith(comparator)
+    //    def comparator(str1: String, str2: String): Int = if (str1.length == str2.length) str1.compareTo(str2) else str1.length - str2.length
+    //    ids.sortWith(comparator)
 
     val tree: ZonePrinterParser.SubstringTree = new ZonePrinterParser.SubstringTree(ids.head.length)
     tree
@@ -150,7 +150,7 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
     this (null)
   }
 
-  /** {@inheritDoc} */
+  /**{@inheritDoc}*/
   override def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = {
     val zone: TimeZone = calendrical.get(TimeZone.rule).getOrElse(throw new CalendricalPrintException("Unable to print TimeZone"))
 
@@ -165,7 +165,7 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
     }
   }
 
-  /** {@inheritDoc} */
+  /**{@inheritDoc}*/
   override def isPrintDataAvailable(calendrical: Calendrical): Boolean = {
     return (calendrical.get(TimeZone.rule) != null)
   }
@@ -192,7 +192,7 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
       return ~position
     }
     var tree: ZonePrinterParser.SubstringTree = null
-    classOf[ZonePrinterParser].synchronized {
+    classOf[ZonePrinterParser].synchronized{
       if (preparedTree == null || preparedIDs.size < ids.size) {
         ids = new HashSet[String](ids)
         preparedTree = prepareParser(ids)
@@ -221,7 +221,7 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
       }
       parsedZoneId = parseText.substring(position, position + nodeLength)
       tree = tree.get(parsedZoneId)
-        count += 1;
+      count += 1;
     }
     if (parsedZoneId != null && preparedIDs.contains(parsedZoneId)) {
       var zone: TimeZone = TimeZone.of(parsedZoneId)
@@ -242,7 +242,7 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
     else return ~position
   }
 
-  /** {@inheritDoc} */
+  /**{@inheritDoc}*/
   override def toString: String = {
     if (textStyle == null) "ZoneId()"
     else "ZoneText(" + textStyle + ")"

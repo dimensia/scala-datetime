@@ -171,7 +171,7 @@ object MonthOfYear {
 
 }
 
-sealed abstract class MonthOfYear(val ordinal: Int) extends Calendrical {
+sealed abstract class MonthOfYear(val ordinal: Int) extends Ordered[MonthOfYear] with Calendrical {
 
   import MonthOfYear._
 

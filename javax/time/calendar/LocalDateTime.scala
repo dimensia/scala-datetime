@@ -507,7 +507,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @param years the years to add, may be negative
    * @return a {@code LocalDateTime} based on this date-time with the period added, never null
    * @throws CalendricalException if the result exceeds the supported date range
-   * @see#plusYears ( int, javax.time.calendar.DateResolver )
+   * @see# p l u s Y e a r s ( int, javax.time.calendar.DateResolver )
    */
   def plusYears(years: Int): LocalDateTime = {
     val newDate: LocalDate = date.plusYears(years)
@@ -602,7 +602,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @param years the years to subtract, may be negative
    * @return a {@code LocalDateTime} based on this date-time with the years subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
-   * @see#minusYears ( int, javax.time.calendar.DateResolver )
+   * @see# m i n u s Y e a r s ( int, javax.time.calendar.DateResolver )
    */
   def minusYears(years: Int): LocalDateTime = {
     val newDate: LocalDate = date.minusYears(years)
@@ -673,7 +673,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @return true if this point is before the specified date-time
    * @throws NullPointerException if {@code other} is null
    */
-  def isBefore(other: LocalDateTime): Boolean = compareTo(other) < 0
+  def isBefore(other: LocalDateTime): Boolean = this < that
 
   /**
    * Converts this date-time to a {@code LocalTime}.
@@ -822,7 +822,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @return a {@code LocalDateTime} based on this date-time with the requested time, never null
    * @throws IllegalCalendarFieldValueException if any field value is invalid
    */
-  def withTime(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int): LocalDateTime = {
+  def withTime(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int = 0, nanoOfSecond: Int = 0): LocalDateTime = {
     if (hourOfDay == getHourOfDay && minuteOfHour == getMinuteOfHour && secondOfMinute == getSecondOfMinute && nanoOfSecond == getNanoOfSecond) {
       return this
     }
@@ -854,9 +854,9 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @return true if this point is equal to the specified date-time
    */
   override def equals(other: AnyRef): Boolean = {
-    if (this == other) true
+    if (this eq other) true
     else if (other.isInstanceOf[LocalDateTime]) {
-      var dt: LocalDateTime = other.asInstanceOf[LocalDateTime]
+      val dt: LocalDateTime = other.asInstanceOf[LocalDateTime]
       date.equals(dt.date) && time.equals(dt.time)
     }
     else false
@@ -1201,27 +1201,6 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    */
   def `with`(adjuster: TimeAdjuster): LocalDateTime = `with`(date, time.`with`(adjuster))
 
-
-  /**
-   * Returns a copy of this {@code LocalDateTime} with the time values altered.
-   * <p>
-   * This method will return a new instance with the same date fields,
-   * but altered time fields.
-   * This is a shorthand for {@link #withTime ( int, int, int, int )} and sets
-   * the nanosecond fields to zero.
-   * <p>
-   * This instance is immutable and unaffected by this method call.
-   *
-   * @param hourOfDay the hour-of-day to represent, from 0 to 23
-   * @param minuteOfHour the minute-of-hour to represent, from 0 to 59
-   * @param secondOfMinute the second-of-minute to represent, from 0 to 59
-   * @return a {@code LocalDateTime} based on this date-time with the requested time, never null
-   * @throws IllegalCalendarFieldValueException if any field value is invalid
-   */
-  def withTime(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int): LocalDateTime = {
-    withTime(hourOfDay, minuteOfHour, secondOfMinute, 0)
-  }
-
   /**
    * Returns a copy of this {@code LocalDateTime} with the specified period in months added.
    * <p>
@@ -1341,7 +1320,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @return true if this is after the specified date-time
    * @throws NullPointerException if {@code other} is null
    */
-  def isAfter(other: LocalDateTime): Boolean = compareTo(other) > 0
+  def isAfter(other: LocalDateTime): Boolean = this > that
 
   /**
    * Returns a zoned date-time formed from this date-time and the specified time-zone
@@ -1389,7 +1368,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @param months the months to add, may be negative
    * @return a {@code LocalDateTime} based on this date-time with the months added, never null
    * @throws CalendricalException if the result exceeds the supported date range
-   * @see#plusMonths ( int, javax.time.calendar.DateResolver )
+   * @see# p l u s M o n t h s ( int, javax.time.calendar.DateResolver )
    */
   def plusMonths(months: Int): LocalDateTime = {
     val newDate: LocalDate = date.plusMonths(months)
@@ -1567,7 +1546,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
    */
-  def get[T](rule: CalendricalRule[T]): Option[T] = Some(rule.deriveValueFor(rule, this, this))
+  def get[T](rule: CalendricalRule[T]): Option[T] = Some(rule.deriveValueFor(rule, this, this, ISOChronology))
 
   /**
    * Returns a copy of this {@code LocalDateTime} with the specified period in months subtracted.
@@ -1590,7 +1569,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @param months the months to subtract, may be negative
    * @return a {@code LocalDateTime} based on this date-time with the months subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
-   * @see#minusMonths ( int, javax.time.calendar.DateResolver )
+   * @see# m i n u s M o n t h s ( int, javax.time.calendar.DateResolver )
    */
   def minusMonths(months: Int): LocalDateTime = {
     val newDate: LocalDate = date.minusMonths(months)
@@ -1609,20 +1588,4 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    */
   def matches(matcher: CalendricalMatcher): Boolean = matcher.matchesCalendrical(this)
 
-  /**
-   * Returns a copy of this {@code LocalDateTime} with the time values altered.
-   * <p>
-   * This method will return a new instance with the same date fields,
-   * but altered time fields.
-   * This is a shorthand for {@link #withTime ( int, int, int, int )} and sets
-   * the second and nanosecond fields to zero.
-   * <p>
-   * This instance is immutable and unaffected by this method call.
-   *
-   * @param hourOfDay the hour-of-day to represent, from 0 to 23
-   * @param minuteOfHour the minute-of-hour to represent, from 0 to 59
-   * @return a {@code LocalDateTime} based on this date-time with the requested time, never null
-   * @throws IllegalCalendarFieldValueException if any field value is invalid
-   */
-  def withTime(hourOfDay: Int, minuteOfHour: Int): LocalDateTime = withTime(hourOfDay, minuteOfHour, 0, 0)
 }

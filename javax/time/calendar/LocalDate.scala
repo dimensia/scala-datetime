@@ -74,7 +74,7 @@ object LocalDate {
    * @param clock the clock to use, not null
    * @return the current date, never null
    */
-  def now(clock: Clock): LocalDate = {
+  def now(clock: Clock = Clock.systemDefaultZone): LocalDate = {
     ISOChronology.checkNotNull(clock, "Clock must not be null")
     val instant: Instant = clock.instant
     val offset: ZoneOffset = clock.getZone.getRules.getOffset(instant)
@@ -160,17 +160,6 @@ object LocalDate {
    * @throws CalendricalException if the text cannot be parsed
    */
   def parse(text: String): LocalDate = DateTimeFormatters.isoLocalDate.parse(text, rule)
-
-  /**
-   * Obtains the current date from the system clock in the default time-zone.
-   * <p>
-   * This will query the system clock in the default time-zone to obtain the current date - today.
-   * Using this method will prevent the ability to use an alternate clock for testing
-   * because the clock is hard-coded.
-   *
-   * @return the current date using the system clock, never null
-   */
-  def now: LocalDate = now(Clock.systemDefaultZone)
 
   /**
    * Obtains an instance of {@code LocalDate} from a date provider.
@@ -298,7 +287,7 @@ object LocalDate {
 /**
  * Constructor, previously validated.
  *
- * @param year the year to represent, from MIN_YEAR to MAX_YEAR
+ * @param year the year to represent, from MinYear to MaxYear
  * @param monthOfYear the month-of-year to represent, not null
  * @param dayOfMonth the day-of-month to represent, valid for year-month, from 1 to 31
  */
@@ -308,7 +297,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * Resolves the date, handling incorrectly implemented resolvers.
    *
    * @param dateResolver the resolver, not null
-   * @param year the year, from MIN_YEAR to MAX_YEAR
+   * @param year the year, from MinYear to MaxYear
    * @param month the month, not null
    * @param day the day-of-month, from 1 to 31
    * @return the resolved date, never null
@@ -345,7 +334,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * @return a {@code LocalDate} based on this date with the requested year, never null
    * @throws IllegalCalendarFieldValueException if the year value is invalid
    */
-  def withYear(year: Int, dateResolver: DateResolver): LocalDate = {
+  def withYear(year: Int, dateResolver: DateResolver = DateResolvers.previousValid): LocalDate = {
     ISOChronology.checkNotNull(dateResolver, "DateResolver must not be null")
     if (this.year == year) this
     else resolveDate(dateResolver, year, month, day)
@@ -467,7 +456,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * @return a {@code LocalDate} based on this date with the months added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def plusMonths(months: Long, dateResolver: DateResolver): LocalDate = {
+  def plusMonths(months: Long, dateResolver: DateResolver = DateResolvers.previousValid): LocalDate = {
     ISOChronology.checkNotNull(dateResolver, "DateResolver must not be null")
     if (months == 0) return this
     val monthCount: Long = year * 12L + (month.getValue - 1)
@@ -662,7 +651,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    *
    * @return true if the year is leap, false otherwise
    */
-  def isLeapYear: Boolean = ISOChronology.isLeapYear(year)
+   def isLeapYear: Boolean = ISOChronology.isLeapYear(year)
 
   /**
    * Gets the year field.
@@ -710,7 +699,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * @return a {@code LocalDate} based on this date with the months subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def minusMonths(months: Long, dateResolver: DateResolver): LocalDate = {
+  def minusMonths(months: Long, dateResolver: DateResolver = DateResolvers.previousValid): LocalDate = {
     ISOChronology.checkNotNull(dateResolver, "DateResolver must not be null")
     if (months == 0) return this
     val monthCount: Long = year * 12L + (month.getValue - 1)
@@ -728,31 +717,6 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * @return the day-of-month, from 1 to 31
    */
   def getDayOfMonth: Int = day
-
-  /**
-   * Returns a copy of this {@code LocalDate} with the specified period in months subtracted.
-   * <p>
-   * This method subtract the specified amount to the months field in three steps:
-   * <ol>
-   * <li>Subtract the input months to the month-of-year field</li>
-   * <li>Check if the resulting date would be invalid</li>
-   * <li>Adjust the day-of-month to the last valid day if necessary</li>
-   * </ol>
-   * <p>
-   * For example, 2007-03-31 minus one month would result in the invalid date
-   * 2007-02-31. Instead of returning an invalid result, the last valid day
-   * of the month, 2007-02-28, is selected instead.
-   * <p>
-   * This method does the same as {@code minusMonts ( months, DateResolvers.previousValid ( ) )}.
-   * <p>
-   * This instance is immutable and unaffected by this method call.
-   *
-   * @param months the months to subtract, may be negative
-   * @return a {@code LocalDate} based on this date with the months subtracted, never null
-   * @throws CalendricalException if the result exceeds the supported date range
-   * @see#minusMonths ( long, javax.time.calendar.DateResolver )
-   */
-  def minusMonths(months: Long): LocalDate = minusMonths(months, DateResolvers.previousValid)
 
   /**
    * Returns a local date-time formed from this date at the specified time.
@@ -813,31 +777,6 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
   }
 
   /**
-   * Returns a copy of this {@code LocalDate} with the specified period in years subtracted.
-   * <p>
-   * This method subtract the specified amount to the years field in three steps:
-   * <ol>
-   * <li>Subtract the input years to the year field</li>
-   * <li>Check if the resulting date would be invalid</li>
-   * <li>Adjust the day-of-month to the last valid day if necessary</li>
-   * </ol>
-   * <p>
-   * For example, 2008-02-29 (leap year) minus one year would result in the
-   * invalid date 2007-02-29 (standard year). Instead of returning an invalid
-   * result, the last valid day of the month, 2007-02-28, is selected instead.
-   * <p>
-   * This method does the same as {@code minusYears ( years, DateResolvers.previousValid ( ) )}.
-   * <p>
-   * This instance is immutable and unaffected by this method call.
-   *
-   * @param years the years to subtract, may be negative
-   * @return a {@code LocalDate} based on this date with the years subtracted, never null
-   * @throws CalendricalException if the result exceeds the supported date range
-   * @see#minusYears ( long, javax.time.calendar.DateResolver )
-   */
-  def minusYears(years: Long): LocalDate = minusYears(years, DateResolvers.previousValid)
-
-  /**
    * Converts this date to a {@code LocalDate}, trivially
    * returning {@code this}.
    *
@@ -879,7 +818,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * @param dateResolver the DateResolver to be used if the resulting date would be invalid
    * @return a {@code LocalDate} based on this date with the requested month, never null
    */
-  def `with`(monthOfYear: MonthOfYear, dateResolver: DateResolver): LocalDate = {
+  def `with`(monthOfYear: MonthOfYear, dateResolver: DateResolver = DateResolvers.previousValid): LocalDate = {
     ISOChronology.checkNotNull(monthOfYear, "MonthOfYear must not be null")
     ISOChronology.checkNotNull(dateResolver, "DateResolver must not be null")
     if (this.month == monthOfYear) this
@@ -920,15 +859,9 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
     total += ((367 * m - 362) / 12)
     total += day - 1
     if (m > 2) {
-      ({
-        total -= 1;
-        total
-      })
+      total -= 1;
       if (ISOChronology.isLeapYear(year) == false) {
-        ({
-          total -= 1;
-          total
-        })
+        total -= 1;
       }
     }
     return total
@@ -951,7 +884,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * @return a {@code LocalDate} based on this date with the years subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def minusYears(years: Long, dateResolver: DateResolver): LocalDate = {
+  def minusYears(years: Long, dateResolver: DateResolver = DateResolvers.previousValid): LocalDate = {
     ISOChronology.checkNotNull(dateResolver, "DateResolver must not be null")
     if (years == 0) return this
     val newYear: Int = ISOChronology.yearRule.checkValue(year - years)
@@ -975,7 +908,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * @return a {@code LocalDate} based on this date with the years added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def plusYears(years: Long, dateResolver: DateResolver): LocalDate = {
+  def plusYears(years: Long, dateResolver: DateResolver = DateResolvers.previousValid): LocalDate = {
     ISOChronology.checkNotNull(dateResolver, "DateResolver must not be null")
     if (years == 0) return this
     val newYear: Int = ISOChronology.yearRule.checkValue(year + years)
@@ -1003,33 +936,6 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
   def getChronology: ISOChronology = ISOChronology
 
   /**
-   * Returns a copy of this {@code LocalDate} with the specified period in months added.
-   * <p>
-   * This method add the specified amount to the months field in three steps:
-   * <ol>
-   * <li>Add the input months to the month-of-year field</li>
-   * <li>Check if the resulting date would be invalid</li>
-   * <li>Adjust the day-of-month to the last valid day if necessary</li>
-   * </ol>
-   * <p>
-   * For example, 2007-03-31 plus one month would result in the invalid date
-   * 2007-04-31. Instead of returning an invalid result, the last valid day
-   * of the month, 2007-04-30, is selected instead.
-   * <p>
-   * This method does the same as {@code plusMonths(months, DateResolvers.previousValid())}.
-   * <p>
-   * This instance is immutable and unaffected by this method call.
-   *
-   * @param months the months to add, may be negative
-   * @return a {@code LocalDate} based on this date with the months added, never null
-   * @throws CalendricalException if the result exceeds the supported date range
-   * @see #plusMonths(long,javax.time.calendar.DateResolver)
-   */
-  def plusMonths(months: Long): LocalDate = {
-    return plusMonths(months, DateResolvers.previousValid)
-  }
-
-  /**
    * Checks if this {@code LocalDate} is after the specified date.
    * <p>
    * The comparison is based on the time-line position of the dates.
@@ -1038,9 +944,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * @return true if this is after the specified date
    * @throws NullPointerException if {@code other} is null
    */
-  def isAfter(other: LocalDate): Boolean = {
-    return compareTo(other) > 0
-  }
+  def isAfter(other: LocalDate): Boolean = this > other
 
   /**
    * Returns a copy of this {@code LocalDate} with the date altered using the adjuster.
@@ -1149,45 +1053,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * @return true if this point is before the specified date
    * @throws NullPointerException if {@code other} is null
    */
-  def isBefore(other: LocalDate): Boolean = compareTo(other) < 0
-
-  /**
-   * Returns a copy of this {@code LocalDate} with the month-of-year altered.
-   * If the resulting date is invalid, it will be resolved using {@link DateResolvers#previousValid()}.
-   * <p>
-   * This method does the same as {@code with ( monthOfYear, DateResolvers.previousValid ( ) )}.
-   * <p>
-   * This instance is immutable and unaffected by this method call.
-   *
-   * @param monthOfYear the month-of-year to set in the returned date, not null
-   * @return a {@code LocalDate} based on this date with the requested month, never null
-   */
-  def `with`(monthOfYear: MonthOfYear): LocalDate = `with`(monthOfYear, DateResolvers.previousValid)
-
-  /**
-   * Returns a copy of this {@code LocalDate} with the specified period in years added.
-   * <p>
-   * This method add the specified amount to the years field in three steps:
-   * <ol>
-   * <li>Add the input years to the year field</li>
-   * <li>Check if the resulting date would be invalid</li>
-   * <li>Adjust the day-of-month to the last valid day if necessary</li>
-   * </ol>
-   * <p>
-   * For example, 2008-02-29 (leap year) plus one year would result in the
-   * invalid date 2009-02-29 (standard year). Instead of returning an invalid
-   * result, the last valid day of the month, 2009-02-28, is selected instead.
-   * <p>
-   * This method does the same as {@code plusYears ( years, DateResolvers.previousValid ( ) )}.
-   * <p>
-   * This instance is immutable and unaffected by this method call.
-   *
-   * @param years the years to add, may be negative
-   * @return a {@code LocalDate} based on this date with the years added, never null
-   * @throws CalendricalException if the result exceeds the supported date range
-   * @see#plusYears ( long, javax.time.calendar.DateResolver )
-   */
-  def plusYears(years: Long): LocalDate = plusYears(years, DateResolvers.previousValid)
+  def isBefore(other: LocalDate): Boolean = this < other
 
   /**
    * Gets the day-of-week field, which is an enum {@code DayOfWeek}.
@@ -1255,20 +1121,6 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * @return the Modified Julian Day equivalent to this date
    */
   def toModifiedJulianDays: Long = toYearZeroDays - ISOChronology.Days0000ToModifiedJulianDaysEpoch
-
-  /**
-   * Returns a copy of this {@code LocalDate} with the year altered.
-   * If the resulting date is invalid, it will be resolved using {@link DateResolvers#previousValid()}.
-   * <p>
-   * This method does the same as {@code withYear ( year, DateResolvers.previousValid ( ) )}.
-   * <p>
-   * This instance is immutable and unaffected by this method call.
-   *
-   * @param year the year to set in the returned date, from MIN_YEAR to MAX_YEAR
-   * @return a {@code LocalDate} based on this date with the requested year, never null
-   * @throws IllegalCalendarFieldValueException if the year value is invalid
-   */
-  def withYear(year: Int): LocalDate = withYear(year, DateResolvers.previousValid)
 
   /**
    * Returns a copy of this {@code LocalDate} with the specified number of days subtracted.

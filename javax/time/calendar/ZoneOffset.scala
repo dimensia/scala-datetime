@@ -583,7 +583,7 @@ final class ZoneOffset private(val amountSeconds: Int) extends Calendrical with 
    * @return true if this offset is the same as that specified
    */
   override def equals(other: AnyRef): Boolean = {
-    if (this == other) true
+    if (this eq other) true
     else if (other.isInstanceOf[ZoneOffset]) amountSeconds == (other.asInstanceOf[ZoneOffset]).amountSeconds
     else false
   }

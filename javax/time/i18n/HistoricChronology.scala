@@ -389,7 +389,7 @@ final class HistoricChronology private(cutover: LocalDate) extends Chronology wi
       return ISOChronology.isLeapYear(year)
     }
     else {
-      if (cutover.getMonthOfYear.compareTo(MonthOfYear.February) < 0) {
+      if (cutover.getMonthOfYear < MonthOfYear.February) {
         return false
       }
       return false

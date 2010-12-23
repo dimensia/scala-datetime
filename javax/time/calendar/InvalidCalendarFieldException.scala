@@ -40,12 +40,12 @@ package javax.time.calendar
  *
  * @author Stephen Colebourne
  */
-  /**
-   * Constructs a new invalid field exception.
-   *
-   * @param message the message describing the problem, should not be null
-   * @param rule the rule that is invalid, may be null
-   */
+/**
+ * Constructs a new invalid field exception.
+ *
+ * @param message the message describing the problem, should not be null
+ * @param rule the rule that is invalid, may be null
+ */
 @SerialVersionUID(1L)
 class InvalidCalendarFieldException[T](message: String, rule: CalendricalRule[T])
   extends CalendricalRuleException(message, rule)

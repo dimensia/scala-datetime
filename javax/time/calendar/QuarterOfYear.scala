@@ -125,7 +125,7 @@ sealed abstract class QuarterOfYear(ordinal: Int) extends Calendrical {
    */
   def get[T](rule: CalendricalRule[T]): Option[T] = {
     if (rule.getReifiedType != classOf[QuarterOfYear]) None
-//    else Some(rule.reify(this))      //FIXME
+    //    else Some(rule.reify(this))      //FIXME
     else None
   }
 
@@ -179,8 +179,9 @@ sealed abstract class QuarterOfYear(ordinal: Int) extends Calendrical {
    * @return the resulting quarter-of-year, never null
    */
   def roll(quarters: Int): QuarterOfYear = of((ordinal + (quarters % 4 + 4)) % 4)
-    //val result = (ordinal + (quarters % 4 + 4)) % 4
-    //if (result == 0) of(4) else of(result)
+
+  //val result = (ordinal + (quarters % 4 + 4)) % 4
+  //if (result == 0) of(4) else of(result)
 
   /**
    * Gets the first of the three months that this quarter refers to.

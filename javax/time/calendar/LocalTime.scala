@@ -129,8 +129,8 @@ object LocalTime {
 
   @SerialVersionUID(1L)
   private[calendar] sealed class Rule
-          extends CalendricalRule[LocalTime](classOf[LocalTime], ISOChronology, "LocalTime", ISOChronology.periodNanos, ISOChronology.periodDays)
-          with Serializable {
+    extends CalendricalRule[LocalTime](classOf[LocalTime], ISOChronology, "LocalTime", ISOChronology.periodNanos, ISOChronology.periodDays)
+    with Serializable {
     protected override def derive(calendrical: Calendrical): Option[LocalTime] = {
       val ldt: LocalDateTime = calendrical.get(LocalDateTime.rule).orNull
       if (ldt != null) return Some(ldt.toLocalTime)
@@ -143,24 +143,40 @@ object LocalTime {
   }
 
   /**
-   * Obtains an instance of {@code LocalTime} from an hour and minute.
-   * <p>
-   * The second and nanosecond fields will be set to zero by this factory method.
+   * Obtains an instance of {@code LocalTime} from an hour, minute, second and nanosecond.
    * <p>
    * This factory may return a cached value, but applications must not rely on this.
    *
    * @param hourOfDay the hour-of-day to represent, from 0 to 23
    * @param minuteOfHour the minute-of-hour to represent, from 0 to 59
+   * @param secondOfMinute the second-of-minute to represent, from 0 to 59
+   * @param nanoOfSecond the nano-of-second to represent, from 0 to 999,999,999
    * @return the local time, never null
    * @throws IllegalCalendarFieldValueException if the value of any field is out of range
    */
-  def of(hourOfDay: Int, minuteOfHour: Int): LocalTime = {
+  def of(hourOfDay: Int, minuteOfHour: Int = 0, secondOfMinute: Int = 0, nanoOfSecond: Int = 0): LocalTime = {
     ISOChronology.hourOfDayRule.checkValue(hourOfDay)
-    if (minuteOfHour == 0) {
-      return Hours(hourOfDay)
-    }
-    ISOChronology.minuteOfHourRule.checkValue(minuteOfHour)
-    return new LocalTime(hourOfDay, minuteOfHour, 0, 0)
+    if(minuteOfHour != 0) ISOChronology.minuteOfHourRule.checkValue(minuteOfHour)
+    if(secondOfMinute != 0) ISOChronology.secondOfMinuteRule.checkValue(secondOfMinute)
+    if(nanoOfSecond != 0) ISOChronology.nanoOfSecondRule.checkValue(nanoOfSecond)
+    return create(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
+  }
+
+  /**
+   * Creates a local time from the hour, minute, second and nanosecond fields.
+   * <p>
+   * This factory may return a cached value, but applications must not rely on this.
+   *
+   * @param hourOfDay the hour-of-day to represent, validated from 0 to 23
+   * @param minuteOfHour the minute-of-hour to represent, validated from 0 to 59
+   * @param secondOfMinute the second-of-minute to represent, validated from 0 to 59
+   * @param nanoOfSecond the nano-of-second to represent, validated from 0 to 999,999,999
+   * @return the local time, never null
+   * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
+   */
+  private def create(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int): LocalTime = {
+    if ((minuteOfHour | secondOfMinute | nanoOfSecond) == 0) Hours(hourOfDay)
+    else new LocalTime(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
   }
 
   /**
@@ -199,49 +215,6 @@ object LocalTime {
   def parse(text: String, formatter: DateTimeFormatter): LocalTime = {
     ISOChronology.checkNotNull(formatter, "DateTimeFormatter must not be null")
     return formatter.parse(text, rule)
-  }
-
-  /**
-   * Obtains an instance of {@code LocalTime} from an hour, minute, second and nanosecond.
-   * <p>
-   * This factory may return a cached value, but applications must not rely on this.
-   *
-   * @param hourOfDay the hour-of-day to represent, from 0 to 23
-   * @param minuteOfHour the minute-of-hour to represent, from 0 to 59
-   * @param secondOfMinute the second-of-minute to represent, from 0 to 59
-   * @param nanoOfSecond the nano-of-second to represent, from 0 to 999,999,999
-   * @return the local time, never null
-   * @throws IllegalCalendarFieldValueException if the value of any field is out of range
-   */
-  def of(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int): LocalTime = {
-    ISOChronology.hourOfDayRule.checkValue(hourOfDay)
-    ISOChronology.minuteOfHourRule.checkValue(minuteOfHour)
-    ISOChronology.secondOfMinuteRule.checkValue(secondOfMinute)
-    ISOChronology.nanoOfSecondRule.checkValue(nanoOfSecond)
-    return create(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
-  }
-
-  /**
-   * Obtains an instance of {@code LocalTime} from an hour, minute and second.
-   * <p>
-   * The nanosecond field will be set to zero by this factory method.
-   * <p>
-   * This factory may return a cached value, but applications must not rely on this.
-   *
-   * @param hourOfDay the hour-of-day to represent, from 0 to 23
-   * @param minuteOfHour the minute-of-hour to represent, from 0 to 59
-   * @param secondOfMinute the second-of-minute to represent, from 0 to 59
-   * @return the local time, never null
-   * @throws IllegalCalendarFieldValueException if the value of any field is out of range
-   */
-  def of(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int): LocalTime = {
-    ISOChronology.hourOfDayRule.checkValue(hourOfDay)
-    if ((minuteOfHour | secondOfMinute) == 0) {
-      return Hours(hourOfDay)
-    }
-    ISOChronology.minuteOfHourRule.checkValue(minuteOfHour)
-    ISOChronology.secondOfMinuteRule.checkValue(secondOfMinute)
-    return new LocalTime(hourOfDay, minuteOfHour, secondOfMinute, 0)
   }
 
   /**
@@ -343,30 +316,13 @@ object LocalTime {
   }
 
   /**
-   * Creates a local time from the hour, minute, second and nanosecond fields.
-   * <p>
-   * This factory may return a cached value, but applications must not rely on this.
-   *
-   * @param hourOfDay the hour-of-day to represent, validated from 0 to 23
-   * @param minuteOfHour the minute-of-hour to represent, validated from 0 to 59
-   * @param secondOfMinute the second-of-minute to represent, validated from 0 to 59
-   * @param nanoOfSecond the nano-of-second to represent, validated from 0 to 999,999,999
-   * @return the local time, never null
-   * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
-   */
-  private def create(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int): LocalTime = {
-    if ((minuteOfHour | secondOfMinute | nanoOfSecond) == 0) Hours(hourOfDay)
-    else new LocalTime(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
-  }
-
-  /**
    * Obtains an instance of {@code LocalTime} from a string.
    * <p>
    * The following formats are accepted in ASCII:
    * <ul>
-   * <li> {@code   { Hour} :   { Minute} }
-   * <li> {@code   { Hour} :   { Minute} :   { Second} }
-   * <li> {@code   { Hour} :   { Minute} :   { Second}.   { NanosecondFraction} }
+   * <li> {@code {Hour}:{Minute}}
+   * <li> {@code {Hour}:{Minute}:{Second}}
+   * <li> {@code {Hour}:{Minute}:{Second}.{NanosecondFraction}}
    * </ul>
    * <p>
    * The hour has 2 digits with values from 0 to 23.
@@ -457,8 +413,8 @@ object LocalTime {
 
 @SerialVersionUID(1L)
 final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte, val nano: Int)
-        extends Calendrical with TimeProvider with CalendricalMatcher
-        with TimeAdjuster with Ordered[LocalTime] with Serializable {
+  extends Calendrical with TimeProvider with CalendricalMatcher
+  with TimeAdjuster with Ordered[LocalTime] with Serializable {
 
   import LocalTime._
 
@@ -471,7 +427,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    * @return true if this point is before the specified time
    * @throws NullPointerException if {@code other} is null
    */
-  def isBefore(other: LocalTime): Boolean = compareTo(other) < 0
+  def isBefore(other: LocalTime): Boolean = this < other
 
   /**
    * Constructor, previously validated.
@@ -906,7 +862,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    * @return true if this point is equal to the specified time
    */
   override def equals(other: AnyRef): Boolean = {
-    if (this == other) true
+    if (this eq other) true
     else if (other.isInstanceOf[LocalTime]) {
       val localTime: LocalTime = other.asInstanceOf[LocalTime]
       hour == localTime.hour && minute == localTime.minute && second == localTime.second && nano == localTime.nano
@@ -977,7 +933,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    * @return true if this is after the specified time
    * @throws NullPointerException if {@code other} is null
    */
-  def isAfter(other: LocalTime): Boolean = compareTo(other) > 0
+  def isAfter(other: LocalTime): Boolean = this > other
 
   /**
    * Gets the minute-of-hour field.

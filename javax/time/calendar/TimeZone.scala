@@ -492,8 +492,8 @@ object TimeZone {
 
   @SerialVersionUID(1L)
   private[calendar] sealed class Rule
-          extends CalendricalRule[TimeZone](classOf[TimeZone], ISOChronology, "TimeZone", null, null)
-          with Serializable {
+    extends CalendricalRule[TimeZone](classOf[TimeZone], ISOChronology, "TimeZone", null, null)
+    with Serializable {
 
     protected override def derive(calendrical: Calendrical): Option[TimeZone] = {
       calendrical.get(ZonedDateTime.rule) match {
@@ -565,9 +565,9 @@ object TimeZone {
    * <li> {@code UTC    { offset} } - fixed time-zone
    * <li> {@code GMT    { offset} } - fixed time-zone
    * </ul>
-   * Group IDs must match regular expression {@code[A -Za-z0-9._-]+}.<br />
-   * Region IDs must match regular expression {@code[A -Za-z0-9%@~/+._-]+}.<br />
-   * Version IDs must match regular expression {@code[A -Za-z0-9._-]+}.
+   * Group IDs must match regular expression {@code[ A -Za-z0-9._-]+}.<br />
+   * Region IDs must match regular expression {@code[ A -Za-z0-9%@~/+._-]+}.<br />
+   * Version IDs must match regular expression {@code[ A -Za-z0-9._-]+}.
    * <p>
    * Most of the formats are based around the group, version and region IDs.
    * The version and region ID formats are specific to the group.

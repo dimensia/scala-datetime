@@ -130,7 +130,7 @@ object TAIInstant {
     try {
       val Parser(secondsString, nanosString) = text
       return TAIInstant.ofTAISeconds(secondsString.toLong, nanosString.toLong)
-   } catch {
+    } catch {
       case ex: MatchError =>
         throw new CalendricalParseException("The text could not be parsed", text, 0)
       case ex: NumberFormatException =>

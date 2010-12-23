@@ -47,16 +47,16 @@ import javax.time.calendar.Calendrical
  * @param literal the literal to print or parse, not null
  */
 final class CharLiteralPrinterParser(literal: Char) extends DateTimePrinter with DateTimeParser {
-  /** {@inheritDoc}*/
+  /**{@inheritDoc}*/
   override def isPrintDataAvailable(calendrical: Calendrical): Boolean = true
 
 
-  /** {@inheritDoc}*/
+  /**{@inheritDoc}*/
   override def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = {
     appendable.append(literal)
   }
 
-  /** {@inheritDoc}*/
+  /**{@inheritDoc}*/
   override def parse(context: DateTimeParseContext, parseText: String, position: Int): Int = {
     var length: Int = parseText.length
     if (position == length) return ~position
@@ -69,6 +69,6 @@ final class CharLiteralPrinterParser(literal: Char) extends DateTimePrinter with
     return position + 1
   }
 
-  /** {@inheritDoc}*/
+  /**{@inheritDoc}*/
   override def toString: String = if (literal == '\'') return "''" else "'" + literal + "'"
 }

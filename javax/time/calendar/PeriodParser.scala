@@ -46,7 +46,7 @@ import javax.time.calendar.format.CalendricalParseException
  *
  * @return the instance of the parser
  */
-object PeriodParser extends PeriodParser{
+object PeriodParser extends PeriodParser {
 
   /**
    * The standard string representing a zero period.

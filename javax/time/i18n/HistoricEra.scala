@@ -95,6 +95,7 @@ object HistoricEra {
    * This has the numeric value of {@code 1}.
    */
   object CE extends HistoricEra(1)
+
 }
 
 sealed abstract class HistoricEra(ordinal: Int) extends Calendrical {

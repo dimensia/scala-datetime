@@ -313,7 +313,7 @@ final class CopticDate private(val epochDays: Int, @transient year: Int, @transi
    */
   def get[T](rule: CalendricalRule[T]): Option[T] = {
     if (rule.equals(LocalDate.rule)) rule.reify(toLocalDate)
-//    else rule.deriveValueFor(rule, this, this, CopticChronology)  //FIXME
+    //    else rule.deriveValueFor(rule, this, this, CopticChronology)  //FIXME
     else None
   }
 

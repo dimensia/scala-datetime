@@ -75,7 +75,7 @@ class NumberPrinterParser private[format](rule: DateTimeFieldRule[_], val minWid
     this (rule, minWidth, maxWidth, signStyle, 0)
   }
 
-  /** {@inheritDoc} */
+  /**{@inheritDoc}*/
   def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = {
     var value: Int = getValue(calendrical)
     var str: String = (if (value == Int.MinValue) "2147483648" else Integer.toString(math.abs(value)))
@@ -116,12 +116,12 @@ class NumberPrinterParser private[format](rule: DateTimeFieldRule[_], val minWid
     appendable.append(str)
   }
 
-  /** {@inheritDoc} */
+  /**{@inheritDoc}*/
   override def isPrintDataAvailable(calendrical: Calendrical): Boolean = {
     return calendrical.get(rule) != null
   }
 
-  /** {@inheritDoc} */
+  /**{@inheritDoc}*/
   override def toString: String = {
     if (minWidth == 1 && maxWidth == 10 && signStyle == SignStyle.Normal) {
       return "Value(" + rule.getID + ")"
@@ -132,7 +132,7 @@ class NumberPrinterParser private[format](rule: DateTimeFieldRule[_], val minWid
     return "Value(" + rule.getID + "," + minWidth + "," + maxWidth + "," + signStyle + ")"
   }
 
-  /** {@inheritDoc} */
+  /**{@inheritDoc}*/
   def parse(context: DateTimeParseContext, parseText: String, _position: Int): Int = {
     var position = _position
     var length: Int = parseText.length
@@ -148,16 +148,16 @@ class NumberPrinterParser private[format](rule: DateTimeFieldRule[_], val minWid
         case Always | ExceedsPad => position += 1
         case _ =>
           if (context.isStrict || (signStyle != SignStyle.Normal && minWidth == maxWidth)) return ~position
-            position += 1
+          position += 1
       }
     }
     else if (sign == context.getSymbols.getNegativeSignChar) {
       negative = true
       signStyle match {
-        case Always | ExceedsPad | Normal=> position += 1
+        case Always | ExceedsPad | Normal => position += 1
         case _ =>
           if (context.isStrict || minWidth == maxWidth) return ~position
-            position += 1;
+          position += 1;
       }
     }
     else {
@@ -233,7 +233,7 @@ class NumberPrinterParser private[format](rule: DateTimeFieldRule[_], val minWid
     }
     if (total > Int.MaxValue || total < Int.MinValue) {
       total /= 10
-        pos -= 1;
+      pos -= 1;
     }
     setValue(context, total)
     return pos

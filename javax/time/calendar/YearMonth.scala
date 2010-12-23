@@ -340,7 +340,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
     ISOChronology.checkNotNull(rule, "CalendricalRule must not be null")
     if (rule.equals(ISOChronology.yearRule)) return rule.reify(year)
     if (rule.equals(ISOChronology.monthOfYearRule)) return rule.reify(month)
-//    return Some(rule.deriveValueFor(rule, this, this, ISOChronology))     //FIXME
+    //    return Some(rule.deriveValueFor(rule, this, this, ISOChronology))     //FIXME
     return None
   }
 
@@ -453,7 +453,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    * @param dayOfMonth the day-of-month to use, from 1 to 31
    * @return the date formed from this year-month and the specified day, never null
    * @throws InvalidCalendarFieldException when the day is invalid for the year-month
-   * @see#isValidDay ( int )
+   * @see# i s V a l i d D a y ( int )
    */
   def atDay(dayOfMonth: Int): LocalDate = LocalDate.of(year, month, dayOfMonth)
 
@@ -477,7 +477,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    * @return true if this is after the specified year-month
    * @throws NullPointerException if  {@code other} is null
    */
-  def isAfter(other: YearMonth): Boolean = compareTo(other) > 0
+  def isAfter(other: YearMonth): Boolean = this > that
 
   /**
    * Returns a copy of this year-month with the new year and month, checking
@@ -626,7 +626,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    * @return true if this point is before the specified year-month
    * @throws NullPointerException if  {@code other} is null
    */
-  def isBefore(other: YearMonth): Boolean = compareTo(other) < 0
+  def isBefore(other: YearMonth): Boolean = this < other
 
   /**
    * Returns a copy of this YearMonth with the specified period in months subtracted.

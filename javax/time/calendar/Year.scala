@@ -248,7 +248,7 @@ final class Year private(val year: Int) extends Calendrical with Ordered[Year] w
    * @return true if this point is equal to the specified year
    */
   override def equals(other: AnyRef): Boolean = {
-    if (this == other) true
+    if (this eq other) true
     else if (other.isInstanceOf[Year]) year == (other.asInstanceOf[Year]).year
     else false
   }

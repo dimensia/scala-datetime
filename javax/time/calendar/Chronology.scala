@@ -66,7 +66,7 @@ object Chronology {
   private[calendar] object Rule extends Rule
 
   private[calendar] sealed class Rule private
-          extends CalendricalRule[Chronology](classOf[Chronology], ISOChronology, "Chronology", null, null) with Serializable {
+    extends CalendricalRule[Chronology](classOf[Chronology], ISOChronology, "Chronology", null, null) with Serializable {
     private def readResolve: AnyRef = Rule
   }
 

@@ -189,7 +189,7 @@ final class DateTimeFields private(val fieldValueMap: TreeMap[DateTimeFieldRule[
   def `with`(fieldRule: DateTimeFieldRule[_], value: Int): DateTimeFields = {
     ISOChronology.checkNotNull(fieldRule, "DateTimeFieldRule must not be null")
     fieldRule.checkValue(value)
-    val clonedMap: TreeMap[DateTimeFieldRule[_], Int]= clonedMap
+    val clonedMap: TreeMap[DateTimeFieldRule[_], Int] = clonedMap
     clonedMap.put(fieldRule, value)
     return new DateTimeFields(clonedMap)
   }

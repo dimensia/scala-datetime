@@ -74,11 +74,11 @@ object PeriodUnit {
     equivalents.add(equivalentPeriod)
     var multiplier: Long = equivalentPeriod.getAmount
     var baseEquivalents: List[PeriodField] = equivalentPeriod.getUnit.getEquivalentPeriods
-      var i: Int = 0
-      while (i < baseEquivalents.size) {
-          equivalents.add(baseEquivalents.get(i).multipliedBy(multiplier))
-          i += 1;
-      }
+    var i: Int = 0
+    while (i < baseEquivalents.size) {
+      equivalents.add(baseEquivalents.get(i).multipliedBy(multiplier))
+      i += 1;
+    }
     return Collections.unmodifiableList(equivalents)
   }
 
@@ -98,18 +98,18 @@ abstract class PeriodUnit private[calendar](@transient val name: String, @transi
 
   import PeriodUnit._
 
-      /**
-     * Constructor used by ISOChronology.
-     *
-     * @param name  the name of the type, not null
-     * @param equivalentPeriod  the period this is derived from, null if no equivalent
-     * @param estimatedDuration  the estimated duration of one unit of this period, not null
-     * @throws ArithmeticException if the equivalent period calculation overflows
-     */
-    def this(name: String, equivalentPeriod: PeriodField, estimatedDuration: Duration) {
-        // input known to be valid
-        this(name, buildEquivalentPeriods(equivalentPeriod), estimatedDuration, name.hashCode ^ estimatedDuration.hashCode ^ (if(equivalentPeriod == null) 0 else equivalentPeriod.hashCode))
-    }
+  /**
+   * Constructor used by ISOChronology.
+   *
+   * @param name  the name of the type, not null
+   * @param equivalentPeriod  the period this is derived from, null if no equivalent
+   * @param estimatedDuration  the estimated duration of one unit of this period, not null
+   * @throws ArithmeticException if the equivalent period calculation overflows
+   */
+  def this(name: String, equivalentPeriod: PeriodField, estimatedDuration: Duration) {
+    // input known to be valid
+    this (name, buildEquivalentPeriods(equivalentPeriod), estimatedDuration, name.hashCode ^ estimatedDuration.hashCode ^ (if (equivalentPeriod == null) 0 else equivalentPeriod.hashCode))
+  }
 
   /**
    * Constructor to create a unit that is derived from another smaller unit.
@@ -127,7 +127,7 @@ abstract class PeriodUnit private[calendar](@transient val name: String, @transi
    * @throws ArithmeticException if the equivalent period calculation overflows
    */
   protected def this(name: String, equivalentPeriod: PeriodField) {
-    this(name, buildEquivalentPeriods(equivalentPeriod), equivalentPeriod.toEstimatedDuration, name.hashCode ^ estimatedDuration.hashCode ^ equivalentPeriod.hashCode)
+    this (name, buildEquivalentPeriods(equivalentPeriod), equivalentPeriod.toEstimatedDuration, name.hashCode ^ estimatedDuration.hashCode ^ equivalentPeriod.hashCode)
     ISOChronology.checkNotNull(equivalentPeriod, "Equivalent period must not be null")
     if (equivalentPeriod.getAmount <= 0) {
       throw new IllegalArgumentException("Equivalent period must not be negative or zero")
@@ -147,7 +147,7 @@ abstract class PeriodUnit private[calendar](@transient val name: String, @transi
    * @throws IllegalArgumentException if the duration is zero or negative
    */
   protected def this(name: String, estimatedDuration: Duration) {
-    this(name, buildEquivalentPeriods(null), estimatedDuration, name.hashCode ^ estimatedDuration.hashCode ^ 0)
+    this (name, buildEquivalentPeriods(null), estimatedDuration, name.hashCode ^ estimatedDuration.hashCode ^ 0)
     ISOChronology.checkNotNull(estimatedDuration, "Estimated duration must not be null")
     if (estimatedDuration.isNegative || estimatedDuration.isZero) {
       throw new IllegalArgumentException("Alternate period must not be negative or zero")
@@ -260,7 +260,7 @@ abstract class PeriodUnit private[calendar](@transient val name: String, @transi
     else if (obj.isInstanceOf[PeriodUnit]) {
       val other: PeriodUnit = obj.asInstanceOf[PeriodUnit]
       name.equals(other.name) && estimatedDuration.equals(other.estimatedDuration) && equivalentPeriods.size == other.equivalentPeriods.size && (equivalentPeriods.size == 0 || equivalentPeriods.get(0).equals(other.equivalentPeriods.get(0)))
-   } else false
+    } else false
   }
 
   /**

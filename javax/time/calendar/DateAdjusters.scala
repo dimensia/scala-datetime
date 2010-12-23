@@ -86,8 +86,8 @@ object DateAdjusters {
 
     /**{@inheritDoc}*/
     override def equals(obj: AnyRef): Boolean = {
-      if (obj == null) return false
-      if (this == obj) return true
+      if (obj eq null) return false
+      if (this eq obj) return true
       if (!(obj.isInstanceOf[DateAdjusters.RelativeDayOfWeek])) return false
       val other: DateAdjusters.RelativeDayOfWeek = obj.asInstanceOf[DateAdjusters.RelativeDayOfWeek]
       if (this.relative != other.relative) return false
@@ -156,6 +156,7 @@ object DateAdjusters {
         }
       }
     }
+
   }
 
   /**

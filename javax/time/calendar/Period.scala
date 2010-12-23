@@ -115,10 +115,10 @@ object Period {
     var years: Long = (endMonth - startMonth) / 12
     if (endDate.getMonthOfYear == startDate.getMonthOfYear) {
       if (years > 0 && endDate.getDayOfMonth < startDate.getDayOfMonth) {
-          years -= 1;
+        years -= 1;
       }
       else if (years < 0 && endDate.getDayOfMonth > startDate.getDayOfMonth) {
-          years += 1;
+        years += 1;
       }
     }
     return ofYears(MathUtils.safeToInt(years))
@@ -324,12 +324,12 @@ object Period {
     var totalMonths: Long = endMonth - startMonth
     var days: Int = endDate.getDayOfMonth - startDate.getDayOfMonth
     if (totalMonths > 0 && days < 0) {
-        totalMonths -= 1
+      totalMonths -= 1
       val calcDate: LocalDate = startDate.plusMonths(totalMonths)
       days = (endDate.toEpochDays - calcDate.toEpochDays).asInstanceOf[Int]
     }
     else if (totalMonths < 0 && days > 0) {
-        totalMonths += 1
+      totalMonths += 1
       days -= endDate.getMonthOfYear.lengthInDays(endDate.isLeapYear)
     }
     val years: Long = totalMonths / 12
@@ -409,10 +409,10 @@ object Period {
     val endMonth: Long = endDate.getYear * 12L + endDate.getMonthOfYear.ordinal
     var months: Long = endMonth - startMonth
     if (months > 0 && endDate.getDayOfMonth < startDate.getDayOfMonth) {
-        months -= 1
+      months -= 1
     }
     else if (months < 0 && endDate.getDayOfMonth > startDate.getDayOfMonth) {
-        months += 1
+      months += 1
     }
     ofMonths(MathUtils.safeToInt(months))
   }
@@ -457,8 +457,8 @@ object Period {
    * @param seconds the amount of seconds, may be negative
    * @return the period, never null
    */
-//  def of(years: Int, months: Int, days: Int, hours: Int, minutes: Int, seconds: Int): Period =
-//    of(years, months, days, hours, minutes, seconds, 0)
+  //  def of(years: Int, months: Int, days: Int, hours: Int, minutes: Int, seconds: Int): Period =
+  //    of(years, months, days, hours, minutes, seconds, 0)
 
   /**
    * Obtains a {@code Period} from date-based and time-based fields.
@@ -1099,11 +1099,11 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
               var n: Long = nanos % 1000000000
               if (s < 0 && n > 0) {
                 n -= 1000000000
-                  s += 1;
+                s += 1;
               }
               else if (s > 0 && n < 0) {
                 n += 1000000000
-                  s -= 1;
+                s -= 1;
               }
               if (n < 0) {
                 n = -n

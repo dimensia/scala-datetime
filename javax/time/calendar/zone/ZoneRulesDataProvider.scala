@@ -72,7 +72,7 @@ trait ZoneRulesDataProvider {
   /**
    * Gets the time-zone group ID of the data available via this provider, such as 'TZDB'.
    * <p>
-   * Group IDs must match regex {@code[A -Za-z0-9._-]+}.
+   * Group IDs must match regex {@code[ A -Za-z0-9._-]+}.
    * Group IDs should use reverse domain name notation, like packages.
    * Group IDs without a dot are reserved for use by the JSR-310 expert group.
    *

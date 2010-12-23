@@ -47,7 +47,7 @@ package javax.time
  *
  * @author Stephen Colebourne
  */
-object UTCRules extends UTCRules{
+object UTCRules extends UTCRules {
   /**
    * Constant for nanos per standard second: 1,000,000,000.
    */

@@ -37,12 +37,12 @@ package javax.time.calendar
  * @author Stephen Colebourne
  */
 
-    /**
-     * Constructs a new unsupported field exception using the specified error message.
-     *
-     * @param message the error message, not null
-     * @param rule the rule that is not supported, may be null
-     */
+/**
+ * Constructs a new unsupported field exception using the specified error message.
+ *
+ * @param message the error message, not null
+ * @param rule the rule that is not supported, may be null
+ */
 @SerialVersionUID(1L)
 class UnsupportedRuleException[T](message: String, rule: CalendricalRule[T])
   extends CalendricalRuleException(message, rule) {

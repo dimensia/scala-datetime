@@ -259,8 +259,8 @@ object ISOChronology extends ISOChronology {
 
   @SerialVersionUID(1L)
   private[calendar] sealed class EpochDaysRule
-          extends CalendricalRule[Long](classOf[Long], ISOChronology, "EpochDays", Days, null)
-          with Serializable {
+    extends CalendricalRule[Long](classOf[Long], ISOChronology, "EpochDays", Days, null)
+    with Serializable {
 
     protected override def derive(calendrical: Calendrical): Option[Long] = {
       calendrical.get(LocalDate.rule) match {
@@ -285,8 +285,8 @@ object ISOChronology extends ISOChronology {
 
   @SerialVersionUID(1L)
   private[calendar] sealed class MonthOfYearRule
-          extends DateTimeFieldRule[MonthOfYear](classOf[MonthOfYear], ISOChronology, "MonthOfYear", Months, Years, 1, 12, true)
-          with Serializable {
+    extends DateTimeFieldRule[MonthOfYear](classOf[MonthOfYear], ISOChronology, "MonthOfYear", Months, Years, 1, 12, true)
+    with Serializable {
     protected def interpret(merger: CalendricalMerger, value: AnyRef): MonthOfYear = {
       //FIXME
       //      value match {
@@ -482,8 +482,8 @@ object ISOChronology extends ISOChronology {
 
   @SerialVersionUID(1L)
   private[calendar] sealed class DayOfWeekRule private
-          extends DateTimeFieldRule[DayOfWeek](classOf[DayOfWeek], ISOChronology, "DayOfWeek", Days, Weeks, 1, 7, true)
-          with Serializable {
+    extends DateTimeFieldRule[DayOfWeek](classOf[DayOfWeek], ISOChronology, "DayOfWeek", Days, Weeks, 1, 7, true)
+    with Serializable {
     override def convertIntToValue(value: Int): DayOfWeek = DayOfWeek.of(value)
 
     protected def createTextStores(textStores: EnumMap[TextStyle, DateTimeFieldRule.TextStore], locale: Locale): Unit = {
@@ -845,7 +845,7 @@ object ISOChronology extends ISOChronology {
 
   @SerialVersionUID(1L)
   private[calendar] sealed class AmPmOfDayRule
-          extends DateTimeFieldRule[AmPmOfDay](classOf[AmPmOfDay], ISOChronology, "AmPmOfDay", _12Hours, Days, 0, 1, true) with Serializable {
+    extends DateTimeFieldRule[AmPmOfDay](classOf[AmPmOfDay], ISOChronology, "AmPmOfDay", _12Hours, Days, 0, 1, true) with Serializable {
 
     private def readResolve: AnyRef = AmPmOfDayRule
 
@@ -895,7 +895,7 @@ object ISOChronology extends ISOChronology {
    */
   @SerialVersionUID(1L)
   private[calendar] sealed class ChronoUnit(val ordinal: Int, name: String, equivalentPeriod: PeriodField, estimatedDuration: Duration)
-          extends PeriodUnit(name, equivalentPeriod, estimatedDuration) {
+    extends PeriodUnit(name, equivalentPeriod, estimatedDuration) {
 
     def compare(other: PeriodUnit): Int = {
       if (other.isInstanceOf[ChronoUnit]) ordinal - (other.asInstanceOf[ChronoUnit]).ordinal
@@ -952,7 +952,7 @@ object ISOChronology extends ISOChronology {
 
   @SerialVersionUID(1L)
   private[calendar] sealed class NanoOfDayRule
-          extends CalendricalRule[Long](classOf[Long], ISOChronology, "NanoOfDay", Nanos, Days) with Serializable {
+    extends CalendricalRule[Long](classOf[Long], ISOChronology, "NanoOfDay", Nanos, Days) with Serializable {
     protected override def derive(calendrical: Calendrical): Option[Long] = {
       calendrical.get(LocalTime.rule) match {
         case Some(time) => Some(time.toNanoOfDay)
@@ -1067,8 +1067,8 @@ object ISOChronology extends ISOChronology {
   //TODO Check if this is right
 
   private[calendar] sealed class QuarterOfYearRule
-          extends DateTimeFieldRule[QuarterOfYear](classOf[QuarterOfYear], ISOChronology, "QuarterOfYear", Quarters, Years, 1, 4)
-          with Serializable {
+    extends DateTimeFieldRule[QuarterOfYear](classOf[QuarterOfYear], ISOChronology, "QuarterOfYear", Quarters, Years, 1, 4)
+    with Serializable {
 
 
     private def readResolve: AnyRef = QuarterOfYearRule
@@ -1137,7 +1137,7 @@ object ISOChronology extends ISOChronology {
    */
   @SerialVersionUID(1L)
   private[calendar] sealed class Rule(private val ordinal: Int, name: String, periodUnit: PeriodUnit, periodRange: PeriodUnit, minimumValue: Int, maximumValue: Int, @transient smallestMaximum: Int)
-          extends DateTimeFieldRule[Int](classOf[Int], ISOChronology, name, periodUnit, periodRange, minimumValue, maximumValue) with Serializable {
+    extends DateTimeFieldRule[Int](classOf[Int], ISOChronology, name, periodUnit, periodRange, minimumValue, maximumValue) with Serializable {
 
     override def getSmallestMaximumValue: Int = smallestMaximum
 

@@ -52,14 +52,14 @@ object DateResolvers {
 
   private object Strict extends Strict
 
-    /**
+  /**
    * Class implementing strict resolver.
    */
   @SerialVersionUID(1L)
   private class Strict extends DateResolver with Serializable {
     private def readResolve: AnyRef = Strict
 
-    /** {@inheritDoc} */
+    /**{@inheritDoc}*/
     override def resolveDate(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int): LocalDate = {
       LocalDate.of(year, monthOfYear, dayOfMonth)
     }
@@ -80,7 +80,7 @@ object DateResolvers {
    */
   @SerialVersionUID(1L)
   private class PreviousValid extends DateResolver with Serializable {
-    /** {@inheritDoc} */
+    /**{@inheritDoc}*/
     override def resolveDate(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int): LocalDate = {
       var lastDay: Int = monthOfYear.getLastDayOfMonth(ISOChronology.isLeapYear(year))
       if (dayOfMonth > lastDay) {
@@ -89,7 +89,7 @@ object DateResolvers {
       return LocalDate.of(year, monthOfYear, dayOfMonth)
     }
 
-    private def readResolve: AnyRef =  PreviousValid
+    private def readResolve: AnyRef = PreviousValid
   }
 
   /**
@@ -102,14 +102,14 @@ object DateResolvers {
 
   private object NextValid extends NextValid
 
-    /**
+  /**
    * Class implementing nextValid resolver.
    */
   @SerialVersionUID(1L)
   private class NextValid extends DateResolver with Serializable {
     private def readResolve: AnyRef = NextValid
 
-    /** {@inheritDoc} */
+    /**{@inheritDoc}*/
     override def resolveDate(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int): LocalDate = {
       var len: Int = monthOfYear.lengthInDays(ISOChronology.isLeapYear(year))
       if (dayOfMonth > len) {
@@ -137,7 +137,7 @@ object DateResolvers {
   private class PartLenient extends DateResolver with Serializable {
     private def readResolve: AnyRef = PartLenient
 
-    /** {@inheritDoc} */
+    /**{@inheritDoc}*/
     override def resolveDate(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int): LocalDate = {
       var len: Int = monthOfYear.lengthInDays(ISOChronology.isLeapYear(year))
       if (dayOfMonth > len) {
@@ -146,4 +146,5 @@ object DateResolvers {
       return LocalDate.of(year, monthOfYear, dayOfMonth)
     }
   }
+
 }

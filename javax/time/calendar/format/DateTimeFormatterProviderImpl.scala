@@ -61,7 +61,7 @@ class DateTimeFormatterProviderImpl extends DateTimeFormatterProvider {
    */
   private def convertStyle(style: DateTimeFormatterBuilder.FormatStyle): Int = style.ordinal
 
-  /** {@inheritDoc} */
+  /**{@inheritDoc}*/
   def getFormatter(dateStyle: DateTimeFormatterBuilder.FormatStyle, timeStyle: DateTimeFormatterBuilder.FormatStyle, locale: Locale, chronology: Chronology): DateTimeFormatter = {
     if (dateStyle == null && timeStyle == null) {
       throw new IllegalArgumentException("Date and Time style must not both be null")
@@ -96,6 +96,6 @@ class DateTimeFormatterProviderImpl extends DateTimeFormatterProvider {
     throw new IllegalArgumentException("Unable to convert DateFormat to DateTimeFormatter")
   }
 
-  /** {@inheritDoc} */
+  /**{@inheritDoc}*/
   def getAvailableLocales: Array[Locale] = DateFormat.getAvailableLocales
 }

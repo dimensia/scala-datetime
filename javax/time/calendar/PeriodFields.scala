@@ -226,7 +226,7 @@ object PeriodFields {
  */
 @SerialVersionUID(1L)
 sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodField])
-        extends PeriodProvider with Iterable[PeriodField] with Serializable {
+  extends PeriodProvider with Iterable[PeriodField] with Serializable {
 
   import PeriodFields._
 
@@ -694,7 +694,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
         }
         it.remove
       }
-   } //todo: labels is not supported
+    } //todo: labels is not supported
     return create(copy)
   }
 

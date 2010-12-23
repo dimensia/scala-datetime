@@ -49,14 +49,14 @@ import javax.time.calendar.Calendrical
  */
 final class StringLiteralPrinterParser private[format](private val literal: String)
   extends DateTimePrinter with DateTimeParser {
-  /** {@inheritDoc} */
+  /**{@inheritDoc}*/
   override def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit =
     appendable.append(literal)
 
-  /** {@inheritDoc} */
+  /**{@inheritDoc}*/
   override def isPrintDataAvailable(calendrical: Calendrical): Boolean = true
 
-  /** {@inheritDoc} */
+  /**{@inheritDoc}*/
   def parse(context: DateTimeParseContext, parseText: String, position: Int): Int = {
     val length: Int = parseText.length
     if (position > length || position < 0) throw new IndexOutOfBoundsException
@@ -66,7 +66,7 @@ final class StringLiteralPrinterParser private[format](private val literal: Stri
     else position + literal.length
   }
 
-  /** {@inheritDoc} */
+  /**{@inheritDoc}*/
   override def toString: String = {
     val converted: String = literal.replace("'", "''")
     return "'" + converted + "'"

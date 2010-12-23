@@ -34,6 +34,7 @@ package javax.time.calendar.format
 import javax.time.calendar.Calendrical
 
 object CaseSensitivePrinterParser {
+
   /**
    * Enumeration to set the case sensitivity parse style.
    *

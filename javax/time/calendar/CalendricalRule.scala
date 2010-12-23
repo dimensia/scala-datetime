@@ -282,7 +282,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * @return true if the rules are the same
    */
   override def equals(obj: AnyRef): Boolean = {
-    if(obj eq this) true
+    if (obj eq this) true
     if (obj == null || getClass != obj.getClass) false
     else id.equals((obj.asInstanceOf[CalendricalRule[_]]).id)
   }

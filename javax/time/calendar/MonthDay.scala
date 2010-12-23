@@ -264,7 +264,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    * @return true if this point is before the specified month-day
    * @throws NullPointerException if {@code other} is null
    */
-  def isBefore(other: MonthDay): Boolean = compareTo(other) < 0
+  def isBefore(other: MonthDay): Boolean = this < other
 
   /**
    * Rolls the day-of-month, adding the specified number of days to a copy
@@ -399,7 +399,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    * @return true if this is after the specified month-day
    * @throws NullPointerException if {@code other} is null
    */
-  def isAfter(other: MonthDay): Boolean = compareTo(other) > 0
+  def isAfter(other: MonthDay): Boolean = this > other
 
   /**
    * A hash code for this month-day.

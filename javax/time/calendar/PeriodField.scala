@@ -321,7 +321,7 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
         return equivalent.multipliedBy(amount)
       }
     }
-    throw new CalendricalException( //FIXME
+    throw new CalendricalException(//FIXME
       "Unable to convert " + getUnit + " to any requested unit: " + Arrays.toString(requiredUnits.asInstanceOf[Array[AnyRef]]))
   }
 

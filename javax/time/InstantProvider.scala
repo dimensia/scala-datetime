@@ -39,7 +39,7 @@ package javax.time
  * <p>
  * The implementation of {@code InstantProvider} may be mutable.
  * For example,{@link java.util.Date Date} is a mutable implementation of this interface.
- * The result of calling {@link#toInstant()} is always immutable.
+ * The result of calling {@link# t o I n s t a n t ( )} is always immutable.
  * <p>
  * When implementing an API that accepts an {@code InstantProvider} as a parameter, it is
  * important to convert the input to a {@code Instant} once and once only.

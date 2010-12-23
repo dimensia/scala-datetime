@@ -83,23 +83,6 @@ object HistoricDate {
 
   /**
    * Obtains an instance of {@code LocalDate} from a year, month and day
-   * using the standard cutover of 1582-10-15.
-   * <p>
-   * The day must be valid for the year and month or an exception will be thrown.
-   *
-   * @param historicYear the year to represent, from -(MAX_YEAR-1) to MAX_YEAR
-   * @param monthOfYear the month-of-year to represent, not null
-   * @param dayOfMonth the day-of-month to represent, from 1 to 31
-   * @return the local date, never null
-   * @throws IllegalCalendarFieldValueException if the value of any field is out of range
-   * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
-   */
-  def of(historicYear: Int, monthOfYear: MonthOfYear, dayOfMonth: Int): HistoricDate = {
-    of(StandardCutover, historicYear, monthOfYear, dayOfMonth)
-  }
-
-  /**
-   * Obtains an instance of {@code LocalDate} from a year, month and day
    * specifying the cutover date to use.
    * <p>
    * The day must be valid for the year and month or an exception will be thrown.
@@ -111,7 +94,7 @@ object HistoricDate {
    * @throws IllegalCalendarFieldValueException if the value of any field is out of range
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
-  def of(cutover: LocalDate, historicYear: Int, monthOfYear: MonthOfYear, dayOfMonth: Int): HistoricDate = {
+  def of(historicYear: Int, monthOfYear: MonthOfYear, dayOfMonth: Int, cutover: LocalDate = StandardCutover): HistoricDate = {
     HistoricChronology.checkNotNull(cutover, "Cutover date must not be null")
     val chrono: HistoricChronology = HistoricChronology.cutoverAt(cutover)
     chrono.yearRule.checkValue(historicYear)
@@ -197,7 +180,7 @@ final class HistoricDate private[i18n](val chrono: HistoricChronology, @transien
    * @param otherDate the other date instance to compare to, not null
    * @return true if this day is after the specified day
    */
-  def isAfter(otherDate: HistoricDate): Boolean = compareTo(otherDate) > 0
+  def isAfter(otherDate: HistoricDate): Boolean = this > otherDate
 
   /**
    * Compares this date to the specified date.
@@ -228,7 +211,7 @@ final class HistoricDate private[i18n](val chrono: HistoricChronology, @transien
    * @param otherDate the other date instance to compare to, not null
    * @return true if this day is before the specified day
    */
-  def isBefore(otherDate: HistoricDate): Boolean = compareTo(otherDate) < 0
+  def isBefore(otherDate: HistoricDate): Boolean = this < otherDate
 
   /**
    * Returns a copy of this date with the specified number of years added.
@@ -382,7 +365,7 @@ final class HistoricDate private[i18n](val chrono: HistoricChronology, @transien
    */
   def get[T](rule: CalendricalRule[T]): Option[T] = {
     if (rule.equals(LocalDate.rule)) rule.reify(toLocalDate)
-//    else rule.deriveValueFor(rule, this, this, chrono)   //FIXME
+    //    else rule.deriveValueFor(rule, this, this, chrono)   //FIXME
     else None
   }
 
@@ -427,7 +410,7 @@ final class HistoricDate private[i18n](val chrono: HistoricChronology, @transien
     if (possible.isBefore(chrono.getCutover)) {
       val julYear1Days: Long = (year - 1) * 365 + (year / 4) + chrono.getDayOfYear(this) - 1
       LocalDate.ofModifiedJulianDays(julYear1Days + 0)
-   } else possible
+    } else possible
   }
 
   /**

@@ -190,6 +190,7 @@ object SafeInt {
 }
 
 class SafeInt(value: Int) {
+
   import SafeInt._
 
   /**
