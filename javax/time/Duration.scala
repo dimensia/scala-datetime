@@ -423,7 +423,7 @@ object Duration {
  * @param nanos the nanoseconds within the second, from 0 to 999,999,999
  */
 @SerialVersionUID(1L)
-final case class Duration private(seconds: Long, nanos: Int) extends Ordered[Duration] with Serializable {
+final case class Duration private(seconds: Long, nanos: Int) extends Ordered[Duration] {
 
   import Duration._
 
