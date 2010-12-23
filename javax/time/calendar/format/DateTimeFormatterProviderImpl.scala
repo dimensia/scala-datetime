@@ -66,8 +66,8 @@ class DateTimeFormatterProviderImpl extends DateTimeFormatterProvider {
     if (dateStyle == null && timeStyle == null) {
       throw new IllegalArgumentException("Date and Time style must not both be null")
     }
-    var key: String = chronology.getName + '|' + locale.toString + '|' + dateStyle + timeStyle
-    var cached: AnyRef = FormatterCache.get(key)
+    val key: String = chronology.getName + '|' + locale.toString + '|' + dateStyle + timeStyle
+    val cached: AnyRef = FormatterCache.get(key)
     if (cached != null) {
       if (cached.equals("")) {
         throw new IllegalArgumentException("Unable to convert DateFormat to DateTimeFormatter")
@@ -87,8 +87,8 @@ class DateTimeFormatterProviderImpl extends DateTimeFormatterProvider {
       dateFormat = DateFormat.getTimeInstance(convertStyle(timeStyle), locale)
     }
     if (dateFormat.isInstanceOf[SimpleDateFormat]) {
-      var pattern: String = (dateFormat.asInstanceOf[SimpleDateFormat]).toPattern
-      var formatter: DateTimeFormatter = (new DateTimeFormatterBuilder).appendPattern(pattern).toFormatter(locale)
+      val pattern: String = (dateFormat.asInstanceOf[SimpleDateFormat]).toPattern
+      val formatter: DateTimeFormatter = (new DateTimeFormatterBuilder).appendPattern(pattern).toFormatter(locale)
       FormatterCache.putIfAbsent(key, formatter)
       return formatter
     }
