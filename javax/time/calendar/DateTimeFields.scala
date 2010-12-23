@@ -31,14 +31,12 @@
  */
 package javax.time.calendar
 
-import java.io.ObjectStreamException
 import java.io.Serializable
 import java.util.Collections
 import java.util.Iterator
 import java.util.Map
 import java.util.SortedMap
 import java.util.TreeMap
-import java.util.Map.Entry
 
 /**
  * A set of date-time fields.
@@ -59,7 +57,7 @@ import java.util.Map.Entry
  */
 object DateTimeFields {
   /**
-   * Obtains an instance of    { @code DateTimeFields } from two field-value pairs.
+   * Obtains an instance of {@code DateTimeFields} from two field-value pairs.
    * <p>
    * This factory allows the creation of a fields object with two field-value pairs.
    * Each value must be within the valid range for that field.
@@ -87,7 +85,7 @@ object DateTimeFields {
   }
 
   /**
-   * Obtains an instance of    { @code DateTimeFields } from a map of field-value pairs.
+   * Obtains an instance of {@code DateTimeFields} from a map of field-value pairs.
    * <p>
    * This factory allows the creation of a fields object from a map of field-value pairs.
    * Each value must be within the valid range for that field.
@@ -109,7 +107,7 @@ object DateTimeFields {
     val map: TreeMap[DateTimeFieldRule[_], Int] = createMap
     for (entry <- fieldValueMap.entrySet) {
       val fieldRule: DateTimeFieldRule[_] = entry.getKey
-      val value: Integer = entry.getValue
+      val value: Int = entry.getValue
       ISOChronology.checkNotNull(fieldRule, "Null keys are not permitted in field-value map")
       ISOChronology.checkNotNull(value, "Null values are not permitted in field-value map")
       fieldRule.checkValue(value)
@@ -119,7 +117,7 @@ object DateTimeFields {
   }
 
   /**
-   * Obtains an instance of    { @code DateTimeFields } from a field-value pair.
+   * Obtains an instance of {@code DateTimeFields} from a field-value pair.
    * <p>
    * This factory allows the creation of a fields object with a single field-value pair.
    * The value must be within the valid range for the field.
@@ -148,7 +146,7 @@ object DateTimeFields {
   }
 
   /**
-   * A singleton empty    { @code DateTimeFields }, placing no restrictions on the date-time.
+   * A singleton empty {@code DateTimeFields }, placing no restrictions on the date-time.
    */
   val Empty: DateTimeFields = new DateTimeFields(createMap)
 }
@@ -215,7 +213,7 @@ final class DateTimeFields private(val fieldValueMap: TreeMap[DateTimeFieldRule[
    * <p>
    * No attempt is made to derive values. The result is simply based on
    * the contents of the stored field-value map. If you want to derive a
-   * value then use    { @link # get } or a    { @link CalendricalMerger }.
+   * value then use {@link #get} or a {@link CalendricalMerger}.
    *
    * @param rule the rule to query from the map, not null
    * @return the value mapped to the specified field
@@ -312,7 +310,7 @@ final class DateTimeFields private(val fieldValueMap: TreeMap[DateTimeFieldRule[
    * This method queries the value of the specified calendrical rule.
    * If the value cannot be returned for the rule from this instance then
    * an attempt is made to derive the value.
-   * If that fails,    { @code null } will be returned.
+   * If that fails, {@code null} will be returned.
    *
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
@@ -349,9 +347,9 @@ final class DateTimeFields private(val fieldValueMap: TreeMap[DateTimeFieldRule[
   /**
    * Iterates through all the field rules.
    * <p>
-   * This method fulfills the    { @link Iterable } interface and allows looping
+   * This method fulfills the {@link Iterable} interface and allows looping
    * around the fields using the for-each loop. The values can be obtained using
-   * { @link # get } or    { @link # getInt }.
+   * { @link # get} or {@link # getInt }.
    *
    * @return an iterator over the fields in this object, never null
    */
@@ -366,7 +364,7 @@ final class DateTimeFields private(val fieldValueMap: TreeMap[DateTimeFieldRule[
    * @param fieldRule the rule to query from the map, null returns null
    * @return the value mapped to the specified field, null if not present
    */
-  def getQuiet(fieldRule: DateTimeFieldRule[_]): Integer = if (fieldRule == null) null else fieldValueMap.get(fieldRule)
+  def getQuiet(fieldRule: DateTimeFieldRule[_]): Int = if (fieldRule == null) null else fieldValueMap.get(fieldRule)
 
   /**
    * Is this object equal to the specified object.
@@ -388,7 +386,7 @@ final class DateTimeFields private(val fieldValueMap: TreeMap[DateTimeFieldRule[
   }
 
   /**
-   * Outputs the fields as a    { @code String }.
+   * Outputs the fields as a {@code String }.
    * <p>
    * The output will consist of the field-value map in standard map format.
    *

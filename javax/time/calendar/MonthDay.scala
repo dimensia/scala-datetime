@@ -39,21 +39,21 @@ import javax.time.calendar.format.DateTimeFormatterBuilder
 /**
  * A month-day in the ISO-8601 calendar system, such as '--12-03'.
  * <p>
- * { @code MonthDay } is an immutable calendrical that represents the combination
+ * {@code MonthDay} is an immutable calendrical that represents the combination
  * of a year and month. Any field that can be derived from a month and day, such as
  * quarter-of-year, can be obtained.
  * <p>
  * This class does not store or represent a year, time or time-zone.
- * Thus, for example, the value "3rd December" can be stored in a    { @code MonthDay }.
+ * Thus, for example, the value "3rd December" can be stored in a {@code MonthDay}.
  * <p>
- * Since a    { @code MonthDay } does not possess a year, the leap day of
+ * Since a {@code MonthDay} does not possess a year, the leap day of
  * 29th of February is considered valid.
  * <p>
  * The ISO-8601 calendar system is the modern civil calendar system used today
  * in most of the world. It is equivalent to the proleptic Gregorian calendar
  * system, in which todays's rules for leap years are applied for all time.
  * For most applications written today, the ISO-8601 rules are entirely suitable.
- * Any application that uses historical dates should consider using    { @code HistoricDate }.
+ * Any application that uses historical dates should consider using {@code HistoricDate}.
  * <p>
  * MonthDay is immutable and thread-safe.
  *
@@ -74,14 +74,14 @@ object MonthDay {
       .toFormatter
 
   /**
-   * Gets the field rule for the month-day.
+   * Gets the rule for the month-day.
    *
-   * @return the field rule for the month-day, never null
+   * @return the rule for the month-day, never null
    */
   def rule: CalendricalRule[MonthDay] = Rule
 
   /**
-   * Obtains an instance of    { @code MonthDay }.
+   * Obtains an instance of {@code MonthDay }.
    * <p>
    * The day-of-month must be valid for the month within a leap year.
    * Hence, for February, day 29 is valid.
@@ -106,7 +106,7 @@ object MonthDay {
   }
 
   /**
-   * Obtains an instance of    { @code MonthDay } from a Calendrical.
+   * Obtains an instance of {@code MonthDay} from a Calendrical.
    * <p>
    * This method will create a MonthDay from the Calendrical by extracting the
    * month-of-year and day-of-month fields.
@@ -123,11 +123,11 @@ object MonthDay {
   }
 
   /**
-   * Obtains an instance of    { @code MonthDay } from a text string.
+   * Obtains an instance of {@code MonthDay} from a text string.
    * <p>
    * The following formats are accepted in ASCII:
    * <ul>
-   * <li>--   { monthOfYear } -   { dayOfMonth }
+   * <li>--{monthOfYear}-{dayOfMonth}
    * </ul>
    * The month-of-year has 2 digits and has values from 1 to 12.
    * <p>
@@ -144,13 +144,13 @@ object MonthDay {
    * <p>
    * This will query the specified clock to obtain the current month-day.
    * Using this method allows the use of an alternate clock for testing.
-   * The alternate clock may be introduced using    { @link Clock dependency injection }.
+   * The alternate clock may be introduced using {@link Clock dependency injection }.
    *
    * @param clock the clock to use, not null
    * @return the current month-day, never null
    */
   def now(clock: Clock): MonthDay = {
-    val date: LocalDate = LocalDate.now(clock)
+    val now: LocalDate = LocalDate.now(clock)
     MonthDay.of(date.getMonthOfYear, date.getDayOfMonth)
   }
 
@@ -163,10 +163,10 @@ object MonthDay {
    *
    * @return the current month-day using the system clock, never null
    */
-  def nowSystemClock: MonthDay = now(Clock.systemDefaultZone)
+  def now: MonthDay = now(Clock.systemDefaultZone)
 
   /**
-   * Obtains an instance of    { @code MonthDay } from a text string using a specific formatter.
+   * Obtains an instance of {@code MonthDay} from a text string using a specific formatter.
    * <p>
    * The text is parsed using the formatter, returning a month-day.
    *
@@ -201,7 +201,7 @@ object MonthDay {
   }
 
   /**
-   * Obtains an instance of    { @code MonthDay }.
+   * Obtains an instance of {@code MonthDay }.
    * <p>
    * The day-of-month must be valid for the month within a leap year.
    * Hence, for month 2 (February), day 29 is valid.
@@ -232,6 +232,9 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
 
   /**
    * Checks if the month-day extracted from the calendrical matches this.
+   * <p>
+   * This method implements the {@code CalendricalMatcher} interface.
+   * It is intended that applications use {@link LocalDate#matches} rather than this method.
    *
    * @param calendrical the calendrical to match, not null
    * @return true if the calendrical matches, false otherwise
@@ -240,7 +243,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
 
   /**
    * Rolls the month-of-year, adding the specified number of months to a copy
-   * of this    { @code MonthDay }.
+   * of this {@code MonthDay }.
    * <p>
    * This method will add the specified number of months to the month-day,
    * rolling from December back to January if necessary.
@@ -251,7 +254,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    * This instance is immutable and unaffected by this method call.
    *
    * @param months the months to roll by, positive or negative
-   * @return a { @code MonthDay } based on this month-day with the month rolled, never null
+   * @return a { @code MonthDay} based on this month-day with the month rolled, never null
    */
   def rollMonthOfYear(months: Int): MonthDay = `with`(month.roll(months))
 
@@ -260,13 +263,13 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    *
    * @param other the other month-day to compare to, not null
    * @return true if this point is before the specified month-day
-   * @throws NullPointerException if    { @code other } is null
+   * @throws NullPointerException if {@code other} is null
    */
   def isBefore(other: MonthDay): Boolean = compareTo(other) < 0
 
   /**
    * Rolls the day-of-month, adding the specified number of days to a copy
-   * of this    { @code MonthDay }.
+   * of this {@code MonthDay }.
    * <p>
    * This method will add the specified number of days to the month-day,
    * rolling from last day-of-month to the first if necessary.
@@ -274,7 +277,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    * This instance is immutable and unaffected by this method call.
    *
    * @param days the days to roll by, positive or negative
-   * @return a { @code MonthDay } based on this month-day with the day rolled, never null
+   * @return a { @code MonthDay} based on this month-day with the day rolled, never null
    */
   def rollDayOfMonth(days: Int): MonthDay = {
     if (days == 0) return this
@@ -327,7 +330,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    *
    * @param other the other month-day to compare to, not null
    * @return the comparator value, negative if less, positive if greater
-   * @throws NullPointerException if    { @code other } is null
+   * @throws NullPointerException if {@code other} is null
    */
   def compareTo(other: MonthDay): Int = {
     var cmp: Int = month.compareTo(other.month)
@@ -340,7 +343,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    * <p>
    * This method queries the value of the specified calendrical rule.
    * If the value cannot be returned for the rule from this month-day then
-   * { @code null } will be returned.
+   * { @code null} will be returned.
    *
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
@@ -349,20 +352,20 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
     ISOChronology.checkNotNull(rule, "CalendricalRule must not be null")
     if (rule.equals(ISOChronology.monthOfYearRule)) return rule.reify(month)
     if (rule.equals(ISOChronology.dayOfMonthRule)) return rule.reify(day)
-    return Some(rule.deriveValueFor(rule, this, this))
+    return Some(rule.deriveValueFor(rule, this, this, ISOChronology))
   }
 
   /**
    * Gets the day-of-month field.
    * <p>
-   * This method returns the primitive    { @code int } value for the day-of-month.
+   * This method returns the primitive {@code int} value for the day-of-month.
    *
    * @return the day-of-month, from 1 to 31
    */
   def getDayOfMonth: Int = day
 
   /**
-   * Outputs this month-day as a    { @code String } using the formatter.
+   * Outputs this month-day as a {@code String} using the formatter.
    *
    * @param formatter the formatter to use, not null
    * @return the formatted month-day string, never null
@@ -375,9 +378,9 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
   }
 
   /**
-   * Gets the month-of-year field, which is an enum    { @code MonthOfYear }.
+   * Gets the month-of-year field, which is an enum {@code MonthOfYear }.
    * <p>
-   * This method returns the enum    { @link MonthOfYear } for the month.
+   * This method returns the enum {@link MonthOfYear} for the month.
    * This avoids confusion as to what {@code int} values mean.
    * If you need access to the primitive {@code int} value then the enum
    * provides the {@link MonthOfYear#getValue() int value}.
@@ -395,7 +398,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    *
    * @param other the other month-day to compare to, not null
    * @return true if this is after the specified month-day
-   * @throws NullPointerException if    { @code other } is null
+   * @throws NullPointerException if {@code other} is null
    */
   def isAfter(other: MonthDay): Boolean = compareTo(other) > 0
 
@@ -419,7 +422,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
   def isValidYear(year: Int): Boolean = (day == 29 && month.isFebruary && ISOChronology.isLeapYear(year) == false) == false
 
   /**
-   * Returns a copy of this    { @code MonthDay } with the day-of-month altered.
+   * Returns a copy of this {@code MonthDay} with the day-of-month altered.
    * <p>
    * If the day-of-month is invalid for the current month, an exception
    * will be thrown.
@@ -427,7 +430,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    * This instance is immutable and unaffected by this method call.
    *
    * @param dayOfMonth the day-of-month to set in the return month-day, from 1 to 31
-   * @return a { @code MonthDay } based on this month-day with the requested day, never null
+   * @return a { @code MonthDay} based on this month-day with the requested day, never null
    * @throws IllegalCalendarFieldValueException if the day-of-month value is invalid
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month
    */
@@ -458,9 +461,9 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
   /**
    * Adjusts a date to have the value of this month-day, returning a new date.
    * <p>
-   * This method implements the    { @link DateAdjuster } interface.
+   * This method implements the {@link DateAdjuster} interface.
    * It is intended that, instead of calling this method directly, it is used from
-   * an instance of    { @code LocalDate } :
+   * an instance of {@code LocalDate} :
    * <pre>
    *   date = date.with(monthDay);
    * </pre>
@@ -479,8 +482,8 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
   /**
    * Returns a date formed from this month-day at the specified year.
    * <p>
-   * This method merges    { @code this } and the specified year to form an
-   * instance of    { @code LocalDate }.
+   * This method merges {@code this} and the specified year to form an
+   * instance of {@code LocalDate }.
    * <pre>
    * LocalDate date = monthDay.atYear(year);
    * </pre>
@@ -494,9 +497,9 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
   def atYear(year: Int): LocalDate = LocalDate.of(year, month, day)
 
   /**
-   * Outputs this month-day as a    { @code String }, such as    { @code --12-03 }.
+   * Outputs this month-day as a {@code String }, such as {@code --12-03 }.
    * <p>
-   * The output will be in the format    { @code --MM-dd } :
+   * The output will be in the format {@code --MM-dd} :
    *
    * @return the formatted month-day, never null
    */
@@ -513,7 +516,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
   }
 
   /**
-   * Returns a copy of this    { @code MonthDay } with the month-of-year altered.
+   * Returns a copy of this {@code MonthDay} with the month-of-year altered.
    * <p>
    * If the day-of-month is invalid for the specified month, the day will
    * be adjusted to the last valid day-of-month.
@@ -521,7 +524,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    * This instance is immutable and unaffected by this method call.
    *
    * @param monthOfYear the month-of-year to set in the returned month-day, not null
-   * @return a { @code MonthDay } based on this month-day with the requested month, never null
+   * @return a { @code MonthDay} based on this month-day with the requested month, never null
    */
   def `with`(monthOfYear: MonthOfYear): MonthDay = {
     ISOChronology.checkNotNull(monthOfYear, "MonthOfYear must not be null")
@@ -538,7 +541,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
   def getChronology: ISOChronology = ISOChronology
 
   /**
-   * Returns a copy of this    { @code MonthDay } with the month-of-year altered.
+   * Returns a copy of this {@code MonthDay} with the month-of-year altered.
    * <p>
    * If the day-of-month is invalid for the specified month, the day will
    * be adjusted to the last valid day-of-month.
@@ -546,7 +549,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    * This instance is immutable and unaffected by this method call.
    *
    * @param monthOfYear the month-of-year to set in the returned month-day, from 1 (January) to 12 (December)
-   * @return a { @code MonthDay } based on this month-day with the requested month, never null
+   * @return a { @code MonthDay} based on this month-day with the requested month, never null
    * @throws IllegalCalendarFieldValueException if the month-of-year value is invalid
    */
   def withMonthOfYear(monthOfYear: Int): MonthDay = `with`(MonthOfYear.of(monthOfYear))

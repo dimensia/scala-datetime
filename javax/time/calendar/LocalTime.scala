@@ -273,7 +273,7 @@ object LocalTime {
    *
    * @return the current time using the system clock, never null
    */
-  def nowSystemClock: LocalTime = now(Clock.systemDefaultZone)
+  def now: LocalTime = now(Clock.systemDefaultZone)
 
   /**
    * Obtains an instance of    { @code LocalTime } from a time provider.

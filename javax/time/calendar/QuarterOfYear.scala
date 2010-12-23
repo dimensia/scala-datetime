@@ -34,22 +34,22 @@ package javax.time.calendar
 /**
  * A quarter-of-year, such as 'Q2'.
  * <p>
- * { @code QuarterOfYear } is an enum representing the 4 quarters of the year -
+ * { @code QuarterOfYear} is an enum representing the 4 quarters of the year -
  * Q1, Q2, Q3 and Q4. These are defined as January to March, April to June,
  * July to September and October to December.
  * <p>
- * The calendrical framework requires date-time fields to have an    { @code int } value.
- * The    { @code int } value follows the quarter, from 1 (Q1) to 4 (Q4).
- * It is recommended that applications use the enum rather than the    { @code int } value
+ * The calendrical framework requires date-time fields to have an {@code int} value.
+ * The {@code int} value follows the quarter, from 1 (Q1) to 4 (Q4).
+ * It is recommended that applications use the enum rather than the {@code int} value
  * to ensure code clarity.
  * <p>
- * <b>Do not use    { @code ordinal ( ) } to obtain the numeric representation of    { @code QuarterOfYear }.
- * Use    { @code getValue ( ) } instead.</b>
+ * <b>Do not use {@code ordinal()} to obtain the numeric representation of {@code QuarterOfYear}.
+ * Use {@code getValue()} instead.</b>
  * <p>
  * This enum represents a common concept that is found in many calendar systems.
  * As such, this enum may be used by any calendar system that has the quarter-of-year
  * concept with a 4 quarter year where the names are equivalent to those defined.
- * Note that the implementation of    { @link DateTimeFieldRule } for quarter-of-year may
+ * Note that the implementation of {@link DateTimeFieldRule} for quarter-of-year may
  * vary by calendar system.
  * <p>
  * QuarterOfYear is an immutable and thread-safe enum.
@@ -62,37 +62,37 @@ object QuarterOfYear {
 
   /**
    * The singleton instance for the first quarter-of-year, from January to March.
-   * This has the numeric value of    { @code 1 }.
+   * This has the numeric value of {@code 1}.
    */
   object Q1 extends QuarterOfYear(1)
 
   /**
    * The singleton instance for the second quarter-of-year, from April to June.
-   * This has the numeric value of    { @code 2 }.
+   * This has the numeric value of {@code 2}.
    */
   object Q2 extends QuarterOfYear(2)
 
   /**
    * The singleton instance for the third quarter-of-year, from July to September.
-   * This has the numeric value of    { @code 3 }.
+   * This has the numeric value of {@code 3}.
    */
   object Q3 extends QuarterOfYear(3)
 
   /**
    * The singleton instance for the fourth quarter-of-year, from October to December.
-   * This has the numeric value of    { @code 4 }.
+   * This has the numeric value of {@code 4}.
    */
   object Q4 extends QuarterOfYear(4)
 
   /**
-   * Obtains an instance of    { @code QuarterOfYear } from an    { @code int } value.
+   * Obtains an instance of {@code QuarterOfYear} from an {@code int} value.
    * <p>
-   * { @code QuarterOfYear } is an enum representing the 4 quarters of the year.
-   * This factory allows the enum to be obtained from the    { @code int } value.
-   * The    { @code int } value follows the quarter, from 1 (Q1) to 4 (Q4).
+   * { @code QuarterOfYear} is an enum representing the 4 quarters of the year.
+   * This factory allows the enum to be obtained from the {@code int} value.
+   * The {@code int} value follows the quarter, from 1 (Q1) to 4 (Q4).
    * <p>
    * An exception is thrown if the value is invalid. The exception uses the
-   * { @link ISOChronology } quarter-of-year rule to indicate the failed rule.
+   * { @link ISOChronology} quarter-of-year rule to indicate the failed rule.
    *
    * @param quarterOfYear the quarter-of-year to represent, from 1 (Q1) to 4 (Q4)
    * @return the QuarterOfYear singleton, never null
@@ -118,7 +118,7 @@ sealed abstract class QuarterOfYear(ordinal: Int) extends Calendrical {
    * Gets the value of the specified calendrical rule.
    * <p>
    * This returns the one of the quarter values if the type of the rule
-   * is    { @code QuarterOfYear }. Other rules will return    { @code null }.
+   * is {@code QuarterOfYear}. Other rules will return {@code null}.
    *
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
@@ -158,7 +158,7 @@ sealed abstract class QuarterOfYear(ordinal: Int) extends Calendrical {
   def isQ4: Boolean = (this == Q4)
 
   /**
-   * Gets the quarter-of-year    { @code int } value.
+   * Gets the quarter-of-year {@code int} value.
    * <p>
    * The values are numbered following the ISO-8601 standard,
    * from 1 (Q1) to 4 (Q4).
@@ -190,7 +190,7 @@ sealed abstract class QuarterOfYear(ordinal: Int) extends Calendrical {
    * Q3 will return July.<br />
    * Q4 will return October.
    * <p>
-   * To obtain the other two months of the quarter, simply use    { @link MonthOfYear # next ( ) }
+   * To obtain the other two months of the quarter, simply use {@link MonthOfYear # next ( ) }
    * on the returned month.
    *
    * @return the first month in the quarter, never null

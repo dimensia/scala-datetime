@@ -129,7 +129,7 @@ object LocalDate {
 
   @SerialVersionUID(1L)
   private[calendar] sealed class Rule
-          extends CalendricalRule[LocalDate](classOf[LocalDate], ISOChronology, "LocalDate", ISOChronology.periodDays, null) with Serializable {
+    extends CalendricalRule[LocalDate](classOf[LocalDate], ISOChronology, "LocalDate", ISOChronology.periodDays, null) with Serializable {
 
     protected override def derive(calendrical: Calendrical): Option[LocalDate] = {
       val ldt: LocalDateTime = calendrical.get(LocalDateTime.rule).getOrElse(return None)
@@ -171,7 +171,7 @@ object LocalDate {
    *
    * @return the current date using the system clock, never null
    */
-  def nowSystemClock: LocalDate = now(Clock.systemDefaultZone)
+  def now: LocalDate = now(Clock.systemDefaultZone)
 
   /**
    * Obtains an instance of   { @code LocalDate } from a date provider.
@@ -226,10 +226,7 @@ object LocalDate {
     var yearEst: Long = (400 * epochDays + 591) / ISOChronology.DaysPerCycle
     var doyEst: Long = epochDays - (365 * yearEst + yearEst / 4 - yearEst / 100 + yearEst / 400)
     if (doyEst < 0) {
-      ({
-        yearEst -= 1;
-        yearEst
-      })
+      yearEst -= 1;
       doyEst = epochDays - (365 * yearEst + yearEst / 4 - yearEst / 100 + yearEst / 400)
     }
     yearEst += adjust
@@ -307,7 +304,7 @@ object LocalDate {
  * @param dayOfMonth the day-of-month to represent, valid for year-month, from 1 to 31
  */
 final class LocalDate private(val year: Int, val month: MonthOfYear, val day: Int)
-        extends Calendrical with DateProvider with CalendricalMatcher with DateAdjuster with Comparable[LocalDate] with Serializable {
+  extends Calendrical with DateProvider with CalendricalMatcher with DateAdjuster with Comparable[LocalDate] with Serializable {
   /**
    * Resolves the date, handling incorrectly implemented resolvers.
    *
@@ -427,6 +424,8 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
     if (periodDays < 0 && day > newMonthLen) periodDays = math.min(periodDays + (day - newMonthLen), 0)
     return LocalDate.of(newYear, newMonth, newDay).plusDays(periodDays)
   }
+
+  def +(periodProvider: PeriodProvider): LocalDate = plus(periodProvider)
 
   /**
    * Returns a zoned date-time from this date at the earliest valid time according
@@ -1123,6 +1122,8 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
     return LocalDate.of(newYear, newMonth, newDay).minusDays(periodDays)
   }
 
+  def -(periodProvider: PeriodProvider): LocalDate = minus(periodProvider)
+
   /**
    * Checks if this   { @code LocalDate } is equal to the specified date.
    * <p>
@@ -1132,7 +1133,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * @return true if this point is equal to the specified date
    */
   override def equals(other: AnyRef): Boolean = {
-    if (this == other) true
+    if (this eq other) true
     else if (other.isInstanceOf[LocalDate]) {
       val otherDate: LocalDate = other.asInstanceOf[LocalDate]
       (year == otherDate.year && month == otherDate.month && day == otherDate.day)

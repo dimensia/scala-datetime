@@ -180,7 +180,7 @@ object OffsetDateTime {
    *
    * @return the current date-time using the system clock, never null
    */
-  def nowSystemClock: OffsetDateTime = now(Clock.systemDefaultZone)
+  def now: OffsetDateTime = now(Clock.systemDefaultZone)
 
   /**
    * Obtains an instance of    { @code OffsetDateTime } from year, month and
@@ -272,7 +272,8 @@ object OffsetDateTime {
    */
   def now(clock: Clock): OffsetDateTime = {
     ISOChronology.checkNotNull(clock, "Clock must not be null")
-    ofInstant(clock.instant, clock.getZone.getRules.getOffset(clock.instant))
+    val now: Instant = clock.instant
+    ofInstant(now, clock.getZone.getRules.getOffset(clock.instant))
   }
 
   /**

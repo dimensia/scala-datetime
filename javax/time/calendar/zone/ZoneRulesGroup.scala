@@ -404,7 +404,7 @@ final class ZoneRulesGroup(val groupID: String) {
     if (regionID == null || versionID == null) {
       return false
     }
-    var version: ZoneRulesVersion = versions.get.get(versionID)
+    val version: ZoneRulesVersion = versions.get.get(versionID)
     return version != null && version.isRegionID(regionID)
   }
 
@@ -415,7 +415,7 @@ final class ZoneRulesGroup(val groupID: String) {
    * @return true if this zone is the same as that specified
    */
   override def equals(otherGroup: AnyRef): Boolean = {
-    if (this == otherGroup) return true
+    if (this eq otherGroup) return true
     if (otherGroup.isInstanceOf[ZoneRulesGroup])
       return groupID.equals((otherGroup.asInstanceOf[ZoneRulesGroup]).groupID)
 
@@ -445,7 +445,7 @@ final class ZoneRulesGroup(val groupID: String) {
     for (version <- versions.get.values) {
       if (version.isRegionID(regionID)) {
         foundRegion = true
-        var rules: ZoneRules = version.getZoneRules(regionID)
+        val rules: ZoneRules = version.getZoneRules(regionID)
         if (rules.isValidDateTime(dateTime)) {
           return version.getVersionID
         }

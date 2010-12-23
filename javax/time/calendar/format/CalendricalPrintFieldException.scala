@@ -47,8 +47,8 @@ import javax.time.calendar.UnsupportedRuleException
  * @param fieldRule the rule of the field that caused the exception, may be null
  * @param value the value of the field that caused the exception
  */
-@SerialVersionUID(1L)
-class CalendricalPrintFieldException(msg: String, rule: DateTimeFieldRule[_], value: Int)
+@SerialVersionUID(1L)                                                  //FIXME CalendricalRule was DateTimeFieldRule
+class CalendricalPrintFieldException(msg: String, rule: CalendricalRule[_], value: Int)
   extends CalendricalPrintException(msg) {
 
   /**
@@ -68,9 +68,9 @@ class CalendricalPrintFieldException(msg: String, rule: DateTimeFieldRule[_], va
    *
    * @param cause the exception cause, may be null
    */
-  //def this(cause: UnsupportedRuleException[_]) {      //FIXME
-  //  this ("Rule " + (if (cause.getRule == null) "null" else cause.getRule.getName) + " cannot be printed as the value cannot be obtained", cause.getRule, Int.MinValue)
-  //}
+  def this(cause: UnsupportedRuleException[_]) {      //FIXME Int.MinValue (was null)
+    this ("Rule " + (if (cause.getRule == null) "null" else cause.getRule.getName) + " cannot be printed as the value cannot be obtained", cause.getRule, Int.MinValue)
+  }
 
   /**
    * Constructs a new exception creating a standard error message for

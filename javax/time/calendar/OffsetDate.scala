@@ -105,7 +105,8 @@ object OffsetDate {
    */
   def now(clock: Clock): OffsetDate = {
     ISOChronology.checkNotNull(clock, "Clock must not be null")
-    return ofInstant(clock.instant, clock.getZone.getRules.getOffset(clock.instant))
+    val now: Instant = clock.instant
+    return ofInstant(now, clock.getZone.getRules.getOffset(clock.instant))
   }
 
   /**
@@ -167,7 +168,7 @@ object OffsetDate {
    *
    * @return the current date using the system clock, never null
    */
-  def nowSystemClock: OffsetDate = now(Clock.systemDefaultZone)
+  def now: OffsetDate = now(Clock.systemDefaultZone)
 
   /**
    * Obtains an instance of    { @code OffsetDate } from an    { @code InstantProvider }.

@@ -206,7 +206,7 @@ object DateTimeFormatterBuilder {
  * @param parent the parent builder, not null
  * @param optional whether the formatter is optional, not null
  */
-final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatterBuilder, optional: Boolean) {
+final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatterBuilder, val optional: Boolean) {
 
   import DateTimeFormatterBuilder._
 

@@ -90,7 +90,7 @@ abstract class Chronology protected extends Calendrical {
    * @return the value for the rule, null if the value cannot be returned
    */
   //  def get[T](rule: Calendrical[T]): Option[T] = rule.deriveValueFor(rule, this, this, this)  //FIXME
-  def get[T](rule: Calendrical[T]): Option[T] = None
+  def get[T](rule: Calendrical): Option[T] = None
 
   /**
    * Returns a textual description of the chronology.

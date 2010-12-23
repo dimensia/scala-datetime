@@ -113,7 +113,7 @@ object LocalDateTime {
    *
    * @return the current date-time using the system clock, never null
    */
-  def nowSystemClock: LocalDateTime = now(Clock.systemDefaultZone)
+  def now: LocalDateTime = now(Clock.systemDefaultZone)
 
   /**
    * Obtains an instance of   { @code LocalTime } from a date-time provider.
@@ -1047,6 +1047,8 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
     (if (result.equals(this)) this else result)
   }
 
+  def +(periodProvider: PeriodProvider): LocalDateTime = plus(periodProvider)
+
   /**
    * Returns a copy of this   { @code LocalDateTime } with the second-of-minute value altered.
    * <p>
@@ -1327,6 +1329,9 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
     val result: LocalDateTime = overflow.toLocalDateTime(newDate)
     (if (result.equals(this)) this else result)
   }
+
+  def -(periodProvider: PeriodProvider): LocalDateTime = minus(periodProvider)
+
 
   /**
    * Checks if this   { @code LocalDateTime } is after the specified date-time.
