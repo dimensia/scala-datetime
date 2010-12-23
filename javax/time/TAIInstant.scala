@@ -171,7 +171,7 @@ object TAIInstant {
  * @param nanoOfSecond the nanoseconds within the second, from 0 to 999,999,999
  */
 @SerialVersionUID(1L)
-final case class TAIInstant(seconds: Long, nanos: Int) extends Ordered[TAIInstant] with Serializable {
+final case class TAIInstant(seconds: Long, nanos: Int) extends Ordered[TAIInstant] {
 
   import TAIInstant._
 

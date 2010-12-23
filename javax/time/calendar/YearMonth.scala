@@ -477,7 +477,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    * @return true if this is after the specified year-month
    * @throws NullPointerException if  {@code other} is null
    */
-  def isAfter(other: YearMonth): Boolean = this > that
+  def isAfter(other: YearMonth): Boolean = this > other
 
   /**
    * Returns a copy of this year-month with the new year and month, checking

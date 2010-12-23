@@ -308,7 +308,7 @@ object Instant {
  * @param nanos the nanoseconds within the second, must be positive
  */
 @SerialVersionUID(1L)
-final case class Instant private(seconds: Long, nanos: Int) extends InstantProvider with Ordered[Instant] with Serializable {
+final case class Instant private(seconds: Long, nanos: Int) extends InstantProvider with Ordered[Instant] {
 
   import Instant._
 
@@ -603,7 +603,7 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
    * @return true if this instant is after the specified instant
    * @throws NullPointerException if otherInstant is null
    */
-  def isAfter(otherInstant: Instant): Boolean = this > after
+  def isAfter(otherInstant: Instant): Boolean = this > otherInstant
 
   /**
    * Returns a copy of this instant with the specified duration added.

@@ -219,7 +219,7 @@ object UTCInstant {
  */
 
 @SerialVersionUID(1L)
-final case class UTCInstant(mjDay: Long, nanos: Long, rules: UTCRules) extends Ordered[UTCInstant] with Serializable {
+final case class UTCInstant(mjDay: Long, nanos: Long, rules: UTCRules) extends Ordered[UTCInstant] {
 
   /**
    * Compares this instant to another based on the time-line, then the name

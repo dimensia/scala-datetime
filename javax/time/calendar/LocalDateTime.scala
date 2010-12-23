@@ -673,7 +673,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @return true if this point is before the specified date-time
    * @throws NullPointerException if {@code other} is null
    */
-  def isBefore(other: LocalDateTime): Boolean = this < that
+  def isBefore(other: LocalDateTime): Boolean = this < other
 
   /**
    * Converts this date-time to a {@code LocalTime}.
@@ -1320,7 +1320,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @return true if this is after the specified date-time
    * @throws NullPointerException if {@code other} is null
    */
-  def isAfter(other: LocalDateTime): Boolean = this > that
+  def isAfter(other: LocalDateTime): Boolean = this > other
 
   /**
    * Returns a zoned date-time formed from this date-time and the specified time-zone
