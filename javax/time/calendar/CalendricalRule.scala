@@ -43,8 +43,8 @@ import javax.time.CalendricalException
  * <p>
  * Each rule uses an underlying type to represent the data.
  * This is captured in the generic type of the rule.
- * The underlying type is reified and made available via   { @link # getReifiedType ( ) }.
- * It is expected, but not enforced, that the underlying type is   { @link Comparable }.
+ * The underlying type is reified and made available via {@link #getReifiedType()}.
+ * It is expected, but not enforced, that the underlying type is {@link Comparable}.
  * <p>
  * CalendricalRule is an abstract class and must be implemented with care to
  * ensure other classes in the framework operate correctly.
@@ -54,8 +54,8 @@ import javax.time.CalendricalException
  * @author Michael Nascimento Santos
  * @author Stephen Colebourne
  *
- * @param < T > the underlying type representing the data, typically a   { @code Calendrical },
- * { @code Number } or   { @code Enum }, must be immutable, should be comparable
+ * @param < T > the underlying type representing the data, typically a {@code Calendrical},
+ * {@code Number} or {@code Enum}, must be immutable, should be comparable
  */
 
 /**
@@ -87,7 +87,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
   /**
    * Derives the value of this rule from a calendrical.
    * <p>
-   * This method is provided for implementations of   { @link Calendrical # get }
+   * This method is provided for implementations of {@link Calendrical # get }
    * and is rarely called directly by application code. It is used when the
    * calendrical has its own values but does not have its own rule.
    * <pre>
@@ -168,7 +168,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * from month-of-year.
    * <p>
    * The implementation only needs to derive the value based on its immediate parents.
-   * The use of   { @link Calendrical # get } will extract any further parents on demand.
+   * The use of {@link Calendrical # get} will extract any further parents on demand.
    * <p>
    * A typical implementation of this method obtains the parent value and performs a calculation.
    * For example, here is a simple implementation for the quarter-of-year field:
@@ -189,7 +189,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
 
   /**
    * Gets the value of this rule from the specified calendrical returning
-   * { @code null } if the value cannot be returned.
+   * {@code null} if the value cannot be returned.
    * <p>
    * This method simply queries the calendrical.
    *
@@ -208,7 +208,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * This is captured in the generic type of the rule.
    * Since the generic implementation is Java is limited to the compiler, the
    * underlying type has been reified and made available through this method.
-   * It is expected, but not enforced, that the underlying type is   { @link Comparable }.
+   * It is expected, but not enforced, that the underlying type is {@link Comparable}.
    *
    * @return the reified type of values of the rule, never null
    */
@@ -230,7 +230,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
   }
 
   /**
-   * Compares this   { @code CalendricalRule } to another.
+   * Compares this {@code CalendricalRule} to another.
    * <p>
    * The comparison is based on the period unit followed by the period range
    * followed by the rule ID.
@@ -368,17 +368,17 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
   override def toString: String = id
 
   /**
-   * Compares two   { @code Calendrical } implementations based on the value
+   * Compares two {@code Calendrical} implementations based on the value
    * of this rule extracted from each calendrical.
    * <p>
-   * This implements the   { @link Comparator } interface and allows any two
-   * { @code Calendrical } implementations to be compared using this rule.
-   * The comparison is based on the result of calling   { @link Calendrical # get }
+   * This implements the {@link Comparator} interface and allows any two
+   * {@code Calendrical} implementations to be compared using this rule.
+   * The comparison is based on the result of calling {@link Calendrical # get }
    * on each calendrical, and comparing those values.
    * <p>
    * For example, to sort a list into year order when the list may contain any
-   * mixture of calendricals, such as a   { @code LocalDate },   { @code YearMonth }
-   * and   { @code ZonedDateTime } :
+   * mixture of calendricals, such as a {@code LocalDate}, {@code YearMonth }
+   * and {@code ZonedDateTime} :
    * <pre>
    *  List<Calendrical> list = ...
    *  Collections.sort(list, ISOChronology.yearRule());
@@ -386,7 +386,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * If the value of this rule cannot be obtained from a calendrical, then
    * an exception is thrown.
    * <p>
-   * If the underlying type of this rule does not implement   { @link Comparable }
+   * If the underlying type of this rule does not implement {@link Comparable }
    * then an exception will be thrown.
    *
    * @param cal1 the first calendrical to compare, not null
@@ -418,9 +418,9 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * this field if this method is called.
    * <p>
    * If the override successfully merged some fields then the following must be performed.
-   * The merged field must be stored using {@link CalendricalMerger # storeMerged }.
+   * The merged field must be stored using {@link CalendricalMerger # storeMerged}.
    * Each field used in the merge must be marked as being used by calling
-   * { @link CalendricalMerger # removeProcessed}.
+   * {@link CalendricalMerger # removeProcessed}.
    * <p>
    * An example to merge two fields into one - hour of AM/PM and AM/PM:
    * <pre>
@@ -442,8 +442,8 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * Gets the value of the rule from the specified calendrical throwing
    * an exception if the rule cannot be returned.
    * <p>
-   * This convenience method uses   { @link # getValue ( Calendrical ) } to find the value
-   * and then ensures it isn't   { @code null }.
+   * This convenience method uses {@link #getValue ( Calendrical )} to find the value
+   * and then ensures it isn't {@code null}.
    *
    * @param calendrical the calendrical to get the field value from, not null
    * @return the value of the field, never null

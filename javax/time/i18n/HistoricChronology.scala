@@ -105,7 +105,7 @@ object HistoricChronology {
    * Historic months are typically 30 days long, except for the 13th month which is
    * 5 or 6 days long. The rule uses an estimated duration of 29.5 days.
    * <p>
-   * See   { @link # monthOfYearRule ( ) } for the main date-time field.
+   * See {@link #monthOfYearRule()} for the main date-time field.
    *
    * @return the period unit for months, never null
    */
@@ -187,7 +187,7 @@ object HistoricChronology {
    * Obtains an instance of <code>HistoricChronology</code> using the standard
    * cutover date of 1582-10-15.
    *
-   * @return a { @code HistoricChronology }, never null
+   * @return a {@code HistoricChronology}, never null
    */
   def standardCutover: HistoricChronology = new HistoricChronology(HistoricDate.StandardCutover)
 
@@ -197,7 +197,7 @@ object HistoricChronology {
    * The period unit defines the concept of a period of a year.
    * This has an estimated duration equal to 365.25 days.
    * <p>
-   * See   { @link # yearRule ( ) } for the main date-time field.
+   * See {@link #yearRule()} for the main date-time field.
    *
    * @return the period unit for years, never null
    */
@@ -225,7 +225,7 @@ object HistoricChronology {
    * The period unit defines the concept of a period of a day.
    * This is equivalent to the ISO days period unit.
    * <p>
-   * See   { @link # dayOfMonthRule ( ) } for the main date-time field.
+   * See {@link #dayOfMonthRule()} for the main date-time field.
    *
    * @return the period unit for days, never null
    */
@@ -272,7 +272,7 @@ object HistoricChronology {
    * cutover date when the Gregorian/ISO calendar system was first used.
    *
    * @param cutover the cutover date, not null
-   * @return a { @code HistoricChronology }, never null
+   * @return a {@code HistoricChronology}, never null
    */
   def cutoverAt(cutover: LocalDate): HistoricChronology = {
     checkNotNull(cutover, "Cutover date must not be null")
@@ -311,7 +311,7 @@ object HistoricChronology {
    * The estimated duration is equal to 2,000,000,000 years.
    * This is equivalent to the ISO era period unit.
    * <p>
-   * See   { @link # eraRule ( ) } for the main date-time field.
+   * See {@link #eraRule()} for the main date-time field.
    *
    * @return the period unit for years, never null
    */

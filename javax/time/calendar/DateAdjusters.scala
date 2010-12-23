@@ -34,7 +34,7 @@ package javax.time.calendar
 import java.io.Serializable
 
 /**
- * Provides common implementations of    { @code DateAdjuster }.
+ * Provides common implementations of {@code DateAdjuster}.
  * <p>
  * DateAdjusters is a utility class.
  * All adjusters returned are immutable and thread-safe.
@@ -70,7 +70,7 @@ object DateAdjusters {
       return hash
     }
 
-    /**{ @inheritDoc }*/
+    /**{@inheritDoc}*/
     override def adjustDate(date: LocalDate): LocalDate = {
       var dow: DayOfWeek = date.getDayOfWeek
       if (relative < 2 && dow == this.dow) {
@@ -86,7 +86,7 @@ object DateAdjusters {
       }
     }
 
-    /**{ @inheritDoc }*/
+    /**{@inheritDoc}*/
     override def equals(obj: AnyRef): Boolean = {
       if (obj == null) return false
       if (this == obj) return true
@@ -118,19 +118,19 @@ object DateAdjusters {
 
     /**Last day-of-year adjuster. */
     object LastDayOfYear extends DateAdjuster {
-      /**{ @inheritDoc }*/
+      /**{@inheritDoc}*/
       override def adjustDate(date: LocalDate): LocalDate = LocalDate.of(date.getYear, MonthOfYear.December, 31)
     }
 
     /**First day-of-year adjuster. */
     object FirstDayOfMonth extends DateAdjuster {
-      /**{ @inheritDoc }*/
+      /**{@inheritDoc}*/
       override def adjustDate(date: LocalDate): LocalDate = date.withDayOfMonth(1)
     }
 
     /**Last day-of-month adjuster. */
     object LastDayOfMonth extends DateAdjuster {
-      /**{ @inheritDoc }*/
+      /**{@inheritDoc}*/
       override def adjustDate(date: LocalDate): LocalDate = {
         val dom: Int = date.getMonthOfYear.getLastDayOfMonth(ISOChronology.isLeapYear(date.getYear))
         return date.withDayOfMonth(dom)
@@ -139,13 +139,13 @@ object DateAdjusters {
 
     /**First day-of-year adjuster. */
     object FirstDayOfYear extends DateAdjuster {
-      /**{ @inheritDoc }*/
+      /**{@inheritDoc}*/
       override def adjustDate(date: LocalDate): LocalDate = LocalDate.of(date.getYear, MonthOfYear.January, 1)
     }
 
     /**Next non weekend day adjuster. */
     object NextNonWeekend extends DateAdjuster {
-      /**{ @inheritDoc }*/
+      /**{@inheritDoc}*/
       override def adjustDate(date: LocalDate): LocalDate = {
         val dow: DayOfWeek = date.getDayOfWeek
         dow match {
@@ -229,10 +229,10 @@ object DateAdjusters {
    */
   @SerialVersionUID(1L)
   private[DateAdjusters] final class DayOfWeekInMonth(val ordinal: Int, val dayOfWeek: DayOfWeek) extends DateAdjuster with Serializable {
-    /**{ @inheritDoc }*/
+    /**{@inheritDoc}*/
     override def hashCode: Int = ordinal + 8 * dayOfWeek.ordinal
 
-    /**{ @inheritDoc }*/
+    /**{@inheritDoc}*/
     override def adjustDate(date: LocalDate): LocalDate = {
       val temp: LocalDate = date.withDayOfMonth(1)
       val curDow: Int = temp.getDayOfWeek.ordinal
@@ -242,7 +242,7 @@ object DateAdjusters {
       return temp.plusDays(dowDiff)
     }
 
-    /**{ @inheritDoc }*/
+    /**{@inheritDoc}*/
     override def equals(obj: AnyRef): Boolean = {
       if (obj.isInstanceOf[DateAdjusters.DayOfWeekInMonth]) {
         val other: DateAdjusters.DayOfWeekInMonth = obj.asInstanceOf[DateAdjusters.DayOfWeekInMonth]

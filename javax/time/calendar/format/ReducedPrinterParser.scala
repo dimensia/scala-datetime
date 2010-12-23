@@ -67,10 +67,10 @@ final class ReducedPrinterParser private[format](rule: DateTimeFieldRule[_], wid
   }
 
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc} */
   override def toString: String = "ReducedValue(" + rule.getID + "," + minWidth + "," + baseValue + ")"
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc} */
   private[format] override def getValue(calendrical: Calendrical): Int = {
     val value: Int = rule.getInt(calendrical)
     return Math.abs(value % range)

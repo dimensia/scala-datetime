@@ -53,10 +53,10 @@ import javax.time.calendar.ZoneOffset
 final class ZoneOffsetPrinterParser private[format](utcText: String, includeColon: Boolean, allowSeconds: Boolean)
   extends DateTimePrinter with DateTimeParser {
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc} */
   override def isPrintDataAvailable(calendrical: Calendrical): Boolean = (calendrical.get(ZoneOffset.rule) != null)
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc} */
   override def toString: String = {
     if (utcText.equals("Z") && includeColon && allowSeconds) return "OffsetId()"
     var converted: String = utcText.replace("'", "''")
@@ -109,7 +109,7 @@ final class ZoneOffsetPrinterParser private[format](utcText: String, includeColo
     return false
   }
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc} */
   override def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = {
     val offset: ZoneOffset = calendrical.get(ZoneOffset.rule).getOrElse(throw new CalendricalPrintException("Unable to print ZoneOffset"))
 
@@ -131,7 +131,7 @@ final class ZoneOffsetPrinterParser private[format](utcText: String, includeColo
     }
   }
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc} */
   def parse(context: DateTimeParseContext, parseText: String, position: Int): Int = {
     var offset: ZoneOffset = null
     var length: Int = parseText.length

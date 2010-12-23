@@ -49,7 +49,7 @@ import javax.time.calendar.DateTimeFieldRule
  * It has the ability to store and retrieve the parsed values and manage optional segments.
  * It also provides key information to the parsing methods.
  * <p>
- * Once parsing is complete, the   { @link # toCalendricalMerger ( ) } is typically used
+ * Once parsing is complete, the {@link #toCalendricalMerger()} is typically used
  * to obtain a merger that will merge the separate parsed fields into meaningful values.
  * <p>
  * This class is mutable and thus not thread-safe.
@@ -173,13 +173,13 @@ final class DateTimeParseContext(val symbols: DateTimeFormatSymbols) {
   def setCaseSensitive(caseSensitive: Boolean) = this.caseSensitive = caseSensitive
 
   /**
-   * Returns a   { @code CalendricalMerger } that can be used to interpret
+   * Returns a {@code CalendricalMerger} that can be used to interpret
    * the results of the parse.
    * <p>
    * This method is typically used once parsing is complete to obtain the parsed data.
    * Parsing will typically result in separate fields, such as year, month and day.
    * The returned merger can be used to combine the parsed data into meaningful
-   * objects such as   { @code LocalDate }, potentially applying complex processing
+   * objects such as {@code LocalDate}, potentially applying complex processing
    * to handle invalid parsed data.
    *
    * @return a new independent merger with the parsed rule-value map, never null

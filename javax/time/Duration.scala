@@ -40,7 +40,7 @@ import javax.time.calendar.format.CalendricalParseException
  * A duration between two instants on the time-line.
  * <p>
  * The Time Framework for Java models time as a series of instantaneous events,
- * known as     { @link Instant instants }, along a single time-line.
+ * known as {@link Instant instants}, along a single time-line.
  * This class represents the duration between two of those instants.
  * The model is of a directed duration, meaning that the duration may be negative.
  * <p>
@@ -49,18 +49,18 @@ import javax.time.calendar.format.CalendricalParseException
  * <p>
  * A physical duration could be of infinite length.
  * However, for practicality the API and this class limits the length to the
- * number of seconds that can be held in a     { @code long }.
+ * number of seconds that can be held in a {@code long}.
  * <p>
  * In order to represent the data a 96 bit number is required. To achieve this the
- * data is stored as seconds, measured using a     { @code long }, and nanoseconds,
- * measured using an     { @code int }. The nanosecond part will always be between
+ * data is stored as seconds, measured using a {@code long}, and nanoseconds,
+ * measured using an {@code int}. The nanosecond part will always be between
  * 0 and 999,999,999 representing the nanosecond part of the second.
- * For example, the negative duration of     { @code PT -0.1S } is represented as
+ * For example, the negative duration of {@code PT -0.1S} is represented as
  * -1 second and 900,000,000 nanoseconds.
  * <p>
  * In this API, the unit of "seconds" only has a precise meaning when applied to an instant.
  * This is because it is the instant that defines the time scale used, not the duration.
- * For example, the simplified UTC time scale used by     { @code Instant } ignores leap seconds,
+ * For example, the simplified UTC time scale used by {@code Instant} ignores leap seconds,
  * which alters the effective length of a second. By comparison, the TAI time scale follows
  * the international scientific definition of a second exactly.
  * For most applications, this subtlety will be irrelevant.
@@ -124,12 +124,12 @@ object Duration {
   private val NanosPerSecond: Int = 1000000000
 
   /**
-   * Obtains an instance of     { @code Duration } from a number of milliseconds.
+   * Obtains an instance of {@code Duration} from a number of milliseconds.
    * <p>
    * The seconds and nanoseconds are extracted from the specified milliseconds.
    *
    * @param millis the number of milliseconds, positive or negative
-   * @return a { @code Duration }, never null
+   * @return a {@code Duration}, never null
    */
   def ofMillis(millis: Long): Duration = {
     var secs: Long = millis / 1000
@@ -142,17 +142,17 @@ object Duration {
   }
 
   /**
-   * Obtains an instance of     { @code Duration } from a number of seconds.
+   * Obtains an instance of {@code Duration} from a number of seconds.
    * <p>
    * The nanosecond in second field is set to zero.
    *
    * @param seconds the number of seconds, positive or negative
-   * @return a { @code Duration }, never null
+   * @return a {@code Duration}, never null
    */
   def ofSeconds(seconds: Long): Duration = create(seconds, 0)
 
   /**
-   * Obtains an instance of     { @code Duration } from a duration in a specified time unit.
+   * Obtains an instance of {@code Duration} from a duration in a specified time unit.
    * <p>
    * The duration amount is measured in terms of the specified unit. For example:
    * <pre>
@@ -162,8 +162,8 @@ object Duration {
    *
    * @param amount the amount of the duration, positive or negative
    * @param unit the unit that the duration is measured in, not null
-   * @return a { @code Duration }, never null
-   * @throws ArithmeticException if the input amount exceeds the capacity of     { @code Duration }
+   * @return a {@code Duration}, never null
+   * @throws ArithmeticException if the input amount exceeds the capacity of {@code Duration }
    *  which can only occur for units MINUTES, HOURS and DAYS
    */
   def of(amount: Long, unit: TimeUnit): Duration = {
@@ -199,8 +199,8 @@ object Duration {
    * The nanosecond in second field is set to zero.
    *
    * @param minutes the number of minutes, positive or negative
-   * @return a { @code Duration }, never null
-   * @throws ArithmeticException if the input minutes exceeds the capacity of     { @code Duration }
+   * @return a {@code Duration}, never null
+   * @throws ArithmeticException if the input minutes exceeds the capacity of {@code Duration }
    */
   def ofStandardMinutes(minutes: Long): Duration = create(MathUtils.safeMultiply(minutes, 60), 0)
 
@@ -212,8 +212,8 @@ object Duration {
    * The nanosecond in second field is set to zero.
    *
    * @param hours the number of hours, positive or negative
-   * @return a { @code Duration }, never null
-   * @throws ArithmeticException if the input hours exceeds the capacity of     { @code Duration }
+   * @return a {@code Duration}, never null
+   * @throws ArithmeticException if the input hours exceeds the capacity of {@code Duration }
    */
   def ofStandardHours(hours: Long): Duration = create(MathUtils.safeMultiply(hours, 3600), 0)
 
@@ -237,8 +237,8 @@ object Duration {
    *
    * @param startInclusive the start instant, inclusive, not null
    * @param endExclusive the end instant, exclusive, not null
-   * @return a { @code Duration }, never null
-   * @throws ArithmeticException if the calculation exceeds the capacity of     { @code Duration }
+   * @return a {@code Duration}, never null
+   * @throws ArithmeticException if the calculation exceeds the capacity of {@code Duration }
    */
   def between(startInclusive: InstantProvider, endExclusive: InstantProvider): Duration = {
     val start: Instant = Instant.of(startInclusive)
@@ -253,28 +253,28 @@ object Duration {
   }
 
   /**
-   * Obtains an instance of     { @code Duration } from a number of standard length days.
+   * Obtains an instance of {@code Duration} from a number of standard length days.
    * <p>
    * The seconds are calculated based on the standard definition of a day,
    * where each day is 86400 seconds which implies a 24 hour day.
    * The nanosecond in second field is set to zero.
    *
    * @param days the number of days, positive or negative
-   * @return a { @code Duration }, never null
-   * @throws ArithmeticException if the input days exceeds the capacity of     { @code Duration }
+   * @return a {@code Duration}, never null
+   * @throws ArithmeticException if the input days exceeds the capacity of {@code Duration }
    */
   def ofStandardDays(days: Long): Duration = create(MathUtils.safeMultiply(days, 86400), 0)
 
   /**
-   * Obtains an instance of     { @code Duration } from a number of nanoseconds.
+   * Obtains an instance of {@code Duration} from a number of nanoseconds.
    * <p>
-   * The seconds and nanoseconds are extracted from the specified     { @code BigInteger }.
-   * If the resulting seconds value is larger than     { @code Long.MAX_VALUE } then an
+   * The seconds and nanoseconds are extracted from the specified {@code BigInteger}.
+   * If the resulting seconds value is larger than {@code Long.MAX_VALUE} then an
    * exception is thrown.
    *
    * @param nanos the number of nanoseconds, positive or negative, not null
-   * @return a { @code Duration }, never null
-   * @throws ArithmeticException if the input nanoseconds exceeds the capacity of     { @code Duration }
+   * @return a {@code Duration}, never null
+   * @throws ArithmeticException if the input nanoseconds exceeds the capacity of {@code Duration }
    */
   def ofNanos(nanos: BigInt): Duration = {
     Instant.checkNotNull(nanos, "Nanos must not be null")
@@ -286,15 +286,15 @@ object Duration {
   }
 
   /**
-   * Obtains an instance of     { @code Duration } from a number of seconds.
+   * Obtains an instance of {@code Duration} from a number of seconds.
    * <p>
-   * The seconds and nanoseconds are extracted from the specified     { @code BigDecimal }.
-   * If the decimal is larger than     { @code Long.MAX_VALUE } or has more than 9 decimal
+   * The seconds and nanoseconds are extracted from the specified {@code BigDecimal}.
+   * If the decimal is larger than {@code Long.MAX_VALUE} or has more than 9 decimal
    * places then an exception is thrown.
    *
    * @param seconds the number of seconds, up to scale 9, positive or negative
-   * @return a { @code Duration }, never null
-   * @throws ArithmeticException if the input seconds exceeds the capacity of a     { @code Duration }
+   * @return a {@code Duration}, never null
+   * @throws ArithmeticException if the input seconds exceeds the capacity of a {@code Duration }
    */
   def ofSeconds(seconds: BigDecimal): Duration = {
     Instant.checkNotNull(seconds, "Seconds must not be null")
@@ -303,12 +303,12 @@ object Duration {
   }
 
   /**
-   * Obtains an instance of     { @code Duration } from a number of nanoseconds.
+   * Obtains an instance of {@code Duration} from a number of nanoseconds.
    * <p>
    * The seconds and nanoseconds are extracted from the specified nanoseconds.
    *
    * @param nanos the number of nanoseconds, positive or negative
-   * @return a { @code Duration }, never null
+   * @return a {@code Duration}, never null
    */
   def ofNanos(nanos: Long): Duration = {
     var secs: Long = nanos / NanosPerSecond
@@ -321,10 +321,10 @@ object Duration {
   }
 
   /**
-   * Obtains an instance of     { @code Duration } by parsing a string.
+   * Obtains an instance of {@code Duration} by parsing a string.
    * <p>
-   * This will parse the string produced by     { @link # toString ( ) } which is
-   * the ISO-8601 format     { @code PTnS } where     { @code n } is
+   * This will parse the string produced by {@link #toString()} which is
+   * the ISO-8601 format {@code PTnS} where {@code n} is
    * the number of seconds with optional decimal part.
    * The number must consist of ASCII numerals.
    * There must only be a negative sign at the start of the number and it can
@@ -335,8 +335,8 @@ object Duration {
    * The decimal point may be either a dot or a comma.
    *
    * @param text the text to parse, not null
-   * @return a { @code Duration }, never null
-   * @throws CalendricalParseException if the text cannot be parsed to a     { @code Duration }
+   * @return a {@code Duration}, never null
+   * @throws CalendricalParseException if the text cannot be parsed to a {@code Duration }
    */
   def parse(text: String): Duration = {
     Instant.checkNotNull(text, "Text to parse must not be null")
@@ -387,7 +387,7 @@ object Duration {
   }
 
   /**
-   * Obtains an instance of     { @code Duration } from a number of seconds
+   * Obtains an instance of {@code Duration} from a number of seconds
    * and an adjustment in nanoseconds.
    * <p>
    * This method allows an arbitrary number of nanoseconds to be passed in.
@@ -403,7 +403,7 @@ object Duration {
    * @param seconds the number of seconds, positive or negative
    * @param nanoAdjustment the nanosecond adjustment to the number of seconds, positive or negative
    * @return a {@code Duration}, never null
-   * @throws ArithmeticException if the adjustment causes the seconds to exceed the capacity of     { @code Duration }
+   * @throws ArithmeticException if the adjustment causes the seconds to exceed the capacity of {@code Duration }
    */
   def ofSeconds(seconds: Long, nanoAdjustment: Long): Duration = {
     var secs: Long = MathUtils.safeAdd(seconds, nanoAdjustment / NanosPerSecond)
@@ -417,7 +417,7 @@ object Duration {
 }
 
 /**
- * Constructs an instance of     { @code Duration } using seconds and nanoseconds.
+ * Constructs an instance of {@code Duration} using seconds and nanoseconds.
  *
  * @param seconds the length of the duration in seconds, positive or negative
  * @param nanos the nanoseconds within the second, from 0 to 999,999,999
@@ -433,9 +433,9 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
    * The length of the duration is stored using two fields - seconds and nanoseconds.
    * The nanoseconds part is a value from 0 to 999,999,999 that is an adjustment to
    * the length in seconds.
-   * The total duration is defined by calling this method and  { @link # getNanoOfSecond ( ) }.
+   * The total duration is defined by calling this method and {@link #getNanoOfSecond()}.
    * <p>
-   * A  { @code Duration } represents a directed distance between two points on the time-line.
+   * A {@code Duration} represents a directed distance between two points on the time-line.
    * A negative duration is expressed by the negative sign of the seconds part.
    * A duration of -1 nanosecond is stored as -1 seconds plus 999,999,999 nanoseconds.
    *
@@ -449,9 +449,9 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
    * The length of the duration is stored using two fields - seconds and nanoseconds.
    * The nanoseconds part is a value from 0 to 999,999,999 that is an adjustment to
    * the length in seconds.
-   * The total duration is defined by calling this method and  { @link # getSeconds ( ) }.
+   * The total duration is defined by calling this method and {@link #getSeconds()}.
    * <p>
-   * A  { @code Duration } represents a directed distance between two points on the time-line.
+   * A {@code Duration} represents a directed distance between two points on the time-line.
    * A negative duration is expressed by the negative sign of the seconds part.
    * A duration of -1 nanosecond is stored as -1 seconds plus 999,999,999 nanoseconds.
    *
@@ -465,8 +465,8 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
    * This instance is immutable and unaffected by this method call.
    *
    * @param secondsToSubtract the seconds to subtract, positive or negative
-   * @return a { @code Duration } based on this duration with the specified seconds subtracted, never null
-   * @throws ArithmeticException if the calculation exceeds the capacity of     { @code Duration }
+   * @return a {@code Duration} based on this duration with the specified seconds subtracted, never null
+   * @throws ArithmeticException if the calculation exceeds the capacity of {@code Duration }
    */
   def minusSeconds(secondsToSubtract: Long): Duration = {
     if (secondsToSubtract == 0) return this
@@ -477,7 +477,7 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
   /**
    * Checks if this duration is positive or zero.
    * <p>
-   * A     { @code Duration } represents a directed distance between two points on
+   * A {@code Duration} represents a directed distance between two points on
    * the time-line and can therefore be positive, zero or negative.
    * This method checks whether the length is greater than or equal to zero.
    *
@@ -491,8 +491,8 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
    * This instance is immutable and unaffected by this method call.
    *
    * @param nanosToAdd the nanoseconds to add, positive or negative
-   * @return a { @code Duration } based on this duration with the specified nanoseconds added, never null
-   * @throws ArithmeticException if the calculation exceeds the capacity of     { @code Duration }
+   * @return a {@code Duration} based on this duration with the specified nanoseconds added, never null
+   * @throws ArithmeticException if the calculation exceeds the capacity of {@code Duration }
    */
   def plusNanos(nanosToAdd: Long): Duration = {
     if (nanosToAdd == 0) return this
@@ -516,10 +516,10 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
    * This method returns the duration converted to the unit, truncating
    * excess precision.
    * If the conversion would overflow, the result will saturate to
-   * { @code Long.MAX_VALUE } or     { @code Long.MIN_VALUE }.
+   * {@code Long.MAX_VALUE} or {@code Long.MIN_VALUE}.
    *
-   * @return the duration in the specified unit, saturated at     { @code Long.MAX_VALUE }
-   * and     { @code Long.MIN_VALUE }, positive or negative
+   * @return the duration in the specified unit, saturated at {@code Long.MAX_VALUE }
+   * and {@code Long.MIN_VALUE}, positive or negative
    */
   def get(unit: TimeUnit): Long = {
     Instant.checkNotNull(unit, "TimeUnit must not be null")
@@ -538,13 +538,13 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
   }
 
   /**
-   * Returns a copy of this duration with the specified     { @code Duration } added.
+   * Returns a copy of this duration with the specified {@code Duration} added.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param duration the duration to add, positive or negative, not null
-   * @return a { @code Duration } based on this duration with the specified duration added, never null
-   * @throws ArithmeticException if the calculation exceeds the capacity of     { @code Duration }
+   * @return a {@code Duration} based on this duration with the specified duration added, never null
+   * @throws ArithmeticException if the calculation exceeds the capacity of {@code Duration }
    */
   def plus(duration: Duration): Duration = {
     var secsToAdd: Long = duration.seconds
@@ -567,8 +567,8 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
    * This instance is immutable and unaffected by this method call.
    *
    * @param multiplicand the value to multiply the duration by, positive or negative
-   * @return a { @code Duration } based on this duration multiplied by the specified scalar, never null
-   * @throws ArithmeticException if the calculation exceeds the capacity of     { @code Duration }
+   * @return a {@code Duration} based on this duration multiplied by the specified scalar, never null
+   * @throws ArithmeticException if the calculation exceeds the capacity of {@code Duration }
    */
   def multipliedBy(multiplicand: Long): Duration = {
     if (multiplicand == 0) return Zero
@@ -592,7 +592,7 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
   /**
    * Checks if this duration is zero length.
    * <p>
-   * A     { @code Duration } represents a directed distance between two points on
+   * A {@code Duration} represents a directed distance between two points on
    * the time-line and can therefore be positive, zero or negative.
    * This method checks whether the length is zero.
    *
@@ -602,7 +602,7 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
 
   /**
    * Converts this duration to the total length in seconds and
-   * fractional nanoseconds expressed as a     { @code BigDecimal }.
+   * fractional nanoseconds expressed as a {@code BigDecimal}.
    *
    * @return the total length of the duration in seconds, with a scale of 9, never null
    */
@@ -614,9 +614,9 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
    * This instance is immutable and unaffected by this method call.
    *
    * @param divisor the value to divide the duration by, positive or negative, not zero
-   * @return a { @code Duration } based on this duration divided by the specified divisor, never null
+   * @return a {@code Duration} based on this duration divided by the specified divisor, never null
    * @throws ArithmeticException if the divisor is zero
-   * @throws ArithmeticException if the calculation exceeds the capacity of     { @code Duration }
+   * @throws ArithmeticException if the calculation exceeds the capacity of {@code Duration }
    */
   def dividedBy(divisor: Long): Duration = {
     if (divisor == 0) throw new ArithmeticException("Cannot divide by zero")
@@ -632,7 +632,7 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
   /**
    * Checks if this duration is positive, excluding zero.
    * <p>
-   * A     { @code Duration } represents a directed distance between two points on
+   * A {@code Duration} represents a directed distance between two points on
    * the time-line and can therefore be positive, zero or negative.
    * This method checks whether the length is greater than zero.
    *
@@ -641,7 +641,7 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
   def isPositive: Boolean = seconds >= 0 && ((seconds | nanos) != 0)
 
   /**
-   * Checks if this duration is equal to the specified     { @code Duration }.
+   * Checks if this duration is equal to the specified {@code Duration}.
    * <p>
    * The comparison is based on the total length of the durations.
    *
@@ -669,8 +669,8 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
    *
    * @param amount the duration to add, positive or negative
    * @param unit the unit that the duration is measured in, not null
-   * @return a { @code Duration } based on this duration with the specified duration added, never null
-   * @throws ArithmeticException if the calculation exceeds the capacity of     { @code Duration }
+   * @return a {@code Duration} based on this duration with the specified duration added, never null
+   * @throws ArithmeticException if the calculation exceeds the capacity of {@code Duration }
    */
   def plus(amount: Long, unit: TimeUnit): Duration = {
     if (unit == TimeUnit.SECONDS) plusSeconds(amount)
@@ -722,7 +722,7 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
    *
    * @param amount the duration to subtract, positive or negative
    * @param unit the unit that the duration is measured in, not null
-   * @return a { @code Duration } based on this duration with the specified duration subtracted, never null
+   * @return a {@code Duration} based on this duration with the specified duration subtracted, never null
    * @throws ArithmeticException if the calculation exceeds the capacity of {@code Duration}
    */
   def minus(amount: Long, unit: TimeUnit): Duration = {
@@ -739,7 +739,7 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
    *
    * @param nanosToSubtract the nanoseconds to subtract, positive or negative
    * @return a {@code Duration} based on this duration with the specified nanoseconds subtracted, never null
-   * @throws ArithmeticException if the calculation exceeds the capacity of     { @code Duration }
+   * @throws ArithmeticException if the calculation exceeds the capacity of {@code Duration }
    */
   def minusNanos(nanosToSubtract: Long): Duration = {
     if (nanosToSubtract == 0) {
@@ -770,19 +770,19 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
    * Returns a copy of this duration with a positive length.
    * <p>
    * This method returns a positive duration by effectively removing the sign from any negative total length.
-   * For example,     { @code PT -1.3S } will be returned as     { @code PT1.3S }.
+   * For example, {@code PT -1.3S} will be returned as {@code PT1.3S}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
-   * @return a { @code Duration } based on this period with an absolute length, never null
-   * @throws ArithmeticException if the seconds part of the length is     { @code Long.MIN_VALUE }
+   * @return a {@code Duration} based on this period with an absolute length, never null
+   * @throws ArithmeticException if the seconds part of the length is {@code Long.MIN_VALUE }
    */
   def abs: Duration = if (isNegative) negated else this
 
   /**
    * Checks if this duration is negative or zero.
    * <p>
-   * A     { @code Duration } represents a directed distance between two points on
+   * A {@code Duration} represents a directed distance between two points on
    * the time-line and can therefore be positive, zero or negative.
    * This method checks whether the length is less than or equal to zero.
    *
@@ -791,7 +791,7 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
   def isNegativeOrZero: Boolean = seconds < 0 || ((seconds | nanos) == 0)
 
   /**
-   * Converts this duration to the total length in nanoseconds expressed as a     { @code BigInteger }.
+   * Converts this duration to the total length in nanoseconds expressed as a {@code BigInteger}.
    *
    * @return the total length of the duration in nanoseconds, never null
    */
@@ -800,7 +800,7 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
   /**
    * Checks if this duration is negative, excluding zero.
    * <p>
-   * A     { @code Duration } represents a directed distance between two points on
+   * A {@code Duration} represents a directed distance between two points on
    * the time-line and can therefore be positive, zero or negative.
    * This method checks whether the length is less than zero.
    *
@@ -816,7 +816,7 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
-   * @return a { @code Duration } based on this period with the amount negated, never null
+   * @return a {@code Duration} based on this period with the amount negated, never null
    * @throws ArithmeticException if the seconds part of the length is {@code Long.MinValue}
    */
   def negated: Duration = multipliedBy(-1)
@@ -857,7 +857,7 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
   }
 
   /**
-   * Compares this duration to the specified     { @code Duration }.
+   * Compares this duration to the specified {@code Duration}.
    * <p>
    * The comparison is based on the total length of the durations.
    *
@@ -876,8 +876,8 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
    * This instance is immutable and unaffected by this method call.
    *
    * @param millisToSubtract the milliseconds to subtract, positive or negative
-   * @return a { @code Duration } based on this duration with the specified milliseconds subtracted, never null
-   * @throws ArithmeticException if the calculation exceeds the capacity of     { @code Duration }
+   * @return a {@code Duration} based on this duration with the specified milliseconds subtracted, never null
+   * @throws ArithmeticException if the calculation exceeds the capacity of {@code Duration }
    */
   def minusMillis(millisToSubtract: Long): Duration = {
     if (millisToSubtract == 0) return this
@@ -920,6 +920,9 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
     return create(secs, nos)
   }
 
+  def -(duration: Duration): Duration = minus(duration)
+
+
   /**
    * Returns a copy of this duration with the specified number of seconds added.
    * <p>
@@ -961,7 +964,7 @@ final case class Duration private(seconds: Long, nanos: Int) extends Comparable[
   }
 
   /**
-   * Checks if this duration is less than the specified     { @code Duration }.
+   * Checks if this duration is less than the specified {@code Duration}.
    * <p>
    * The comparison is based on the total length of the durations.
    *

@@ -45,13 +45,13 @@ import javax.time.calendar.ZoneOffset
  * <p>
  * A transition between two offsets is normally the result of a daylight savings cutover.
  * The discontinuity is normally a gap in spring and an overlap in autumn.
- * { @code ZoneOffsetTransition } models the transition between the two offsets.
+ * {@code ZoneOffsetTransition} models the transition between the two offsets.
  * <p>
  * There are two types of transition - a gap and an overlap.
  * Gaps occur where there are local date-times that simply do not not exist.
- * An example would be when the offset changes from   { @code +01:00 } to   { @code +02:00 }.
+ * An example would be when the offset changes from {@code +01:00} to {@code +02:00}.
  * Overlaps occur where there are local date-times that exist twice.
- * An example would be when the offset changes from   { @code +02:00 } to   { @code +01:00 }.
+ * An example would be when the offset changes from {@code +02:00} to {@code +01:00}.
  * <p>
  * ZoneOffsetTransition is immutable and thread-safe.
  *
@@ -61,8 +61,8 @@ object ZoneOffsetTransition {
   /**
    * Obtains an instance defining a transition between two offsets.
    * <p>
-   * Applications should normally obtain an instance from   { @link ZoneRules }.
-   * This constructor is intended for use by implementors of   { @code ZoneRules }.
+   * Applications should normally obtain an instance from {@link ZoneRules}.
+   * This constructor is intended for use by implementors of {@code ZoneRules}.
    *
    * @param transition the transition date-time with the offset before the transition, not null
    * @param offsetAfter the offset at and after the transition, not null
@@ -160,8 +160,8 @@ final class ZoneOffsetTransition private[zone](val transition: OffsetDateTime, o
    * <p>
    * This is the instant of the discontinuity, which is defined as the first
    * instant that the 'after' offset applies. This instant can be also obtained
-   * using the   { @link # getDateTime ( ) 'before' offset } or the
-   * { @link # getDateTimeAfter ( ) 'after' offset }.
+   * using the {@link #getDateTime ( ) 'before' offset} or the
+   * {@link #getDateTimeAfter ( ) 'after' offset}.
    *
    * @return the transition instant, not null
    */
@@ -178,7 +178,7 @@ final class ZoneOffsetTransition private[zone](val transition: OffsetDateTime, o
    * Gets the transition date-time expressed with the 'after' offset.
    * <p>
    * This is the first date-time after the discontinuity, when the new offset applies.
-   * This is the same instant as   { @link # getDateTime ( ) } but with the 'after' offset.
+   * This is the same instant as {@link #getDateTime()} but with the 'after' offset.
    *
    * @return the transition date-time expressed with the after offset, not null
    */
@@ -196,7 +196,7 @@ final class ZoneOffsetTransition private[zone](val transition: OffsetDateTime, o
    * the 'before' offset.
    * <p>
    * This is the date-time where the discontinuity begins, and as such it never
-   * actually occurs. This method is simply   { @code getDateTime ( ).toLocalDateTime ( ) }
+   * actually occurs. This method is simply {@code getDateTime ( ).toLocalDateTime()}
    * <p>
    * This value expresses the date-time normally used in verbal communications.
    * For example 'the clocks will move forward one hour tonight at 1am'.
@@ -246,7 +246,7 @@ final class ZoneOffsetTransition private[zone](val transition: OffsetDateTime, o
    * <p>
    * This is the date-time where the discontinuity begins, and as such it never
    * actually occurs (as the 'after' offset is actually used at this instant).
-   * This is the same instant as   { @link # getDateTimeAfter ( ) } but with the 'before' offset.
+   * This is the same instant as {@link #getDateTimeAfter()} but with the 'before' offset.
    *
    * @return the transition date-time expressed with the before offset, not null
    */

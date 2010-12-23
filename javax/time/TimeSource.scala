@@ -37,10 +37,10 @@ import java.io.Serializable
  * A source providing access to the current instant.
  * <p>
  * The Time Framework for Java abstracts the concept of the "current time" into two interfaces
- * -     { @code TimeSource } and     { @link javax.time.calendar.Clock Clock }.
- * This class, provides access to the current     { @code Instant } which is independent of
+ * - {@code TimeSource} and {@link javax.time.calendar.Clock Clock}.
+ * This class, provides access to the current {@code Instant} which is independent of
  * local factors such as time-zone and cannot be queried for human-scale fields.
- * By comparison,     { @code Clock } provides access to the current date and time, via
+ * By comparison, {@code Clock} provides access to the current date and time, via
  * human-scale fields, but requires a time-zone.
  * <p>
  * The purpose of this abstraction is to allow alternate time-sources
@@ -49,7 +49,7 @@ import java.io.Serializable
  *
  * <h4>Best practice</h4>
  * The recommended best practice for most applications is to <i>avoid using the static methods</i>.
- * Instead, the main application should obtain the current time from a     { @code TimeSource }
+ * Instead, the main application should obtain the current time from a {@code TimeSource }
  * instance that is passed to the object or method.
  * This approach is typically implemented using a dependency injection framework.
  * <pre>
@@ -66,7 +66,7 @@ import java.io.Serializable
  * }
  * </pre>
  * This approach allows alternate time-source implementations, such as
- * { @link # fixed ( InstantProvider ) fixed } or     { @link # offsetSystem ( Duration ) offsetSystem }
+ * {@link #fixed ( InstantProvider ) fixed} or {@link #offsetSystem ( Duration ) offsetSystem }
  * to be used during testing.
  * <pre>
  * public void test_process()     {
@@ -76,25 +76,25 @@ import java.io.Serializable
  * </pre>
  *
  * <h4>Accuracy</h4>
- * The main method used by applications is     { @link # instant ( ) }.
+ * The main method used by applications is {@link #instant()}.
  * This returns the best value available for the current instant ignoring leap-seconds.
  * To achieve this, the instant may not be fully accurate around a leap-second.
  * <p>
  * Two alternative methods are available and may return a more accurate instant depending
  * on the implementation. The instant in UTC, taking into account leap seconds, can be
- * obtained using     { @link # utcInstant ( ) }. The instant in TAI, which is a simple incrementing number
- * ignoring all human time concepts, can be obtained using     { @link # taiInstant ( ) }.
+ * obtained using {@link #utcInstant()}. The instant in TAI, which is a simple incrementing number
+ * ignoring all human time concepts, can be obtained using {@link #taiInstant()}.
  * See the relevant classes for more detail.
  *
  * <h4>Implementation notes</h4>
  * <p>
- * { @code TimeSource } is an abstract class and must be implemented with care
+ * {@code TimeSource} is an abstract class and must be implemented with care
  * to ensure other classes in the framework operate correctly.
  * All instantiable implementations must be final, immutable and thread-safe.
  * <p>
- * Subclass implementations should implement     { @code Serializable } wherever possible.
- * They should also implement     { @code equals ( ) },     { @code hashCode ( ) } and
- * { @code toString ( ) } based on their state.
+ * Subclass implementations should implement {@code Serializable} wherever possible.
+ * They should also implement {@code equals()}, {@code hashCode()} and
+ * {@code toString()} based on their state.
  *
  * @author Michael Nascimento Santos
  * @author Stephen Colebourne
@@ -103,7 +103,7 @@ object TimeSource {
 
   /**
    * Implementation of a time-source that always returns the latest time from
-   * { @link System # currentTimeMillis ( ) }.
+   * {@link System # currentTimeMillis()}.
    */
   private[time] object SystemTimeSource extends SystemTimeSource
 
@@ -111,13 +111,13 @@ object TimeSource {
   @SerialVersionUID(1L)
   private[time] sealed class SystemTimeSource extends TimeSource with Serializable {
 
-    /** { @inheritDoc }*/
+    /**{@inheritDoc}*/
     def instant: Instant = Instant.ofEpochMillis(System.currentTimeMillis)
 
-    /** { @inheritDoc }*/
+    /**{@inheritDoc}*/
     override def toString: String = "SystemTimeSource"
 
-    /** { @inheritDoc }*/
+    /**{@inheritDoc}*/
     override def millis: Long = {
       return System.currentTimeMillis
     }
@@ -127,19 +127,19 @@ object TimeSource {
   }
 
   /**
-   * Gets a time-source that always returns the same     { @code Instant }.
+   * Gets a time-source that always returns the same {@code Instant}.
    * <p>
-   * This method converts the     { @code InstantProvider } to an     { @code Instant }
-   * which it then returns from the     { @code TimeSource }.
+   * This method converts the {@code InstantProvider} to an {@code Instant}
+   * which it then returns from the {@code TimeSource}.
    * <p>
-   * The returned implementation is     { @code Serializable }
+   * The returned implementation is {@code Serializable}
    *
    * @param fixedInstantProvider the instant to return from each call to the time-source
-   * @return a { @code TimeSource } that always returns the same instant, never null
+   * @return a {@code TimeSource} that always returns the same instant, never null
    */
   def fixed(fixedInstantProvider: InstantProvider): TimeSource = {
     Instant.checkNotNull(fixedInstantProvider, "InstantProvider must not be null")
-    var instant: Instant = Instant.of(fixedInstantProvider)
+    val instant: Instant = Instant.of(fixedInstantProvider)
     return new TimeSource.FixedTimeSource(instant)
   }
 
@@ -147,12 +147,12 @@ object TimeSource {
    * Gets a time-source that obtains the current instant using
    * the system millisecond clock.
    * <p>
-   * The time-source wraps     { @link System # currentTimeMillis ( ) }, thus it has
+   * The time-source wraps {@link System#currentTimeMillis()}, thus it has
    * at best millisecond resolution.
    * <p>
-   * The returned implementation is     { @code Serializable }
+   * The returned implementation is {@code Serializable}
    *
-   * @return a { @code TimeSource } that uses the system millisecond clock, never null
+   * @return a {@code TimeSource} that uses the system millisecond clock, never null
    */
   def system: TimeSource = SystemTimeSource
 
@@ -162,16 +162,16 @@ object TimeSource {
    * Restricted constructor. */
   @SerialVersionUID(1L)
   private[time] final class FixedTimeSource(instant: Instant) extends TimeSource with Serializable {
-    /** { @inheritDoc }*/
+    /**{@inheritDoc}*/
     override def equals(obj: AnyRef): Boolean = {
       if (obj.isInstanceOf[TimeSource.FixedTimeSource]) instant.equals((obj.asInstanceOf[TimeSource.FixedTimeSource]).instant)
       else false
     }
 
-    /** { @inheritDoc }*/
+    /**{@inheritDoc}*/
     override def toString: String = "FixedTimeSource[" + instant + ']'
 
-    /** { @inheritDoc }*/
+    /**{@inheritDoc}*/
     override def hashCode: Int = instant.hashCode
   }
 
@@ -179,17 +179,17 @@ object TimeSource {
    * Gets a time-source that obtains the current instant using the system
    * millisecond clock and adjusts by a fixed offset.
    * <p>
-   * The time-source wraps     { @link System # currentTimeMillis ( ) }, thus it has
+   * The time-source wraps {@link System # currentTimeMillis()}, thus it has
    * at best millisecond resolution.
    * <p>
    * The final instant is adjusted by adding the offset.
    * This is useful for simulating an application running at a later or earlier
    * point in time.
    * <p>
-   * The returned implementation is     { @code Serializable }
+   * The returned implementation is {@code Serializable }
    *
    * @param offset the duration by which this time-source is offset from the system millisecond clock
-   * @return a { @code TimeSource } that is offset from the system millisecond clock, never null
+   * @return a {@code TimeSource} that is offset from the system millisecond clock, never null
    */
   def offsetSystem(offset: Duration): TimeSource = {
     Instant.checkNotNull(offset, "Duration must not be null")
@@ -199,21 +199,21 @@ object TimeSource {
 
   /**
    * Implementation of a time-source that returns the latest time from
-   * { @link System # currentTimeMillis ( ) } plus an offset.
+   * {@link System#currentTimeMillis()} plus an offset.
    * Restricted constructor. */
   @SerialVersionUID(1L)
   private[time] final class OffsetSystemTimeSource(val offset: Duration) extends TimeSource with Serializable {
 
-    /** { @inheritDoc }*/
+    /**{@inheritDoc}*/
     def instant: Instant = Instant.ofEpochMillis(System.currentTimeMillis).plus(offset)
 
-    /** { @inheritDoc }*/
+    /**{@inheritDoc}*/
     override def hashCode: Int = offset.hashCode
 
-    /** { @inheritDoc }*/
+    /**{@inheritDoc}*/
     override def toString: String = "OffsetSystemTimeSource[" + offset + ']'
 
-    /** { @inheritDoc }*/
+    /**{@inheritDoc}*/
     override def equals(obj: AnyRef): Boolean = {
       if (obj.isInstanceOf[TimeSource.OffsetSystemTimeSource]) offset.equals((obj.asInstanceOf[TimeSource.OffsetSystemTimeSource]).offset)
       else false
@@ -227,14 +227,14 @@ object TimeSource {
  */
 abstract class TimeSource protected() {
   /**
-   * Gets the current     { @code TAIInstant }.
+   * Gets the current {@code TAIInstant}.
    * <p>
    * The TAI time-scale is a simple incrementing number of seconds from the TAI epoch of 1958-01-01(TAI).
    * It ignores all human concepts of time such as days.
    * An accurate implementation of this abstract class will return a TAI value in
    * accordance with international standards.
    * <p>
-   * The default implementation of this method converts the value from     { @code instant ( ) }
+   * The default implementation of this method converts the value from {@code instant()}
    * and thus is no more accurate than that method.
    * <p>
    * Normally, this method will not throw an exception.
@@ -245,30 +245,30 @@ abstract class TimeSource protected() {
   def taiInstant: TAIInstant = TAIInstant.of(instant)
 
   /**
-   * Gets the current     { @code Instant }.
+   * Gets the current {@code Instant}.
    * <p>
    * The instant returned by this method will vary according to the implementation.
-   * For example, the time-source returned by     { @link # system ( ) } will return
-   * an instant based on     { @link System # currentTimeMillis ( ) }.
+   * For example, the time-source returned by {@link #system()} will return
+   * an instant based on {@link System # currentTimeMillis()}.
    * <p>
    * Normally, this method will not throw an exception.
    * However, one possible implementation would be to obtain the time from a
    * central time server across the network. Obviously, in this case the lookup
    * could fail, and so the method is permitted to throw an exception.
    *
-   * @return the current     { @code Instant } from this time-source, never null
+   * @return the current {@code Instant} from this time-source, never null
    * @throws CalendricalException if the instant cannot be obtained, not thrown by most implementations
    */
   def instant: Instant
 
   /**
-   * Gets the current     { @code UTCInstant }.
+   * Gets the current {@code UTCInstant}.
    * <p>
-   * The UTC time-scale differs from that used by     { @code Instant } because it includes
+   * The UTC time-scale differs from that used by {@code Instant} because it includes
    * leap-seconds. An accurate implementation of this abstract class will return a
    * UTC value that includes leap-second information.
    * <p>
-   * The default implementation of this method converts the value from     { @code instant ( ) }
+   * The default implementation of this method converts the value from {@code instant()}
    * and thus is no more accurate than that method.
    * <p>
    * Normally, this method will not throw an exception.
@@ -276,7 +276,7 @@ abstract class TimeSource protected() {
    * central time server across the network. Obviously, in this case the lookup
    * could fail, and so the method is permitted to throw an exception.
    *
-   * @return the current     { @code UTCInstant } from this time-source, never null
+   * @return the current {@code UTCInstant} from this time-source, never null
    * @throws CalendricalException if the instant cannot be obtained, not thrown by most implementations
    */
   def utcInstant: UTCInstant = UTCInstant.of(instant)
@@ -285,8 +285,8 @@ abstract class TimeSource protected() {
    * Gets the current millisecond instant.
    * <p>
    * The instant returned by this method will vary according to the implementation.
-   * For example, the time-source returned by     { @link # system ( ) } will return
-   * { @link System # currentTimeMillis ( ) }.
+   * For example, the time-source returned by {@link #system()} will return
+   * {@link System # currentTimeMillis()}.
    * <p>
    * This method is provided for backwards compatibility.
    * New code should use classes such as <code>Instant</code> to represent an instant

@@ -81,7 +81,7 @@ object MonthDay {
   def rule: CalendricalRule[MonthDay] = Rule
 
   /**
-   * Obtains an instance of {@code MonthDay }.
+   * Obtains an instance of {@code MonthDay}.
    * <p>
    * The day-of-month must be valid for the month within a leap year.
    * Hence, for February, day 29 is valid.
@@ -144,7 +144,7 @@ object MonthDay {
    * <p>
    * This will query the specified clock to obtain the current month-day.
    * Using this method allows the use of an alternate clock for testing.
-   * The alternate clock may be introduced using {@link Clock dependency injection }.
+   * The alternate clock may be introduced using {@link Clock dependency injection}.
    *
    * @param clock the clock to use, not null
    * @return the current month-day, never null
@@ -201,7 +201,7 @@ object MonthDay {
   }
 
   /**
-   * Obtains an instance of {@code MonthDay }.
+   * Obtains an instance of {@code MonthDay}.
    * <p>
    * The day-of-month must be valid for the month within a leap year.
    * Hence, for month 2 (February), day 29 is valid.
@@ -243,7 +243,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
 
   /**
    * Rolls the month-of-year, adding the specified number of months to a copy
-   * of this {@code MonthDay }.
+   * of this {@code MonthDay}.
    * <p>
    * This method will add the specified number of months to the month-day,
    * rolling from December back to January if necessary.
@@ -254,7 +254,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    * This instance is immutable and unaffected by this method call.
    *
    * @param months the months to roll by, positive or negative
-   * @return a { @code MonthDay} based on this month-day with the month rolled, never null
+   * @return a {@code MonthDay} based on this month-day with the month rolled, never null
    */
   def rollMonthOfYear(months: Int): MonthDay = `with`(month.roll(months))
 
@@ -269,7 +269,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
 
   /**
    * Rolls the day-of-month, adding the specified number of days to a copy
-   * of this {@code MonthDay }.
+   * of this {@code MonthDay}.
    * <p>
    * This method will add the specified number of days to the month-day,
    * rolling from last day-of-month to the first if necessary.
@@ -277,7 +277,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    * This instance is immutable and unaffected by this method call.
    *
    * @param days the days to roll by, positive or negative
-   * @return a { @code MonthDay} based on this month-day with the day rolled, never null
+   * @return a {@code MonthDay} based on this month-day with the day rolled, never null
    */
   def rollDayOfMonth(days: Int): MonthDay = {
     if (days == 0) return this
@@ -343,7 +343,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    * <p>
    * This method queries the value of the specified calendrical rule.
    * If the value cannot be returned for the rule from this month-day then
-   * { @code null} will be returned.
+   * {@code null} will be returned.
    *
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
@@ -378,7 +378,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
   }
 
   /**
-   * Gets the month-of-year field, which is an enum {@code MonthOfYear }.
+   * Gets the month-of-year field, which is an enum {@code MonthOfYear}.
    * <p>
    * This method returns the enum {@link MonthOfYear} for the month.
    * This avoids confusion as to what {@code int} values mean.
@@ -430,7 +430,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    * This instance is immutable and unaffected by this method call.
    *
    * @param dayOfMonth the day-of-month to set in the return month-day, from 1 to 31
-   * @return a { @code MonthDay} based on this month-day with the requested day, never null
+   * @return a {@code MonthDay} based on this month-day with the requested day, never null
    * @throws IllegalCalendarFieldValueException if the day-of-month value is invalid
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month
    */
@@ -483,7 +483,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    * Returns a date formed from this month-day at the specified year.
    * <p>
    * This method merges {@code this} and the specified year to form an
-   * instance of {@code LocalDate }.
+   * instance of {@code LocalDate}.
    * <pre>
    * LocalDate date = monthDay.atYear(year);
    * </pre>
@@ -497,7 +497,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
   def atYear(year: Int): LocalDate = LocalDate.of(year, month, day)
 
   /**
-   * Outputs this month-day as a {@code String }, such as {@code --12-03 }.
+   * Outputs this month-day as a {@code String}, such as {@code --12-03}.
    * <p>
    * The output will be in the format {@code --MM-dd} :
    *
@@ -524,7 +524,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    * This instance is immutable and unaffected by this method call.
    *
    * @param monthOfYear the month-of-year to set in the returned month-day, not null
-   * @return a { @code MonthDay} based on this month-day with the requested month, never null
+   * @return a {@code MonthDay} based on this month-day with the requested month, never null
    */
   def `with`(monthOfYear: MonthOfYear): MonthDay = {
     ISOChronology.checkNotNull(monthOfYear, "MonthOfYear must not be null")
@@ -549,7 +549,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    * This instance is immutable and unaffected by this method call.
    *
    * @param monthOfYear the month-of-year to set in the returned month-day, from 1 (January) to 12 (December)
-   * @return a { @code MonthDay} based on this month-day with the requested month, never null
+   * @return a {@code MonthDay} based on this month-day with the requested month, never null
    * @throws IllegalCalendarFieldValueException if the month-of-year value is invalid
    */
   def withMonthOfYear(monthOfYear: Int): MonthDay = `with`(MonthOfYear.of(monthOfYear))

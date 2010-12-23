@@ -146,7 +146,7 @@ object DateTimeFields {
   }
 
   /**
-   * A singleton empty {@code DateTimeFields }, placing no restrictions on the date-time.
+   * A singleton empty {@code DateTimeFields}, placing no restrictions on the date-time.
    */
   val Empty: DateTimeFields = new DateTimeFields(createMap)
 }
@@ -349,7 +349,7 @@ final class DateTimeFields private(val fieldValueMap: TreeMap[DateTimeFieldRule[
    * <p>
    * This method fulfills the {@link Iterable} interface and allows looping
    * around the fields using the for-each loop. The values can be obtained using
-   * { @link # get} or {@link # getInt }.
+   * {@link #get} or {@link #getInt}.
    *
    * @return an iterator over the fields in this object, never null
    */
@@ -386,7 +386,7 @@ final class DateTimeFields private(val fieldValueMap: TreeMap[DateTimeFieldRule[
   }
 
   /**
-   * Outputs the fields as a {@code String }.
+   * Outputs the fields as a {@code String}.
    * <p>
    * The output will consist of the field-value map in standard map format.
    *

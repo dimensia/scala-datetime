@@ -80,7 +80,7 @@ object OffsetDate {
   }
 
   /**
-   * Obtains an instance of    { @code OffsetDate } from a    { @code DateProvider }.
+   * Obtains an instance of {@code OffsetDate} from a {@code DateProvider}.
    *
    * @param dateProvider the date provider to use, not null
    * @param offset the zone offset, not null
@@ -98,7 +98,7 @@ object OffsetDate {
    * The offset will be set based on the time-zone in the clock.
    * <p>
    * Using this method allows the use of an alternate clock for testing.
-   * The alternate clock may be introduced using    { @link Clock dependency injection }.
+   * The alternate clock may be introduced using {@link Clock dependency injection}.
    *
    * @param clock the clock to use, not null
    * @return the current date, never null
@@ -110,7 +110,7 @@ object OffsetDate {
   }
 
   /**
-   * Obtains an instance of    { @code OffsetDate } from a year, month and day.
+   * Obtains an instance of {@code OffsetDate} from a year, month and day.
    *
    * @param year the year to represent, from MIN_VALUE + 1 to MAX_VALUE
    * @param monthOfYear the month-of-year, not null
@@ -126,7 +126,7 @@ object OffsetDate {
   }
 
   /**
-   * Obtains an instance of    { @code OffsetDate } from a year, month and day.
+   * Obtains an instance of {@code OffsetDate} from a year, month and day.
    *
    * @param year the year to represent, from MIN_VALUE + 1 to MAX_VALUE
    * @param monthOfYear the month-of-year to represent, from 1 (January) to 12 (December)
@@ -142,7 +142,7 @@ object OffsetDate {
   }
 
   /**
-   * Obtains an instance of    { @code OffsetDate } from a text string using a specific formatter.
+   * Obtains an instance of {@code OffsetDate} from a text string using a specific formatter.
    * <p>
    * The text is parsed using the formatter, returning a date.
    *
@@ -171,7 +171,7 @@ object OffsetDate {
   def now: OffsetDate = now(Clock.systemDefaultZone)
 
   /**
-   * Obtains an instance of    { @code OffsetDate } from an    { @code InstantProvider }.
+   * Obtains an instance of {@code OffsetDate} from an {@code InstantProvider}.
    * <p>
    * This conversion drops the time component of the instant.
    *
@@ -190,11 +190,11 @@ object OffsetDate {
   }
 
   /**
-   * Obtains an instance of    { @code OffsetDate } from a text string.
+   * Obtains an instance of {@code OffsetDate} from a text string.
    * <p>
    * The following format is accepted in ASCII:
    * <ul>
-   * <li>   { @code   { Year } -   { MonthOfYear } -   { DayOfMonth } { OffsetID } }
+   * <li> {@code   { Year} -   { MonthOfYear} -   { DayOfMonth} { OffsetID} }
    * </ul>
    * The year has between 4 and 10 digits with values from MIN_YEAR to MAX_YEAR.
    * If there are more than 4 digits then the year must be prefixed with the plus symbol.
@@ -204,7 +204,7 @@ object OffsetDate {
    * <p>
    * The day-of-month has 2 digits with values from 1 to 31 appropriate to the month.
    * <p>
-   * The offset ID is the normalized form as defined in    { @link ZoneOffset }.
+   * The offset ID is the normalized form as defined in {@link ZoneOffset}.
    *
    * @param text the text to parse such as '2007-12-03+01:00', not null
    * @return the parsed offset date, never null
@@ -213,7 +213,7 @@ object OffsetDate {
   def parse(text: String): OffsetDate = DateTimeFormatters.isoOffsetDate.parse(text, rule)
 
   /**
-   * Gets the field rule for    { @code OffsetDate }.
+   * Gets the field rule for {@code OffsetDate}.
    *
    * @return the field rule for the date, never null
    */
@@ -250,7 +250,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * This instance is immutable and unaffected by this method call.
    *
    * @param adjuster the adjuster to use, not null
-   * @return an { @code OffsetDate } based on this date adjusted as necessary, never null
+   * @return an {@code OffsetDate} based on this date adjusted as necessary, never null
    * @throws NullPointerException if the adjuster returned null
    */
   def `with`(adjuster: DateAdjuster): OffsetDate = `with`(date.`with`(adjuster), offset)
@@ -267,7 +267,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * This instance is immutable and unaffected by this method call.
    *
    * @param weeks the weeks to add, may be negative
-   * @return an { @code OffsetDate } based on this date with the weeks added, never null
+   * @return an {@code OffsetDate} based on this date with the weeks added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def plusWeeks(weeks: Int): OffsetDate = `with`(date.plusWeeks(weeks), offset)
@@ -277,7 +277,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    *
    * @param other the other date to compare to, not null
    * @return true if this point is before the specified date
-   * @throws NullPointerException if    { @code other } is null
+   * @throws NullPointerException if {@code other} is null
    */
   def isBefore(other: OffsetDate): Boolean = compareTo(other) < 0
 
@@ -295,12 +295,12 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * invalid date 2009-02-29 (standard year). Instead of returning an invalid
    * result, the last valid day of the month, 2009-02-28, is selected instead.
    * <p>
-   * This method does the same as    { @code plusYears ( years, DateResolvers.previousValid ( ) ) }.
+   * This method does the same as {@code plusYears ( years, DateResolvers.previousValid ( ) )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param years the years to add, may be negative
-   * @return an { @code OffsetDate } based on this date with the years added, never null
+   * @return an {@code OffsetDate} based on this date with the years added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    * @see # plusYears ( int, javax.time.calendar.DateResolver )
    */
@@ -315,7 +315,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
   override def matchesCalendrical(calendrical: Calendrical): Boolean = this.equals(calendrical.get(OffsetDate.rule))
 
   /**
-   * Converts this date to a    { @code LocalDate }.
+   * Converts this date to a {@code LocalDate}.
    *
    * @return a LocalDate with the same date as this instance, never null
    */
@@ -336,7 +336,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * offset and the new date.
    *
    * @param dateProvider the local date to change to, not null
-   * @return an { @code OffsetDate } based on this date with the requested date, never null
+   * @return an {@code OffsetDate} based on this date with the requested date, never null
    */
   def withDate(dateProvider: DateProvider): OffsetDate = {
     val newDate: LocalDate = LocalDate.of(dateProvider)
@@ -345,16 +345,16 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
   }
 
   /**
-   * Returns a copy of this    { @code OffsetDate } with the year altered.
-   * If the resulting date is invalid, it will be resolved using    { @link DateResolvers # previousValid ( ) }.
+   * Returns a copy of this {@code OffsetDate} with the year altered.
+   * If the resulting date is invalid, it will be resolved using {@link DateResolvers # previousValid()}.
    * The offset does not affect the calculation and will be the same in the result.
    * <p>
-   * This method does the same as    { @code withYear ( year, DateResolvers.previousValid ( ) ) }.
+   * This method does the same as {@code withYear ( year, DateResolvers.previousValid ( ) )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param year the year to set in the returned date, from MIN_YEAR to MAX_YEAR
-   * @return an { @code OffsetDate } based on this date with the requested year, never null
+   * @return an {@code OffsetDate} based on this date with the requested year, never null
    * @throws IllegalCalendarFieldValueException if the year value is invalid
    */
   def withYear(year: Int): OffsetDate = `with`(date.withYear(year), offset)
@@ -362,8 +362,8 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
   /**
    * Returns a offset date-time formed from this date at the specified time.
    * <p>
-   * This merges the four values -    { @code this } and the specified time -
-   * to form an instance of    { @code OffsetDateTime }.
+   * This merges the four values - {@code this} and the specified time -
+   * to form an instance of {@code OffsetDateTime}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -384,14 +384,14 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * <ol>
    * <li>Add the input months to the month-of-year field</li>
    * <li>Check if the resulting date would be invalid</li>
-   * <li>Adjust the date using    { @code dateResolver } if necessary</li>
+   * <li>Adjust the date using {@code dateResolver} if necessary</li>
    * </ol>
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param months the months to add, may be negative
    * @param dateResolver the DateResolver to be used if the resulting date would be invalid
-   * @return an { @code OffsetDate } based on this date with the months added, never null
+   * @return an {@code OffsetDate} based on this date with the months added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def plusMonths(months: Int, dateResolver: DateResolver): OffsetDate = {
@@ -399,23 +399,23 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
   }
 
   /**
-   * Returns a copy of this    { @code OffsetDate } with the specified date period added.
+   * Returns a copy of this {@code OffsetDate} with the specified date period added.
    * <p>
    * This adds the specified period to this date, returning a new date.
-   * Before addition, the period is converted to a date-based    { @code Period } using
-   * { @link Period # ofDateFields ( PeriodProvider ) }.
+   * Before addition, the period is converted to a date-based {@code Period} using
+   * {@link Period # ofDateFields ( PeriodProvider )}.
    * That factory ignores any time-based ISO fields, thus adding a time-based
    * period to this date will have no effect. If you want to take time fields into
-   * account, call    { @link Period # normalizedWith24HourDays ( ) } on the input period.
+   * account, call {@link Period # normalizedWith24HourDays()} on the input period.
    * <p>
    * The detailed rules for the addition have some complexity due to variable length months.
-   * See    { @link LocalDate # plus ( PeriodProvider ) } for details.
+   * See {@link LocalDate # plus ( PeriodProvider )} for details.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param periodProvider the period to add, not null
-   * @return an { @code OffsetDate } based on this date with the period added, never null
-   * @throws CalendricalException if the specified period cannot be converted to a    { @code Period }
+   * @return an {@code OffsetDate} based on this date with the period added, never null
+   * @throws CalendricalException if the specified period cannot be converted to a {@code Period }
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def plus(periodProvider: PeriodProvider): OffsetDate = `with`(date.plus(periodProvider), offset)
@@ -425,7 +425,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    *
    * @param other the other date to compare to, not null
    * @return true if this is after the specified date
-   * @throws NullPointerException if    { @code other } is null
+   * @throws NullPointerException if {@code other} is null
    */
   def isAfter(other: OffsetDate): Boolean = compareTo(other) > 0
 
@@ -441,7 +441,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * This instance is immutable and unaffected by this method call.
    *
    * @param days the days to subtract, may be negative
-   * @return an { @code OffsetDate } based on this date with the days subtracted, never null
+   * @return an {@code OffsetDate} based on this date with the days subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def minusDays(days: Long): OffsetDate = `with`(date.minusDays(days), offset)
@@ -449,8 +449,8 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
   /**
    * Returns a offset date-time formed from this date at the specified time.
    * <p>
-   * This merges the three values -    { @code this } and the specified time -
-   * to form an instance of    { @code OffsetDateTime }.
+   * This merges the three values - {@code this} and the specified time -
+   * to form an instance of {@code OffsetDateTime}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -468,36 +468,36 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * <ol>
    * <li>Add the input years to the year field</li>
    * <li>Check if the resulting date would be invalid</li>
-   * <li>Adjust the date using    { @code dateResolver } if necessary</li>
+   * <li>Adjust the date using {@code dateResolver} if necessary</li>
    * </ol>
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param years the years to add, may be negative
    * @param dateResolver the DateResolver to be used if the resulting date would be invalid
-   * @return an { @code OffsetDate } based on this date with the years added, never null
+   * @return an {@code OffsetDate} based on this date with the years added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def plusYears(years: Int, dateResolver: DateResolver): OffsetDate = `with`(date.plusYears(years, dateResolver), offset)
 
   /**
-   * Returns a copy of this    { @code OffsetDate } with the specified date period subtracted.
+   * Returns a copy of this {@code OffsetDate} with the specified date period subtracted.
    * <p>
    * This subtracts the specified period from this date, returning a new date.
-   * Before subtraction, the period is converted to a date-based    { @code Period } using
-   * { @link Period # ofDateFields ( PeriodProvider ) }.
+   * Before subtraction, the period is converted to a date-based {@code Period} using
+   * {@link Period # ofDateFields ( PeriodProvider )}.
    * That factory ignores any time-based ISO fields, thus adding a time-based
    * period to this date will have no effect. If you want to take time fields into
-   * account, call    { @link Period # normalizedWith24HourDays ( ) } on the input period.
+   * account, call {@link Period # normalizedWith24HourDays()} on the input period.
    * <p>
    * The detailed rules for the subtraction have some complexity due to variable length months.
-   * See    { @link LocalDate # minus ( PeriodProvider ) } for details.
+   * See {@link LocalDate # minus ( PeriodProvider )} for details.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param periodProvider the period to subtract, not null
-   * @return an { @code OffsetDate } based on this date with the period subtracted, never null
-   * @throws CalendricalException if the specified period cannot be converted to a    { @code Period }
+   * @return an {@code OffsetDate} based on this date with the period subtracted, never null
+   * @throws CalendricalException if the specified period cannot be converted to a {@code Period }
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def minus(periodProvider: PeriodProvider): OffsetDate = `with`(date.minus(periodProvider), offset)
@@ -516,12 +516,12 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * 2007-04-31. Instead of returning an invalid result, the last valid day
    * of the month, 2007-04-30, is selected instead.
    * <p>
-   * This method does the same as    { @code plusMonths ( months, DateResolvers.previousValid ( ) ) }.
+   * This method does the same as {@code plusMonths ( months, DateResolvers.previousValid ( ) )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param months the months to add, may be negative
-   * @return an { @code OffsetDate } based on this date with the months added, never null
+   * @return an {@code OffsetDate} based on this date with the months added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    * @see # plusMonths ( int, javax.time.calendar.DateResolver )
    */
@@ -530,8 +530,8 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
   /**
    * Returns an offset date-time formed from this date at the specified time.
    * <p>
-   * This merges the two objects -    { @code this } and the specified time -
-   * to form an instance of    { @code OffsetDateTime }.
+   * This merges the two objects - {@code this} and the specified time -
+   * to form an instance of {@code OffsetDateTime}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -543,7 +543,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
   /**
    * Gets the day-of-year field.
    * <p>
-   * This method returns the primitive    { @code int } value for the day-of-year.
+   * This method returns the primitive {@code int} value for the day-of-year.
    *
    * @return the day-of-year, from 1 to 365, or 366 in a leap year
    */
@@ -556,14 +556,14 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * <ol>
    * <li>Subtract the input months to the month-of-year field</li>
    * <li>Check if the resulting date would be invalid</li>
-   * <li>Adjust the date using    { @code dateResolver } if necessary</li>
+   * <li>Adjust the date using {@code dateResolver} if necessary</li>
    * </ol>
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param months the months to subtract, may be negative
    * @param dateResolver the DateResolver to be used if the resulting date would be invalid
-   * @return an { @code OffsetDate } based on this date with the months subtracted, never null
+   * @return an {@code OffsetDate} based on this date with the months subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def minusMonths(months: Int, dateResolver: DateResolver): OffsetDate = {
@@ -571,13 +571,13 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
   }
 
   /**
-   * Returns a copy of this    { @code OffsetDate } with the day-of-year altered.
+   * Returns a copy of this {@code OffsetDate} with the day-of-year altered.
    * If the resulting date is invalid, an exception is thrown.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param dayOfYear the day-of-year to set in the returned date, from 1 to 365-366
-   * @return an { @code OffsetDate } based on this date with the requested day, never null
+   * @return an {@code OffsetDate} based on this date with the requested day, never null
    * @throws IllegalCalendarFieldValueException if the day-of-year value is invalid
    * @throws InvalidCalendarFieldException if the day-of-year is invalid for the year
    */
@@ -597,12 +597,12 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * 2007-02-31. Instead of returning an invalid result, the last valid day
    * of the month, 2007-02-28, is selected instead.
    * <p>
-   * This method does the same as    { @code minusMonths ( months, DateResolvers.previousValid ( ) ) }.
+   * This method does the same as {@code minusMonths ( months, DateResolvers.previousValid ( ) )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param months the months to subtract, may be negative
-   * @return an { @code OffsetDate } based on this date with the months subtracted, never null
+   * @return an {@code OffsetDate} based on this date with the months subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    * @see # minusMonths ( int, javax.time.calendar.DateResolver )
    */
@@ -611,36 +611,36 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
   /**
    * Gets the day-of-month field.
    * <p>
-   * This method returns the primitive    { @code int } value for the day-of-month.
+   * This method returns the primitive {@code int} value for the day-of-month.
    *
    * @return the day-of-month, from 1 to 31
    */
   def getDayOfMonth: Int = date.getDayOfMonth
 
   /**
-   * Returns a copy of this    { @code OffsetDate } with the month-of-year altered.
-   * If the resulting date is invalid, it will be resolved using    { @link DateResolvers # previousValid ( ) }.
+   * Returns a copy of this {@code OffsetDate} with the month-of-year altered.
+   * If the resulting date is invalid, it will be resolved using {@link DateResolvers # previousValid()}.
    * The offset does not affect the calculation and will be the same in the result.
    * <p>
-   * This method does the same as    { @code with ( monthOfYear, DateResolvers.previousValid ( ) ) }.
+   * This method does the same as {@code with ( monthOfYear, DateResolvers.previousValid ( ) )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param monthOfYear the month-of-year to set in the returned date, not null
-   * @return an { @code OffsetDate } based on this date with the requested month, never null
+   * @return an {@code OffsetDate} based on this date with the requested month, never null
    */
   def `with`(monthOfYear: MonthOfYear): OffsetDate = `with`(date.`with`(monthOfYear), offset)
 
   /**
-   * Returns a copy of this    { @code OffsetDate } with the day-of-month altered.
-   * If the resulting date is invalid, it will be resolved using    { @code dateResolver }.
+   * Returns a copy of this {@code OffsetDate} with the day-of-month altered.
+   * If the resulting date is invalid, it will be resolved using {@code dateResolver}.
    * The offset does not affect the calculation and will be the same in the result.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param dayOfMonth the day-of-month to set in the returned date, from 1 to 31
    * @param dateResolver the DateResolver to be used if the resulting date would be invalid
-   * @return an { @code OffsetDate } based on this date with the requested day, never null
+   * @return an {@code OffsetDate} based on this date with the requested day, never null
    * @throws IllegalCalendarFieldValueException if the day-of-month value is invalid
    */
   def withDayOfMonth(dayOfMonth: Int, dateResolver: DateResolver): OffsetDate = `with`(date.withDayOfMonth(dayOfMonth, dateResolver), offset)
@@ -654,7 +654,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
   override def adjustDate(date: LocalDate): LocalDate = this.date.adjustDate(date)
 
   /**
-   * Returns a new date based on this one, returning    { @code this } where possible.
+   * Returns a new date based on this one, returning {@code this} where possible.
    *
    * @param date the date to create with, not null
    * @param offset the zone offset to create with, not null
@@ -667,8 +667,8 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
   /**
    * Returns a offset date-time formed from this date at the specified time.
    * <p>
-   * This merges the five values -    { @code this } and the specified time -
-   * to form an instance of    { @code OffsetDateTime }.
+   * This merges the five values - {@code this} and the specified time -
+   * to form an instance of {@code OffsetDateTime}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -684,7 +684,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
   }
 
   /**
-   * Outputs this date as a    { @code String } using the formatter.
+   * Outputs this date as a {@code String} using the formatter.
    *
    * @param formatter the formatter to use, not null
    * @return the formatted date string, never null
@@ -697,14 +697,14 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
   }
 
   /**
-   * Returns a copy of this    { @code OffsetDate } with the day-of-month altered.
+   * Returns a copy of this {@code OffsetDate} with the day-of-month altered.
    * If the resulting date is invalid, an exception is thrown.
    * The offset does not affect the calculation and will be the same in the result.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param dayOfMonth the day-of-month to set in the returned date, from 1 to 28-31
-   * @return an { @code OffsetDate } based on this date with the requested day, never null
+   * @return an {@code OffsetDate} based on this date with the requested day, never null
    * @throws IllegalCalendarFieldValueException if the day-of-month value is invalid
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
@@ -728,29 +728,29 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
   }
 
   /**
-   * Returns a copy of this    { @code OffsetDate } with the year altered.
-   * If the resulting date is invalid, it will be resolved using    { @code dateResolver }.
+   * Returns a copy of this {@code OffsetDate} with the year altered.
+   * If the resulting date is invalid, it will be resolved using {@code dateResolver}.
    * The offset does not affect the calculation and will be the same in the result.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param year the year to set in the returned date, from MIN_YEAR to MAX_YEAR
    * @param dateResolver the DateResolver to be used if the resulting date would be invalid
-   * @return an { @code OffsetDate } based on this date with the requested year, never null
+   * @return an {@code OffsetDate} based on this date with the requested year, never null
    * @throws IllegalCalendarFieldValueException if the year value is invalid
    */
   def withYear(year: Int, dateResolver: DateResolver): OffsetDate = `with`(date.withYear(year, dateResolver), offset)
 
   /**
-   * Returns a copy of this    { @code OffsetDate } with the month-of-year altered.
-   * If the resulting date is invalid, it will be resolved using    { @code dateResolver }.
+   * Returns a copy of this {@code OffsetDate} with the month-of-year altered.
+   * If the resulting date is invalid, it will be resolved using {@code dateResolver}.
    * The offset does not affect the calculation and will be the same in the result.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param monthOfYear the month-of-year to set in the returned date, not null
    * @param dateResolver the DateResolver to be used if the resulting date would be invalid
-   * @return an { @code OffsetDate } based on this date with the requested month, never null
+   * @return an {@code OffsetDate} based on this date with the requested month, never null
    */
   def `with`(monthOfYear: MonthOfYear, dateResolver: DateResolver): OffsetDate = `with`(date.`with`(monthOfYear, dateResolver), offset)
 
@@ -768,21 +768,21 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * invalid date 2007-02-29 (standard year). Instead of returning an invalid
    * result, the last valid day of the month, 2007-02-28, is selected instead.
    * <p>
-   * This method does the same as    { @code minusYears ( years, DateResolvers.previousValid ( ) ) }.
+   * This method does the same as {@code minusYears ( years, DateResolvers.previousValid ( ) )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param years the years to subtract, may be negative
-   * @return an { @code OffsetDate } based on this date with the years subtracted, never null
+   * @return an {@code OffsetDate} based on this date with the years subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    * @see # minusYears ( int, javax.time.calendar.DateResolver )
    */
   def minusYears(years: Int): OffsetDate = `with`(date.minusYears(years), offset)
 
   /**
-   * Outputs this date as a    { @code String }, such as    { @code 2007 -12-03+01:00 }.
+   * Outputs this date as a {@code String}, such as {@code 2007 -12-03+01:00}.
    * <p>
-   * The output will be in the format    { @code yyyy -MM-ddZZZZ }.
+   * The output will be in the format {@code yyyy -MM-ddZZZZ}.
    *
    * @return the formatted date, never null
    */
@@ -796,11 +796,11 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * local time-line exists. When this method converts the date to a date-time it
    * adjusts the time and offset as necessary to ensure that the time is as early
    * as possible on the date, which is typically midnight. Internally this is
-   * achieved using the    { @link ZoneResolvers # postGapPreOverlap ( ) zone resolver }.
+   * achieved using the {@link ZoneResolvers # postGapPreOverlap ( ) zone resolver}.
    * <p>
-   * To convert to a specific time in a given time-zone call    { @link # atTime ( LocalTime ) }
-   * followed by    { @link OffsetDateTime # atZoneSimilarLocal ( TimeZone ) }. Note that the resolver
-   * used by    { @code atZoneSimilarLocal ( ) } is different to that used here (it chooses
+   * To convert to a specific time in a given time-zone call {@link #atTime ( LocalTime ) }
+   * followed by {@link OffsetDateTime # atZoneSimilarLocal ( TimeZone )}. Note that the resolver
+   * used by {@code atZoneSimilarLocal()} is different to that used here (it chooses
    * the later offset in an overlap, whereas this method chooses the earlier offset).
    * <p>
    * The offset from this date is ignored during the conversion.
@@ -820,7 +820,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * <p>
    * This method queries the value of the specified calendrical rule.
    * If the value cannot be returned for the rule from this date then
-   * { @code null } will be returned.
+   * {@code null} will be returned.
    *
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
@@ -832,7 +832,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * Compares this date to another date based on the UTC equivalent dates
    * then local date.
    * <p>
-   * This ordering is consistent with    { @code equals ( ) }.
+   * This ordering is consistent with {@code equals()}.
    * For example, the following is the comparator order:
    * <ol>
    * <li>2008-06-29-11:00</li>
@@ -843,11 +843,11 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * Values #2 and #3 represent the same instant on the time-line.
    * When two values represent the same instant, the local date is compared
    * to distinguish them. This step is needed to make the ordering
-   * consistent with    { @code equals ( ) }.
+   * consistent with {@code equals()}.
    *
    * @param other the other date to compare to, not null
    * @return the comparator value, negative if less, positive if greater
-   * @throws NullPointerException if    { @code other } is null
+   * @throws NullPointerException if {@code other} is null
    */
   def compareTo(other: OffsetDate): Int = {
     if (offset.equals(other.offset)) date.compareTo(other.date)
@@ -864,14 +864,14 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
   }
 
   /**
-   * Gets the day-of-week field, which is an enum    { @code DayOfWeek }.
+   * Gets the day-of-week field, which is an enum {@code DayOfWeek}.
    * <p>
-   * This method returns the enum    { @link DayOfWeek } for the day-of-week.
-   * This avoids confusion as to what    { @code int } values mean.
-   * If you need access to the primitive    { @code int } value then the enum
-   * provides the    { @link DayOfWeek # getValue ( ) int value }.
+   * This method returns the enum {@link DayOfWeek} for the day-of-week.
+   * This avoids confusion as to what {@code int} values mean.
+   * If you need access to the primitive {@code int} value then the enum
+   * provides the {@link DayOfWeek # getValue ( ) int value}.
    * <p>
-   * Additional information can be obtained from the    { @code DayOfWeek }.
+   * Additional information can be obtained from the {@code DayOfWeek}.
    * This includes textual names of the values.
    *
    * @return the day-of-week, never null
@@ -891,10 +891,10 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
   def matches(matcher: CalendricalMatcher): Boolean = matcher.matchesCalendrical(this)
 
   /**
-   * Gets the year field as a    { @code Year }.
+   * Gets the year field as a {@code Year}.
    * <p>
    * This method provides access to an object representing the year field.
-   * { @code Year } has methods for querying addition year-based information.
+   * {@code Year} has methods for querying addition year-based information.
    *
    * @return the year, never null
    */
@@ -903,10 +903,10 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
   /**
    * Gets the year field.
    * <p>
-   * This method returns the primitive    { @code int } value for the year.
+   * This method returns the primitive {@code int} value for the year.
    * <p>
-   * Additional information about the year can be obtained via    { @link # toYear }.
-   * This returns a    { @code Year } object which includes information on whether
+   * Additional information about the year can be obtained via {@link #toYear}.
+   * This returns a {@code Year} object which includes information on whether
    * this is a leap year and its length in days.
    *
    * @return the year, from MIN_YEAR to MAX_YEAR
@@ -914,30 +914,30 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
   def getYear: Int = date.getYear
 
   /**
-   * Returns a copy of this    { @code OffsetDate } with the month-of-year altered.
-   * If the resulting date is invalid, it will be resolved using    { @link DateResolvers # previousValid ( ) }.
+   * Returns a copy of this {@code OffsetDate} with the month-of-year altered.
+   * If the resulting date is invalid, it will be resolved using {@link DateResolvers # previousValid()}.
    * The offset does not affect the calculation and will be the same in the result.
    * <p>
-   * This method does the same as    { @code withMonthOfYear ( monthOfYear, DateResolvers.previousValid ( ) ) }.
+   * This method does the same as {@code withMonthOfYear ( monthOfYear, DateResolvers.previousValid ( ) )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param monthOfYear the month-of-year to set in the returned date, from 1 (January) to 12 (December)
-   * @return an { @code OffsetDate } based on this date with the requested month, never null
+   * @return an {@code OffsetDate} based on this date with the requested month, never null
    * @throws IllegalCalendarFieldValueException if the month-of-year value is invalid
    */
   def withMonthOfYear(monthOfYear: Int): OffsetDate = `with`(date.withMonthOfYear(monthOfYear), offset)
 
   /**
-   * Returns a copy of this    { @code OffsetDate } with the month-of-year altered.
-   * If the resulting date is invalid, it will be resolved using    { @code dateResolver }.
+   * Returns a copy of this {@code OffsetDate} with the month-of-year altered.
+   * If the resulting date is invalid, it will be resolved using {@code dateResolver}.
    * The offset does not affect the calculation and will be the same in the result.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param monthOfYear the month-of-year to set in the returned date, from 1 (January) to 12 (December)
    * @param dateResolver the DateResolver to be used if the resulting date would be invalid
-   * @return an { @code OffsetDate } based on this date with the requested month, never null
+   * @return an {@code OffsetDate} based on this date with the requested month, never null
    * @throws IllegalCalendarFieldValueException if the month-of-year value is invalid
    */
   def withMonthOfYear(monthOfYear: Int, dateResolver: DateResolver): OffsetDate = {
@@ -951,14 +951,14 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * <ol>
    * <li>Subtract the input years to the year field</li>
    * <li>Check if the resulting date would be invalid</li>
-   * <li>Adjust the date using    { @code dateResolver } if necessary</li>
+   * <li>Adjust the date using {@code dateResolver} if necessary</li>
    * </ol>
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param years the years to subtract, may be negative
    * @param dateResolver the DateResolver to be used if the resulting date would be invalid
-   * @return an { @code OffsetDate } based on this date with the years subtracted, never null
+   * @return an {@code OffsetDate} based on this date with the years subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def minusYears(years: Int, dateResolver: DateResolver): OffsetDate = {
@@ -966,14 +966,14 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
   }
 
   /**
-   * Gets the month-of-year field, which is an enum    { @code MonthOfYear }.
+   * Gets the month-of-year field, which is an enum {@code MonthOfYear}.
    * <p>
-   * This method returns the enum    { @link MonthOfYear } for the month.
-   * This avoids confusion as to what    { @code int } values mean.
-   * If you need access to the primitive    { @code int } value then the enum
-   * provides the    { @link MonthOfYear # getValue ( ) int value }.
+   * This method returns the enum {@link MonthOfYear} for the month.
+   * This avoids confusion as to what {@code int} values mean.
+   * If you need access to the primitive {@code int} value then the enum
+   * provides the {@link MonthOfYear # getValue ( ) int value}.
    * <p>
-   * Additional information can be obtained from the    { @code MonthOfYear }.
+   * Additional information can be obtained from the {@code MonthOfYear}.
    * This includes month lengths, textual names and access to the quarter-of-year
    * and month-of-quarter values.
    *
@@ -993,7 +993,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * This instance is immutable and unaffected by this method call.
    *
    * @param days the days to add, may be negative
-   * @return an { @code OffsetDate } based on this date with the days added, never null
+   * @return an {@code OffsetDate} based on this date with the days added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def plusDays(days: Long): OffsetDate = `with`(date.plusDays(days), offset)
@@ -1001,8 +1001,8 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
   /**
    * Returns an offset date-time formed from this date at the time of midnight.
    * <p>
-   * This merges the two objects -    { @code this } and    { @link LocalTime # MIDNIGHT } -
-   * to form an instance of    { @code OffsetDateTime }.
+   * This merges the two objects - {@code this} and {@link LocalTime # MIDNIGHT} -
+   * to form an instance of {@code OffsetDateTime}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -1037,7 +1037,7 @@ final class OffsetDate(val date: LocalDate, val offset: ZoneOffset) extends Cale
    * This instance is immutable and unaffected by this method call.
    *
    * @param weeks the weeks to subtract, may be negative
-   * @return an { @code OffsetDate } based on this date with the weeks subtracted, never null
+   * @return an {@code OffsetDate} based on this date with the weeks subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def minusWeeks(weeks: Int): OffsetDate = {

@@ -150,7 +150,7 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
     this (null)
   }
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc} */
   override def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = {
     val zone: TimeZone = calendrical.get(TimeZone.rule).getOrElse(throw new CalendricalPrintException("Unable to print TimeZone"))
 
@@ -165,13 +165,13 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
     }
   }
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc} */
   override def isPrintDataAvailable(calendrical: Calendrical): Boolean = {
     return (calendrical.get(TimeZone.rule) != null)
   }
 
   /**
-   * { @inheritDoc }
+   * {@inheritDoc }
    * <p>
    * This implementation looks for the longest matching string.
    * For example, parsing Etc/GMT-2 will return Etc/GMC-2 rather than just
@@ -242,7 +242,7 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
     else return ~position
   }
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc} */
   override def toString: String = {
     if (textStyle == null) "ZoneId()"
     else "ZoneText(" + textStyle + ")"

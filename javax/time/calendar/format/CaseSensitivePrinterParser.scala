@@ -31,7 +31,6 @@
  */
 package javax.time.calendar.format
 
-import java.io.IOException
 import javax.time.calendar.Calendrical
 
 object CaseSensitivePrinterParser {
@@ -50,18 +49,18 @@ sealed class CaseSensitivePrinterParser extends DateTimePrinter with DateTimePar
 
   import CaseSensitivePrinterParser._
 
-  /**{ @inheritDoc }*/
+  /**{@inheritDoc}*/
   override def parse(context: DateTimeParseContext, parseText: String, position: Int): Int = {
     context.setCaseSensitive(this == Sensitive)
     position
   }
 
-  /**{ @inheritDoc }*/
+  /**{@inheritDoc}*/
   override def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = {}
 
-  /**{ @inheritDoc }*/
+  /**{@inheritDoc}*/
   override def toString: String = "ParseCaseSensitive(" + (this == Sensitive) + ")"
 
-  /**{ @inheritDoc }*/
+  /**{@inheritDoc}*/
   override def isPrintDataAvailable(calendrical: Calendrical): Boolean = true
 }

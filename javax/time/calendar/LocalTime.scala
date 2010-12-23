@@ -144,7 +144,7 @@ object LocalTime {
   }
 
   /**
-   * Obtains an instance of    { @code LocalTime } from an hour and minute.
+   * Obtains an instance of {@code LocalTime} from an hour and minute.
    * <p>
    * The second and nanosecond fields will be set to zero by this factory method.
    * <p>
@@ -169,7 +169,7 @@ object LocalTime {
    * <p>
    * This will query the specified clock to obtain the current time.
    * Using this method allows the use of an alternate clock for testing.
-   * The alternate clock may be introduced using    { @link Clock dependency injection }.
+   * The alternate clock may be introduced using {@link Clock dependency injection}.
    *
    * @param clock the clock to use, not null
    * @return the current time, never null
@@ -187,7 +187,7 @@ object LocalTime {
   }
 
   /**
-   * Obtains an instance of    { @code LocalTime } from a text string using a specific formatter.
+   * Obtains an instance of {@code LocalTime} from a text string using a specific formatter.
    * <p>
    * The text is parsed using the formatter, returning a time.
    *
@@ -203,7 +203,7 @@ object LocalTime {
   }
 
   /**
-   * Obtains an instance of    { @code LocalTime } from an hour, minute, second and nanosecond.
+   * Obtains an instance of {@code LocalTime} from an hour, minute, second and nanosecond.
    * <p>
    * This factory may return a cached value, but applications must not rely on this.
    *
@@ -223,7 +223,7 @@ object LocalTime {
   }
 
   /**
-   * Obtains an instance of    { @code LocalTime } from an hour, minute and second.
+   * Obtains an instance of {@code LocalTime} from an hour, minute and second.
    * <p>
    * The nanosecond field will be set to zero by this factory method.
    * <p>
@@ -246,11 +246,11 @@ object LocalTime {
   }
 
   /**
-   * Obtains an instance of    { @code LocalTime } from a second-of-day value.
+   * Obtains an instance of {@code LocalTime} from a second-of-day value.
    * <p>
    * This factory may return a cached value, but applications must not rely on this.
    *
-   * @param secondOfDay the second-of-day, from    { @code 0 } to    { @code 24 * 60 * 60 - 1 }
+   * @param secondOfDay the second-of-day, from {@code 0} to {@code 24 * 60 * 60 - 1 }
    * @return the local time, never null
    * @throws IllegalCalendarFieldValueException if the second-of-day value is invalid
    */
@@ -276,10 +276,10 @@ object LocalTime {
   def now: LocalTime = now(Clock.systemDefaultZone)
 
   /**
-   * Obtains an instance of    { @code LocalTime } from a time provider.
+   * Obtains an instance of {@code LocalTime} from a time provider.
    * <p>
-   * The purpose of this method is to convert a    { @code TimeProvider }
-   * to a    { @code LocalTime } in the safest possible way. Specifically,
+   * The purpose of this method is to convert a {@code TimeProvider }
+   * to a {@code LocalTime} in the safest possible way. Specifically,
    * the means checking whether the input parameter is null and
    * whether the result of the provider is null.
    * <p>
@@ -296,11 +296,11 @@ object LocalTime {
   }
 
   /**
-   * Obtains an instance of    { @code LocalTime } from a nanos-of-day value.
+   * Obtains an instance of {@code LocalTime} from a nanos-of-day value.
    * <p>
    * This factory may return a cached value, but applications must not rely on this.
    *
-   * @param nanoOfDay the nano of day, from    { @code 0 } to    { @code 24 * 60 * 60 * 1,000,000,000 - 1 }
+   * @param nanoOfDay the nano of day, from {@code 0} to {@code 24 * 60 * 60 * 1,000,000,000 - 1 }
    * @return the local time, never null
    * @throws CalendricalException if the nanos of day value is invalid
    */
@@ -322,12 +322,12 @@ object LocalTime {
   }
 
   /**
-   * Obtains an instance of    { @code LocalTime } from a second-of-day value, with
+   * Obtains an instance of {@code LocalTime} from a second-of-day value, with
    * associated nanos of second.
    * <p>
    * This factory may return a cached value, but applications must not rely on this.
    *
-   * @param secondOfDay the second-of-day, from    { @code 0 } to    { @code 24 * 60 * 60 - 1 }
+   * @param secondOfDay the second-of-day, from {@code 0} to {@code 24 * 60 * 60 - 1 }
    * @param nanoOfSecond the nano-of-second, from 0 to 999,999,999
    * @return the local time, never null
    * @throws IllegalCalendarFieldValueException if the either input value is invalid
@@ -361,13 +361,13 @@ object LocalTime {
   }
 
   /**
-   * Obtains an instance of    { @code LocalTime } from a string.
+   * Obtains an instance of {@code LocalTime} from a string.
    * <p>
    * The following formats are accepted in ASCII:
    * <ul>
-   * <li>   { @code   { Hour } :   { Minute } }
-   * <li>   { @code   { Hour } :   { Minute } :   { Second } }
-   * <li>   { @code   { Hour } :   { Minute } :   { Second }.   { NanosecondFraction } }
+   * <li> {@code   { Hour} :   { Minute} }
+   * <li> {@code   { Hour} :   { Minute} :   { Second} }
+   * <li> {@code   { Hour} :   { Minute} :   { Second}.   { NanosecondFraction} }
    * </ul>
    * <p>
    * The hour has 2 digits with values from 0 to 23.
@@ -382,7 +382,7 @@ object LocalTime {
   def parse(text: String): LocalTime = DateTimeFormatters.isoLocalTime.parse(text, rule)
 
   /**
-   * The result of addition to a    { @code LocalTime } allowing the expression of
+   * The result of addition to a {@code LocalTime} allowing the expression of
    * any overflow in days.
    */
 
@@ -390,7 +390,7 @@ object LocalTime {
   /**
    * Constructor.
    *
-   * @param time the    { @code LocalTime } after the addition, not null
+   * @param time the {@code LocalTime} after the addition, not null
    * @param days the overflow in days
    */
   final class Overflow private[LocalTime](val time: LocalTime, val days: Int) {
@@ -438,7 +438,7 @@ object LocalTime {
     def getResultTime: LocalTime = time
 
     /**
-     * Creates a    { @code LocalDateTime } from the specified date and this instance.
+     * Creates a {@code LocalDateTime} from the specified date and this instance.
      *
      * @param date the date to use, not null
      * @return the combination of the date, time and overflow in days, never null
@@ -449,7 +449,7 @@ object LocalTime {
   }
 
   /**
-   * Gets the rule for    { @code LocalTime }.
+   * Gets the rule for {@code LocalTime}.
    *
    * @return the rule for the time, never null
    */
@@ -464,13 +464,13 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   import LocalTime._
 
   /**
-   * Checks if this    { @code LocalTime } is before the specified time.
+   * Checks if this {@code LocalTime} is before the specified time.
    * <p>
    * The comparison is based on the time-line position of the time within a day.
    *
    * @param other the other time to compare to, not null
    * @return true if this point is before the specified time
-   * @throws NullPointerException if    { @code other } is null
+   * @throws NullPointerException if {@code other} is null
    */
   def isBefore(other: LocalTime): Boolean = compareTo(other) < 0
 
@@ -487,7 +487,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   }
 
   /**
-   * Returns a copy of this    { @code LocalTime } with the time altered using the adjuster.
+   * Returns a copy of this {@code LocalTime} with the time altered using the adjuster.
    * <p>
    * Adjusters can be used to alter the time in various ways.
    * A simple adjuster might simply set the one of the fields, such as the hour field.
@@ -496,7 +496,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    * This instance is immutable and unaffected by this method call.
    *
    * @param adjuster the adjuster to use, not null
-   * @return a { @code LocalTime } based on this time adjusted as necessary, never null
+   * @return a {@code LocalTime} based on this time adjusted as necessary, never null
    */
   def `with`(adjuster: TimeAdjuster): LocalTime = {
     var time: LocalTime = adjuster.adjustTime(this)
@@ -520,7 +520,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   def toOverflow(daysOverflow: Int): LocalTime.Overflow = new LocalTime.Overflow(this, daysOverflow)
 
   /**
-   * Returns a copy of this    { @code LocalTime } with the specified period in nanoseconds added.
+   * Returns a copy of this {@code LocalTime} with the specified period in nanoseconds added.
    * <p>
    * If the resulting hour is lesser than 0 or greater than 23, the hour field <b>rolls</b>.
    * For instance, 24 becomes 0 and -1 becomes 23.
@@ -528,7 +528,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    * This instance is immutable and unaffected by this method call.
    *
    * @param nanos the nanos to add, may be negative
-   * @return a { @code LocalTime } based on this time with the nanoseconds added, never null
+   * @return a {@code LocalTime} based on this time with the nanoseconds added, never null
    */
   def plusNanos(nanos: Long): LocalTime = {
     if (nanos == 0) return this
@@ -543,15 +543,15 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   }
 
   /**
-   * Outputs this time as a    { @code String }, such as    { @code 10 :15 }.
+   * Outputs this time as a {@code String}, such as {@code 10 :15}.
    * <p>
    * The output will be one of the following formats:
    * <ul>
-   * <li>   { @code HH :mm } </li>
-   * <li>   { @code HH :mm:ss } </li>
-   * <li>   { @code HH :mm:ssfnnn } </li>
-   * <li>   { @code HH :mm:ssfnnnnnn } </li>
-   * <li>   { @code HH :mm:ssfnnnnnnnnn } </li>
+   * <li> {@code HH :mm} </li>
+   * <li> {@code HH :mm:ss} </li>
+   * <li> {@code HH :mm:ssfnnn} </li>
+   * <li> {@code HH :mm:ssfnnnnnn} </li>
+   * <li> {@code HH :mm:ssfnnnnnnnnn} </li>
    * </ul>
    * The format used will be the shortest that outputs the full value of
    * the time where the omitted parts are implied to be zero.
@@ -584,10 +584,10 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   }
 
   /**
-   * Returns a copy of this    { @code LocalTime } with the specified period added,
+   * Returns a copy of this {@code LocalTime} with the specified period added,
    * returning the new time with any overflow in days.
    * <p>
-   * This method returns an    { @link Overflow } instance with the result of the
+   * This method returns an {@link Overflow} instance with the result of the
    * addition and any overflow in days.
    * <p>
    * This instance is immutable and unaffected by this method call.
@@ -596,7 +596,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    * @param minutes the minutes to add, may be negative
    * @param seconds the seconds to add, may be negative
    * @param nanos the nanos to add, may be negative
-   * @return an { @code Overflow } instance with the resulting time and overflow, never null
+   * @return an {@code Overflow} instance with the resulting time and overflow, never null
    */
   private def plusWithOverflow(hours: Int, minutes: Int, seconds: Int, nanos: Long, sign: Int): LocalTime.Overflow = {
     var totDays: Int = (nanos / NanosPerDay).asInstanceOf[Int] + seconds / SecondsPerDay + minutes / MinutesPerDay + hours / HoursPerDay
@@ -616,8 +616,8 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   /**
    * Returns an offset time formed from this time and the specified offset.
    * <p>
-   * This merges the two objects -    { @code this } and the specified offset -
-   * to form an instance of    { @code OffsetTime }.
+   * This merges the two objects - {@code this} and the specified offset -
+   * to form an instance of {@code OffsetTime}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -627,10 +627,10 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   def atOffset(offset: ZoneOffset): OffsetTime = OffsetTime.of(this, offset)
 
   /**
-   * Returns a copy of this    { @code LocalTime } with the specified period added,
+   * Returns a copy of this {@code LocalTime} with the specified period added,
    * returning the new time with any overflow in days.
    * <p>
-   * This method returns an    { @link Overflow } instance with the result of the
+   * This method returns an {@link Overflow} instance with the result of the
    * addition and any overflow in days.
    * <p>
    * This instance is immutable and unaffected by this method call.
@@ -639,26 +639,26 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    * @param minutes the minutes to add, may be negative
    * @param seconds the seconds to add, may be negative
    * @param nanos the nanos to add, may be negative
-   * @return an { @code Overflow } instance with the resulting time and overflow, never null
+   * @return an {@code Overflow} instance with the resulting time and overflow, never null
    */
   def plusWithOverflow(hours: Int, minutes: Int, seconds: Int, nanos: Long): LocalTime.Overflow = {
     plusWithOverflow(hours, minutes, seconds, nanos, 1)
   }
 
   /**
-   * Returns a copy of this    { @code LocalTime } with the specified period subtracted.
+   * Returns a copy of this {@code LocalTime} with the specified period subtracted.
    * <p>
    * This subtracts the specified period from this time, returning a new time.
-   * Before subtraction, the period is converted to a time-based    { @code Period } using
-   * { @link Period # ofTimeFields ( PeriodProvider ) }.
+   * Before subtraction, the period is converted to a time-based {@code Period} using
+   * {@link Period # ofTimeFields ( PeriodProvider )}.
    * That factory ignores any date-based ISO fields, thus subtracting a date-based
    * period from this time will have no effect.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param periodProvider the period to subtract, not null
-   * @return a { @code LocalTime } based on this time with the period subtracted, never null
-   * @throws CalendricalException if the specified period cannot be converted to a    { @code Period }
+   * @return a {@code LocalTime} based on this time with the period subtracted, never null
+   * @throws CalendricalException if the specified period cannot be converted to a {@code Period }
    * @throws ArithmeticException if the period overflows during conversion to hours/minutes/seconds/nanos
    */
   def minus(periodProvider: PeriodProvider): LocalTime = {
@@ -678,7 +678,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   private def readResolve: AnyRef = create(hour, minute, second, nano)
 
   /**
-   * Returns a copy of this    { @code LocalTime } with the specified period in hours subtracted.
+   * Returns a copy of this {@code LocalTime} with the specified period in hours subtracted.
    * <p>
    * If the resulting hour is lesser than 0 or greater than 23, the field <b>rolls</b>.
    * For instance, 24 becomes 0 and -1 becomes 23.
@@ -686,7 +686,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    * This instance is immutable and unaffected by this method call.
    *
    * @param hours the hours to subtract, may be negative
-   * @return a { @code LocalTime } based on this time with the hours subtracted, never null
+   * @return a {@code LocalTime} based on this time with the hours subtracted, never null
    */
   def minusHours(hours: Long): LocalTime = {
     if (hours == 0) this
@@ -697,13 +697,13 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   }
 
   /**
-   * Compares this    { @code LocalTime } to another time.
+   * Compares this {@code LocalTime} to another time.
    * <p>
    * The comparison is based on the time-line position of the times within a day.
    *
    * @param other the other time to compare to, not null
    * @return the comparator value, negative if less, positive if greater
-   * @throws NullPointerException if    { @code other } is null
+   * @throws NullPointerException if {@code other} is null
    */
   def compareTo(other: LocalTime): Int = {
     var cmp: Int = MathUtils.safeCompare(hour, other.hour)
@@ -720,10 +720,10 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   }
 
   /**
-   * Returns a copy of this    { @code LocalTime } with the specified period subtracted,
+   * Returns a copy of this {@code LocalTime} with the specified period subtracted,
    * returning the new time with any overflow in days.
    * <p>
-   * This method returns an    { @link Overflow } instance with the result of the
+   * This method returns an {@link Overflow} instance with the result of the
    * subtraction and any overflow in days.
    * <p>
    * This instance is immutable and unaffected by this method call.
@@ -732,7 +732,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    * @param minutes the minutes to subtract, may be negative
    * @param seconds the seconds to subtract, may be negative
    * @param nanos the nanos to subtract, may be negative
-   * @return an { @code Overflow } instance with the resulting time and overflow, never null
+   * @return an {@code Overflow} instance with the resulting time and overflow, never null
    */
   def minusWithOverflow(hours: Int, minutes: Int, seconds: Int, nanos: Long): LocalTime.Overflow = {
     plusWithOverflow(hours, minutes, seconds, nanos, -1)
@@ -751,19 +751,19 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   def matches(matcher: CalendricalMatcher): Boolean = matcher.matchesCalendrical(this)
 
   /**
-   * Returns a copy of this    { @code LocalTime } with the specified period added.
+   * Returns a copy of this {@code LocalTime} with the specified period added.
    * <p>
    * This adds the specified period to this time, returning a new time.
-   * Before addition, the period is converted to a time-based    { @code Period } using
-   * { @link Period # ofTimeFields ( PeriodProvider ) }.
+   * Before addition, the period is converted to a time-based {@code Period} using
+   * {@link Period # ofTimeFields ( PeriodProvider )}.
    * That factory ignores any date-based ISO fields, thus adding a date-based
    * period to this time will have no effect.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param periodProvider the period to add, not null
-   * @return a { @code LocalTime } based on this time with the period added, never null
-   * @throws CalendricalException if the specified period cannot be converted to a    { @code Period }
+   * @return a {@code LocalTime} based on this time with the period added, never null
+   * @throws CalendricalException if the specified period cannot be converted to a {@code Period }
    * @throws ArithmeticException if the period overflows during conversion to hours/minutes/seconds/nanos
    */
   def plus(periodProvider: PeriodProvider): LocalTime = {
@@ -789,7 +789,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
 
   /**
    * Extracts the time as seconds of day,
-   * from    { @code 0 } to    { @code 24 * 60 * 60 - 1 }.
+   * from {@code 0} to {@code 24 * 60 * 60 - 1}.
    *
    * @return the second-of-day equivalent to this time
    */
@@ -801,7 +801,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   }
 
   /**
-   * A hash code for this    { @code LocalTime }.
+   * A hash code for this {@code LocalTime}.
    *
    * @return a suitable hash code
    */
@@ -811,7 +811,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   }
 
   /**
-   * Returns a copy of this    { @code LocalTime } with the specified period in hours added.
+   * Returns a copy of this {@code LocalTime} with the specified period in hours added.
    * <p>
    * If the resulting hour is lesser than 0 or greater than 23, the field <b>rolls</b>.
    * For instance, 24 becomes 0 and -1 becomes 23.
@@ -819,7 +819,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    * This instance is immutable and unaffected by this method call.
    *
    * @param hours the hours to add, may be negative
-   * @return a { @code LocalTime } based on this time with the hours added, never null
+   * @return a {@code LocalTime} based on this time with the hours added, never null
    */
   def plusHours(hours: Long): LocalTime = {
     if (hours == 0) this
@@ -830,12 +830,12 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   }
 
   /**
-   * Returns a copy of this    { @code LocalTime } with the second-of-minute value altered.
+   * Returns a copy of this {@code LocalTime} with the second-of-minute value altered.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param secondOfMinute the second-of-minute to represent, from 0 to 59
-   * @return a { @code LocalTime } based on this time with the requested second, never null
+   * @return a {@code LocalTime} based on this time with the requested second, never null
    * @throws IllegalCalendarFieldValueException if the second value is invalid
    */
   def withSecondOfMinute(secondOfMinute: Int): LocalTime = {
@@ -847,7 +847,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   }
 
   /**
-   * Returns a copy of this    { @code LocalTime } with the specified period in seconds subtracted.
+   * Returns a copy of this {@code LocalTime} with the specified period in seconds subtracted.
    * <p>
    * If the resulting hour is lesser than 0 or greater than 23, the hour field <b>rolls</b>.
    * For instance, 24 becomes 0 and -1 becomes 23.
@@ -855,7 +855,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    * This instance is immutable and unaffected by this method call.
    *
    * @param seconds the seconds to subtract, may be negative
-   * @return a { @code LocalTime } based on this time with the seconds subtracted, never null
+   * @return a {@code LocalTime} based on this time with the seconds subtracted, never null
    */
   def minusSeconds(seconds: Long): LocalTime = {
     if (seconds == 0) return this
@@ -869,7 +869,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   }
 
   /**
-   * Returns a copy of this    { @code LocalTime } with the specified period in minutes added.
+   * Returns a copy of this {@code LocalTime} with the specified period in minutes added.
    * <p>
    * If the resulting hour is lesser than 0 or greater than 23, the hour field <b>rolls</b>.
    * For instance, 24 becomes 0 and -1 becomes 23.
@@ -877,7 +877,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    * This instance is immutable and unaffected by this method call.
    *
    * @param minutes the minutes to add, may be negative
-   * @return a { @code LocalTime } based on this time with the minutes added, never null
+   * @return a {@code LocalTime} based on this time with the minutes added, never null
    */
   def plusMinutes(minutes: Long): LocalTime = {
     if (minutes == 0) return this
@@ -897,7 +897,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   def getHourOfDay: Int = hour
 
   /**
-   * Checks if this    { @code LocalTime } is equal to the specified time.
+   * Checks if this {@code LocalTime} is equal to the specified time.
    * <p>
    * The comparison is based on the time-line position of the time within a day.
    *
@@ -918,7 +918,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    * <p>
    * This method queries the value of the specified calendrical rule.
    * If the value cannot be returned for the rule from this time then
-   * { @code null } will be returned.
+   * {@code null} will be returned.
    *
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
@@ -927,7 +927,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   def get[T](rule: CalendricalRule[T]): Option[T] = None
 
   /**
-   * Outputs this time as a    { @code String } using the formatter.
+   * Outputs this time as a {@code String} using the formatter.
    *
    * @param formatter the formatter to use, not null
    * @return the formatted time string, never null
@@ -940,7 +940,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   }
 
   /**
-   * Returns a copy of this    { @code LocalTime } with the specified period in minutes subtracted.
+   * Returns a copy of this {@code LocalTime} with the specified period in minutes subtracted.
    * <p>
    * If the resulting hour is lesser than 0 or greater than 23, the hour field <b>rolls</b>.
    * For instance, 24 becomes 0 and -1 becomes 23.
@@ -948,7 +948,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    * This instance is immutable and unaffected by this method call.
    *
    * @param minutes the minutes to subtract, may be negative
-   * @return a { @code LocalTime } based on this time with the minutes subtracted, never null
+   * @return a {@code LocalTime} based on this time with the minutes subtracted, never null
    */
   def minusMinutes(minutes: Long): LocalTime = {
     if (minutes == 0) return this
@@ -968,13 +968,13 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   def getSecondOfMinute: Int = second
 
   /**
-   * Checks if this    { @code LocalTime } is after the specified time.
+   * Checks if this {@code LocalTime} is after the specified time.
    * <p>
    * The comparison is based on the time-line position of the time within a day.
    *
    * @param other the other time to compare to, not null
    * @return true if this is after the specified time
-   * @throws NullPointerException if    { @code other } is null
+   * @throws NullPointerException if {@code other} is null
    */
   def isAfter(other: LocalTime): Boolean = compareTo(other) > 0
 
@@ -986,12 +986,12 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   def getMinuteOfHour: Int = minute
 
   /**
-   * Returns a copy of this    { @code LocalTime } with the nano-of-second value altered.
+   * Returns a copy of this {@code LocalTime} with the nano-of-second value altered.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param nanoOfSecond the nano-of-second to represent, from 0 to 999,999,999
-   * @return a { @code LocalTime } based on this time with the requested nanosecond, never null
+   * @return a {@code LocalTime} based on this time with the requested nanosecond, never null
    * @throws IllegalCalendarFieldValueException if the nanos value is invalid
    */
   def withNanoOfSecond(nanoOfSecond: Int): LocalTime = {
@@ -1015,20 +1015,20 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   def getNanoOfSecond: Int = nano
 
   /**
-   * Converts this time to a    { @code LocalTime }, trivially
-   * returning    { @code this }.
+   * Converts this time to a {@code LocalTime}, trivially
+   * returning {@code this}.
    *
-   * @return { @code this }, never null
+   * @return {@code this}, never null
    */
   override def toLocalTime: LocalTime = this
 
   /**
-   * Returns a copy of this    { @code LocalTime } with the hour-of-day value altered.
+   * Returns a copy of this {@code LocalTime} with the hour-of-day value altered.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param hourOfDay the hour-of-day to represent, from 0 to 23
-   * @return a { @code LocalTime } based on this time with the requested hour, never null
+   * @return a {@code LocalTime} based on this time with the requested hour, never null
    * @throws IllegalCalendarFieldValueException if the hour value is invalid
    */
   def withHourOfDay(hourOfDay: Int): LocalTime = {
@@ -1040,12 +1040,12 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   }
 
   /**
-   * Returns a copy of this    { @code LocalTime } with the minute-of-hour value altered.
+   * Returns a copy of this {@code LocalTime} with the minute-of-hour value altered.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param minuteOfHour the minute-of-hour to represent, from 0 to 59
-   * @return a { @code LocalTime } based on this time with the requested minute, never null
+   * @return a {@code LocalTime} based on this time with the requested minute, never null
    * @throws IllegalCalendarFieldValueException if the minute value is invalid
    */
   def withMinuteOfHour(minuteOfHour: Int): LocalTime = {
@@ -1066,7 +1066,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
 
   /**
    * Extracts the time as nanos of day,
-   * from    { @code 0 } to    { @code 24 * 60 * 60 * 1,000,000,000 - 1 }.
+   * from {@code 0} to {@code 24 * 60 * 60 * 1,000,000,000 - 1}.
    *
    * @return the nano of day equivalent to this time
    */
@@ -1079,7 +1079,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   }
 
   /**
-   * Returns a copy of this    { @code LocalTime } with the specified period in seconds added.
+   * Returns a copy of this {@code LocalTime} with the specified period in seconds added.
    * <p>
    * If the resulting hour is lesser than 0 or greater than 23, the hour field <b>rolls</b>.
    * For instance, 24 becomes 0 and -1 becomes 23.
@@ -1087,7 +1087,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    * This instance is immutable and unaffected by this method call.
    *
    * @param seconds the seconds to add, may be negative
-   * @return a { @code LocalTime } based on this time with the seconds added, never null
+   * @return a {@code LocalTime} based on this time with the seconds added, never null
    */
   def plusSeconds(seconds: Long): LocalTime = {
     if (seconds == 0) return this
@@ -1101,7 +1101,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   }
 
   /**
-   * Returns a copy of this    { @code LocalTime } with the specified period in nanoseconds subtracted.
+   * Returns a copy of this {@code LocalTime} with the specified period in nanoseconds subtracted.
    * <p>
    * If the resulting hour is lesser than 0 or greater than 23, the hour field <b>rolls</b>.
    * For instance, 24 becomes 0 and -1 becomes 23.
@@ -1109,7 +1109,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    * This instance is immutable and unaffected by this method call.
    *
    * @param nanos the nanos to subtract, may be negative
-   * @return a { @code LocalTime } based on this time with the nanoseconds subtracted, never null
+   * @return a {@code LocalTime} based on this time with the nanoseconds subtracted, never null
    */
   def minusNanos(nanos: Long): LocalTime = {
     if (nanos == 0) return this

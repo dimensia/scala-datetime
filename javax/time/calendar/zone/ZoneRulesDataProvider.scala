@@ -46,7 +46,7 @@ import java.util.Set
  * Many systems would like to receive new time-zone rules dynamically.
  * This must be implemented separately from this interface, typically using a listener.
  * Whenever the listener detects new rules it should call
- * { @link ZoneRulesGroup # registerProvider ( ZoneRulesDataProvider ) } using a standard
+ * {@link ZoneRulesGroup # registerProvider ( ZoneRulesDataProvider )} using a standard
  * immutable provider implementation.
  * <p>
  * ZoneRulesDataProvider is a service provider interface that can be called
@@ -72,7 +72,7 @@ trait ZoneRulesDataProvider {
   /**
    * Gets the time-zone group ID of the data available via this provider, such as 'TZDB'.
    * <p>
-   * Group IDs must match regex   { @code[A -Za-z0-9._-]+ }.
+   * Group IDs must match regex {@code[A -Za-z0-9._-]+}.
    * Group IDs should use reverse domain name notation, like packages.
    * Group IDs without a dot are reserved for use by the JSR-310 expert group.
    *

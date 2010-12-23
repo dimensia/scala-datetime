@@ -142,8 +142,8 @@ object ZoneRulesBuilder {
  * although two adjacent windows can have the same standard offset.
  * <p>
  * Within each window, there can either be a
- * { @link # setFixedSavingsToWindow fixed savings amount } or a
- * { @link # addRuleToWindow list of rules }.
+ * {@link #setFixedSavingsToWindow fixed savings amount} or a
+ * {@link #addRuleToWindow list of rules}.
  */
 @SerialVersionUID(1L)
 class ZoneRulesBuilder {
@@ -325,7 +325,7 @@ class ZoneRulesBuilder {
       return new ZoneOffsetTransition(dt, offsetAfter)
     }
 
-    /**{ @inheritDoc }. */
+    /**{ @inheritDoc}. */
     def compareTo(other: ZoneRulesBuilder#TZRule): Int = {
       var cmp: Int = year - other.year
       cmp = (if (cmp == 0) month.compareTo(other.month) else cmp)

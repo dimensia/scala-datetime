@@ -34,9 +34,9 @@ package javax.time.calendar
 import java.io.Serializable
 
 /**
- * Provides common implementations of    { @code CalendricalMatcher }.
+ * Provides common implementations of {@code CalendricalMatcher}.
  * <p>
- * These matchers are useful and common implementations of    { @link CalendricalMatcher }.
+ * These matchers are useful and common implementations of {@link CalendricalMatcher}.
  * A matcher allows any type of matching to be performed against a calendrical.
  * Examples might be checking of the calendrical represents Friday the Thirteenth,
  * or the last day of the month, or one of the American continent time-zones.
@@ -79,7 +79,7 @@ object CalendricalMatchers {
 
     /**Leap year matcher. */
     object LeapYear extends CalendricalMatcher {
-      /**{ @inheritDoc }*/
+      /**{@inheritDoc}*/
       override def matchesCalendrical(calendrical: Calendrical): Boolean = {
         val yearVal: Int = calendrical.get(ISOChronology.yearRule).getOrElse(return false)
         return ISOChronology.isLeapYear(yearVal)
@@ -88,7 +88,7 @@ object CalendricalMatchers {
 
     /**Leap day matcher. */
     object LeapDay extends CalendricalMatcher {
-      /**{ @inheritDoc }*/
+      /**{@inheritDoc}*/
       override def matchesCalendrical(calendrical: Calendrical): Boolean = {
         var moy: MonthOfYear = calendrical.get(ISOChronology.monthOfYearRule).get
         var domVal: Int = calendrical.get(ISOChronology.dayOfMonthRule).getOrElse(return false)
@@ -98,7 +98,7 @@ object CalendricalMatchers {
 
     /**Non weekend matcher. */
     object NonWeekendDay extends CalendricalMatcher {
-      /**{ @inheritDoc }*/
+      /**{@inheritDoc}*/
       override def matchesCalendrical(calendrical: Calendrical): Boolean = {
         val dow: DayOfWeek = calendrical.get(ISOChronology.dayOfWeekRule).getOrElse(return false)
         return dow != DayOfWeek.Saturday && dow != DayOfWeek.Sunday
@@ -107,7 +107,7 @@ object CalendricalMatchers {
 
     /**Non weekend matcher. */
     object WeekendDay extends CalendricalMatcher {
-      /**{ @inheritDoc }*/
+      /**{@inheritDoc}*/
       override def matchesCalendrical(calendrical: Calendrical): Boolean = {
         var dow: DayOfWeek = calendrical.get(ISOChronology.dayOfWeekRule).getOrElse(return false)
         return dow == DayOfWeek.Saturday || dow == DayOfWeek.Sunday
@@ -116,7 +116,7 @@ object CalendricalMatchers {
 
     /**Last day-of-year matcher. */
     object LastDayOfYear extends CalendricalMatcher {
-      /**{ @inheritDoc }*/
+      /**{@inheritDoc}*/
       override def matchesCalendrical(calendrical: Calendrical): Boolean = {
         var moy: MonthOfYear = calendrical.get(ISOChronology.monthOfYearRule).getOrElse(return false)
         var domVal: Int = calendrical.get(ISOChronology.dayOfMonthRule).getOrElse(return false)
@@ -126,7 +126,7 @@ object CalendricalMatchers {
 
     /**Last day-of-month matcher. */
     object LastDayOfMonth extends CalendricalMatcher {
-      /**{ @inheritDoc }*/
+      /**{@inheritDoc}*/
       override def matchesCalendrical(calendrical: Calendrical): Boolean = {
         val yearVal: Int = calendrical.get(ISOChronology.yearRule).getOrElse(return false)
         val moy: MonthOfYear = calendrical.get(ISOChronology.monthOfYearRule).getOrElse(return false)

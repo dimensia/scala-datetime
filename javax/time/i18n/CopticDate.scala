@@ -46,13 +46,13 @@ import javax.time.calendar.LocalDate
  * A date in the Coptic calendar system.
  * <p>
  * CopticDate is an immutable class that represents a date in the Coptic calendar system.
- * The rules of the calendar system are described in   { @link CopticChronology }.
+ * The rules of the calendar system are described in {@link CopticChronology}.
  * The date has a precision of one day and a range from Coptic year 1 to year 9999 (inclusive).
  * <p>
  * Instances of this class may be created from any other object that implements
- * { @link DateProvider } including   { @link LocalDate }. Similarly, instances of
+ * {@link DateProvider} including {@link LocalDate}. Similarly, instances of
  * this class may be passed into the factory method of any other implementation
- * of   { @code DateProvider }.
+ * of {@code DateProvider}.
  * <p>
  * CopticDate is immutable and thread-safe.
  *
@@ -92,14 +92,14 @@ object CopticDate {
   private val ModifiedJulianDaysToCoptic: Int = 574971
 
   /**
-   * Gets the field rule for   { @code CopticDate }.
+   * Gets the field rule for {@code CopticDate}.
    *
    * @return the field rule for the date, never null
    */
   def rule: CalendricalRule[CopticDate] = Rule
 
   /**
-   * Obtains an instance of   { @code CopticDate } from the Coptic year,
+   * Obtains an instance of {@code CopticDate} from the Coptic year,
    * month-of-year and day-of-month.
    *
    * @param copticYear the year to represent, from MIN_YEAR to MAX_YEAR
@@ -121,10 +121,10 @@ object CopticDate {
   }
 
   /**
-   * Obtains an instance of   { @code CopticDate } from a calendrical.
+   * Obtains an instance of {@code CopticDate} from a calendrical.
    * <p>
    * This can be used extract the date directly from any implementation
-   * of   { @code Calendrical }, including those in other calendar systems.
+   * of {@code Calendrical}, including those in other calendar systems.
    *
    * @param calendrical the calendrical to extract from, not null
    * @return the Coptic date, never null
@@ -133,7 +133,7 @@ object CopticDate {
   def of(calendrical: Calendrical): CopticDate = rule.getValueChecked(calendrical)
 
   /**
-   * Obtains an instance of   { @code CopticDate } from a number of epoch days.
+   * Obtains an instance of {@code CopticDate} from a number of epoch days.
    *
    * @param epochDays the epoch days to use, not null
    * @return a CopticDate object, never null
@@ -152,7 +152,7 @@ object CopticDate {
   }
 
   /**
-   * Obtains an instance of   { @code CopticDate } using the previous valid algorithm.
+   * Obtains an instance of {@code CopticDate} using the previous valid algorithm.
    *
    * @param year the year to represent
    * @param monthOfYear the month-of-year to represent
@@ -329,7 +329,7 @@ final class CopticDate private(val epochDays: Int, @transient year: Int, @transi
   def isLeapDay: Boolean = getMonthOfYear == 13 && getDayOfMonth == 6
 
   /**
-   * Outputs the date as a   { @code String }, such as '1723-13-01 (Coptic)'.
+   * Outputs the date as a {@code String}, such as '1723-13-01 (Coptic)'.
    * <p>
    * The output will be in the format 'yyyy-MM-dd (Coptic)'.
    *
@@ -372,7 +372,7 @@ final class CopticDate private(val epochDays: Int, @transient year: Int, @transi
   }
 
   /**
-   * Converts this date to an ISO-8601 calendar system   { @code LocalDate }.
+   * Converts this date to an ISO-8601 calendar system {@code LocalDate}.
    *
    * @return the equivalent date in the ISO-8601 calendar system, never null
    */

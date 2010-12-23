@@ -292,9 +292,9 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
   }
 
   /**
-   * Converts the typed value of the rule to the   { @code int } equivalent.
+   * Converts the typed value of the rule to the {@code int} equivalent.
    * <p>
-   * This default implementation handles   { @code Integer } and   { @code Enum }.
+   * This default implementation handles {@code Integer} and {@code Enum}.
    * When the reified type is another type, this method must be overridden.
    *
    * @param value the value to convert, not null
@@ -313,8 +313,8 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * This method has no knowledge of other calendrical fields, thus only the
    * outer minimum and maximum range for the field is validated.
    * <p>
-   * This method performs the same check as   { @link # checkValue ( int ) }.
-   * The implementation uses   { @link # isValidValue ( long ) }.
+   * This method performs the same check as {@link #checkValue ( int )}.
+   * The implementation uses {@link #isValidValue ( long )}.
    *
    * @param value the value to check
    * @return the value cast to an int
@@ -333,10 +333,10 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * Some fields have a textual representation, such as day-of-week or
    * month-of-year. This method provides a convenient way to convert a value
    * to such a textual representation.
-   * More control is available using   { @link # getTextStore }.
+   * More control is available using {@link #getTextStore}.
    * <p>
    * If there is no textual mapping, then the value is returned as per
-   * { @link Integer # toString ( ) }. Note that this is different to what occurs
+   * {@link Integer # toString()}. Note that this is different to what occurs
    * in printing /parsing, where a more advanced localized conversion from
    * int to String is used.
    *
@@ -355,10 +355,10 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * Converts a fraction from 0 to 1 for this field to a value.
    * <p>
    * The fractional value must be between 0 (inclusive) and 1 (exclusive).
-   * It can only be returned if   { @link # isFixedValueSet ( ) } returns true and the
-   * { @link # getMinimumValue ( ) } returns zero.
+   * It can only be returned if {@link #isFixedValueSet()} returns true and the
+   * {@link #getMinimumValue()} returns zero.
    * The value is obtained by calculation from the field range and a rounding
-   * mode of   { @link RoundingMode # FLOOR FLOOR }.
+   * mode of {@link RoundingMode # FLOOR FLOOR}.
    * <p>
    * For example, the fractional second-of-minute of 0.25 would be converted to 15,
    * assuming the standard definition of 60 seconds in a minute.
@@ -393,7 +393,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
   /**
    * Gets the largest possible minimum value that the field can take.
    * <p>
-   * The default implementation returns   { @link # getMinimumValue ( ) }.
+   * The default implementation returns {@link #getMinimumValue()}.
    * Subclasses must override this as necessary.
    *
    * @return the largest possible minimum value for this field
@@ -411,9 +411,9 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * of days in the month varies depending on the month and year. If both the
    * month and year can be derived from the calendrical, then the maximum value
    * returned will be accurate. Otherwise the 'best guess' value from
-   * { @link # getMaximumValue ( ) } will be returned.
+   * {@link #getMaximumValue()} will be returned.
    * <p>
-   * The default implementation returns   { @link # getMaximumValue ( ) }.
+   * The default implementation returns {@link #getMaximumValue()}.
    * Subclasses must override this as necessary.
    *
    * @param calendrical context calendrical, not null
@@ -428,7 +428,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * The result of this method may still be inaccurate, if there is insufficient
    * information in the calendrical.
    * <p>
-   * The default implementation returns   { @link # getMinimumValue ( ) }.
+   * The default implementation returns {@link #getMinimumValue()}.
    * Subclasses must override this as necessary.
    *
    * @param calendrical context calendrical, not null
@@ -449,8 +449,8 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * This method has no knowledge of other calendrical fields, thus only the
    * outer minimum and maximum range for the field is validated.
    * <p>
-   * This method performs the same check as   { @link # checkValue ( long ) }.
-   * The implementation uses   { @link # isValidValue ( int ) }.
+   * This method performs the same check as {@link #checkValue ( long )}.
+   * The implementation uses {@link #isValidValue ( int )}.
    *
    * @param value the value to check
    * @return the value
@@ -475,7 +475,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * month-of-year. The text store provides details of those textual representations.
    * <p>
    * To supply text, subclasses should pass true in the constructor and
-   * override   { @link # createTextStores }. This method is not normally overridden.
+   * override {@link #createTextStores}. This method is not normally overridden.
    *
    * @param locale the locale to use, not null
    * @param textStyle the text style, not null
@@ -505,7 +505,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * This method has no knowledge of other calendrical fields, thus only the
    * outer minimum and maximum range for the field is validated.
    * <p>
-   * This method performs the same check as   { @link # isValidValue ( int ) }.
+   * This method performs the same check as {@link #isValidValue ( int )}.
    *
    * @param value the value to check
    * @return true if the value is valid, false if invalid
@@ -515,7 +515,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
   /**
    * Gets the smallest possible maximum value that the field can take.
    * <p>
-   * The default implementation returns   { @link # getMaximumValue ( ) }.
+   * The default implementation returns {@link #getMaximumValue()}.
    * Subclasses must override this as necessary.
    *
    * @return the smallest possible maximum value for this field
@@ -523,11 +523,11 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
   def getSmallestMaximumValue: Int = getMaximumValue
 
   /**
-   * Gets the   { @code int } value of this field from the specified calendrical
+   * Gets the {@code int} value of this field from the specified calendrical
    * throwing an exception if the value cannot be returned.
    * <p>
-   * This uses   { @link # getValue ( Calendrical ) } to find the value and then
-   * converts it to an   { @code int } ensuring it isn't   { @code null }.
+   * This uses {@link #getValue ( Calendrical )} to find the value and then
+   * converts it to an {@code int} ensuring it isn't {@code null}.
    *
    * @param calendrical the calendrical to get the field value from, not null
    * @return the value of the field, never null
@@ -544,10 +544,10 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * Converts a value for this field to a fraction between 0 and 1.
    * <p>
    * The fractional value is between 0 (inclusive) and 1 (exclusive).
-   * It can only be returned if   { @link # isFixedValueSet ( ) } returns true and the
-   * { @link # getMinimumValue ( ) } returns zero.
+   * It can only be returned if {@link #isFixedValueSet()} returns true and the
+   * {@link #getMinimumValue()} returns zero.
    * The fraction is obtained by calculation from the field range using 9 decimal
-   * places and a rounding mode of   { @link RoundingMode # FLOOR FLOOR }.
+   * places and a rounding mode of {@link RoundingMode # FLOOR FLOOR}.
    * <p>
    * For example, the second-of-minute value of 15 would be returned as 0.25,
    * assuming the standard definition of 60 seconds in a minute.
@@ -578,7 +578,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * Creates the text store for each style for the specified locale.
    * <p>
    * It is intended that a new copy of the text store should be created in
-   * response to calling this method as the result is cached by   { @link # getTextStore }.
+   * response to calling this method as the result is cached by {@link #getTextStore}.
    *
    * @param textStores the map to populate with TextStore instances, not null
    * @param locale the locale to use, not null
@@ -591,12 +591,12 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
     (if (hasText) new ConcurrentHashMap[Locale, SoftReference[Map[Any, Any]]] else null)
 
   /**
-   * Converts the   { @code int } to a typed value of the rule.
+   * Converts the {@code int} to a typed value of the rule.
    * <p>
-   * The   { @code int } will be checked to ensure that it is within the
+   * The {@code int} will be checked to ensure that it is within the
    * valid range of values for the field.
    * <p>
-   * This default implementation handles   { @code Integer } and   { @code Enum }.
+   * This default implementation handles {@code Integer} and {@code Enum}.
    * When the reified type is another type, this method must be overridden.
    *
    * @param value the value to convert, not null
@@ -619,7 +619,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
   def isFixedValueSet: Boolean = getMaximumValue == getSmallestMaximumValue && getMinimumValue == getLargestMinimumValue
 
   /**
-   * Converts the typed value of the rule to the   { @code Integer } equivalent.
+   * Converts the typed value of the rule to the {@code Integer} equivalent.
    * <p>
    * This method avoids boxing and unboxing when the value is an Integer.
    *
@@ -637,7 +637,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * This method has no knowledge of other calendrical fields, thus only the
    * outer minimum and maximum range for the field is validated.
    * <p>
-   * This method performs the same check as   { @link # isValidValue ( long ) }.
+   * This method performs the same check as {@link #isValidValue ( long )}.
    *
    * @param value the value to check
    * @return true if the value is valid, false if invalid
@@ -647,11 +647,11 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
   }
 
   /**
-   * Gets the   { @code Integer } value of this field from the specified calendrical
-   * returning   { @code null } if the value cannot be returned.
+   * Gets the {@code Integer} value of this field from the specified calendrical
+   * returning {@code null} if the value cannot be returned.
    * <p>
-   * This uses   { @link # getValue ( Calendrical ) } to find the value and then
-   * converts it to an   { @code Integer }.
+   * This uses {@link #getValue ( Calendrical )} to find the value and then
+   * converts it to an {@code Integer}.
    *
    * @param calendrical the calendrical to get the field value from, not null
    * @return the value of the field, null if unable to extract the field

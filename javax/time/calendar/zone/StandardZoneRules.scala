@@ -186,7 +186,7 @@ final class StandardZoneRules private(private val standardTransitions: Array[Lon
    */
   def getTransitionRules: List[ZoneOffsetTransitionRule] = lastRules.toList
 
-  /**{ @inheritDoc }*/
+  /**{@inheritDoc}*/
   def getOffset(instantProvider: InstantProvider): ZoneOffset = {
     val instant: Instant = Instant.of(instantProvider)
     val epochSecs: Long = instant.getEpochSeconds
@@ -438,7 +438,7 @@ final class StandardZoneRules private(private val standardTransitions: Array[Lon
     }
   }
 
-  /**{ @inheritDoc }*/
+  /**{@inheritDoc}*/
   def getStandardOffset(instantProvider: InstantProvider): ZoneOffset = {
     val instant: Instant = Instant.of(instantProvider)
     val epochSecs: Long = instant.getEpochSeconds

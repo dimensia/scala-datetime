@@ -49,7 +49,7 @@ trait Calendrical {
    * Gets the value of the specified calendrical rule.
    * <p>
    * This method queries the value of the specified rule.
-   * If the rule is not supported then  { @code null } will be returned.
+   * If the rule is not supported then {@code null} will be returned.
    * <p>
    * Where this method returns numeric values, Integer is the preferred type.
    * The values should be within the range of the field wherever possible.

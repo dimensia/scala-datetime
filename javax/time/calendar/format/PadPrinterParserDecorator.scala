@@ -52,7 +52,7 @@ import javax.time.calendar.Calendrical
  */
 final class PadPrinterParserDecorator private[format](printer: DateTimePrinter, parser: DateTimeParser, padWidth: Int, padChar: Char)
   extends DateTimePrinter with DateTimeParser {
-  /**{ @inheritDoc }*/
+  /**{@inheritDoc}*/
   def parse(context: DateTimeParseContext, _parseText: String, position: Int): Int = {
     var parseText = _parseText
     if (position > parseText.length) {
@@ -103,7 +103,7 @@ final class PadPrinterParserDecorator private[format](printer: DateTimePrinter, 
     appendable.append(buf)
   }
 
-  /**{ @inheritDoc }*/
+  /**{@inheritDoc}*/
   override def toString: String = {
     var base: String = "Pad("
     if (printer == parser) base += printer

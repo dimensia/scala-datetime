@@ -144,7 +144,7 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
     if (oldValue.isDefined) {
       if (oldValue.get.equals(value) == false) {
         throw new InvalidCalendarFieldException("Merge resulted in two different values, " + value + " and " + oldValue.get + ", for " + rule.getID + " given input " + inputMap, rule);
-      } else {
+     } else {
         return // no change
       }
     }
@@ -281,7 +281,7 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
    * possible from this set of fields. Ideally the outcome will be a date, time
    * or both, however there may be insufficient information to achieve this.
    * <p>
-   * The process repeatedly calls the field rule    { @link CalendricalRule # merge merge }
+   * The process repeatedly calls the field rule {@link CalendricalRule # merge merge }
    * method to perform the merge on each individual field. Sometimes two or
    * more fields will combine to form a more significant field. Sometimes they
    * will combine to form a date or time. The process stops when there no more
@@ -294,7 +294,7 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
    * values can be derived from the merged field.
    * <p>
    * The exact definition of which fields combine with which is chronology dependent.
-   * For example, see    { @link ISOChronology }.
+   * For example, see {@link ISOChronology}.
    * <p>
    * The details of the process are controlled by the merge context.
    * This includes strict/lenient behavior.

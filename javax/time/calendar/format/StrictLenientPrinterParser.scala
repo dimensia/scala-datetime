@@ -57,18 +57,18 @@ sealed abstract class StrictLenientPrinterParser extends DateTimePrinter with Da
 
   import StrictLenientPrinterParser._
 
-  /**{ @inheritDoc }*/
+  /**{@inheritDoc}*/
   def parse(context: DateTimeParseContext, parseText: String, position: Int): Int = {
     context.strict = (this == Strict)
     position
   }
 
-  /**{ @inheritDoc }*/
+  /**{@inheritDoc}*/
   override def toString: String = "ParseStrict(" + (this == Strict) + ")"
 
-  /**{ @inheritDoc }*/
+  /**{@inheritDoc}*/
   override def isPrintDataAvailable(calendrical: Calendrical): Boolean = true
 
-  /**{ @inheritDoc }*/
+  /**{@inheritDoc}*/
   override def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = {}
 }

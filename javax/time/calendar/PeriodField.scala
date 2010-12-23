@@ -82,12 +82,12 @@ object PeriodField {
 @SerialVersionUID(1L)
 final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends PeriodProvider with Comparable[PeriodField] with Serializable {
   /**
-   * Gets the amount of this period, converted to an   { @code int }.
+   * Gets the amount of this period, converted to an {@code int}.
    * <p>
    * For example, in the period '5 Days', the amount is '5'.
    *
    * @return the amount of time of this period, positive or negative
-   * @throws ArithmeticException if the amount exceeds the capacity of an   { @code int }
+   * @throws ArithmeticException if the amount exceeds the capacity of an {@code int }
    */
   def getAmountInt: Int = MathUtils.safeToInt(amount)
 
@@ -106,7 +106,7 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
    * This instance is immutable and unaffected by this method call.
    *
    * @param scalar the value to multiply by, positive or negative
-   * @return a { @code PeriodField } based on this period multiplied by the specified scalar, never null
+   * @return a {@code PeriodField} based on this period multiplied by the specified scalar, never null
    * @throws ArithmeticException if the calculation overflows
    */
   def multipliedBy(scalar: Long): PeriodField = withAmount(MathUtils.safeMultiply(amount, scalar))
@@ -120,7 +120,7 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
    * For example, it could be used to change '3 Days' to '3 Months'.
    *
    * @param unit the unit to set in the returned period, positive or negative
-   * @return a { @code PeriodField } based on this period with the specified unit, never null
+   * @return a {@code PeriodField} based on this period with the specified unit, never null
    */
   def withUnit(unit: PeriodUnit): PeriodField = {
     PeriodFields.checkNotNull(unit, "PeriodUnit must not be null")
@@ -133,8 +133,8 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
-   * @return a { @code PeriodField } based on this period with the amount negated, never null
-   * @throws ArithmeticException if the amount is   { @code Long.MIN_VALUE }
+   * @return a {@code PeriodField} based on this period with the amount negated, never null
+   * @throws ArithmeticException if the amount is {@code Long.MIN_VALUE }
    */
   def negated: PeriodField = withAmount(MathUtils.safeNegate(amount))
 
@@ -142,13 +142,13 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
    * Returns a copy of this period with the amount as the remainder following
    * division by the specified divisor.
    * <p>
-   * This uses the   { @code % } operator to provide the result, which may be negative.
+   * This uses the {@code %} operator to provide the result, which may be negative.
    * For example, the remainder of '11 Days' divided by 4 is '3 Days'.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param divisor the value to divide by, positive or negative
-   * @return a { @code PeriodField } based on this period divided by the specified divisor, never null
+   * @return a {@code PeriodField} based on this period divided by the specified divisor, never null
    * @throws ArithmeticException if the divisor is zero
    */
   def remainder(divisor: Long): PeriodField = withAmount(amount % divisor)
@@ -156,7 +156,7 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
   /**
    * Checks if this period is zero length.
    * <p>
-   * A   { @code PeriodField } can be positive, zero or negative.
+   * A {@code PeriodField} can be positive, zero or negative.
    * This method checks whether the length is zero.
    *
    * @return true if this period is zero length
@@ -177,8 +177,8 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
-   * @return a { @code PeriodField } based on this period with an absolute amount, never null
-   * @throws ArithmeticException if the amount is   { @code Long.MIN_VALUE }
+   * @return a {@code PeriodField} based on this period with an absolute amount, never null
+   * @throws ArithmeticException if the amount is {@code Long.MIN_VALUE }
    */
   def abs: PeriodField = if (amount < 0) negated else this
 
@@ -200,12 +200,12 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
    * Converts this period to an equivalent in the specified unit.
    * <p>
    * This converts this period to one measured in the specified unit.
-   * This uses   { @link PeriodUnit # getEquivalentPeriod ( PeriodUnit ) } to lookup
+   * This uses {@link PeriodUnit # getEquivalentPeriod ( PeriodUnit )} to lookup
    * the equivalent period for the unit.
    * <p>
    * For example, '3 Hours' could be converted to '180 Minutes'.
    * <p>
-   * This method is equivalent to   { @link # toEquivalent ( PeriodUnit...) } with a single parameter.
+   * This method is equivalent to {@link #toEquivalent ( PeriodUnit...)} with a single parameter.
    *
    * @param requiredUnit the unit to convert to, not null
    * @return a period equivalent to this period, never null
@@ -226,7 +226,7 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
    * This instance is immutable and unaffected by this method call.
    *
    * @param amount the period to subtract, measured in the unit of the period, positive or negative
-   * @return a { @code PeriodField } based on this period with the specified amount subtracted, never null
+   * @return a {@code PeriodField} based on this period with the specified amount subtracted, never null
    * @throws ArithmeticException if the calculation overflows
    */
   def minus(amount: Long): PeriodField = withAmount(MathUtils.safeSubtract(this.amount, amount))
@@ -234,9 +234,9 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
   def -(amount: Long): PeriodField = minus(amount)
 
   /**
-   * Converts this period to a   { @code PeriodFields }.
+   * Converts this period to a {@code PeriodFields}.
    * <p>
-   * The returned   { @code PeriodFields } will always contain the unit even
+   * The returned {@code PeriodFields} will always contain the unit even
    * if the amount is zero.
    *
    * @return the equivalent period, never null
@@ -246,12 +246,12 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
   /**
    * Calculates the accurate duration of this period.
    * <p>
-   * The conversion is based on the   { @code ISOChronology } definition of the seconds and
+   * The conversion is based on the {@code ISOChronology} definition of the seconds and
    * nanoseconds units. If the unit of this period can be converted to either seconds
    * or nanoseconds then the conversion will succeed, subject to calculation overflow.
    * If the unit cannot be converted then an exception is thrown.
    *
-   * @return the duration of this period based on   { @code ISOChronology } fields, never null
+   * @return the duration of this period based on {@code ISOChronology} fields, never null
    * @throws ArithmeticException if the calculation overflows
    */
   def toDuration: Duration = {
@@ -332,7 +332,7 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
    * This instance is immutable and unaffected by this method call.
    *
    * @param amount the period to add, measured in the unit of the period, positive or negative
-   * @return a { @code PeriodField } based on this period with the specified amount added, never null
+   * @return a {@code PeriodField} based on this period with the specified amount added, never null
    * @throws ArithmeticException if the calculation overflows
    */
   def plus(amount: Long): PeriodField = withAmount(MathUtils.safeAdd(this.amount, amount))
@@ -355,7 +355,7 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
    * For example, it could be used to change '3 Days' to '5 Days'.
    *
    * @param amount the amount of time to set in the returned period, positive or negative
-   * @return a { @code PeriodField } based on this period with the specified amount, never null
+   * @return a {@code PeriodField} based on this period with the specified amount, never null
    */
   def withAmount(amount: Long): PeriodField = {
     if (amount == this.amount) this
@@ -368,7 +368,7 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
    * This instance is immutable and unaffected by this method call.
    *
    * @param period the period to add, positive or negative
-   * @return a { @code PeriodField } based on this period with the specified period added, never null
+   * @return a {@code PeriodField} based on this period with the specified period added, never null
    * @throws IllegalArgumetException if the specified period has a different unit
    * @throws ArithmeticException if the calculation overflows
    */
@@ -388,7 +388,7 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
    * This instance is immutable and unaffected by this method call.
    *
    * @param period the period to subtract, positive or negative
-   * @return a { @code PeriodField } based on this period with the specified period subtracted, never null
+   * @return a {@code PeriodField} based on this period with the specified period subtracted, never null
    * @throws IllegalArgumetException if the specified has a different unit
    * @throws ArithmeticException if the calculation overflows
    */
@@ -405,10 +405,10 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
   /**
    * Estimates the duration of this period.
    * <p>
-   * The   { @link PeriodUnit } contains an estimated duration for that unit.
+   * The {@link PeriodUnit} contains an estimated duration for that unit.
    * The value allows an estimate to be calculated for this period irrespective
    * of whether the unit is of fixed or variable duration. The estimate will equal the
-   * { @link # toDuration accurate } calculation if the unit is based on the second.
+   * {@link #toDuration accurate} calculation if the unit is based on the second.
    *
    * @return the estimated duration of this period, positive or negative
    * @throws ArithmeticException if the calculation overflows

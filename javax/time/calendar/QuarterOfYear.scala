@@ -34,7 +34,7 @@ package javax.time.calendar
 /**
  * A quarter-of-year, such as 'Q2'.
  * <p>
- * { @code QuarterOfYear} is an enum representing the 4 quarters of the year -
+ * {@code QuarterOfYear} is an enum representing the 4 quarters of the year -
  * Q1, Q2, Q3 and Q4. These are defined as January to March, April to June,
  * July to September and October to December.
  * <p>
@@ -87,12 +87,12 @@ object QuarterOfYear {
   /**
    * Obtains an instance of {@code QuarterOfYear} from an {@code int} value.
    * <p>
-   * { @code QuarterOfYear} is an enum representing the 4 quarters of the year.
+   * {@code QuarterOfYear} is an enum representing the 4 quarters of the year.
    * This factory allows the enum to be obtained from the {@code int} value.
    * The {@code int} value follows the quarter, from 1 (Q1) to 4 (Q4).
    * <p>
    * An exception is thrown if the value is invalid. The exception uses the
-   * { @link ISOChronology} quarter-of-year rule to indicate the failed rule.
+   * {@link ISOChronology} quarter-of-year rule to indicate the failed rule.
    *
    * @param quarterOfYear the quarter-of-year to represent, from 1 (Q1) to 4 (Q4)
    * @return the QuarterOfYear singleton, never null
@@ -190,7 +190,7 @@ sealed abstract class QuarterOfYear(ordinal: Int) extends Calendrical {
    * Q3 will return July.<br />
    * Q4 will return October.
    * <p>
-   * To obtain the other two months of the quarter, simply use {@link MonthOfYear # next ( ) }
+   * To obtain the other two months of the quarter, simply use {@link MonthOfYear # next()}
    * on the returned month.
    *
    * @return the first month in the quarter, never null

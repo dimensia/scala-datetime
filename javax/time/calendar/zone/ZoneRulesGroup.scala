@@ -60,7 +60,7 @@ import javax.time.calendar.OffsetDateTime
  * approved by the JSR-310 expert group.
  * <p>
  * Each group will provide versioned sets of data for a number of geographical regions.
- * Instances of   { @code ZoneRulesGroup } manage the data via region and version IDs.
+ * Instances of {@code ZoneRulesGroup} manage the data via region and version IDs.
  * <p>
  * ZoneRulesGroup is thread-safe and immutable.
  * <p>
@@ -155,7 +155,7 @@ object ZoneRulesGroup {
    * Which groups are available is dependent on the registered providers.
    * <p>
    * This method relies on time-zone data provider files. These are often loaded as jar files.
-   * If no providers have been   { @link # registerProvider ( ZoneRulesDataProvider ) registered } or no
+   * If no providers have been {@link #registerProvider ( ZoneRulesDataProvider ) registered} or no
    * provider has been registered for the requested group then an exception is thrown.
    *
    * @param groupID the group ID, not null
@@ -184,8 +184,8 @@ object ZoneRulesGroup {
    * <p>
    * For example, for the single time-zone of 'Europe/London' would contain:
    * <ul>
-   * <li>  { @code Europe /London } </li>
-   * <li>  { @code TZDB :Europe/London } </li>
+   * <li> {@code Europe /London} </li>
+   * <li> {@code TZDB :Europe/London} </li>
    * </ul>
    * <p>
    * The returned set is a view of underlying state that may be changed by another thread.
@@ -219,7 +219,7 @@ final class ZoneRulesGroup(val groupID: String) {
   /**
    * Gets the latest available version of the group's data for a region.
    * <p>
-   * The latest available version is determined by a   { @code String } based sort
+   * The latest available version is determined by a {@code String} based sort
    * of the versions.
    * <p>
    * The returned version will remain available for the lifetime of the application as
@@ -264,7 +264,7 @@ final class ZoneRulesGroup(val groupID: String) {
    * Gets the set of available region IDs for this group that are valid for the specified version.
    * <p>
    * The available versions are returned sorted from oldest to newest using
-   * an ordering determined by a   { @code String } based sort.
+   * an ordering determined by a {@code String} based sort.
    * <p>
    * If the version is not found, an empty list is returned.
    * <p>
@@ -374,7 +374,7 @@ final class ZoneRulesGroup(val groupID: String) {
   /**
    * Gets the latest available version of the group's data.
    * <p>
-   * The latest available version is determined by a   { @code String } based sort
+   * The latest available version is determined by a {@code String} based sort
    * of the versions.
    * <p>
    * The returned version will remain available for the lifetime of the application as
@@ -461,7 +461,7 @@ final class ZoneRulesGroup(val groupID: String) {
    * Gets the set of available versions for this group.
    * <p>
    * The available versions are returned sorted from newest to oldest using
-   * an ordering determined by a   { @code String } based sort.
+   * an ordering determined by a {@code String} based sort.
    * <p>
    * The returned versions will remain available for the lifetime of the application as
    * there is no way to deregister time-zone information. More regions may be added during

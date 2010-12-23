@@ -40,7 +40,7 @@ import javax.time.Duration
 /**
  * A unit of time for measuring a period, such as 'Days' or 'Minutes'.
  * <p>
- * { @code PeriodUnit } is an immutable definition of a unit of human-scale time.
+ * {@code PeriodUnit} is an immutable definition of a unit of human-scale time.
  * For example, humans typically measure periods of time in units of years, months,
  * days, hours, minutes and seconds. These concepts are defined by instances of
  * this class defined in the chronology classes.
@@ -55,7 +55,7 @@ import javax.time.Duration
  * All instantiable implementations must be final, immutable and thread-safe.
  * <p>
  * The subclass is fully responsible for serialization as all fields in this class are
- * transient. The subclass must use   { @code readResolve } to replace the deserialized
+ * transient. The subclass must use {@code readResolve} to replace the deserialized
  * class with a valid one created via a constructor.
  *
  * @author Stephen Colebourne
@@ -118,9 +118,9 @@ abstract class PeriodUnit private[calendar](@transient val name: String, @transi
    * A derived unit is created as a multiple of a smaller unit.
    * For example, an ISO year period can be derived as 12 ISO month periods.
    * <p>
-   * The estimated duration is calculated using   { @link PeriodField # toEstimatedDuration ( ) }.
+   * The estimated duration is calculated using {@link PeriodField # toEstimatedDuration()}.
    * <p>
-   * This method is typically only used when writing a   { @link Chronology }.
+   * This method is typically only used when writing a {@link Chronology}.
    *
    * @param name the name of the type, not null
    * @param equivalentPeriod the period this is derived from, not null
@@ -141,7 +141,7 @@ abstract class PeriodUnit private[calendar](@transient val name: String, @transi
    * A base unit cannot be derived from any smaller unit.
    * For example, an ISO month period cannot be derived from any other smaller period.
    * <p>
-   * This method is typically only used when writing a   { @link Chronology }.
+   * This method is typically only used when writing a {@link Chronology}.
    *
    * @param name the name of the type, not null
    * @param estimatedDuration the estimated duration of one unit of this period, not null
@@ -164,7 +164,7 @@ abstract class PeriodUnit private[calendar](@transient val name: String, @transi
    * including both '60 Minutes', '3600 Seconds' and any other equivalent periods.
    * <p>
    * Registered conversion is stored from larger units to smaller units.
-   * Thus,   { @code monthsUnit.getEquivalentPeriods ( ) } will not contain the unit for years.
+   * Thus, {@code monthsUnit.getEquivalentPeriods()} will not contain the unit for years.
    * Note that the returned list does <i>not</i> contain this unit.
    * <p>
    * The list will be unmodifiable and sorted, from largest unit to smallest.
@@ -180,7 +180,7 @@ abstract class PeriodUnit private[calendar](@transient val name: String, @transi
    * For those units which can be derived ultimately from nanoseconds, the
    * estimated duration will be accurate. For other units, it will be an estimate.
    * <p>
-   * One key use for the estimated duration is to implement   { @link Comparable }.
+   * One key use for the estimated duration is to implement {@link Comparable}.
    *
    * @return the estimate of the duration in seconds, never null
    */
@@ -194,7 +194,7 @@ abstract class PeriodUnit private[calendar](@transient val name: String, @transi
    * This method checks if this unit has a registered conversion to the specified unit.
    * <p>
    * Registered conversion is stored from larger units to smaller units.
-   * Thus,   { @code monthsUnit.isConvertibleTo ( yearsUnit ) } will return false.
+   * Thus, {@code monthsUnit.isConvertibleTo ( yearsUnit )} will return false.
    * Note that this unit is convertible to itself.
    *
    * @param unit the unit, null returns false
@@ -212,7 +212,7 @@ abstract class PeriodUnit private[calendar](@transient val name: String, @transi
   /**
    * Compares this unit to another.
    * <p>
-   * The comparison is based primarily on the   { @link # getEstimatedDuration ( ) estimated duration }.
+   * The comparison is based primarily on the {@link #getEstimatedDuration ( ) estimated duration}.
    * If that is equal, the name is compared using standard string comparison.
    * Finally, the first equivalent period is checked, with basic units before derived ones.
    *
@@ -261,7 +261,7 @@ abstract class PeriodUnit private[calendar](@transient val name: String, @transi
     else if (obj.isInstanceOf[PeriodUnit]) {
       val other: PeriodUnit = obj.asInstanceOf[PeriodUnit]
       name.equals(other.name) && estimatedDuration.equals(other.estimatedDuration) && equivalentPeriods.size == other.equivalentPeriods.size && (equivalentPeriods.size == 0 || equivalentPeriods.get(0).equals(other.equivalentPeriods.get(0)))
-    } else false
+   } else false
   }
 
   /**
@@ -284,7 +284,7 @@ abstract class PeriodUnit private[calendar](@transient val name: String, @transi
    * then this method would return '3600 Seconds'.
    * <p>
    * Registered conversion is stored from larger units to smaller units.
-   * Thus,   { @code monthsUnit.getEquivalentPeriod ( yearsUnit ) } will return null.
+   * Thus, {@code monthsUnit.getEquivalentPeriod ( yearsUnit )} will return null.
    * Note that if the unit specified is this unit, then a period of 1 of this unit is returned.
    *
    * @param requiredUnit the required unit, not null

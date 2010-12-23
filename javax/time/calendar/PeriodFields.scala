@@ -46,10 +46,10 @@ import javax.time.Duration
  * A period of time measured using a number of different units,
  * such as '3 Months, 4 Days and 7 Hours'.
  * <p>
- * { @code PeriodFields } is an immutable period that stores an amount of human-scale
+ * {@code PeriodFields} is an immutable period that stores an amount of human-scale
  * time for a number of units. For example, humans typically measure periods of time
  * in units of years, months, days, hours, minutes and seconds. These concepts are
- * defined by instances of   { @link PeriodUnit } in the chronology classes. This class
+ * defined by instances of {@link PeriodUnit} in the chronology classes. This class
  * allows an amount to be specified for a number of the units, such as '3 Days and 65 Seconds'.
  * <p>
  * Basic mathematical operations are provided - plus(), minus(), multipliedBy(),
@@ -58,9 +58,9 @@ import javax.time.Duration
  * A value of zero can also be stored for any unit. This means that a
  * period of zero hours is not equal to a period of zero minutes.
  * However, an empty instance constant exists to represent zero irrespective of unit.
- * The   { @link # withZeroesRemoved ( ) } method removes zero values.
+ * The {@link #withZeroesRemoved()} method removes zero values.
  * <p>
- * { @code PeriodFields } can store units of any kind which makes it usable with
+ * {@code PeriodFields} can store units of any kind which makes it usable with
  * any calendar system.
  * <p>
  * PeriodFields is immutable and thread-safe.
@@ -80,10 +80,10 @@ object PeriodFields {
   }
 
   /**
-   * Obtains a   { @code PeriodFields } from a single-unit period.
+   * Obtains a {@code PeriodFields} from a single-unit period.
    *
    * @param period the single-unit period, not null
-   * @return the { @code PeriodFields } instance, never null
+   * @return the {@code PeriodFields} instance, never null
    */
   def of(period: PeriodField): PeriodFields = {
     checkNotNull(period, "PeriodField must not be null")
@@ -93,13 +93,13 @@ object PeriodFields {
   }
 
   /**
-   * Obtains a   { @code PeriodFields } from an amount and unit.
+   * Obtains a {@code PeriodFields} from an amount and unit.
    * <p>
    * The parameters represent the two parts of a phrase like '6 Days'.
    *
    * @param amount the amount of create with, positive or negative
    * @param unit the period unit, not null
-   * @return the { @code PeriodFields } instance, never null
+   * @return the {@code PeriodFields} instance, never null
    */
   def of(amount: Long, unit: PeriodUnit): PeriodFields = {
     checkNotNull(unit, "PeriodUnit must not be null")
@@ -109,12 +109,12 @@ object PeriodFields {
   }
 
   /**
-   * Obtains a   { @code PeriodFields } from an array of single-unit periods.
+   * Obtains a {@code PeriodFields} from an array of single-unit periods.
    * <p>
    * The period fields must all have different units.
    *
    * @param periods the array of single-unit periods, not null
-   * @return the { @code PeriodFields } instance, never null
+   * @return the {@code PeriodFields} instance, never null
    * @throws IllegalArgumentException if the same period unit occurs twice
    */
   def of(periods: Array[PeriodField]): PeriodFields = {
@@ -137,15 +137,15 @@ object PeriodFields {
   private def createMap: TreeMap[PeriodUnit, PeriodField] = new TreeMap[PeriodUnit, PeriodField](Collections.reverseOrder)
 
   /**
-   * Obtains a   { @code PeriodFields } by totalling the amounts in a list of
-   * { @code PeriodProvider } instances.
+   * Obtains a {@code PeriodFields} by totalling the amounts in a list of
+   * {@code PeriodProvider} instances.
    * <p>
    * This method returns a period with all the unit-amount pairs from the providers
    * totalled. Thus a period of '2 Months and 5 Days' combined with a period of
    * '7 Days and 21 Hours' will yield a result of '2 Months, 12 Days and 21 Hours'.
    *
    * @param periodProviders the providers to total, not null
-   * @return the { @code PeriodFields } instance, never null
+   * @return the {@code PeriodFields} instance, never null
    * @throws NullPointerException if any period provider is null or returns null
    */
   def ofTotal(periodProviders: Array[PeriodProvider]): PeriodFields = {
@@ -172,12 +172,12 @@ object PeriodFields {
   object Zero extends PeriodFields(new TreeMap[PeriodUnit, PeriodField])
 
   /**
-   * Obtains a   { @code PeriodFields } from a   { @code PeriodProvider }.
+   * Obtains a {@code PeriodFields} from a {@code PeriodProvider}.
    * <p>
-   * This method provides null-checking around   { @link PeriodProvider # toPeriodFields ( ) }.
+   * This method provides null-checking around {@link PeriodProvider # toPeriodFields()}.
    *
    * @param periodProvider the provider to create from, not null
-   * @return the { @code PeriodFields } instance, never null
+   * @return the {@code PeriodFields} instance, never null
    * @throws NullPointerException if the period provider is null or returns null
    */
   def of(periodProvider: PeriodProvider): PeriodFields = {
@@ -188,14 +188,14 @@ object PeriodFields {
   }
 
   /**
-   * Obtains a   { @code PeriodFields } from a   { @code Duration } based on the standard
+   * Obtains a {@code PeriodFields} from a {@code Duration} based on the standard
    * durations of seconds and nanoseconds.
    * <p>
-   * The conversion will create an instance with two units - the   { @code ISOChronology }
-   * seconds and nanoseconds units. This matches the   { @link # toDuration ( ) } method.
+   * The conversion will create an instance with two units - the {@code ISOChronology }
+   * seconds and nanoseconds units. This matches the {@link #toDuration()} method.
    *
    * @param duration the duration to create from, not null
-   * @return the { @code PeriodFields } instance, never null
+   * @return the {@code PeriodFields} instance, never null
    */
   def of(duration: Duration): PeriodFields = {
     checkNotNull(duration, "Duration must not be null")
@@ -232,10 +232,10 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
   import PeriodFields._
 
   /**
-   * Converts this period to a   { @code PeriodFields }, trivially
-   * returning   { @code this }.
+   * Converts this period to a {@code PeriodFields}, trivially
+   * returning {@code this}.
    *
-   * @return { @code this }, never null
+   * @return {@code this}, never null
    */
   override def toPeriodFields: PeriodFields = this
 
@@ -252,7 +252,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    * This instance is immutable and unaffected by this method call.
    *
    * @param periodProvider the period to merge over this period, not null
-   * @return a { @code PeriodFields } based on this period with the specified period overlaid, never null
+   * @return a {@code PeriodFields} based on this period with the specified period overlaid, never null
    */
   def `with`(periodProvider: PeriodProvider): PeriodFields = {
     var periods: PeriodFields = of(periodProvider)
@@ -309,7 +309,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    *
    * @param amount the amount to subtract, measured in the specified unit, positive or negative
    * @param unit the unit defining the amount, not null
-   * @return a { @code PeriodFields } based on this period with the specified period subtracted, never null
+   * @return a {@code PeriodFields} based on this period with the specified period subtracted, never null
    * @throws ArithmeticException if the calculation overflows
    */
   def minus(amount: Long, unit: PeriodUnit): PeriodFields = {
@@ -345,10 +345,10 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
   /**
    * Estimates the duration of this period.
    * <p>
-   * Each   { @link PeriodUnit } contains an estimated duration for that unit.
+   * Each {@link PeriodUnit} contains an estimated duration for that unit.
    * The per-unit estimate allows an estimate to be calculated for the whole period
    * including fields of variable duration. The estimate will equal the
-   * { @link # toDuration accurate } calculation if all the fields are based on seconds.
+   * {@link #toDuration accurate} calculation if all the fields are based on seconds.
    *
    * @return the estimated duration of this period, never null
    * @throws ArithmeticException if the calculation overflows
@@ -372,7 +372,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    *
    * @param amount the amount to add, measured in the specified unit, positive or negative
    * @param unit the unit defining the amount, not null
-   * @return a { @code PeriodFields } based on this period with the specified period added, never null
+   * @return a {@code PeriodFields} based on this period with the specified period added, never null
    * @throws ArithmeticException if the calculation overflows
    */
   def plus(amount: Long, unit: PeriodUnit): PeriodFields = {
@@ -408,7 +408,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    * by the specified scalar.
    *
    * @param scalar the scalar to multiply by, not null
-   * @return a { @code PeriodFields } based on this period with the amounts multiplied by the scalar, never null
+   * @return a {@code PeriodFields} based on this period with the amounts multiplied by the scalar, never null
    * @throws ArithmeticException if the calculation overflows
    */
   def multipliedBy(scalar: Long): PeriodFields = {
@@ -434,7 +434,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    * Gets the period for the specified unit.
    * <p>
    * This method allows the period to be queried by unit, like a map.
-   * If the unit is not found then   { @code null } is returned.
+   * If the unit is not found then {@code null} is returned.
    *
    * @param unit the unit to query, not null
    * @return the period, null if no period stored for the unit
@@ -449,7 +449,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
-   * @return a { @code PeriodFields } based on this period with zero amounts removed, never null
+   * @return a {@code PeriodFields} based on this period with zero amounts removed, never null
    */
   def withZeroesRemoved: PeriodFields = {
     if (isZero) {
@@ -466,7 +466,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
   /**
    * Iterates through all the single-unit periods in this period.
    * <p>
-   * This method fulfills the   { @link Iterable } interface and allows looping
+   * This method fulfills the {@link Iterable} interface and allows looping
    * around the contained single-unit periods using the for-each loop.
    *
    * @return an iterator over the single-unit periods in this period, never null
@@ -485,7 +485,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    * This instance is immutable and unaffected by this method call.
    *
    * @param periodProvider the period to add, not null
-   * @return a { @code PeriodFields } based on this period with the specified period added, never null
+   * @return a {@code PeriodFields} based on this period with the specified period added, never null
    * @throws ArithmeticException if the calculation overflows
    */
   def plus(periodProvider: PeriodProvider): PeriodFields = {
@@ -505,14 +505,14 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
   /**
    * Returns a copy of this period with each amount in this period negated.
    *
-   * @return a { @code PeriodFields } based on this period with the amounts negated, never null
+   * @return a {@code PeriodFields} based on this period with the amounts negated, never null
    * @throws ArithmeticException if the calculation overflows
    */
   def negated: PeriodFields = multipliedBy(-1)
 
   /**
    * Gets the amount of this period for the specified unit converted
-   * to an   { @code int }.
+   * to an {@code int}.
    * <p>
    * This method allows the amount to be queried by unit, like a map.
    * If the unit is not found then zero is returned.
@@ -540,12 +540,12 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
   /**
    * Calculates the accurate duration of this period.
    * <p>
-   * The conversion is based on the   { @code ISOChronology } definition of the seconds and
+   * The conversion is based on the {@code ISOChronology} definition of the seconds and
    * nanoseconds units. If all the fields in this period can be converted to either seconds
    * or nanoseconds then the conversion will succeed, subject to calculation overflow.
    * If any field cannot be converted to these fields above then an exception is thrown.
    *
-   * @return the duration of this period based on   { @code ISOChronology } fields, never null
+   * @return the duration of this period based on {@code ISOChronology} fields, never null
    * @throws ArithmeticException if the calculation overflows
    */
   def toDuration: Duration = {
@@ -571,7 +571,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    * This instance is immutable and unaffected by this method call.
    *
    * @param unit the unit to remove, not null
-   * @return a { @code PeriodFields } based on this period with the specified unit removed, never null
+   * @return a {@code PeriodFields} based on this period with the specified unit removed, never null
    */
   def without(unit: PeriodUnit): PeriodFields = {
     checkNotNull(unit, "PeriodUnit must not be null")
@@ -586,8 +586,8 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
   /**
    * Checks if this instance equal to the specified period.
    * <p>
-   * Two   { @code PeriodFields } instances are equal if all the contained
-   * { @code PeriodField } instances are equal.
+   * Two {@code PeriodFields} instances are equal if all the contained
+   * {@code PeriodField} instances are equal.
    *
    * @param obj the other period to compare to, null returns false
    * @return true if this instance is equal to the specified period
@@ -630,13 +630,13 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    * '24 Hours' then the output will be '13 Hours, 7 Minutes'.
    * <p>
    * This method requires this period to be convertible to the specified period.
-   * To ensure this is true, call   { @link # retainConvertible }, with the base unit of the
+   * To ensure this is true, call {@link #retainConvertible}, with the base unit of the
    * period passed into this method, before calling this method.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param period the period to calculate the remainder against, not null
-   * @return a { @code PeriodFields } based on this period with the remainder, never null
+   * @return a {@code PeriodFields} based on this period with the remainder, never null
    * @throws CalendricalException if any field cannot be converted to the unit of the period
    */
   def remainder(period: PeriodField): PeriodFields = {
@@ -675,7 +675,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    * This instance is immutable and unaffected by this method call.
    *
    * @param units the units to retain, not altered, not null, no nulls
-   * @return a { @code PeriodFields } based on this period with the specified units retained, never null
+   * @return a {@code PeriodFields} based on this period with the specified units retained, never null
    */
   def retainConvertible(units: Array[PeriodUnit]): PeriodFields = {
     checkNotNull(units, "PeriodUnit array must not be null")
@@ -693,14 +693,14 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
         }
         it.remove
       }
-    } //todo: labels is not supported
+   } //todo: labels is not supported
     return create(copy)
   }
 
   /**
    * Totals this period in terms of a single unit.
    * <p>
-   * This will take each of the stored   { @code PeriodField } instances and
+   * This will take each of the stored {@code PeriodField} instances and
    * convert them to the specified unit. The result will be the total of these
    * converted periods.
    * <p>
@@ -723,7 +723,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
   }
 
   /**
-   * Returns a   { @code Map } equivalent to this period.
+   * Returns a {@code Map} equivalent to this period.
    * <p>
    * The map will connect the unit to the single field period.
    * The sort order is from largest unit to smallest unit.
@@ -742,9 +742,9 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    * <p>
    * No normalization is performed on the result.
    * This means that an amount in a smaller unit cannot be converted to an amount in a larger unit.
-   * If you need to do this, call   { @link # normalized ( ) } before calling this method.
+   * If you need to do this, call {@link #normalized()} before calling this method.
    * <p>
-   * This method uses   { @link PeriodField # toEquivalent ( PeriodUnit...) } and as such,
+   * This method uses {@link PeriodField # toEquivalent ( PeriodUnit...)} and as such,
    * it is recommended to specify the units from largest to smallest.
    * <p>
    * For example, '3 Hours' can normally be converted to both minutes and seconds.
@@ -778,7 +778,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    * This instance is immutable and unaffected by this method call.
    *
    * @param units the units to retain, not altered, not null, no nulls
-   * @return a { @code PeriodFields } based on this period with the specified units retained, never null
+   * @return a {@code PeriodFields} based on this period with the specified units retained, never null
    */
   def retain(units: Array[PeriodUnit]): PeriodFields = {
     checkNotNull(units, "PeriodUnit array must not be null")
@@ -900,7 +900,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    *
    * @param amount the amount to store in terms of the unit, positive or negative
    * @param unit the unit to store not null
-   * @return a { @code PeriodFields } based on this period with the specified period overlaid, never null
+   * @return a {@code PeriodFields} based on this period with the specified period overlaid, never null
    */
   def `with`(amount: Long, unit: PeriodUnit): PeriodFields = {
     val existing: PeriodField = get(unit)
@@ -924,7 +924,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    * This instance is immutable and unaffected by this method call.
    *
    * @param periodProvider the period to subtract, not null
-   * @return a { @code PeriodFields } based on this period with the specified period subtracted, never null
+   * @return a {@code PeriodFields} based on this period with the specified period subtracted, never null
    * @throws ArithmeticException if the calculation overflows
    */
   def minus(periodProvider: PeriodProvider): PeriodFields = {
@@ -946,7 +946,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    * by the specified value.
    *
    * @param divisor the value to divide by, not null, not zero
-   * @return a { @code PeriodFields } based on this period with the amounts divided by the divisor, never null
+   * @return a {@code PeriodFields} based on this period with the amounts divided by the divisor, never null
    * @throws ArithmeticException if dividing by zero
    */
   def dividedBy(divisor: Long): PeriodFields = {

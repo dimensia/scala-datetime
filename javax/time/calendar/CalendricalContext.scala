@@ -32,7 +32,6 @@
 package javax.time.calendar
 
 import java.io.Serializable
-import javax.time.CalendricalException
 
 /**
  * Context for aspects of date-time calculations that frequently change.
@@ -73,7 +72,7 @@ final class CalendricalContext(val isStrict: Boolean, val checkUnusedFields: Boo
   override def equals(obj: AnyRef): Boolean = {
     if (obj eq this) true
     else if (obj.isInstanceOf[CalendricalContext]) {
-      var other: CalendricalContext = obj.asInstanceOf[CalendricalContext]
+      val other: CalendricalContext = obj.asInstanceOf[CalendricalContext]
       isStrict == other.isStrict && (dateResolver == other.dateResolver || (dateResolver != null && dateResolver.equals(other.dateResolver))) && checkUnusedFields == other.checkUnusedFields
     }
     else false

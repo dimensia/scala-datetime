@@ -54,10 +54,10 @@ import javax.time.calendar.DateTimeFieldRule
 final class FractionPrinterParser private[format](val rule: DateTimeFieldRule[_], val minWidth: Int, val maxWidth: Int)
         extends DateTimePrinter with DateTimeParser {
 
-  /**{ @inheritDoc }*/
+  /**{@inheritDoc}*/
   override def toString: String = "Fraction(" + rule.getID + "," + minWidth + "," + maxWidth + ")"
 
-  /**{ @inheritDoc }*/
+  /**{@inheritDoc}*/
   override def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = {
     var value: Int = rule.getInt(calendrical)
     var fraction: BigDecimal = rule.convertIntToFraction(value)
@@ -82,10 +82,10 @@ final class FractionPrinterParser private[format](val rule: DateTimeFieldRule[_]
     }
   }
 
-  /**{ @inheritDoc }*/
+  /**{@inheritDoc}*/
   override def isPrintDataAvailable(calendrical: Calendrical): Boolean = calendrical.get(rule) != null
 
-  /**{ @inheritDoc }*/
+  /**{@inheritDoc}*/
   def parse(context: DateTimeParseContext, parseText: String, _position: Int): Int = {
     var position = _position
     var length: Int = parseText.length

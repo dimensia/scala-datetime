@@ -45,22 +45,11 @@ import javax.time.CalendricalException
    * @param message the message to use for this exception, may be null
    * @param parsedString the parsed text, should not be null
    * @param errorIndex the index in the parsed string that was invalid, should be a valid index
-   */
-@SerialVersionUID(1L)
-class CalendricalParseException(message: String, parsedString: String, errorIndex: Int, cause: Throwable)
-  extends CalendricalException(message, cause) {
-
-  /**
-   * Constructs a new exception with the specified message and cause.
-   *
-   * @param message the message to use for this exception, may be null
-   * @param parsedString the parsed text, should not be null
-   * @param errorIndex the index in the parsed string that was invalid, should be a valid index
    * @param cause the cause exception, may be null
    */
-  def this(message: String, parsedString: String, errorIndex: Int) {
-    this(message, parsedString, errorIndex, null)
-  }
+@SerialVersionUID(1L)
+class CalendricalParseException(message: String, parsedString: String, errorIndex: Int, cause: Throwable = null)
+  extends CalendricalException(message, cause) {
 
     /**
      * Returns the string that was being parsed.

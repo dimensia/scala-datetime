@@ -55,11 +55,11 @@ import javax.time.calendar.format.DateTimeFormatterBuilder.TextStyle
 final class TextPrinterParser private[format](rule: DateTimeFieldRule[_], textStyle: DateTimeFormatterBuilder.TextStyle)
   extends DateTimePrinter with DateTimeParser {
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc} */
   override def toString: String = if (textStyle == TextStyle.Full) "Text(" + rule.getID + ")"
   else return "Text(" + rule.getID + "," + textStyle + ")"
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc} */
   def parse(context: DateTimeParseContext, parseText: String, _position: Int): Int = {
     var position = _position
     var length: Int = parseText.length
@@ -107,7 +107,7 @@ final class TextPrinterParser private[format](rule: DateTimeFieldRule[_], textSt
   @volatile
   private var _numberPrinterParser: NumberPrinterParser = null
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc} */
   override def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = {
     var value: Int = rule.getInt(calendrical)
     var textStore: DateTimeFieldRule.TextStore = rule.getTextStore(symbols.getLocale, textStyle)
@@ -129,6 +129,6 @@ final class TextPrinterParser private[format](rule: DateTimeFieldRule[_], textSt
     _numberPrinterParser
   }
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc} */
   override def isPrintDataAvailable(calendrical: Calendrical): Boolean = calendrical.get(rule) != null
 }

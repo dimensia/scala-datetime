@@ -41,42 +41,42 @@ import java.util.Locale
  */
 object DateTimeFormatSymbols {
   /**
-   * Gets the   { @code DateFormatSymbols } instance for the default
-   * locale. This method provides access to   { @code DateFormatSymbols }
+   * Gets the {@code DateFormatSymbols} instance for the default
+   * locale. This method provides access to {@code DateFormatSymbols }
    * instances for locales supported by the Java runtime itself as well as for
    * those supported by installed
-   * { @link java.text.spi.DateFormatSymbolsProvider DateFormatSymbolsProvider }
+   * {@link java.text.spi.DateFormatSymbolsProvider DateFormatSymbolsProvider }
    * implementations.
    *
-   * @return a { @code DateTimeFormatSymbols } instance.
+   * @return a {@code DateTimeFormatSymbols} instance.
    */
   def getInstance: DateTimeFormatSymbols = getInstance(Locale.getDefault)
 
   /**
-   * Returns an array of all locales for which the   { @code getInstance }
+   * Returns an array of all locales for which the {@code getInstance }
    * methods of this class can return localized instances. The returned array
    * represents the union of locales supported by the Java runtime and by
    * installed
-   * { @link java.text.spi.DateTimeFormatSymbolsProvider DateTimeFormatSymbolsProvider }
-   * implementations. It must contain at least a   { @code Locale }
-   * instance equal to   { @link java.util.Locale # US Locale.US }.
+   * {@link java.text.spi.DateTimeFormatSymbolsProvider DateTimeFormatSymbolsProvider }
+   * implementations. It must contain at least a {@code Locale }
+   * instance equal to {@link java.util.Locale # US Locale.US}.
    *
    * @return an array of locales for which localized
-   * { @code DateTimeFormatSymbols } instances are available
+   * {@code DateTimeFormatSymbols} instances are available
    */
   def getAvailableLocales: Array[Locale] = Locale.getAvailableLocales
 
   /**
-   * Gets the   { @code DateFormatSymbols } instance for the specified
-   * locale. This method provides access to   { @code DateFormatSymbols }
+   * Gets the {@code DateFormatSymbols} instance for the specified
+   * locale. This method provides access to {@code DateFormatSymbols }
    * instances for locales supported by the Java runtime itself as well as for
    * those supported by installed
-   * { @link java.text.spi.DateFormatSymbolsProvider DateFormatSymbolsProvider }
+   * {@link java.text.spi.DateFormatSymbolsProvider DateFormatSymbolsProvider }
    * implementations.
    *
    * @param locale the given locale, not null
-   * @return a { @code DateTimeFormatSymbols } instance
-   * @throws NullPointerException if   { @code locale } is null
+   * @return a {@code DateTimeFormatSymbols} instance
+   * @throws NullPointerException if {@code locale} is null
    */
   def getInstance(locale: Locale): DateTimeFormatSymbols = {
     DateTimeFormatter.checkNotNull(locale, "Locale must not be null")

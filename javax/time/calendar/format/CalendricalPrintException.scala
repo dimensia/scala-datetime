@@ -47,16 +47,8 @@ import javax.time.CalendricalException
  * @param throwable the throwable to store as the cause, may be null
  */
 @SerialVersionUID(1L)
-class CalendricalPrintException(message: String, throwable: Throwable) extends CalendricalException(message, throwable) {
-
-  /**
-   * Constructs a new exception with the specified message.
-   *
-   * @param message the message to use for this exception, may be null
-   */
-  def this(message: String) {
-    this (message, null)
-  }
+class CalendricalPrintException(message: String, throwable: Throwable = null)
+  extends CalendricalException(message, throwable) {
 
   /**
    * Checks if the cause of this exception was an IOException, and if so
@@ -67,7 +59,7 @@ class CalendricalPrintException(message: String, throwable: Throwable) extends C
    * <pre>
    * try   {
    *   printer.print(writer, dateTime);
-   * } catch (CalendricalFormatException ex)   {
+   *} catch (CalendricalFormatException ex)   {
    *   ex.rethrowIOException();
    *   // if code reaches here exception was caused by date-time issues
    * }

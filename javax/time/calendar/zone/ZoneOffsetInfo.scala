@@ -46,9 +46,9 @@ import javax.time.calendar.ZoneOffset
  * <li>Overlap. Where there is a gap in the local time-line typically caused by the
  * autumn cutover from daylight savings. There are two valid offsets during the overlap.</li>
  * </ul>
- * When using this class, it is vital to check the   { @link # isTransition ( ) }
+ * When using this class, it is vital to check the {@link #isTransition()}
  * method to handle the gap and overlap. Alternatively use one of the general
- * methods   { @link # getEstimatedOffset ( ) } or   { @link # isValidOffset ( ZoneOffset ) }.
+ * methods {@link #getEstimatedOffset()} or {@link #isValidOffset ( ZoneOffset )}.
  * <p>
  * OffsetInfo is immutable and thread-safe.
  *
@@ -58,8 +58,8 @@ object ZoneOffsetInfo {
   /**
    * Creates an instance representing a simple single offset or a transition.
    * <p>
-   * Applications should normally obtain an instance from   { @link ZoneRules }.
-   * This constructor is intended for use by implementors of   { @code ZoneRules }.
+   * Applications should normally obtain an instance from {@link ZoneRules}.
+   * This constructor is intended for use by implementors of {@code ZoneRules}.
    * <p>
    * One, and only one, of the {@code offset} or {@code transition} parameters must be specified.
    *
@@ -154,7 +154,7 @@ final class ZoneOffsetInfo private[zone](val dateTime: LocalDateTime, val offset
   /**
    * Gets information about the transition occurring on the local time-line.
    * <p>
-   * This method is intended for use when   { @link # isTransition ( ) } returns   { @code true }
+   * This method is intended for use when {@link #isTransition()} returns {@code true }
    *
    * @return the transition on the local-time line, null if not a transition
    */
@@ -177,7 +177,7 @@ final class ZoneOffsetInfo private[zone](val dateTime: LocalDateTime, val offset
    * The date-time will typically have a single valid offset.
    * During a gap, there will be no valid offsets.
    * During an overlap, there will be two valid offsets.
-   * This method returns   { @code true } if the specified offset is one of the
+   * This method returns {@code true} if the specified offset is one of the
    * valid offsets.
    *
    * @param offset the offset to check, null returns false
@@ -191,7 +191,7 @@ final class ZoneOffsetInfo private[zone](val dateTime: LocalDateTime, val offset
   /**
    * Gets the offset applicable at this point on the local time-line.
    * <p>
-   * This method is intended for use when   { @link # isTransition ( ) } returns   { @code false }.
+   * This method is intended for use when {@link #isTransition()} returns {@code false}.
    *
    * @return the offset applicable when there is not a transition on the
    *  local-time line, null if it is a transition

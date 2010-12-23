@@ -42,17 +42,17 @@ import javax.time.calendar.format.DateTimeFormatterBuilder.TextStyle
 /**
  * An era in the historic calendar system, with the values 'BCE' and 'CE'.
  * <p>
- * { @code HistoricEra } is an enum representing the historic era concepts of BCE and CE.
+ * {@code HistoricEra} is an enum representing the historic era concepts of BCE and CE.
  * BCE is defined as the time-line before historic year 1, while CE is defined as
  * the time-line from year 1 onwards.
  * <p>
- * The calendrical framework requires date-time fields to have an  { @code int } value.
- * The  { @code int } value follows  { @link Calendar }, assigning 0 to BCE and 1 to CE.
- * It is recommended that applications use the enum rather than the  { @code int } value
+ * The calendrical framework requires date-time fields to have an {@code int} value.
+ * The {@code int} value follows {@link Calendar}, assigning 0 to BCE and 1 to CE.
+ * It is recommended that applications use the enum rather than the {@code int} value
  * to ensure code clarity.
  * <p>
- * <b>Do not use  { @code ordinal ( ) } to obtain the numeric representation of  { @code HistoricEra }.
- * Use  { @code getValue ( ) } instead.</b>
+ * <b>Do not use {@code ordinal()} to obtain the numeric representation of {@code HistoricEra}.
+ * Use {@code getValue()} instead.</b>
  * <p>
  * HistoricEra is an immutable and thread-safe enum.
  *
@@ -60,14 +60,14 @@ import javax.time.calendar.format.DateTimeFormatterBuilder.TextStyle
  */
 object HistoricEra {
   /**
-   * Obtains an instance of  { @code HistoricEra } from an  { @code int } value.
+   * Obtains an instance of {@code HistoricEra} from an {@code int} value.
    * <p>
-   * { @code HistoricEra } is an enum representing the historic eras of BCE/CE.
-   * This factory allows the enum to be obtained from the  { @code int } value.
-   * The  { @code int } value follows  { @link Calendar }, assigning 0 to BCE and 1 to CE.
+   * {@code HistoricEra} is an enum representing the historic eras of BCE/CE.
+   * This factory allows the enum to be obtained from the {@code int} value.
+   * The {@code int} value follows {@link Calendar}, assigning 0 to BCE and 1 to CE.
    * <p>
    * An exception is thrown if the value is invalid. The exception uses the
-   * { @link ISOChronology } BCE/CE rule to indicate the failed rule.
+   * {@link ISOChronology} BCE/CE rule to indicate the failed rule.
    *
    * @param era the BCE/CE value to represent, from 0 (BCE) to 1 (CE)
    * @return the HistoricEra singleton, never null
@@ -86,22 +86,22 @@ object HistoricEra {
 
   /**
    * The singleton instance for the era BCE - Before Common Era.
-   * This has the numeric value of  { @code 0 }.
+   * This has the numeric value of {@code 0}.
    */
   object BCE extends HistoricEra(0)
 
   /**
    * The singleton instance for the era CE - Common Era.
-   * This has the numeric value of  { @code 1 }.
+   * This has the numeric value of {@code 1}.
    */
   object CE extends HistoricEra(1)
 }
 
 sealed abstract class HistoricEra(ordinal: Int) extends Calendrical {
   /**
-   * Gets the BCE/CE  { @code int } value.
+   * Gets the BCE/CE {@code int} value.
    * <p>
-   * The values are numbered following  { @link Calendar }, assigning 0 to BCE and 1 to CE.
+   * The values are numbered following {@link Calendar}, assigning 0 to BCE and 1 to CE.
    *
    * @return the BCE/CE value, from 0 (BCE) to 1 (CE)
    */
@@ -111,7 +111,7 @@ sealed abstract class HistoricEra(ordinal: Int) extends Calendrical {
    * Gets the short textual representation of this BCE/CE, such as 'BCE' or 'CE'.
    * <p>
    * If there is no textual mapping for the locale, then the value is
-   * returned as per  { @link Integer # toString ( ) }.
+   * returned as per {@link Integer # toString()}.
    *
    * @param locale the locale to use, not null
    * @return the short text value of the BCE/CE, never null
@@ -123,7 +123,7 @@ sealed abstract class HistoricEra(ordinal: Int) extends Calendrical {
    * Gets the value of the specified calendrical rule.
    * <p>
    * This returns the one of the era values if the type of the rule
-   * is  { @code HistoricEra }. Other rules will return  { @code null }.
+   * is {@code HistoricEra}. Other rules will return {@code null}.
    *
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
@@ -137,7 +137,7 @@ sealed abstract class HistoricEra(ordinal: Int) extends Calendrical {
    * Gets the short textual representation of this day-of-week, such as 'BCE' or 'CE'.
    * <p>
    * If there is no textual mapping for the locale, then the value is
-   * returned as per  { @link Integer # toString ( ) }.
+   * returned as per {@link Integer # toString()}.
    *
    * @param locale the locale to use, not null
    * @return the long text value of the BCE/CE, never null

@@ -37,25 +37,25 @@ package javax.time.calendar
  * DateTimeProvider is a simple interface that provides uniform access to any
  * object that can provide access to a date-time in the ISO-8601 calendar system.
  * <p>
- * The implementation of  { @code DateTimeProvider } may be mutable.
- * For example,  { @link java.util.GregorianCalendar GregorianCalendar } is a
+ * The implementation of {@code DateTimeProvider} may be mutable.
+ * For example, {@link java.util.GregorianCalendar GregorianCalendar} is a
  * mutable implementation of this interface.
- * The result of  { @link # toLocalDateTime ( ) }, however, is immutable.
+ * The result of {@link #toLocalDateTime()}, however, is immutable.
  * <p>
  * When implementing an API that accepts a DateTimeProvider as a parameter, it is
- * important to convert the input to a  { @code LocalDateTime } once and once only.
+ * important to convert the input to a {@code LocalDateTime} once and once only.
  * It is recommended that this is done at the top of the method before other processing.
  * This is necessary to handle the case where the implementation of the provider is
- * mutable and changes in value between two calls to  { @code toLocalDateTime ( ) }.
+ * mutable and changes in value between two calls to {@code toLocalDateTime()}.
  * <p>
  * The recommended way to convert a DateTimeProvider to a LocalDateTime is using
- * { @link LocalDateTime # of ( DateTimeProvider ) } as this method provides additional null checking.
+ * {@link LocalDateTime # of ( DateTimeProvider )} as this method provides additional null checking.
  * <p>
  * It is recommended that this interface should only be implemented by classes
  * that provide time information to at least minute precision.
  * <p>
- * The implementation of  { @code DateTimeProvider } may provide more
- * information than just a local date-time. For example,  { @link ZonedDateTime },
+ * The implementation of {@code DateTimeProvider} may provide more
+ * information than just a local date-time. For example, {@link ZonedDateTime},
  * implements this interface and also provides a time-zone.
  * <p>
  * DateTimeProvider makes no guarantees about the thread-safety or immutability
@@ -66,24 +66,24 @@ package javax.time.calendar
  */
 trait DateTimeProvider extends DateProvider with TimeProvider {
   /**
-   * Returns an instance of  { @code LocalDateTime } initialized from the
+   * Returns an instance of {@code LocalDateTime} initialized from the
    * state of this object.
    * <p>
    * This method will take the date-time represented by this object and return
-   * a  { @link LocalDateTime } constructed using the year, month, day, hour,
+   * a {@link LocalDateTime} constructed using the year, month, day, hour,
    * minute, second and nanosecond. If this object is already a
-   * { @code LocalDateTime } then it is simply returned.
+   * {@code LocalDateTime} then it is simply returned.
    * <p>
    * If this object does not support nanosecond precision, then all fields
    * below the precision it does support must be set to zero. For example,
    * if this instance only stores hours, minutes and seconds, then the
    * nanoseconds part will be set to zero.
    * <p>
-   * The result of this method is a  { @code LocalDateTime } which represents
+   * The result of this method is a {@code LocalDateTime} which represents
    * a date in the ISO calendar system. Implementors may perform conversion
    * when implementing this method to convert from alternate calendar systems.
    *
-   * @return the { @code LocalDateTime } equivalent to this object, never null
+   * @return the {@code LocalDateTime} equivalent to this object, never null
    * @throws CalendricalException if the date-time cannot be converted
    */
   def toLocalDateTime: LocalDateTime

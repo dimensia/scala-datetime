@@ -66,8 +66,8 @@ object ZoneOffsetTransitionRule {
   /**
    * Creates an instance defining the yearly rule to create transitions between two offsets.
    * <p>
-   * Applications should normally obtain an instance from  { @link ZoneRules }.
-   * This constructor is intended for use by implementors of  { @code ZoneRules }.
+   * Applications should normally obtain an instance from {@link ZoneRules}.
+   * This constructor is intended for use by implementors of {@code ZoneRules}.
    *
    * @param month the month of the month-day of the first day of the cutover week, not null
    * @param dayOfMonthIndicator the day of the month-day of the cutover week, positive if the week is that
@@ -289,7 +289,7 @@ final class ZoneOffsetTransitionRule(val month: MonthOfYear,
    * The date may refer to 29th February which should be treated as 1st March in non-leap years.
    * <p>
    * If the value is negative, then it represents the number of days back from the
-   * end of the month where  { @code -1 } is the last day of the month.
+   * end of the month where {@code -1} is the last day of the month.
    * In this case, the day identified is the latest possible date that the transition can be.
    *
    * @return the day-of-month indicator, from -28 to 31 excluding 0
@@ -378,7 +378,7 @@ final class ZoneOffsetTransitionRule(val month: MonthOfYear,
 
   /**
    * Gets the local time of day of the transition which must be checked with
-   * { @link # isMidnightEndOfDay ( ) }.
+   * {@link #isMidnightEndOfDay()}.
    * <p>
    * The time is converted into an instant using the time definition.
    *

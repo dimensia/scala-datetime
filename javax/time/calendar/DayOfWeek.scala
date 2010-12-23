@@ -197,7 +197,7 @@ sealed abstract class DayOfWeek(val ordinal: Int) extends Calendrical {
    * of the implementation should be irrelevant to applications.
    * <p>
    * If there is no textual mapping for the locale, then the ISO-8601
-   * { @link # getValue ( ) value} is returned as per {@link Integer # toString ( )}.
+   * {@link #getValue ( ) value} is returned as per {@link Integer # toString ( )}.
    *
    * @param locale the locale to use, not null
    * @return the full text value of the day-of-week, never null
@@ -213,7 +213,7 @@ sealed abstract class DayOfWeek(val ordinal: Int) extends Calendrical {
    * of the implementation should be irrelevant to applications.
    * <p>
    * If there is no textual mapping for the locale, then the ISO-8601
-   * { @link # getValue ( ) value} is returned as per {@link Integer # toString ( )}.
+   * {@link #getValue ( ) value} is returned as per {@link Integer # toString ( )}.
    *
    * @param locale the locale to use, not null
    * @return the short text value of the day-of-week, never null

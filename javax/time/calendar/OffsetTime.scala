@@ -201,9 +201,9 @@ object OffsetTime {
    * <p>
    * The following formats are accepted in ASCII:
    * <ul>
-   * <li>  { @code  { Hour} :  { Minute} { OffsetID} }
-   * <li>  { @code  { Hour} :  { Minute} :  { Second} { OffsetID} }
-   * <li>  { @code  { Hour} :  { Minute} :  { Second}.  { NanosecondFraction} { OffsetID} }
+   * <li> {@code  { Hour} :  { Minute} { OffsetID} }
+   * <li> {@code  { Hour} :  { Minute} :  { Second} { OffsetID} }
+   * <li> {@code  { Hour} :  { Minute} :  { Second}.  { NanosecondFraction} { OffsetID} }
    * </ul>
    * <p>
    * The hour has 2 digits with values from 0 to 23.
@@ -254,7 +254,7 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
    * <p>
    * This method queries the value of the specified calendrical rule.
    * If the value cannot be returned for the rule from this time then
-   * { @code null} will be returned.
+   * {@code null} will be returned.
    *
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
@@ -267,7 +267,7 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
    * This instance is immutable and unaffected by this method call.
    *
    * @param secondOfMinute the second-of-minute to represent, from 0 to 59
-   * @return an { @code OffsetTime} based on this time with the requested second, never null
+   * @return an {@code OffsetTime} based on this time with the requested second, never null
    * @throws IllegalCalendarFieldValueException if the second value is invalid
    */
   def withSecondOfMinute(secondOfMinute: Int): OffsetTime = {
@@ -280,14 +280,14 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
    * <p>
    * This adds the specified period to this time, returning a new time.
    * Before addition, the period is converted to a time-based {@code Period} using
-   * { @link Period # ofTimeFields ( PeriodProvider )}.
+   * {@link Period # ofTimeFields ( PeriodProvider )}.
    * That factory ignores any date-based ISO fields, thus adding a date-based
    * period to this time will have no effect.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param periodProvider the period to add, not null
-   * @return an { @code OffsetTime} based on this time with the period added, never null
+   * @return an {@code OffsetTime} based on this time with the period added, never null
    * @throws CalendricalException if the specified period cannot be converted to a {@code Period }
    */
   def plus(periodProvider: PeriodProvider): OffsetTime = {
@@ -301,7 +301,7 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
    * This instance is immutable and unaffected by this method call.
    *
    * @param hours the hours to subtract, may be negative
-   * @return an { @code OffsetTime} based on this time with the hours subtracted, never null
+   * @return an {@code OffsetTime} based on this time with the hours subtracted, never null
    */
   def minusHours(hours: Int): OffsetTime = {
     val newTime: LocalTime = time.minusHours(hours)
@@ -324,7 +324,7 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
    * This instance is immutable and unaffected by this method call.
    *
    * @param adjuster the adjuster to use, not null
-   * @return an { @code OffsetTime} based on this time adjusted as necessary, never null
+   * @return an {@code OffsetTime} based on this time adjusted as necessary, never null
    */
   def `with`(adjuster: TimeAdjuster): OffsetTime = {
     val newTime: LocalTime = time.`with`(adjuster)
@@ -361,7 +361,7 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
    * +03:00, then this method will return 11:30+03:00.
    * <p>
    * To change the offset whilst keeping the local time,
-   * use {@link # withOffset ( ZoneOffset )}.
+   * use {@link #withOffset ( ZoneOffset )}.
    *
    * @param offset the zone offset to change to, not null
    * @return a new updated OffsetTime, never null
@@ -388,7 +388,7 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
    * This instance is immutable and unaffected by this method call.
    *
    * @param seconds the seconds to add, may be negative
-   * @return an { @code OffsetTime} based on this time with the seconds added, never null
+   * @return an {@code OffsetTime} based on this time with the seconds added, never null
    */
   def plusSeconds(seconds: Int): OffsetTime = {
     val newTime: LocalTime = time.plusSeconds(seconds)
@@ -408,7 +408,7 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
    * This instance is immutable and unaffected by this method call.
    *
    * @param nanoOfSecond the nano-of-second to represent, from 0 to 999,999,999
-   * @return an { @code OffsetTime} based on this time with the requested nanosecond, never null
+   * @return an {@code OffsetTime} based on this time with the requested nanosecond, never null
    * @throws IllegalCalendarFieldValueException if the nanos value is invalid
    */
   def withNanoOfSecond(nanoOfSecond: Int): OffsetTime = {
@@ -422,7 +422,7 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
    * This instance is immutable and unaffected by this method call.
    *
    * @param minutes the minutes to add, may be negative
-   * @return an { @code OffsetTime} based on this time with the minutes added, never null
+   * @return an {@code OffsetTime} based on this time with the minutes added, never null
    */
   def plusMinutes(minutes: Int): OffsetTime = {
     val newTime: LocalTime = time.plusMinutes(minutes)
@@ -539,7 +539,7 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
    * This instance is immutable and unaffected by this method call.
    *
    * @param nanos the nanos to add, may be negative
-   * @return an { @code OffsetTime} based on this time with the nanoseconds added, never null
+   * @return an {@code OffsetTime} based on this time with the nanoseconds added, never null
    */
   def plusNanos(nanos: Int): OffsetTime = {
     val newTime: LocalTime = time.plusNanos(nanos)
@@ -552,7 +552,7 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
    * This instance is immutable and unaffected by this method call.
    *
    * @param seconds the seconds to subtract, may be negative
-   * @return an { @code OffsetTime} based on this time with the seconds subtracted, never null
+   * @return an {@code OffsetTime} based on this time with the seconds subtracted, never null
    */
   def minusSeconds(seconds: Int): OffsetTime = {
     val newTime: LocalTime = time.minusSeconds(seconds)
@@ -574,7 +574,7 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
    * This instance is immutable and unaffected by this method call.
    *
    * @param nanos the nanos to subtract, may be negative
-   * @return an { @code OffsetTime} based on this time with the nanoseconds subtracted, never null
+   * @return an {@code OffsetTime} based on this time with the nanoseconds subtracted, never null
    */
   def minusNanos(nanos: Int): OffsetTime = {
     val newTime: LocalTime = time.minusNanos(nanos)
@@ -582,15 +582,15 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
   }
 
   /**
-   * Outputs this time as a {@code String }, such as {@code 10 :15:30+01:00}.
+   * Outputs this time as a {@code String}, such as {@code 10 :15:30+01:00}.
    * <p>
    * The output will be one of the following formats:
    * <ul>
-   * <li>  { @code HH :mmZZZZ} </li>
-   * <li>  { @code HH :mm:ssZZZZ} </li>
-   * <li>  { @code HH :mm:ssfnnnZZZZ} </li>
-   * <li>  { @code HH :mm:ssfnnnnnnZZZZ} </li>
-   * <li>  { @code HH :mm:ssfnnnnnnnnnZZZZ} </li>
+   * <li> {@code HH :mmZZZZ} </li>
+   * <li> {@code HH :mm:ssZZZZ} </li>
+   * <li> {@code HH :mm:ssfnnnZZZZ} </li>
+   * <li> {@code HH :mm:ssfnnnnnnZZZZ} </li>
+   * <li> {@code HH :mm:ssfnnnnnnnnnZZZZ} </li>
    * </ul>
    * The format used will be the shortest that outputs the full value of
    * the time where the omitted parts are implied to be zero.
@@ -605,7 +605,7 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
    * This instance is immutable and unaffected by this method call.
    *
    * @param hours the hours to add, may be negative
-   * @return an { @code OffsetTime} based on this time with the hours added, never null
+   * @return an {@code OffsetTime} based on this time with the hours added, never null
    */
   def plusHours(hours: Int): OffsetTime = {
     val newTime: LocalTime = time.plusHours(hours)
@@ -618,7 +618,7 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
    * This instance is immutable and unaffected by this method call.
    *
    * @param minuteOfHour the minute-of-hour to represent, from 0 to 59
-   * @return an { @code OffsetTime} based on this time with the requested minute, never null
+   * @return an {@code OffsetTime} based on this time with the requested minute, never null
    * @throws IllegalCalendarFieldValueException if the minute value is invalid
    */
   def withMinuteOfHour(minuteOfHour: Int): OffsetTime = {
@@ -632,7 +632,7 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
    * This instance is immutable and unaffected by this method call.
    *
    * @param hourOfDay the hour-of-day to represent, from 0 to 23
-   * @return an { @code OffsetTime} based on this time with the requested hour, never null
+   * @return an {@code OffsetTime} based on this time with the requested hour, never null
    * @throws IllegalCalendarFieldValueException if the hour value is invalid
    */
   def withHourOfDay(hourOfDay: Int): OffsetTime = {
@@ -648,7 +648,7 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
    * time and the new offset.
    * <p>
    * To take into account the offsets and adjust the time fields,
-   * use {@link # adjustLocalTime ( ZoneOffset )}.
+   * use {@link #adjustLocalTime ( ZoneOffset )}.
    *
    * @param offset the zone offset to change to, not null
    * @return a new updated OffsetTime, never null
@@ -662,14 +662,14 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
    * <p>
    * This subtracts the specified period from this time, returning a new time.
    * Before subtraction, the period is converted to a time-based {@code Period} using
-   * { @link Period # ofTimeFields ( PeriodProvider )}.
+   * {@link Period # ofTimeFields ( PeriodProvider )}.
    * That factory ignores any date-based ISO fields, thus subtracting a date-based
    * period to this time will have no effect.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param periodProvider the period to subtract, not null
-   * @return an { @code OffsetTime} based on this time with the period subtracted, never null
+   * @return an {@code OffsetTime} based on this time with the period subtracted, never null
    * @throws CalendricalException if the specified period cannot be converted to a {@code Period }
    */
   def minus(periodProvider: PeriodProvider): OffsetTime = {
@@ -710,7 +710,7 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
    * This instance is immutable and unaffected by this method call.
    *
    * @param minutes the minutes to subtract, may be negative
-   * @return an { @code OffsetTime} based on this time with the minutes subtracted, never null
+   * @return an {@code OffsetTime} based on this time with the minutes subtracted, never null
    */
   def minusMinutes(minutes: Int): OffsetTime = {
     val newTime: LocalTime = time.minusMinutes(minutes)

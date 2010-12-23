@@ -54,13 +54,13 @@ import javax.time.calendar.format.DateTimeFormatters
  */
 object OffsetDateTime {
   /**
-   * Obtains an instance of    { @code OffsetDateTime } from a text string.
+   * Obtains an instance of {@code OffsetDateTime} from a text string.
    * <p>
    * The following formats are accepted in ASCII:
    * <ul>
-   * <li>   { @code   { Year } -   { MonthOfYear } -   { DayOfMonth } T   { Hour } :   { Minute } { OffsetID } }
-   * <li>   { @code   { Year } -   { MonthOfYear } -   { DayOfMonth } T   { Hour } :   { Minute } :   { Second } { OffsetID } }
-   * <li>   { @code   { Year } -   { MonthOfYear } -   { DayOfMonth } T   { Hour } :   { Minute } :   { Second }.   { NanosecondFraction } { OffsetID } }
+   * <li> {@code   { Year} -   { MonthOfYear} -   { DayOfMonth} T   { Hour} :   { Minute} { OffsetID} }
+   * <li> {@code   { Year} -   { MonthOfYear} -   { DayOfMonth} T   { Hour} :   { Minute} :   { Second} { OffsetID} }
+   * <li> {@code   { Year} -   { MonthOfYear} -   { DayOfMonth} T   { Hour} :   { Minute} :   { Second}.   { NanosecondFraction} { OffsetID} }
    * </ul>
    * <p>
    * The year has between 4 and 10 digits with values from MIN_YEAR to MAX_YEAR.
@@ -76,7 +76,7 @@ object OffsetDateTime {
    * The second has 2 digits with values from 0 to 59.
    * The nanosecond fraction has from 1 to 9 digits with values from 0 to 999,999,999.
    * <p>
-   * The offset ID is the normalized form as defined in    { @link ZoneOffset }.
+   * The offset ID is the normalized form as defined in {@link ZoneOffset}.
    *
    * @param text the text to parse such as '2007-12-03T10:15:30+01:00', not null
    * @return the parsed offset date-time, never null
@@ -85,7 +85,7 @@ object OffsetDateTime {
   def parse(text: String): OffsetDateTime = DateTimeFormatters.isoOffsetDateTime.parse(text, rule)
 
   /**
-   * Obtains an instance of    { @code OffsetDateTime } from a date with the
+   * Obtains an instance of {@code OffsetDateTime} from a date with the
    * time set to midnight at the start of day.
    * <p>
    * The time fields will be set to zero by this factory method.
@@ -100,7 +100,7 @@ object OffsetDateTime {
   }
 
   /**
-   * Obtains an instance of    { @code OffsetDateTime } from year, month,
+   * Obtains an instance of {@code OffsetDateTime} from year, month,
    * day, hour and minute, setting the second and nanosecond to zero.
    * <p>
    * The second and nanosecond fields will be set to zero by this factory method.
@@ -141,7 +141,7 @@ object OffsetDateTime {
   }
 
   /**
-   * Obtains an instance of    { @code OffsetDateTime } from year, month,
+   * Obtains an instance of {@code OffsetDateTime} from year, month,
    * day, hour, minute and second, setting the nanosecond to zero.
    * <p>
    * The nanosecond field will be set to zero by this factory method.
@@ -183,7 +183,7 @@ object OffsetDateTime {
   def now: OffsetDateTime = now(Clock.systemDefaultZone)
 
   /**
-   * Obtains an instance of    { @code OffsetDateTime } from year, month and
+   * Obtains an instance of {@code OffsetDateTime} from year, month and
    * day with the time set to midnight at the start of day.
    * <p>
    * The time fields will be set to zero by this factory method.
@@ -202,8 +202,8 @@ object OffsetDateTime {
   }
 
   /**
-   * Obtains an instance of    { @code OffsetDateTime } from a    { @code DateProvider }
-   * and    { @code TimeProvider }.
+   * Obtains an instance of {@code OffsetDateTime} from a {@code DateProvider }
+   * and {@code TimeProvider}.
    *
    * @param dateProvider the date provider to use, not null
    * @param timeProvider the time provider to use, not null
@@ -216,7 +216,7 @@ object OffsetDateTime {
   }
 
   /**
-   * Obtains an instance of    { @code OffsetDateTime } from year, month,
+   * Obtains an instance of {@code OffsetDateTime} from year, month,
    * day, hour, minute and second, setting the nanosecond to zero.
    * <p>
    * The nanosecond field will be set to zero by this factory method.
@@ -238,7 +238,7 @@ object OffsetDateTime {
   }
 
   /**
-   * Obtains an instance of    { @code OffsetDateTime } from year, month,
+   * Obtains an instance of {@code OffsetDateTime} from year, month,
    * day, hour and minute, setting the second and nanosecond to zero.
    * <p>
    * The second and nanosecond fields will be set to zero by this factory method.
@@ -265,7 +265,7 @@ object OffsetDateTime {
    * The offset will be set based on the time-zone in the clock.
    * <p>
    * Using this method allows the use of an alternate clock for testing.
-   * The alternate clock may be introduced using    { @link Clock dependency injection }.
+   * The alternate clock may be introduced using {@link Clock dependency injection}.
    *
    * @param clock the clock to use, not null
    * @return the current date-time, never null
@@ -277,7 +277,7 @@ object OffsetDateTime {
   }
 
   /**
-   * Obtains an instance of    { @code OffsetDateTime } from year, month,
+   * Obtains an instance of {@code OffsetDateTime} from year, month,
    * day, hour, minute, second and nanosecond.
    *
    * @param year the year to represent, from MIN_YEAR to MAX_YEAR
@@ -298,7 +298,7 @@ object OffsetDateTime {
   }
 
   /**
-   * Obtains an instance of    { @code OffsetDateTime } from year, month and
+   * Obtains an instance of {@code OffsetDateTime} from year, month and
    * day with the time set to midnight at the start of day.
    * <p>
    * The time fields will be set to zero by this factory method.
@@ -317,7 +317,7 @@ object OffsetDateTime {
   }
 
   /**
-   * Obtains an instance of    { @code OffsetDateTime } using seconds from the
+   * Obtains an instance of {@code OffsetDateTime} using seconds from the
    * epoch of 1970-01-01T00:00:00Z.
    * <p>
    * The nanosecond field is set to zero.
@@ -334,7 +334,7 @@ object OffsetDateTime {
   }
 
   /**
-   * Obtains an instance of    { @code OffsetDateTime } from year, month,
+   * Obtains an instance of {@code OffsetDateTime} from year, month,
    * day, hour, minute, second and nanosecond.
    *
    * @param year the year to represent, from MIN_YEAR to MAX_YEAR
@@ -355,7 +355,7 @@ object OffsetDateTime {
   }
 
   /**
-   * Obtains an instance of    { @code OffsetDateTime } from a text string using a specific formatter.
+   * Obtains an instance of {@code OffsetDateTime} from a text string using a specific formatter.
    * <p>
    * The text is parsed using the formatter, returning a date-time.
    *
@@ -371,7 +371,7 @@ object OffsetDateTime {
   }
 
   /**
-   * Obtains an instance of    { @code OffsetDateTime } from a    { @code DateTimeProvider }.
+   * Obtains an instance of {@code OffsetDateTime} from a {@code DateTimeProvider}.
    *
    * @param dateTimeProvider the date-time provider to use, not null
    * @param offset the zone offset, not null
@@ -383,7 +383,7 @@ object OffsetDateTime {
   }
 
   /**
-   * Obtains an instance of    { @code OffsetDateTime } from an    { @code InstantProvider }.
+   * Obtains an instance of {@code OffsetDateTime} from an {@code InstantProvider}.
    *
    * @param instantProvider the instant to convert, not null
    * @param offset the zone offset, not null
@@ -422,30 +422,30 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
 
   /**
    * Returns a copy of this OffsetDateTime with the month-of-year altered.
-   * If the resulting    { @code OffsetDateTime } is invalid, it will be resolved using    { @link DateResolvers # previousValid ( ) }.
+   * If the resulting {@code OffsetDateTime} is invalid, it will be resolved using {@link DateResolvers # previousValid()}.
    * The offset does not affect the calculation and will be the same in the result.
    * <p>
-   * This method does the same as    { @code withMonthOfYear ( monthOfYear, DateResolvers.previousValid ( ) ) }.
+   * This method does the same as {@code withMonthOfYear ( monthOfYear, DateResolvers.previousValid ( ) )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param monthOfYear the month-of-year to set in the returned date, from 1 (January) to 12 (December)
-   * @return an { @code OffsetDateTime } based on this date-time with the requested month, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the requested month, never null
    * @throws IllegalCalendarFieldValueException if the month-of-year value is invalid
    */
   def withMonthOfYear(monthOfYear: Int): OffsetDateTime = `with`(dateTime.withMonthOfYear(monthOfYear), offset)
 
   /**
    * Returns a copy of this OffsetDateTime with the month-of-year altered.
-   * If the resulting    { @code OffsetDateTime } is invalid, it will be resolved using    { @link DateResolvers # previousValid ( ) }.
+   * If the resulting {@code OffsetDateTime} is invalid, it will be resolved using {@link DateResolvers # previousValid()}.
    * The offset does not affect the calculation and will be the same in the result.
    * <p>
-   * This method does the same as    { @code with ( monthOfYear, DateResolvers.previousValid ( ) ) }.
+   * This method does the same as {@code with ( monthOfYear, DateResolvers.previousValid ( ) )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param monthOfYear the month-of-year to set in the returned date, not null
-   * @return an { @code OffsetDateTime } based on this date-time with the requested month, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the requested month, never null
    */
   def `with`(monthOfYear: MonthOfYear): OffsetDateTime = `with`(dateTime.`with`(monthOfYear), offset)
 
@@ -453,7 +453,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * Compares this date-time to another date-time based on the instant
    * then local date-time.
    * <p>
-   * This ordering is consistent with    { @code equals ( ) }.
+   * This ordering is consistent with {@code equals()}.
    * For example, the following is the comparator order:
    * <ol>
    * <li>2008-12-03T10:30+01:00</li>
@@ -466,11 +466,11 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * Values #2 and #3 represent the same instant on the time-line.
    * When two values represent the same instant, the local date-time is compared
    * to distinguish them. This step is needed to make the ordering
-   * consistent with    { @code equals ( ) }.
+   * consistent with {@code equals()}.
    *
    * @param other the other date-time to compare to, not null
    * @return the comparator value, negative if less, positive if greater
-   * @throws NullPointerException if    { @code other } is null
+   * @throws NullPointerException if {@code other} is null
    */
   def compareTo(other: OffsetDateTime): Int = {
     if (offset.equals(other.offset)) return dateTime.compareTo(other.dateTime)
@@ -489,7 +489,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * This instance is immutable and unaffected by this method call.
    *
    * @param nanos the nanos to subtract, may be negative
-   * @return an { @code OffsetDateTime } based on this date-time with the nanoseconds subtracted, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the nanoseconds subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def minusNanos(nanos: Int): OffsetDateTime = {
@@ -500,7 +500,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
   /**
    * Gets the day-of-month field.
    * <p>
-   * This method returns the primitive    { @code int } value for the day-of-month.
+   * This method returns the primitive {@code int} value for the day-of-month.
    *
    * @return the day-of-month, from 1 to 31
    */
@@ -521,7 +521,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
   }
 
   /**
-   * Converts this date-time to an    { @code OffsetDate }.
+   * Converts this date-time to an {@code OffsetDate}.
    *
    * @return an OffsetDate representing the date and offset, never null
    */
@@ -535,14 +535,14 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
   def getSecondOfMinute: Int = dateTime.getSecondOfMinute
 
   /**
-   * Gets the day-of-week field, which is an enum    { @code DayOfWeek }.
+   * Gets the day-of-week field, which is an enum {@code DayOfWeek}.
    * <p>
-   * This method returns the enum    { @link DayOfWeek } for the day-of-week.
-   * This avoids confusion as to what    { @code int } values mean.
-   * If you need access to the primitive    { @code int } value then the enum
-   * provides the    { @link DayOfWeek # getValue ( ) int value }.
+   * This method returns the enum {@link DayOfWeek} for the day-of-week.
+   * This avoids confusion as to what {@code int} values mean.
+   * If you need access to the primitive {@code int} value then the enum
+   * provides the {@link DayOfWeek # getValue ( ) int value}.
    * <p>
-   * Additional information can be obtained from the    { @code DayOfWeek }.
+   * Additional information can be obtained from the {@code DayOfWeek}.
    * This includes textual names of the values.
    *
    * @return the day-of-week, never null
@@ -557,7 +557,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * This avoids any problems with local time-line gaps or overlaps.
    * The result might have different values for fields such as hour, minute an even day.
    * <p>
-   * To attempt to retain the values of the fields, use    { @link # atZoneSimilarLocal ( TimeZone ) }.
+   * To attempt to retain the values of the fields, use {@link #atZoneSimilarLocal ( TimeZone )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -583,14 +583,14 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
 
   /**
    * Returns a copy of this OffsetDateTime with the month-of-year altered.
-   * If the resulting    { @code OffsetDateTime } is invalid, it will be resolved using    { @code dateResolver }.
+   * If the resulting {@code OffsetDateTime} is invalid, it will be resolved using {@code dateResolver}.
    * The offset does not affect the calculation and will be the same in the result.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param monthOfYear the month-of-year to set in the returned date, from 1 (January) to 12 (December)
    * @param dateResolver the DateResolver to be used if the resulting date would be invalid
-   * @return an { @code OffsetDateTime } based on this date-time with the requested month, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the requested month, never null
    * @throws IllegalCalendarFieldValueException if the month-of-year value is invalid
    */
   def withMonthOfYear(monthOfYear: Int, dateResolver: DateResolver): OffsetDateTime = {
@@ -605,7 +605,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
   def getHourOfDay: Int = dateTime.getHourOfDay
 
   /**
-   * Converts this date-time to an    { @code Instant }.
+   * Converts this date-time to an {@code Instant}.
    *
    * @return an Instant representing the same instant, never null
    */
@@ -617,7 +617,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * This instance is immutable and unaffected by this method call.
    *
    * @param seconds the seconds to add, may be negative
-   * @return an { @code OffsetDateTime } based on this date-time with the seconds added, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the seconds added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def plusSeconds(seconds: Int): OffsetDateTime = {
@@ -638,27 +638,27 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
   def matches(matcher: CalendricalMatcher): Boolean = matcher.matchesCalendrical(this)
 
   /**
-   * Converts this date-time to a    { @code LocalDate }.
+   * Converts this date-time to a {@code LocalDate}.
    *
    * @return a LocalDate representing the date fields of this date-time, never null
    */
   def toLocalDate: LocalDate = dateTime.toLocalDate
 
   /**
-   * Returns a copy of this    { @code OffsetDateTime } with the specified period subtracted.
+   * Returns a copy of this {@code OffsetDateTime} with the specified period subtracted.
    * <p>
    * This subtracts the specified period from this date-time, returning a new date-time.
-   * Before addition, the period is converted to a    { @code Period } using the
-   * { @link Period # of ( PeriodProvider ) }.
+   * Before addition, the period is converted to a {@code Period} using the
+   * {@link Period # of ( PeriodProvider )}.
    * <p>
    * The detailed rules for the subtraction have some complexity due to variable length months.
-   * See    { @link LocalDateTime # minus ( PeriodProvider ) } for details.
+   * See {@link LocalDateTime # minus ( PeriodProvider )} for details.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param periodProvider the period to subtract, not null
-   * @return an { @code OffsetDateTime } based on this date-time with the period subtracted, never null
-   * @throws CalendricalException if the specified period cannot be converted to a    { @code Period }
+   * @return an {@code OffsetDateTime} based on this date-time with the period subtracted, never null
+   * @throws CalendricalException if the specified period cannot be converted to a {@code Period }
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def minus(periodProvider: PeriodProvider): OffsetDateTime = {
@@ -668,15 +668,15 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
 
   /**
    * Returns a copy of this OffsetDateTime with the year altered.
-   * If the resulting    { @code OffsetDateTime } is invalid, it will be resolved using    { @link DateResolvers # previousValid ( ) }.
+   * If the resulting {@code OffsetDateTime} is invalid, it will be resolved using {@link DateResolvers # previousValid()}.
    * The offset does not affect the calculation and will be the same in the result.
    * <p>
-   * This method does the same as    { @code withYear ( year, DateResolvers.previousValid ( ) ) }.
+   * This method does the same as {@code withYear ( year, DateResolvers.previousValid ( ) )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param year the year to set in the returned date, from MIN_YEAR to MAX_YEAR
-   * @return an { @code OffsetDateTime } based on this date-time with the requested year, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the requested year, never null
    * @throws IllegalCalendarFieldValueException if the year value is invalid
    */
   def withYear(year: Int): OffsetDateTime = `with`(dateTime.withYear(year), offset)
@@ -690,20 +690,20 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
   override def adjustTime(time: LocalTime): LocalTime = dateTime.adjustTime(time)
 
   /**
-   * Returns a copy of this    { @code OffsetDateTime } with the specified period added.
+   * Returns a copy of this {@code OffsetDateTime} with the specified period added.
    * <p>
    * This adds the specified period to this date-time, returning a new date-time.
-   * Before addition, the period is converted to a    { @code Period } using the
-   * { @link Period # of ( PeriodProvider ) }.
+   * Before addition, the period is converted to a {@code Period} using the
+   * {@link Period # of ( PeriodProvider )}.
    * <p>
    * The detailed rules for the addition have some complexity due to variable length months.
-   * See    { @link LocalDateTime # plus ( PeriodProvider ) } for details.
+   * See {@link LocalDateTime # plus ( PeriodProvider )} for details.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param periodProvider the period to add, not null
-   * @return an { @code OffsetDateTime } based on this date-time with the period added, never null
-   * @throws CalendricalException if the specified period cannot be converted to a    { @code Period }
+   * @return an {@code OffsetDateTime} based on this date-time with the period added, never null
+   * @throws CalendricalException if the specified period cannot be converted to a {@code Period }
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def plus(periodProvider: PeriodProvider): OffsetDateTime = {
@@ -712,7 +712,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
   }
 
   /**
-   * Converts this date-time to a    { @code LocalTime }.
+   * Converts this date-time to a {@code LocalTime}.
    *
    * @return a LocalTime representing the time fields of this date-time, never null
    */
@@ -742,14 +742,14 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * <ol>
    * <li>Subtract the input months to the month-of-year field</li>
    * <li>Check if the resulting date would be invalid</li>
-   * <li>Adjust the date using    { @code dateResolver } if necessary</li>
+   * <li>Adjust the date using {@code dateResolver} if necessary</li>
    * </ol>
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param months the months to subtract, may be negative
    * @param dateResolver the DateResolver to be used if the resulting date would be invalid
-   * @return an { @code OffsetDateTime } based on this date-time with the months subtracted, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the months subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def minusMonths(months: Int, dateResolver: DateResolver): OffsetDateTime = {
@@ -760,13 +760,13 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
   /**
    * Checks if the instant of this date-time is before that of the specified date-time.
    * <p>
-   * This method differs from the comparison in    { @link # compareTo } in that it
+   * This method differs from the comparison in {@link #compareTo} in that it
    * compares only the instant of the date-time. This is equivalent to using
-   * { @code dateTime1.toInstant ( ).isBefore ( dateTime2.toInstant ( ) ); }.
+   * {@code dateTime1.toInstant ( ).isBefore ( dateTime2.toInstant ( ) );}.
    *
    * @param other the other date-time to compare to, not null
    * @return true if this point is before the specified date-time
-   * @throws NullPointerException if    { @code other } is null
+   * @throws NullPointerException if {@code other} is null
    */
   def isBefore(other: OffsetDateTime): Boolean = {
     val thisEpochSecs: Long = toEpochSeconds
@@ -782,7 +782,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
   override def hashCode: Int = dateTime.hashCode ^ offset.hashCode
 
   /**
-   * Returns a new date-time based on this one, returning    { @code this } where possible.
+   * Returns a new date-time based on this one, returning {@code this} where possible.
    *
    * @param dateTime the date-time to create with, not null
    * @param offset the zone offset to create with, not null
@@ -817,7 +817,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @param year the year to represent, from MIN_VALUE + 1 to MAX_VALUE
    * @param monthOfYear the month-of-year to represent, from 1 (January) to 12 (December)
    * @param dayOfMonth the day-of-month to represent, from 1 to 31
-   * @return an { @code OffsetDateTime } based on this date-time with the requested date, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the requested date, never null
    * @throws IllegalCalendarFieldValueException if any field value is invalid
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
@@ -832,17 +832,17 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * local time-line exists. As a result, this method can only convert the date-time
    * to the same time if the time-zone rules permit it. If not then a similar time is returned.
    * <p>
-   * This method uses the    { @link ZoneResolvers # postTransition ( ) post transition } rules
+   * This method uses the {@link ZoneResolvers # postTransition ( ) post transition} rules
    * to determine what to do when a gap or overlap occurs. These rules select the
    * date-time immediately after a gap and the later offset in overlaps.
    * <p>
    * Finer control over gaps and overlaps is available in two ways.
    * If you simply want to use the earlier offset at overlaps then call
-   * { @link ZonedDateTime # withEarlierOffsetAtOverlap ( ) } immediately after this method.
-   * Alternately, pass a specific resolver to    { @link # atZoneSimilarLocal ( TimeZone, ZoneResolver ) }.
+   * {@link ZonedDateTime # withEarlierOffsetAtOverlap()} immediately after this method.
+   * Alternately, pass a specific resolver to {@link #atZoneSimilarLocal ( TimeZone, ZoneResolver )}.
    * <p>
    * To create a zoned date-time at the same instant irrespective of the local time-line,
-   * use    { @link # atZoneSameInstant ( TimeZone ) }.
+   * use {@link #atZoneSameInstant ( TimeZone )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -856,7 +856,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * <p>
    * This method queries the value of the specified calendrical rule.
    * If the value cannot be returned for the rule from this date-time then
-   * { @code null } will be returned.
+   * {@code null} will be returned.
    *
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
@@ -865,12 +865,12 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
 
   /**
    * Returns a copy of this OffsetDateTime with the day-of-year altered.
-   * If the resulting    { @code OffsetDateTime } is invalid, an exception is thrown.
+   * If the resulting {@code OffsetDateTime} is invalid, an exception is thrown.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param dayOfYear the day-of-year to set in the returned date, from 1 to 365-366
-   * @return an { @code OffsetDateTime } based on this date with the requested day, never null
+   * @return an {@code OffsetDateTime} based on this date with the requested day, never null
    * @throws IllegalCalendarFieldValueException if the day-of-year value is invalid
    * @throws InvalidCalendarFieldException if the day-of-year is invalid for the year
    */
@@ -893,7 +893,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * This instance is immutable and unaffected by this method call.
    *
    * @param years the years to subtract, may be negative
-   * @return an { @code OffsetDateTime } based on this date-time with the years subtracted, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the years subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def minusYears(years: Int): OffsetDateTime = {
@@ -912,7 +912,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @param year the year to represent, from MIN_YEAR to MAX_YEAR
    * @param monthOfYear the month-of-year to represent, not null
    * @param dayOfMonth the day-of-month to represent, from 1 to 31
-   * @return an { @code OffsetDateTime } based on this date-time with the requested date, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the requested date, never null
    * @throws IllegalCalendarFieldValueException if any field value is invalid
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
@@ -927,14 +927,14 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * <ol>
    * <li>Add the input years to the year field</li>
    * <li>Check if the resulting date would be invalid</li>
-   * <li>Adjust the date using    { @code dateResolver } if necessary</li>
+   * <li>Adjust the date using {@code dateResolver} if necessary</li>
    * </ol>
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param years the years to add, may be negative
    * @param dateResolver the DateResolver to be used if the resulting date would be invalid
-   * @return an { @code OffsetDateTime } based on this date-time with the years added, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the years added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def plusYears(years: Int, dateResolver: DateResolver): OffsetDateTime = {
@@ -947,7 +947,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * <p>
    * This method will return a new instance with the same date fields,
    * but altered time fields.
-   * This is a shorthand for    { @link # withTime ( int, int, int ) } and sets
+   * This is a shorthand for {@link #withTime ( int, int, int )} and sets
    * the second field to zero.
    * <p>
    * This instance is immutable and unaffected by this method call.
@@ -963,14 +963,14 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
   }
 
   /**
-   * Gets the month-of-year field, which is an enum    { @code MonthOfYear }.
+   * Gets the month-of-year field, which is an enum {@code MonthOfYear}.
    * <p>
-   * This method returns the enum    { @link MonthOfYear } for the month.
-   * This avoids confusion as to what    { @code int } values mean.
-   * If you need access to the primitive    { @code int } value then the enum
-   * provides the    { @link MonthOfYear # getValue ( ) int value }.
+   * This method returns the enum {@link MonthOfYear} for the month.
+   * This avoids confusion as to what {@code int} values mean.
+   * If you need access to the primitive {@code int} value then the enum
+   * provides the {@link MonthOfYear # getValue ( ) int value}.
    * <p>
-   * Additional information can be obtained from the    { @code MonthOfYear }.
+   * Additional information can be obtained from the {@code MonthOfYear}.
    * This includes month lengths, textual names and access to the quarter-of-year
    * and month-of-quarter values.
    *
@@ -995,7 +995,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * This instance is immutable and unaffected by this method call.
    *
    * @param months the months to subtract, may be negative
-   * @return an { @code OffsetDateTime } based on this date-time with the months subtracted, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the months subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def minusMonths(months: Int): OffsetDateTime = {
@@ -1004,15 +1004,15 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
   }
 
   /**
-   * Outputs this date-time as a    { @code String }, such as    { @code 2007 -12-03T10:15:30+01:00 }.
+   * Outputs this date-time as a {@code String}, such as {@code 2007 -12-03T10:15:30+01:00}.
    * <p>
    * The output will be one of the following formats:
    * <ul>
-   * <li>   { @code yyyy -MM-dd'T'HH:mmZZZZ } </li>
-   * <li>   { @code yyyy -MM-dd'T'HH:mm:ssZZZZ } </li>
-   * <li>   { @code yyyy -MM-dd'T'HH:mm:ssfnnnZZZZ } </li>
-   * <li>   { @code yyyy -MM-dd'T'HH:mm:ssfnnnnnnZZZZ } </li>
-   * <li>   { @code yyyy -MM-dd'T'HH:mm:ssfnnnnnnnnnZZZZ } </li>
+   * <li> {@code yyyy -MM-dd'T'HH:mmZZZZ} </li>
+   * <li> {@code yyyy -MM-dd'T'HH:mm:ssZZZZ} </li>
+   * <li> {@code yyyy -MM-dd'T'HH:mm:ssfnnnZZZZ} </li>
+   * <li> {@code yyyy -MM-dd'T'HH:mm:ssfnnnnnnZZZZ} </li>
+   * <li> {@code yyyy -MM-dd'T'HH:mm:ssfnnnnnnnnnZZZZ} </li>
    * </ul>
    * The format used will be the shortest that outputs the full value of
    * the time where the omitted parts are implied to be zero.
@@ -1038,7 +1038,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * This instance is immutable and unaffected by this method call.
    *
    * @param years the years to add, may be negative
-   * @return an { @code OffsetDateTime } based on this date-time with the years added, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the years added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def plusYears(years: Int): OffsetDateTime = {
@@ -1062,7 +1062,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * This instance is immutable and unaffected by this method call.
    *
    * @param hours the hours to add, may be negative
-   * @return an { @code OffsetDateTime } based on this date-time with the hours added, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the hours added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def plusHours(hours: Int): OffsetDateTime = {
@@ -1073,7 +1073,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
   /**
    * Gets the day-of-year field.
    * <p>
-   * This method returns the primitive    { @code int } value for the day-of-year.
+   * This method returns the primitive {@code int} value for the day-of-year.
    *
    * @return the day-of-year, from 1 to 365, or 366 in a leap year
    */
@@ -1082,10 +1082,10 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
   /**
    * Gets the year field.
    * <p>
-   * This method returns the primitive    { @code int } value for the year.
+   * This method returns the primitive {@code int} value for the year.
    * <p>
-   * Additional information about the year can be obtained via    { @link # toYear }.
-   * This returns a    { @code Year } object which includes information on whether
+   * Additional information about the year can be obtained via {@link #toYear}.
+   * This returns a {@code Year} object which includes information on whether
    * this is a leap year and its length in days.
    *
    * @return the year, from MIN_YEAR to MAX_YEAR
@@ -1093,7 +1093,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
   def getYear: Int = dateTime.getYear
 
   /**
-   * Converts this date-time to a    { @code LocalDateTime }.
+   * Converts this date-time to a {@code LocalDateTime}.
    *
    * @return a LocalDateTime representing the fields of this date-time, never null
    */
@@ -1106,14 +1106,14 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * <ol>
    * <li>Subtract the input years to the year field</li>
    * <li>Check if the resulting date would be invalid</li>
-   * <li>Adjust the date using    { @code dateResolver } if necessary</li>
+   * <li>Adjust the date using {@code dateResolver} if necessary</li>
    * </ol>
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param years the years to subtract, may be negative
    * @param dateResolver the DateResolver to be used if the resulting date would be invalid
-   * @return an { @code OffsetDateTime } based on this date-time with the years subtracted, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the years subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def minusYears(years: Int, dateResolver: DateResolver): OffsetDateTime = {
@@ -1122,7 +1122,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
   }
 
   /**
-   * Outputs this date-time as a    { @code String } using the formatter.
+   * Outputs this date-time as a {@code String} using the formatter.
    *
    * @param formatter the formatter to use, not null
    * @return the formatted date-time string, never null
@@ -1137,13 +1137,13 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
   /**
    * Checks if the instant of this date-time is after that of the specified date-time.
    * <p>
-   * This method differs from the comparison in    { @link # compareTo } in that it
+   * This method differs from the comparison in {@link #compareTo} in that it
    * compares the only the instant of the date-time. This is equivalent to using
-   * { @code dateTime1.toInstant ( ).isAfter ( dateTime2.toInstant ( ) ); }.
+   * {@code dateTime1.toInstant ( ).isAfter ( dateTime2.toInstant ( ) );}.
    *
    * @param other the other date-time to compare to, not null
    * @return true if this is after the specified date-time
-   * @throws NullPointerException if    { @code other } is null
+   * @throws NullPointerException if {@code other} is null
    */
   def isAfter(other: OffsetDateTime): Boolean = {
     val thisEpochSecs: Long = toEpochSeconds
@@ -1163,7 +1163,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * specified is +03:00, then this method will return 10:30+03:00.
    * <p>
    * To maintain the same instant on the time-line while changing offsets
-   * use    { @link # withOffsetSameInstant }.
+   * use {@link #withOffsetSameInstant}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -1174,13 +1174,13 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
 
   /**
    * Returns a copy of this OffsetDateTime with the day-of-month altered.
-   * If the resulting    { @code OffsetDateTime } is invalid, an exception is thrown.
+   * If the resulting {@code OffsetDateTime} is invalid, an exception is thrown.
    * The offset does not affect the calculation and will be the same in the result.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param dayOfMonth the day-of-month to set in the returned date, from 1 to 28-31
-   * @return an { @code OffsetDateTime } based on this date-time with the requested day, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the requested day, never null
    * @throws IllegalCalendarFieldValueException if the day-of-month value is invalid
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
@@ -1190,14 +1190,14 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
 
   /**
    * Returns a copy of this OffsetDateTime with the day-of-month altered.
-   * If the resulting    { @code OffsetDateTime } is invalid, it will be resolved using    { @code dateResolver }.
+   * If the resulting {@code OffsetDateTime} is invalid, it will be resolved using {@code dateResolver}.
    * The offset does not affect the calculation and will be the same in the result.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param dayOfMonth the day-of-month to set in the returned date, from 1 to 31
    * @param dateResolver the DateResolver to be used if the resulting date would be invalid
-   * @return an { @code OffsetDateTime } based on this date-time with the requested day, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the requested day, never null
    * @throws IllegalCalendarFieldValueException if the day-of-month value is invalid
    */
   def withDayOfMonth(dayOfMonth: Int, dateResolver: DateResolver): OffsetDateTime = {
@@ -1223,7 +1223,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * This instance is immutable and unaffected by this method call.
    *
    * @param weeks the weeks to add, may be negative
-   * @return an { @code OffsetDateTime } based on this date-time with the weeks added, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the weeks added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def plusWeeks(weeks: Int): OffsetDateTime = {
@@ -1248,7 +1248,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * This instance is immutable and unaffected by this method call.
    *
    * @param months the months to add, may be negative
-   * @return an { @code OffsetDateTime } based on this date-time with the months added, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the months added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def plusMonths(months: Int): OffsetDateTime = {
@@ -1262,7 +1262,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * This instance is immutable and unaffected by this method call.
    *
    * @param minutes the minutes to add, may be negative
-   * @return an { @code OffsetDateTime } based on this date-time with the minutes added, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the minutes added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def plusMinutes(minutes: Int): OffsetDateTime = {
@@ -1289,7 +1289,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * This instance is immutable and unaffected by this method call.
    *
    * @param days the days to subtract, may be negative
-   * @return an { @code OffsetDateTime } based on this date-time with the days subtracted, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the days subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def minusDays(days: Int): OffsetDateTime = {
@@ -1309,7 +1309,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * This instance is immutable and unaffected by this method call.
    *
    * @param adjuster the adjuster to use, not null
-   * @return an { @code OffsetDateTime } based on this date-time with the time adjusted, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the time adjusted, never null
    * @throws IllegalArgumentException if the adjuster returned null
    */
   def `with`(adjuster: TimeAdjuster): OffsetDateTime = `with`(dateTime.`with`(adjuster), offset)
@@ -1351,7 +1351,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * This instance is immutable and unaffected by this method call.
    *
    * @param minutes the minutes to subtract, may be negative
-   * @return an { @code OffsetDateTime } based on this date-time with the minutes subtracted, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the minutes subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def minusMinutes(minutes: Int): OffsetDateTime = {
@@ -1362,13 +1362,13 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
   /**
    * Checks if the instant of this date-time is equal to that of the specified date-time.
    * <p>
-   * This method differs from the comparison in    { @link # compareTo } and    { @link # equals }
+   * This method differs from the comparison in {@link #compareTo} and {@link #equals }
    * in that it compares only the instant of the date-time. This is equivalent to using
-   * { @code dateTime1.toInstant ( ).equals ( dateTime2.toInstant ( ) ); }.
+   * {@code dateTime1.toInstant ( ).equals ( dateTime2.toInstant ( ) );}.
    *
    * @param other the other date-time to compare to, not null
    * @return true if this is after the specified date-time
-   * @throws NullPointerException if    { @code other } is null
+   * @throws NullPointerException if {@code other} is null
    */
   def equalInstant(other: OffsetDateTime): Boolean = {
     toEpochSeconds == other.toEpochSeconds && getNanoOfSecond == other.getNanoOfSecond
@@ -1386,7 +1386,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * This instance is immutable and unaffected by this method call.
    *
    * @param days the days to add, may be negative
-   * @return an { @code OffsetDateTime } based on this date-time with the days added, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the days added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def plusDays(days: Int): OffsetDateTime = {
@@ -1419,7 +1419,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * This method uses the specified resolver to determine what to do when a gap or overlap occurs.
    * <p>
    * To create a zoned date-time at the same instant irrespective of the local time-line,
-   * use    { @link # atZoneSameInstant ( TimeZone ) }.
+   * use {@link #atZoneSameInstant ( TimeZone )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -1431,17 +1431,17 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
   def atZoneSimilarLocal(zone: TimeZone, resolver: ZoneResolver): ZonedDateTime = ZonedDateTime.of(this, zone, resolver)
 
   /**
-   * Gets the year field as a    { @code Year }.
+   * Gets the year field as a {@code Year}.
    * <p>
    * This method provides access to an object representing the year field.
-   * { @code Year } has methods for querying addition year-based information.
+   * {@code Year} has methods for querying addition year-based information.
    *
    * @return the year, never null
    */
   def toYear: Year = dateTime.toYear
 
   /**
-   * Converts this date-time to an    { @code OffsetTime }.
+   * Converts this date-time to an {@code OffsetTime}.
    *
    * @return an OffsetTime representing the time and offset, never null
    */
@@ -1459,7 +1459,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * This instance is immutable and unaffected by this method call.
    *
    * @param weeks the weeks to subtract, may be negative
-   * @return an { @code OffsetDateTime } based on this date-time with the weeks subtracted, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the weeks subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def minusWeeks(weeks: Int): OffsetDateTime = {
@@ -1491,7 +1491,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * This instance is immutable and unaffected by this method call.
    *
    * @param hours the hours to subtract, may be negative
-   * @return an { @code OffsetDateTime } based on this date-time with the hours subtracted, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the hours subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def minusHours(hours: Int): OffsetDateTime = {
@@ -1501,14 +1501,14 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
 
   /**
    * Returns a copy of this OffsetDateTime with the year altered.
-   * If the resulting    { @code OffsetDateTime } is invalid, it will be resolved using    { @code dateResolver }.
+   * If the resulting {@code OffsetDateTime} is invalid, it will be resolved using {@code dateResolver}.
    * The offset does not affect the calculation and will be the same in the result.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param year the year to set in the returned date, from MIN_YEAR to MAX_YEAR
    * @param dateResolver the DateResolver to be used if the resulting date would be invalid
-   * @return an { @code OffsetDateTime } based on this date-time with the requested year, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the requested year, never null
    * @throws IllegalCalendarFieldValueException if the year value is invalid
    */
   def withYear(year: Int, dateResolver: DateResolver): OffsetDateTime = {
@@ -1530,7 +1530,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * This method is useful for finding the current local time in a different offset.
    * <p>
    * To change the offset while keeping the local time
-   * use    { @link # withOffsetSameLocal }.
+   * use {@link #withOffsetSameLocal}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -1554,14 +1554,14 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * <ol>
    * <li>Add the input months to the month-of-year field</li>
    * <li>Check if the resulting date would be invalid</li>
-   * <li>Adjust the date using    { @code dateResolver } if necessary</li>
+   * <li>Adjust the date using {@code dateResolver} if necessary</li>
    * </ol>
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param months the months to add, may be negative
    * @param dateResolver the DateResolver to be used if the resulting date would be invalid
-   * @return an { @code OffsetDateTime } based on this date-time with the months added, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the months added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def plusMonths(months: Int, dateResolver: DateResolver): OffsetDateTime = {
@@ -1590,7 +1590,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * This method returns true if the state of the two objects are equal.
    * The state consists of the local date-time and the offset.
    * <p>
-   * To compare for the same instant on the time-line, use    { @link # equalInstant }.
+   * To compare for the same instant on the time-line, use {@link #equalInstant}.
    *
    * @param other the other date-time to compare to, null returns false
    * @return true if this point is equal to the specified date-time
@@ -1606,14 +1606,14 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
 
   /**
    * Returns a copy of this OffsetDateTime with the month-of-year altered.
-   * If the resulting    { @code OffsetDateTime } is invalid, it will be resolved using    { @code dateResolver }.
+   * If the resulting {@code OffsetDateTime} is invalid, it will be resolved using {@code dateResolver}.
    * The offset does not affect the calculation and will be the same in the result.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param monthOfYear the month-of-year to set in the returned date, not null
    * @param dateResolver the DateResolver to be used if the resulting date would be invalid
-   * @return an { @code OffsetDateTime } based on this date-time with the requested month, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the requested month, never null
    */
   def `with`(monthOfYear: MonthOfYear, dateResolver: DateResolver): OffsetDateTime = {
     `with`(dateTime.`with`(monthOfYear, dateResolver), offset)
@@ -1625,7 +1625,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * This instance is immutable and unaffected by this method call.
    *
    * @param nanos the nanos to add, may be negative
-   * @return an { @code OffsetDateTime } based on this date-time with the nanoseconds added, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the nanoseconds added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def plusNanos(nanos: Int): OffsetDateTime = {
@@ -1645,7 +1645,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * This instance is immutable and unaffected by this method call.
    *
    * @param adjuster the adjuster to use, not null
-   * @return an { @code OffsetDateTime } based on this date-time with the date adjusted, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the date adjusted, never null
    * @throws NullPointerException if the adjuster returned null
    */
   def `with`(adjuster: DateAdjuster): OffsetDateTime = {
@@ -1672,7 +1672,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * This instance is immutable and unaffected by this method call.
    *
    * @param seconds the seconds to subtract, may be negative
-   * @return an { @code OffsetDateTime } based on this date-time with the seconds subtracted, never null
+   * @return an {@code OffsetDateTime} based on this date-time with the seconds subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def minusSeconds(seconds: Int): OffsetDateTime = {

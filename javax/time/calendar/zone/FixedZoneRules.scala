@@ -75,10 +75,10 @@ final class FixedZoneRules private[zone](val offset: ZoneOffset) extends ZoneRul
    */
   private[zone] def writeExternal(out: DataOutput): Unit = Ser.writeOffset(offset, out)
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc} */
   def getStandardOffset(instant: InstantProvider): ZoneOffset = offset
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc} */
   override def isFixedOffset: Boolean = true
 
   /**
@@ -88,19 +88,19 @@ final class FixedZoneRules private[zone](val offset: ZoneOffset) extends ZoneRul
    */
   private def writeReplace: AnyRef = new Ser(Ser.FZR, this)
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc} */
   def getOffset(instant: InstantProvider): ZoneOffset = offset
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc} */
   def previousTransition(instantProvider: InstantProvider): ZoneOffsetTransition = null
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc} */
   def getTransitionRules: List[ZoneOffsetTransitionRule] = new ArrayList[ZoneOffsetTransitionRule]
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc} */
   def getOffsetInfo(dateTime: LocalDateTime): ZoneOffsetInfo = new ZoneOffsetInfo(dateTime, offset, null)
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc} */
   def getTransitions: List[ZoneOffsetTransition] = new ArrayList[ZoneOffsetTransition]
 
   /**
@@ -133,6 +133,6 @@ final class FixedZoneRules private[zone](val offset: ZoneOffset) extends ZoneRul
     else false
   }
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc} */
   def nextTransition(instantProvider: InstantProvider): ZoneOffsetTransition = null
 }

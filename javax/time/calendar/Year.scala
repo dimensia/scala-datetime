@@ -38,7 +38,7 @@ import javax.time.MathUtils
 /**
  * A year in the ISO-8601 calendar system, such as '2007'.
  * <p>
- * { @code Year } is an immutable calendrical that represents a year.
+ * {@code Year} is an immutable calendrical that represents a year.
  * Any field that can be derived from a year can be obtained.
  * <p>
  * <b>Note that years in the ISO chronology only align with years in the
@@ -47,7 +47,7 @@ import javax.time.MathUtils
  * As such, historical years must be treated with caution.</b>
  * <p>
  * This class does not store or represent a month, day, time or time-zone.
- * Thus, for example, the value "2007" can be stored in a   { @code Year }.
+ * Thus, for example, the value "2007" can be stored in a {@code Year}.
  * <p>
  * Years represented by this class follow the ISO-8601 standard and use
  * the proleptic numbering system. Year 1 is preceded by year 0, then by year -1.
@@ -56,7 +56,7 @@ import javax.time.MathUtils
  * in most of the world. It is equivalent to the proleptic Gregorian calendar
  * system, in which todays's rules for leap years are applied for all time.
  * For most applications written today, the ISO-8601 rules are entirely suitable.
- * Any application that uses historical dates should consider using   { @code HistoricDate }.
+ * Any application that uses historical dates should consider using {@code HistoricDate}.
  * <p>
  * Year is immutable and thread-safe.
  *
@@ -79,7 +79,7 @@ object Year {
    * <p>
    * This will query the specified clock to obtain the current year.
    * Using this method allows the use of an alternate clock for testing.
-   * The alternate clock may be introduced using   { @link Clock dependency injection }.
+   * The alternate clock may be introduced using {@link Clock dependency injection}.
    *
    * @param clock the clock to use, not null
    * @return the current year, never null
@@ -97,7 +97,7 @@ object Year {
   def rule: DateTimeFieldRule[Int] = ISOChronology.yearRule
 
   /**
-   * Obtains an instance of   { @code Year }.
+   * Obtains an instance of {@code Year}.
    * <p>
    * This method accepts a year value from the proleptic ISO calendar system.
    * <p>
@@ -118,10 +118,10 @@ object Year {
   def apply(isoYear: Int): Year = of(isoYear)
 
   /**
-   * Obtains an instance of   { @code Year } from a calendrical.
+   * Obtains an instance of {@code Year} from a calendrical.
    * <p>
    * This can be used extract the year value directly from any implementation
-   * of   { @code Calendrical }, including those in other calendar systems.
+   * of {@code Calendrical}, including those in other calendar systems.
    *
    * @param calendrical the calendrical to extract from, not null
    * @return the Year instance, never null
@@ -140,7 +140,7 @@ object Year {
    *
    * @return the current year using the system clock, never null
    */
-  def nowSystemClock: Year = now(Clock.systemDefaultZone)
+  def now: Year = now(Clock.systemDefaultZone)
 }
 
 
@@ -160,7 +160,7 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
    * This instance is immutable and unaffected by this method call.
    *
    * @param years the years to add
-   * @return a { @code Year } based on this year with the period added, never null
+   * @return a {@code Year} based on this year with the period added, never null
    * @throws CalendricalException if the result exceeds the supported year range
    */
   def plusYears(years: Long): Year = {
@@ -173,7 +173,7 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
    *
    * @param other the other year to compare to, not null
    * @return true if this is after the specified year
-   * @throws NullPointerException if   { @code other } is null
+   * @throws NullPointerException if {@code other} is null
    */
   def isAfter(other: Year): Boolean = year > other.year
 
@@ -218,15 +218,15 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
   /**
    * Adjusts a date to have the value of this year, returning a new date.
    * <p>
-   * This method implements the   { @link DateAdjuster } interface.
+   * This method implements the {@link DateAdjuster} interface.
    * It is intended that, instead of calling this method directly, it is used from
-   * an instance of   { @code LocalDate } :
+   * an instance of {@code LocalDate} :
    * <pre>
    *   date = date.with(year);
    * </pre>
    * <p>
    * This implementation handles the case where the date represents February 29 and
-   * this is not a leap year using the   { @link DateResolvers # previousValid ( ) } resolver.
+   * this is not a leap year using the {@link DateResolvers # previousValid()} resolver.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -256,7 +256,7 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
 
   /**
    * Returns the previous leap year before the current year.
-   * The definition of a leap year is specified in   { @link # isLeap ( ) }.
+   * The definition of a leap year is specified in {@link #isLeap()}.
    *
    * @return the previous leap year after this year, never null
    * @throws CalendricalException if the minimum year is reached
@@ -279,11 +279,11 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
   def isValidMonthDay(monthDay: MonthDay): Boolean = monthDay != null && monthDay.isValidYear(year)
 
   /**
-   * Returns a copy of this   { @code Year } with the specified period added.
+   * Returns a copy of this {@code Year} with the specified period added.
    * <p>
    * This adds the specified period to this year, returning a new year.
-   * Before addition, the period is converted to a   { @code Period } using
-   * { @link Period # of ( PeriodProvider ) }.
+   * Before addition, the period is converted to a {@code Period} using
+   * {@link Period # of ( PeriodProvider )}.
    * The calculation simply adds the amount of years from the specified period.
    * ISO fields other than years are ignored.
    * <p>
@@ -293,8 +293,8 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
    * This instance is immutable and unaffected by this method call.
    *
    * @param periodProvider the period to add, not null
-   * @return a { @code Year } based on this year with the period added, never null
-   * @throws CalendricalException if the specified period cannot be converted to a   { @code Period }
+   * @return a {@code Year} based on this year with the period added, never null
+   * @throws CalendricalException if the specified period cannot be converted to a {@code Period }
    * @throws ArithmeticException if the result exceeds the supported year range
    */
   def plus(periodProvider: PeriodProvider): Year = {
@@ -306,7 +306,7 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
 
   /**
    * Returns the next leap year after the current year.
-   * The definition of a leap year is specified in   { @link # isLeap ( ) }.
+   * The definition of a leap year is specified in {@link #isLeap()}.
    *
    * @return the next leap year after this year, never null
    * @throws CalendricalException if the maximum year is reached
@@ -322,15 +322,15 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
    *
    * @param other the other year to compare to, not null
    * @return true if this point is before the specified year
-   * @throws NullPointerException if   { @code other } is null
+   * @throws NullPointerException if {@code other} is null
    */
   def isBefore(other: Year): Boolean = year < other.year
 
   /**
    * Returns a date formed from this year at the specified month-day.
    * <p>
-   * This merges the two objects -   { @code this } and the specified day -
-   * to form an instance of   { @code LocalDate }.
+   * This merges the two objects - {@code this} and the specified day -
+   * to form an instance of {@code LocalDate}.
    * <pre>
    * LocalDate date = year.atMonthDay(monthDay);
    * </pre>
@@ -359,7 +359,7 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
    * <p>
    * This method queries the value of the specified calendrical rule.
    * If the value cannot be returned for the rule from this instance then
-   * { @code null } will be returned.
+   * {@code null} will be returned.
    *
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
@@ -393,7 +393,7 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
    * This instance is immutable and unaffected by this method call.
    *
    * @param years the years to subtract
-   * @return a { @code Year } based on this year with the period subtracted, never null
+   * @return a {@code Year} based on this year with the period subtracted, never null
    * @throws CalendricalException if the result exceeds the supported year range
    */
   def minusYears(years: Long): Year = {
@@ -415,8 +415,8 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
   /**
    * Returns a year-month formed from this year at the specified month.
    * <p>
-   * This method merges   { @code this } and the specified month to form an
-   * instance of   { @code YearMonth }.
+   * This method merges {@code this} and the specified month to form an
+   * instance of {@code YearMonth}.
    * This method can be used as part of a chain to produce a date:
    * <pre>
    * LocalDate date = year.atMonth(month).atDay(day);
@@ -430,11 +430,11 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
   def atMonth(monthOfYear: Int): YearMonth = YearMonth.of(year, monthOfYear)
 
   /**
-   * Returns a copy of this   { @code Year } with the specified period subtracted.
+   * Returns a copy of this {@code Year} with the specified period subtracted.
    * <p>
    * This subtracts the specified period from this year, returning a new year.
-   * Before subtraction, the period is converted to a   { @code Period } using
-   * { @link Period # of ( PeriodProvider ) }.
+   * Before subtraction, the period is converted to a {@code Period} using
+   * {@link Period # of ( PeriodProvider )}.
    * The calculation simply adds the amount of years from the specified period.
    * ISO fields other than years are ignored.
    * <p>
@@ -444,8 +444,8 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
    * This instance is immutable and unaffected by this method call.
    *
    * @param periodProvider the period to subtract, not null
-   * @return a { @code Year } based on this year with the period subtracted, never null
-   * @throws CalendricalException if the specified period cannot be converted to a   { @code Period }
+   * @return a {@code Year} based on this year with the period subtracted, never null
+   * @throws CalendricalException if the specified period cannot be converted to a {@code Period }
    * @throws ArithmeticException if the result exceeds the supported year range
    */
   def minus(periodProvider: PeriodProvider): Year = {
@@ -460,7 +460,7 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
    *
    * @param other the other year to compare to, not null
    * @return the comparator value, negative if less, positive if greater
-   * @throws NullPointerException if   { @code other } is null
+   * @throws NullPointerException if {@code other} is null
    */
   def compareTo(other: Year): Int = MathUtils.safeCompare(year, other.year)
 
@@ -474,8 +474,8 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
   /**
    * Returns a date formed from this year at the specified day-of-year.
    * <p>
-   * This merges the two objects -   { @code this } and the specified day -
-   * to form an instance of   { @code LocalDate }.
+   * This merges the two objects - {@code this} and the specified day -
+   * to form an instance of {@code LocalDate}.
    * <pre>
    * LocalDate date = year.atDay(dayOfYear);
    * </pre>
@@ -497,8 +497,8 @@ final class Year private(val year: Int) extends Calendrical with Comparable[Year
   /**
    * Returns a year-month formed from this year at the specified month.
    * <p>
-   * This method merges   { @code this } and the specified month to form an
-   * instance of   { @code YearMonth }.
+   * This method merges {@code this} and the specified month to form an
+   * instance of {@code YearMonth}.
    * This method can be used as part of a chain to produce a date:
    * <pre>
    * LocalDate date = year.atMonth(month).atDay(day);

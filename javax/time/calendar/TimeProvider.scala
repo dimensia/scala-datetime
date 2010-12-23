@@ -37,25 +37,25 @@ package javax.time.calendar
  * TimeProvider is a simple interface that provides uniform access to any
  * object that can provide access to a time in the ISO-8601 calendar system.
  * <p>
- * The implementation of  { @code TimeProvider } may be mutable.
- * For example,  { @link java.util.GregorianCalendar GregorianCalendar } is a
+ * The implementation of {@code TimeProvider} may be mutable.
+ * For example, {@link java.util.GregorianCalendar GregorianCalendar} is a
  * mutable implementation of this interface.
- * The result of  { @link # toLocalTime ( ) }, however, is immutable.
+ * The result of {@link #toLocalTime()}, however, is immutable.
  * <p>
  * When implementing an API that accepts a TimeProvider as a parameter, it is
- * important to convert the input to a  { @code LocalTime } once and once only.
+ * important to convert the input to a {@code LocalTime} once and once only.
  * It is recommended that this is done at the top of the method before other processing.
  * This is necessary to handle the case where the implementation of the provider is
- * mutable and changes in value between two calls to  { @code toLocalTime ( ) }.
+ * mutable and changes in value between two calls to {@code toLocalTime()}.
  * <p>
  * The recommended way to convert a TimeProvider to a LocalTime is using
- * { @link LocalTime # of ( TimeProvider ) } as this method provides additional null checking.
+ * {@link LocalTime # of ( TimeProvider )} as this method provides additional null checking.
  * <p>
  * It is recommended that this interface should only be implemented by classes
  * that provide time information to at least minute precision.
  * <p>
- * The implementation of  { @code TimeProvider } may provide more
- * information than just a time. For example,  { @link OffsetTime },
+ * The implementation of {@code TimeProvider} may provide more
+ * information than just a time. For example, {@link OffsetTime},
  * implements this interface and also provides a zone offset.
  * <p>
  * TimeProvider makes no guarantees about the thread-safety or immutability
@@ -66,12 +66,12 @@ package javax.time.calendar
  */
 trait TimeProvider {
   /**
-   * Returns an instance of  { @code LocalTime } initialized from the
+   * Returns an instance of {@code LocalTime} initialized from the
    * state of this object.
    * <p>
    * This method will take the time represented by this object and return
-   * a  { @link LocalTime } constructed using the hour, minute, second and
-   * nanosecond. If this object is already a  { @code LocalTime } then
+   * a {@link LocalTime} constructed using the hour, minute, second and
+   * nanosecond. If this object is already a {@code LocalTime} then
    * it is simply returned.
    * <p>
    * If this object does not support nanosecond precision, then all fields
@@ -79,11 +79,11 @@ trait TimeProvider {
    * if this instance only stores hours, minutes and seconds, then the
    * nanoseconds part will be set to zero.
    * <p>
-   * The result of this method is a  { @code LocalTime } which represents
+   * The result of this method is a {@code LocalTime} which represents
    * a time in the ISO calendar system. Implementors may perform conversion
    * when implementing this method to convert from alternate calendar systems.
    *
-   * @return the { @code LocalTime } equivalent to this object, never null
+   * @return the {@code LocalTime} equivalent to this object, never null
    * @throws CalendricalException if the time cannot be converted
    */
   def toLocalTime: LocalTime

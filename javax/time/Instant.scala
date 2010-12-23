@@ -46,12 +46,12 @@ import javax.time.calendar.ZoneOffset
  * An instant is in reality an instantaneous event on an infinite time-line.
  * However, for practicality this API uses a precision of nanoseconds.
  * In addition, this API limits the measurable time-line to the number of seconds
- * that can be held in a    { @code long }.
+ * that can be held in a {@code long}.
  * This is greater than the current estimated age of the universe.
  * <p>
  * In order to represent the data a 96 bit number is required. To achieve this the
- * data is stored as seconds, measured using a    { @code long }, and nanoseconds,
- * measured using an    { @code int }. The nanosecond part will always be between
+ * data is stored as seconds, measured using a {@code long}, and nanoseconds,
+ * measured using an {@code int}. The nanosecond part will always be between
  * 0 and 999,999,999 representing the nanosecond part of the second.
  * <p>
  * The seconds are measured from the standard Java epoch of {@code 1970-01-01T00:00:00Z}.
@@ -59,7 +59,7 @@ import javax.time.calendar.ZoneOffset
  *
  * <h4>Time-scale</h4>
  * <p>
- * { @code Instant } uses the <a href="http://www.cl.cam.ac.uk/~mgk25/time/utc-sls/">UTC-SLS</a>
+ * {@code Instant} uses the <a href="http://www.cl.cam.ac.uk/~mgk25/time/utc-sls/">UTC-SLS</a>
  * time-scale which always has 86400 seconds in a day.
  * Essentially, UTC-SLS is a consistent mechanism of converting an accurate UTC time
  * (potentially with leap seconds) to a 86400 second day.
@@ -92,8 +92,24 @@ import javax.time.calendar.ZoneOffset
  * @author Stephen Colebourne
  */
 object Instant {
+
   /**
-   * Obtains an instance of    { @code Instant } using seconds from the
+   * BigInteger constant for a billion.
+   */
+  private[time] val Billion: BigInt = BigInt(NanosPerSecond)
+
+  /**
+   * Constant for nanos per second.
+   */
+  private val NanosPerSecond: Int = 1000000000
+
+  /**
+   * Constant for the 1970-01-01T00:00:00Z epoch instant.
+   */
+  val Epoch: Instant = new Instant(0, 0)
+
+  /**
+   * Obtains an instance of {@code Instant} using seconds from the
    * epoch of 1970-01-01T00:00:00Z.
    * <p>
    * The nanosecond field is set to zero.
@@ -109,7 +125,7 @@ object Instant {
    * This will query the specified time-source to obtain the current time.
    * <p>
    * Using this method allows the use of an alternate clock for testing.
-   * The alternate clock may be introduced using    { @link Clock dependency injection }.
+   * The alternate clock may be introduced using {@link Clock dependency injection}.
    *
    * @param timeSource the time-source to use, not null
    * @return the current instant, never null
@@ -120,11 +136,7 @@ object Instant {
   }
 
   /**
-   * BigInteger constant for a billion.
-   */
-  private[time] val Billion: BigInt = BigInt(NanosPerSecond)
-  /**
-   * Obtains an instance of    { @code Instant } using nanoseconds from the
+   * Obtains an instance of {@code Instant} using nanoseconds from the
    * epoch of 1970-01-01T00:00:00Z.
    * <p>
    * The seconds and nanoseconds are extracted from the specified nanoseconds.
@@ -139,7 +151,7 @@ object Instant {
   }
 
   /**
-   * Obtains an instance of    { @code Instant } using seconds from the
+   * Obtains an instance of {@code Instant} using seconds from the
    * epoch of 1970-01-01T00:00:00Z and nanosecond fraction of second.
    * <p>
    * This method allows an arbitrary number of nanoseconds to be passed in.
@@ -174,11 +186,11 @@ object Instant {
     else new Instant(seconds, nanoOfSecond)
 
   /**
-   * Obtains an instance of    { @code Instant } using nanoseconds from the
+   * Obtains an instance of {@code Instant} using nanoseconds from the
    * epoch of 1970-01-01T00:00:00Z.
    * <p>
-   * The seconds and nanoseconds are extracted from the specified    { @code BigInteger }.
-   * If the resulting seconds value is larger than    { @code Long.MaxValue } then an
+   * The seconds and nanoseconds are extracted from the specified {@code BigInteger}.
+   * If the resulting seconds value is larger than {@code Long.MaxValue} then an
    * exception is thrown.
    *
    * @param epochNanos the number of nanoseconds, not null
@@ -195,9 +207,9 @@ object Instant {
   }
 
   /**
-   * Obtains an instance of    { @code Instant } from a provider of instants.
+   * Obtains an instance of {@code Instant} from a provider of instants.
    * <p>
-   * In addition to calling    { @link InstantProvider # toInstant ( ) } this method
+   * In addition to calling {@link InstantProvider # toInstant()} this method
    * also checks the validity of the result of the provider.
    *
    * @param instantProvider a provider of instant information, not null
@@ -213,12 +225,7 @@ object Instant {
   def apply(instantProvider: InstantProvider): Instant = of(instantProvider)
 
   /**
-   * Constant for the 1970-01-01T00:00:00Z epoch instant.
-   */
-  val Epoch: Instant = new Instant(0, 0)
-
-  /**
-   * Obtains an instance of    { @code Instant } using milliseconds from the
+   * Obtains an instance of {@code Instant} using milliseconds from the
    * epoch of 1970-01-01T00:00:00Z.
    * <p>
    * The seconds and nanoseconds are extracted from the specified milliseconds.
@@ -233,7 +240,7 @@ object Instant {
   }
 
   /**
-   * Obtains an instance of    { @code Instant } by parsing a string.
+   * Obtains an instance of {@code Instant} by parsing a string.
    * <p>
    * This will parse the string produced by {@link #toString()} which is
    * the ISO-8601 format {@code yyyy -MM-ddTHH:mm:ss.SSSSSSSSSZ}.
@@ -283,10 +290,6 @@ object Instant {
   def now: Instant = now(TimeSource.system)
 
   /**
-   * Constant for nanos per second.
-   */
-  private val NanosPerSecond: Int = 1000000000
-  /**
    * Validates that the input value is not null.
    *
    * @param object the object to check
@@ -315,7 +318,7 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
    * <p>
    * The epoch second count is a simple incrementing count of seconds where
    * second 0 is 1970-01-01T00:00:00Z.
-   * The nanosecond part of the day is returned by  { @code getNanosOfSecond }.
+   * The nanosecond part of the day is returned by {@code getNanosOfSecond}.
    *
    * @return the seconds from the epoch of 1970-01-01T00:00:00Z
    */
@@ -326,16 +329,16 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
    * of the second.
    * <p>
    * The nanosecond-of-second value measures the total number of nanoseconds from
-   * the second returned by  { @code getEpochSeconds }.
+   * the second returned by {@code getEpochSeconds}.
    *
    * @return the nanoseconds within the second, always positive, never exceeds 999,999,999
    */
   def getNanoOfSecond: Int = nanos
 
   /**
-   * Converts this instant to an    { @code Instant }, trivially returning    { @code this }.
+   * Converts this instant to an {@code Instant}, trivially returning {@code this}.
    *
-   * @return { @code this }, never null
+   * @return {@code this}, never null
    */
   def toInstant: Instant = return this
 
@@ -348,7 +351,7 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
 
   /**
    * Converts this instant to the number of seconds from the epoch
-   * of 1970-01-01T00:00:00Z expressed as a    { @code BigDecimal }.
+   * of 1970-01-01T00:00:00Z expressed as a {@code BigDecimal}.
    *
    * @return the number of seconds since the epoch of 1970-01-01T00:00:00Z, scale 9, never null
    */
@@ -361,7 +364,7 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
    *
    * @param secondsToAdd the seconds to add, positive or negative
    * @param nanosToAdd the nanos to add, positive or negative
-   * @return an { @code Instant } based on this instant with the specified seconds added, never null
+   * @return an {@code Instant} based on this instant with the specified seconds added, never null
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   private def plus(secondsToAdd: Long, nanosToAdd: Long): Instant = {
@@ -381,7 +384,7 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
    * This instance is immutable and unaffected by this method call.
    *
    * @param secondsToAdd the seconds to add, positive or negative
-   * @return an { @code Instant } based on this instant with the specified seconds added, never null
+   * @return an {@code Instant} based on this instant with the specified seconds added, never null
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   def plusSeconds(secondsToAdd: Long): Instant = {
@@ -391,7 +394,7 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
 
   /**
    * Converts this instant to the number of nanoseconds from the epoch
-   * of 1970-01-01T00:00:00Z expressed as a    { @code BigInteger }.
+   * of 1970-01-01T00:00:00Z expressed as a {@code BigInteger}.
    *
    * @return the number of nanoseconds since the epoch of 1970-01-01T00:00:00Z, never null
    */
@@ -417,7 +420,7 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
    *
    * @param amount the duration to subtract, positive or negative
    * @param unit the unit that the duration is measured in, not null
-   * @return a { @code Duration } based on this duration with the specified duration subtracted, never null
+   * @return a {@code Duration} based on this duration with the specified duration subtracted, never null
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   def minus(amount: Long, unit: TimeUnit): Instant = {
@@ -433,7 +436,7 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
    * This instance is immutable and unaffected by this method call.
    *
    * @param duration the duration to subtract, positive or negative, not null
-   * @return an { @code Instant } based on this instant with the specified duration subtracted, never null
+   * @return an {@code Instant} based on this instant with the specified duration subtracted, never null
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   def minus(duration: Duration): Instant = {
@@ -458,7 +461,7 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
    *
    * @param amount the duration to add, positive or negative
    * @param unit the unit that the duration is measured in, not null
-   * @return an { @code Instant } based on this duration with the specified duration added, never null
+   * @return an {@code Instant} based on this duration with the specified duration added, never null
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   def plus(amount: Long, unit: TimeUnit): Instant = {
@@ -474,7 +477,7 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
    * This instance is immutable and unaffected by this method call.
    *
    * @param nanosToAdd the nanoseconds to add, positive or negative
-   * @return an { @code Instant } based on this instant with the specified nanoseconds added, never null
+   * @return an {@code Instant} based on this instant with the specified nanoseconds added, never null
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   def plusNanos(nanosToAdd: Long): Instant = plus(0, nanosToAdd)
@@ -485,7 +488,7 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
    * This instance is immutable and unaffected by this method call.
    *
    * @param secondsToSubtract the seconds to subtract, positive or negative
-   * @return an { @code Instant } based on this instant with the specified seconds subtracted, never null
+   * @return an {@code Instant} based on this instant with the specified seconds subtracted, never null
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   def minusSeconds(secondsToSubtract: Long): Instant = {
@@ -499,7 +502,7 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
    * This instance is immutable and unaffected by this method call.
    *
    * @param millisToSubtract the milliseconds to subtract, positive or negative
-   * @return an { @code Instant } based on this instant with the specified milliseconds subtracted, never null
+   * @return an {@code Instant} based on this instant with the specified milliseconds subtracted, never null
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   def minusMillis(millisToSubtract: Long): Instant = {
@@ -535,7 +538,7 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
    * This instance is immutable and unaffected by this method call.
    *
    * @param nanosToSubtract the nanoseconds to subtract, positive or negative
-   * @return an { @code Instant } based on this instant with the specified nanoseconds subtracted, never null
+   * @return an {@code Instant} based on this instant with the specified nanoseconds subtracted, never null
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   def minusNanos(nanosToSubtract: Long): Instant = {
@@ -548,7 +551,7 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
    * of 1970-01-01T00:00:00Z.
    * <p>
    * If this instant represents a point on the time-line too far in the future
-   * or past to fit in a    { @code long } milliseconds, then an exception is thrown.
+   * or past to fit in a {@code long} milliseconds, then an exception is thrown.
    * <p>
    * If this instant has greater than millisecond precision, then the conversion
    * will drop any excess precision information as though the amount in nanoseconds
@@ -578,7 +581,7 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
    * This instance is immutable and unaffected by this method call.
    *
    * @param millisToAdd the milliseconds to add, positive or negative
-   * @return an { @code Instant } based on this instant with the specified milliseconds added, never null
+   * @return an {@code Instant} based on this instant with the specified milliseconds added, never null
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   def plusMillis(millisToAdd: Long): Instant = plus(millisToAdd / 1000, (millisToAdd % 1000) * 1000000)
@@ -586,7 +589,7 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
   /**
    * A string representation of this instant using ISO-8601 representation.
    * <p>
-   * The format of the returned string will be    { @code yyyy -MM-ddTHH:mm:ss.SSSSSSSSSZ }.
+   * The format of the returned string will be {@code yyyy -MM-ddTHH:mm:ss.SSSSSSSSSZ}.
    *
    * @return an ISO-8601 representation of this instant, never null
    */
@@ -609,7 +612,7 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
    * This instance is immutable and unaffected by this method call.
    *
    * @param duration the duration to add, positive or negative, not null
-   * @return an { @code Instant } based on this instant with the specified duration added, never null
+   * @return an {@code Instant} based on this instant with the specified duration added, never null
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   def plus(duration: Duration): Instant = {

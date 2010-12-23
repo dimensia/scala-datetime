@@ -158,7 +158,7 @@ object ISOChronology extends ISOChronology {
    * <p>
    * The equivalent period and estimated duration are equal to 4 quarters.
    * <p>
-   * See      { @link # yearRule ( ) } for the main date-time field.
+   * See {@link #yearRule()} for the main date-time field.
    *
    * @return the period unit for years, never null
    */
@@ -338,7 +338,7 @@ object ISOChronology extends ISOChronology {
    * This field uses the ISO-8601 values for the day-of-week.
    * These define Monday as value 1 to Sunday as value 7.
    * <p>
-   * The enum      { @link DayOfWeek } should be used wherever possible in
+   * The enum {@link DayOfWeek} should be used wherever possible in
    * applications when referring to the day of the week value to avoid
    * needing to remember the values from 1 to 7.
    *
@@ -399,7 +399,7 @@ object ISOChronology extends ISOChronology {
    * Gets the rule for the week-based-year field in the ISO chronology.
    * <p>
    * This field is the year that results from calculating weeks with the ISO-8601 algorithm.
-   * See      { @link # weekOfWeekBasedYearRule ( ) week of week-based-year } for details.
+   * See {@link #weekOfWeekBasedYearRule ( ) week of week-based-year} for details.
    * <p>
    * The week-based-year will either be 52 or 53 weeks long, depending on the
    * result of the algorithm for a particular date.
@@ -550,14 +550,14 @@ object ISOChronology extends ISOChronology {
    * The period unit defines the concept of a period of exactly 24 hours that
    * is often treated as a day. The unit name of "24Hours" is intended to convey
    * the fact that this is primarily a 24 hour unit that happens to be used as
-   * a day unit on occasion. In most scenarios, the standard      { @link # periodDays ( ) Days }
+   * a day unit on occasion. In most scenarios, the standard {@link #periodDays ( ) Days }
    * unit is more applicable and accurate.
    * <p>
    * This chronology defines two units that could represent a day.
-   * This unit,      { @code 24Hours }, represents a fixed length of exactly 24 hours,
-   * allowing it to be converted to seconds, nanoseconds and      { @link Duration }.
-   * By contrast, the      { @code Days } unit varies in length based on time-zone (daylight
-   * savings time) changes and cannot be converted to seconds, nanoseconds or      { @code Duration }.
+   * This unit, {@code 24Hours}, represents a fixed length of exactly 24 hours,
+   * allowing it to be converted to seconds, nanoseconds and {@link Duration}.
+   * By contrast, the {@code Days} unit varies in length based on time-zone (daylight
+   * savings time) changes and cannot be converted to seconds, nanoseconds or {@code Duration}.
    * <p>
    * The equivalent period and estimated duration are equal to twice the
    * 12 hours unit, making it also equivalent to 24 hours.
@@ -585,7 +585,7 @@ object ISOChronology extends ISOChronology {
    * This is a basic unit and has no equivalent period.
    * The estimated duration is equal to 364.5 days, which is just over 5 weeks.
    * <p>
-   * See      { @link # weekBasedYearRule ( ) } for the main date-time field.
+   * See {@link #weekBasedYearRule()} for the main date-time field.
    *
    * @return the period unit for week-based-years, never null
    */
@@ -647,7 +647,7 @@ object ISOChronology extends ISOChronology {
    * <p>
    * The equivalent period and estimated duration are equal to 1000 microseconds.
    * <p>
-   * See      { @link # milliOfSecondRule ( ) } for the main date-time field.
+   * See {@link #milliOfSecondRule()} for the main date-time field.
    *
    * @return the period unit for milliseconds, never null
    */
@@ -660,7 +660,7 @@ object ISOChronology extends ISOChronology {
    * defined as AM, while the hours from 12 to 23 are defined as PM.
    * AM is defined with the value 0, while PM is defined with the value 1.
    * <p>
-   * The enum      { @link AmPmOfDay } should be used wherever possible in
+   * The enum {@link AmPmOfDay} should be used wherever possible in
    * applications when referring to the day of the week to avoid
    * hard-coding the values.
    *
@@ -746,7 +746,7 @@ object ISOChronology extends ISOChronology {
    * <p>
    * The equivalent period and estimated duration are equal to 1000 milliseconds.
    * <p>
-   * See      { @link # secondOfMinuteRule ( ) } for the main date-time field.
+   * See {@link #secondOfMinuteRule()} for the main date-time field.
    *
    * @return the period unit for seconds, never null
    */
@@ -788,8 +788,8 @@ object ISOChronology extends ISOChronology {
    * 8th to the 14th is always week 2 and so on.
    * <p>
    * This field can be used to create concepts such as 'the second Saturday'
-   * of a month. To achieve this, setup a      { @link DateTimeFields } instance
-   * using this rule and the      { @link # dayOfWeekRule ( ) day-of-week } rule.
+   * of a month. To achieve this, setup a {@link DateTimeFields} instance
+   * using this rule and the {@link #dayOfWeekRule ( ) day-of-week} rule.
    *
    * @return the rule for the week-of-month field, never null
    */
@@ -802,7 +802,7 @@ object ISOChronology extends ISOChronology {
    * <p>
    * The equivalent period and estimated duration are equal to 12 hours.
    * <p>
-   * See      { @link # amPmOfDayRule ( ) } for the main date-time field.
+   * See {@link #amPmOfDayRule()} for the main date-time field.
    *
    * @return the period unit for twelve hours, never null
    */
@@ -895,7 +895,7 @@ object ISOChronology extends ISOChronology {
    * using a Monday to Sunday week definition. Thus it is possible for the first
    * week to start on any day from the 29th December in the previous year to the
    * 4th January in the new year. The year which is aligned with this field is
-   * known as the      { @link # weekBasedYearRule ( ) week-based-year }.
+   * known as the {@link #weekBasedYearRule ( ) week-based-year}.
    *
    * @return the rule for the week-of-week-based-year field, never null
    */
@@ -912,7 +912,7 @@ object ISOChronology extends ISOChronology {
    * <p>
    * The equivalent period and estimated duration are equal to 60 seconds.
    * <p>
-   * See      { @link # minuteOfHourRule ( ) } for the main date-time field.
+   * See {@link #minuteOfHourRule()} for the main date-time field.
    *
    * @return the period unit for minutes, never null
    */
@@ -953,7 +953,7 @@ object ISOChronology extends ISOChronology {
   private val NanoOfSecondOrdinal: Int = 0 * 16
 
   /**
-   * The singleton instance of      { @code ISOChronology }.
+   * The singleton instance of {@code ISOChronology}.
    */
   object ISOChronology extends ISOChronology
 
@@ -964,7 +964,7 @@ object ISOChronology extends ISOChronology {
    * The values follow the ISO-8601 standard and normal human interactions.
    * These define January as value 1 to December as value 12.
    * <p>
-   * The enum      { @link MonthOfYear } should be used wherever possible in
+   * The enum {@link MonthOfYear} should be used wherever possible in
    * applications when referring to the day of the week to avoid
    * hard-coding the values.
    *
@@ -1289,7 +1289,7 @@ object ISOChronology extends ISOChronology {
    * <p>
    * The equivalent period and estimated duration are equal to 60 minutes.
    * <p>
-   * See      { @link # hourOfDayRule ( ) } for the main date-time field.
+   * See {@link #hourOfDayRule()} for the main date-time field.
    *
    * @return the period unit for hours, never null
    */
@@ -1331,16 +1331,16 @@ object ISOChronology extends ISOChronology {
    * This is typically equal to 24 hours, but may vary due to time-zone changes.
    * <p>
    * This chronology defines two units that could represent a day.
-   * This unit,      { @code Days }, represents a day that varies in length based on
+   * This unit, {@code Days}, represents a day that varies in length based on
    * time-zone (daylight savings time) changes. It is a basic unit that cannot
-   * be converted to seconds, nanoseconds or      { @link Duration }.
-   * By contrast, the      { @link # period24Hours ( ) 24Hours } unit has a fixed length of
-   * exactly 24 hours allowing it to be converted to seconds, nanoseconds and      { @code Duration }.
+   * be converted to seconds, nanoseconds or {@link Duration}.
+   * By contrast, the {@link #period24Hours ( ) 24Hours} unit has a fixed length of
+   * exactly 24 hours allowing it to be converted to seconds, nanoseconds and {@code Duration}.
    * <p>
    * This is a basic unit and has no equivalent period.
    * The estimated duration is equal to 24 hours.
    * <p>
-   * See      { @link # dayOfMonthRule ( ) } for the main date-time field.
+   * See {@link #dayOfMonthRule()} for the main date-time field.
    *
    * @return the period unit for accurate, variable length, days, never null
    */

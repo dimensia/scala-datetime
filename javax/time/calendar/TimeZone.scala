@@ -52,27 +52,27 @@ import javax.time.calendar.zone.ZoneRulesGroup
  * The rules are defined by governments and change frequently.
  * <p>
  * There are a number of sources of time-zone information available,
- * each represented by an instance of     { @link ZoneRulesGroup }.
+ * each represented by an instance of {@link ZoneRulesGroup}.
  * One group is provided as standard - 'TZDB' - and applications can add more as required.
  * <p>
  * Each group defines a naming scheme for the regions of the time-zone.
  * The format of the region is specific to the group.
- * For example, the 'TZDB' group typically use the format     { area } /    { city },
+ * For example, the 'TZDB' group typically use the format     { area} /    { city},
  * such as 'Europe/London'.
  * <p>
  * Each group typically produces multiple versions of their data.
  * The format of the version is specific to the group.
- * For example, the 'TZDB' group use the format     { year } { letter }, such as '2009b'.
+ * For example, the 'TZDB' group use the format     { year} { letter}, such as '2009b'.
  * <p>
  * In combination, a unique ID is created expressing the time-zone, formed from
- * { groupID } :    { regionID } #    { versionID }.
+ * { groupID} :    { regionID} #    { versionID}.
  * <p>
  * The version can be set to an empty string. This represents the "floating version".
  * The floating version will always choose the latest applicable set of rules.
  * Applications will probably choose to use the floating version, as it guarantees
  * usage of the latest rules.
  * <p>
- * In addition to the group:region#version combinations,     { @code TimeZone }
+ * In addition to the group:region#version combinations, {@code TimeZone }
  * can represent a fixed offset. This has an empty group and version ID.
  * It is not possible to have an invalid instance of a fixed time-zone.
  * <p>
@@ -85,15 +85,15 @@ import javax.time.calendar.zone.ZoneRulesGroup
  * By storing the version of the time-zone rules data together with the date, it is
  * possible to tell that the rules have changed and to process accordingly.
  * <p>
- * { @code TimeZone } merely represents the identifier of the zone.
- * The actual rules are provided by     { @link ZoneRules }.
+ * {@code TimeZone} merely represents the identifier of the zone.
+ * The actual rules are provided by {@link ZoneRules}.
  * One difference is that serializing this class only stores the reference to the zone,
- * whereas serializing     { @code ZoneRules } stores the entire set of rules.
+ * whereas serializing {@code ZoneRules} stores the entire set of rules.
  * <p>
- * After deserialization, or by using the special factory     { @link # ofUnchecked ( String ) ofUnchecked },
+ * After deserialization, or by using the special factory {@link #ofUnchecked ( String ) ofUnchecked},
  * it is possible for the time-zone to represent a group/region/version combination that is unavailable.
  * Since this class can still be loaded even when the rules cannot, the application can
- * continue. For example, a     { @link ZonedDateTime } instance could still be queried.
+ * continue. For example, a {@link ZonedDateTime} instance could still be queried.
  * The application might also take appropriate corrective action.
  * For example, an application might choose to download missing rules from a central server.
  * <p>
@@ -103,17 +103,17 @@ import javax.time.calendar.zone.ZoneRulesGroup
  */
 object TimeZone {
   /**
-   * Obtains an instance of     { @code TimeZone } from an identifier without checking
+   * Obtains an instance of {@code TimeZone} from an identifier without checking
    * if the time-zone has available rules.
    * <p>
-   * The identifier is parsed in a similar manner to     { @link # of ( String ) }.
+   * The identifier is parsed in a similar manner to {@link #of ( String )}.
    * However, there is no check to ensure that the group, region and version resolve
    * to a set of rules that can be loaded.
    * This factory does however check that the identifier meets the acceptable format.
    * <p>
    * This method is intended for advanced use cases.
    * One example might be a system that always retrieves time-zone rules from a remote server.
-   * Using this factory allows a     { @code TimeZone }, and thus a     { @code ZonedDateTime },
+   * Using this factory allows a {@code TimeZone}, and thus a {@code ZonedDateTime},
    * to be created without loading the rules from the remote server.
    *
    * @param zoneID the time-zone identifier, not null
@@ -123,7 +123,7 @@ object TimeZone {
   def ofUnchecked(zoneID: String): TimeZone = ofID(zoneID, false)
 
   /**
-   * Obtains an instance of     { @code TimeZone } using its ID using a map
+   * Obtains an instance of {@code TimeZone} using its ID using a map
    * of aliases to supplement the standard zone IDs.
    * <p>
    * Many users of time-zones use short abbreviations, such as PST for
@@ -146,13 +146,13 @@ object TimeZone {
   }
 
   /**
-   * Obtains an instance of     { @code TimeZone } representing a fixed time-zone.
+   * Obtains an instance of {@code TimeZone} representing a fixed time-zone.
    * <p>
    * The time-zone returned from this factory has a fixed offset for all time.
    * The region ID will return an identifier formed from 'UTC' and the offset.
    * The group and version IDs will both return an empty string.
    * <p>
-   * Fixed time-zones are     { @link # isValid ( ) always valid }.
+   * Fixed time-zones are {@link #isValid ( ) always valid}.
    *
    * @param offset the zone offset to create a fixed zone for, not null
    * @return the time-zone for the offset, never null
@@ -371,7 +371,7 @@ object TimeZone {
   }
 
   /**
-   * Gets the field rule for     { @code DateTimeZone }.
+   * Gets the field rule for {@code DateTimeZone}.
    *
    * @return the field rule for the time-zone, never null
    */
@@ -554,28 +554,28 @@ object TimeZone {
   }
 
   /**
-   * Obtains an instance of     { @code TimeZone } from an identifier ensuring that the
+   * Obtains an instance of {@code TimeZone} from an identifier ensuring that the
    * identifier is valid and available for use.
    * <p>
    * Six forms of identifier are recognized:
    * <ul>
-   * <li>    { @code    { groupID } :    { regionID } #    { versionID } } - full
-   * <li>    { @code    { groupID } :    { regionID } } - implies the floating version
-   * <li>    { @code    { regionID } #    { versionID } } - implies 'TZDB' group and specific version
-   * <li>    { @code    { regionID } } - implies 'TZDB' group and the floating version
-   * <li>    { @code UTC    { offset } } - fixed time-zone
-   * <li>    { @code GMT    { offset } } - fixed time-zone
+   * <li> {@code    { groupID} :    { regionID} #    { versionID} } - full
+   * <li> {@code    { groupID} :    { regionID} } - implies the floating version
+   * <li> {@code    { regionID} #    { versionID} } - implies 'TZDB' group and specific version
+   * <li> {@code    { regionID} } - implies 'TZDB' group and the floating version
+   * <li> {@code UTC    { offset} } - fixed time-zone
+   * <li> {@code GMT    { offset} } - fixed time-zone
    * </ul>
-   * Group IDs must match regular expression     { @code[A -Za-z0-9._-]+ }.<br />
-   * Region IDs must match regular expression     { @code[A -Za-z0-9%@~/+._-]+ }.<br />
-   * Version IDs must match regular expression     { @code[A -Za-z0-9._-]+ }.
+   * Group IDs must match regular expression {@code[A -Za-z0-9._-]+}.<br />
+   * Region IDs must match regular expression {@code[A -Za-z0-9%@~/+._-]+}.<br />
+   * Version IDs must match regular expression {@code[A -Za-z0-9._-]+}.
    * <p>
    * Most of the formats are based around the group, version and region IDs.
    * The version and region ID formats are specific to the group.
    * <p>
-   * The default group is 'TZDB' which has versions of the form     { year } { letter }, such as '2009b'.
-   * The region ID for the 'TZDB' group is generally of the form '    { area } /    { city } ', such as 'Europe/Paris'.
-   * This is compatible with most IDs from     { @link java.util.TimeZone }.
+   * The default group is 'TZDB' which has versions of the form     { year} { letter}, such as '2009b'.
+   * The region ID for the 'TZDB' group is generally of the form '    { area} /    { city} ', such as 'Europe/Paris'.
+   * This is compatible with most IDs from {@link java.util.TimeZone}.
    * <p>
    * For example, if a provider is loaded with the ID 'MyProvider' containing a zone ID of
    * 'France', then the unique key for version 2.1 would be 'MyProvider:France#2.1'.
@@ -586,11 +586,11 @@ object TimeZone {
    * <p>
    * The alternate format is for fixed time-zones, where the offset never changes over time.
    * A fixed time-zone is returned if the first three characters are 'UTC' or 'GMT' and
-   * the remainder of the ID is a valid format for     { @link ZoneOffset # of ( String ) }.
-   * The result will have a normalized time-zone ID of 'UTC    { offset } ', or just 'UTC' if the offset is zero.
+   * the remainder of the ID is a valid format for {@link ZoneOffset # of ( String )}.
+   * The result will have a normalized time-zone ID of 'UTC    { offset} ', or just 'UTC' if the offset is zero.
    * <p>
    * Note that it is intended that fixed offset time-zones are rarely used. Applications should use
-   * { @link ZoneOffset } and     { @link OffsetDateTime } in preference.
+   * {@link ZoneOffset} and {@link OffsetDateTime} in preference.
    *
    * @param zoneID the time-zone identifier, not null
    * @return the time-zone, never null
@@ -608,9 +608,9 @@ abstract class TimeZone private[calendar] extends Calendrical with Serializable 
    * Gets the unique time-zone ID.
    * <p>
    * The unique key is created from the group ID, version ID and region ID.
-   * The format is     { groupID } :    { regionID } #    { versionID }.
-   * If the group is 'TZDB' then the     { groupID } : is omitted.
-   * If the version is floating, then the #    { versionID } is omitted.
+   * The format is     { groupID} :    { regionID} #    { versionID}.
+   * If the group is 'TZDB' then the     { groupID} : is omitted.
+   * If the version is floating, then the #    { versionID} is omitted.
    * Fixed time-zones will only output the region ID.
    *
    * @return the time-zone unique ID, never null
@@ -641,11 +641,11 @@ abstract class TimeZone private[calendar] extends Calendrical with Serializable 
    * an exception if the time-zone is fixed.
    * <p>
    * Callers of this method need to be aware of an unusual scenario.
-   * It is possible to obtain a     { @code TimeZone } instance even when the
-   * rules are not available. This typically occurs when a     { @code TimeZone }
+   * It is possible to obtain a {@code TimeZone} instance even when the
+   * rules are not available. This typically occurs when a {@code TimeZone }
    * is loaded from a previously stored version but the rules are not available.
-   * In this case, the     { @code TimeZone } instance is still valid, as is
-   * any associated object, such as     { @link ZonedDateTime }. It is impossible to
+   * In this case, the {@code TimeZone} instance is still valid, as is
+   * any associated object, such as {@link ZonedDateTime}. It is impossible to
    * perform any calculations that require the rules however, and this method
    * will throw an exception.
    *
@@ -658,11 +658,11 @@ abstract class TimeZone private[calendar] extends Calendrical with Serializable 
   /**
    * Returns a copy of this time-zone with the specified version ID.
    * <p>
-   * For group based time-zones, this returns a     { @code TimeZone } with the
+   * For group based time-zones, this returns a {@code TimeZone} with the
    * same group and region, but a floating version.
    * The group and region IDs are not validated.
    * <p>
-   * For fixed time-zones,     { @code this } is returned.
+   * For fixed time-zones, {@code this} is returned.
    *
    * @return the new updated time-zone, never null
    * @throws CalendricalException if the time-zone is fixed
@@ -683,9 +683,9 @@ abstract class TimeZone private[calendar] extends Calendrical with Serializable 
   /**
    * Checks of the time-zone is fixed, such that the offset never varies.
    * <p>
-   * It is intended that     { @link OffsetDateTime },     { @link OffsetDate } and
-   * { @link OffsetTime } are used in preference to fixed offset time-zones
-   * in     { @link ZonedDateTime }.
+   * It is intended that {@link OffsetDateTime}, {@link OffsetDate} and
+   * {@link OffsetTime} are used in preference to fixed offset time-zones
+   * in {@link ZonedDateTime}.
    *
    * @return true if the time-zone is fixed and the offset never changes
    */
@@ -740,7 +740,7 @@ abstract class TimeZone private[calendar] extends Calendrical with Serializable 
    * <p>
    * This will return true if the rules are available for the group, region
    * and version ID combination. If this method returns true, then
-   * { @link # getRules ( ) } will return a valid rules instance.
+   * {@link #getRules()} will return a valid rules instance.
    * <p>
    * A time-zone can be invalid if it is deserialized in a JVM which does not
    * have the same rules loaded as the JVM that stored it.
@@ -790,7 +790,7 @@ abstract class TimeZone private[calendar] extends Calendrical with Serializable 
    * <p>
    * This method queries the value of the specified calendrical rule.
    * If the value cannot be returned for the rule from this offset then
-   * { @code null } will be returned.
+   * {@code null} will be returned.
    *
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
@@ -808,7 +808,7 @@ abstract class TimeZone private[calendar] extends Calendrical with Serializable 
    * group and region, but the latest version that has been registered.
    * The group and region IDs are validated in order to calculate the latest version.
    * <p>
-   * For fixed time-zones,     { @code this } is returned.
+   * For fixed time-zones, {@code this} is returned.
    *
    * @return the new updated time-zone, never null
    * @throws CalendricalException if the version is non-floating and the group or region ID is not found
@@ -819,7 +819,7 @@ abstract class TimeZone private[calendar] extends Calendrical with Serializable 
    * Gets the time-zone region identifier, such as 'Europe/London'.
    * <p>
    * The time-zone region identifier is of a format specific to the group.
-   * The default 'TZDB' group generally uses the format     { area } /    { city }, such as 'Europe/Paris'.
+   * The default 'TZDB' group generally uses the format     { area} /    { city}, such as 'Europe/Paris'.
    *
    * @return the time-zone rules region ID, never null
    */
@@ -841,7 +841,7 @@ abstract class TimeZone private[calendar] extends Calendrical with Serializable 
   /**
    * Returns a copy of this time-zone with the specified version ID.
    * <p>
-   * For group based time-zones, this returns a     { @code TimeZone }
+   * For group based time-zones, this returns a {@code TimeZone }
    * with the same group and region, but the specified version.
    * The group and region IDs are validated to ensure that the version is valid.
    * <p>
@@ -893,7 +893,7 @@ abstract class TimeZone private[calendar] extends Calendrical with Serializable 
    * <p>
    * This will return true if the rules are available for the group, region
    * and version ID combination that are valid for the specified date-time.
-   * If this method returns true, then     { @link # getRulesValidFor ( OffsetDateTime ) }
+   * If this method returns true, then {@link #getRulesValidFor ( OffsetDateTime ) }
    * will return a valid rules instance.
    * <p>
    * A time-zone can be invalid if it is deserialized in a JVM which does not
@@ -932,7 +932,7 @@ abstract class TimeZone private[calendar] extends Calendrical with Serializable 
   /**
    * Returns a string representation of the time-zone.
    * <p>
-   * This returns     { @link # getID ( ) }.
+   * This returns {@link #getID()}.
    *
    * @return the time-zone ID, never null
    */

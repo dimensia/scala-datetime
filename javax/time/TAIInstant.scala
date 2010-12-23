@@ -52,10 +52,10 @@ import util.matching.Regex
  * GPS and TAI differ by the fixed amount of 19 seconds.
  * <p>
  * The duration between two points on the TAI time-scale is calculated solely using this class.
- * Do not use the  { @code between } method on  { @code Duration } as that will lose information.
- * Instead use  { @link # durationUntil ( TAIInstant ) } on this class.
+ * Do not use the {@code between} method on {@code Duration} as that will lose information.
+ * Instead use {@link #durationUntil ( TAIInstant )} on this class.
  * <p>
- * It is intended that most applications will use the  { @code Instant } class
+ * It is intended that most applications will use the {@code Instant} class
  * which uses the UTC-SLS mapping from UTC to guarantee 86400 seconds per day.
  * Specialist applications with access to an accurate time-source may find this class useful.
  * <p>
@@ -97,7 +97,7 @@ object TAIInstant {
    * Converting a UTC instant to a TAI instant requires leap second rules.
    * This method uses the rules held in within the UTC instant.
    * <p>
-   * Conversion from a  { @code UTCInstant } will be entirely accurate.
+   * Conversion from a {@code UTCInstant} will be entirely accurate.
    * The resulting TAI instant will not reference the leap second rules, so
    * converting back to a UTC instant may result in a different UTC instant.
    *
@@ -120,7 +120,7 @@ object TAIInstant {
    * The seconds part must contain only numbers and a possible leading negative sign.
    * The nanoseconds part must contain exactly nine digits.
    * The trailing literal must be exactly specified.
-   * This format parses the  { @code toString } format.
+   * This format parses the {@code toString} format.
    *
    * @param text the text to parse such as '12345.123456789s(TAI)', not null
    * @return the parsed instant, never null
@@ -131,7 +131,7 @@ object TAIInstant {
     try {
       val Parser(secondsString, nanosString) = text
       return TAIInstant.ofTAISeconds(secondsString.toLong, nanosString.toLong)
-    } catch {
+   } catch {
       case ex: MatchError =>
         throw new CalendricalParseException("The text could not be parsed", text, 0)
       case ex: NumberFormatException =>
@@ -140,7 +140,7 @@ object TAIInstant {
   }
 
   /**
-   * Obtains an instance of  { @code TAIInstant } from the number of seconds from
+   * Obtains an instance of {@code TAIInstant} from the number of seconds from
    * the TAI epoch of 1958-01-01T00:00:00(TAI) with a nanosecond fraction of second.
    * <p>
    * This method allows an arbitrary number of nanoseconds to be passed in.
@@ -207,7 +207,7 @@ final case class TAIInstant(seconds: Long, nanos: Int) extends Comparable[TAIIns
    * Returns the duration between this instant and the specified instant.
    * <p>
    * This calculates the duration between this instant and another based on
-   * the TAI time-scale. Adding the duration to this instant using  { @link # plus }
+   * the TAI time-scale. Adding the duration to this instant using {@link #plus }
    * will always result in an instant equal to the specified instant.
    *
    * @param taiInstant the instant to calculate the duration until, not null
@@ -226,7 +226,7 @@ final case class TAIInstant(seconds: Long, nanos: Int) extends Comparable[TAIIns
    * <p>
    * This method converts this instant from the TAI to the UTC time-scale using the
    * system default leap-second rules. This conversion does not lose information
-   * and the UTC instant may safely be converted back to a  { @code TAIInstant }.
+   * and the UTC instant may safely be converted back to a {@code TAIInstant}.
    *
    * @return a {@code UTCInstant} representing the same instant using the system leap second rules, never null
    */
@@ -326,15 +326,15 @@ final case class TAIInstant(seconds: Long, nanos: Int) extends Comparable[TAIIns
   }
 
   /**
-   * Converts this instant to an  { @code Instant } using the system default
+   * Converts this instant to an {@code Instant} using the system default
    * leap second rules.
    * <p>
    * This method converts this instant from the TAI to the UTC-SLS time-scale using the
    * system default leap-second rules to convert to UTC.
    * This conversion will lose information around a leap second in accordance with UTC-SLS.
-   * Converting back to a  { @code TAIInstant } may result in a slightly different instant.
+   * Converting back to a {@code TAIInstant} may result in a slightly different instant.
    *
-   * @return an { @code Instant } representing the best approximation of this instant, never null
+   * @return an {@code Instant} representing the best approximation of this instant, never null
    */
   def toInstant: Instant = toUTCInstant.toInstant
 }

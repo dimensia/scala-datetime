@@ -77,7 +77,7 @@ final class CompositePrinterParser private[format](_printers: List[DateTimePrint
     else new CompositePrinterParser(Arrays.asList(printers: _*), Arrays.asList(parsers: _*), optional)
   }
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc}*/
   override def parse(context: DateTimeParseContext, parseText: String, _position: Int): Int = {
     var position = _position
     if (parsers == null) {
@@ -107,7 +107,7 @@ final class CompositePrinterParser private[format](_printers: List[DateTimePrint
     }
   }
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc} */
   override def toString: String = {
     val buf: StringBuilder = new StringBuilder
     if (printers != null) {
@@ -120,7 +120,7 @@ final class CompositePrinterParser private[format](_printers: List[DateTimePrint
     return buf.toString
   }
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc} */
   override def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = {
     if (printers == null) {
       throw new UnsupportedOperationException("Formatter does not support printing")
@@ -137,13 +137,13 @@ final class CompositePrinterParser private[format](_printers: List[DateTimePrint
     }
   }
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc} */
   def isParseSupported: Boolean = parsers != null
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc} */
   def isPrintSupported: Boolean = printers != null
 
-  /** { @inheritDoc }*/
+  /** {@inheritDoc} */
   override def isPrintDataAvailable(calendrical: Calendrical): Boolean = {
     if (optional) {
       return true

@@ -43,11 +43,11 @@ import javax.time.calendar.ZoneOffset
  * The rules defining how the zone offset varies for a single time-zone.
  * <p>
  * The rules model all the historic and future transitions for a time-zone.
- * The rules are loaded via   { @link TimeZone } and   { @link ZoneRulesGroup } and
+ * The rules are loaded via {@link TimeZone} and {@link ZoneRulesGroup} and
  * are specific to a group, region and version. The same rules may be shared
  * between multiple versions, regions or even groups.
  * <p>
- * Serializing an instance of   { @code ZoneRules } will store the entire set
+ * Serializing an instance of {@code ZoneRules} will store the entire set
  * of rules. It does not store the group, region or version as they are not
  * part of the state of this object.
  * <p>
@@ -103,11 +103,11 @@ abstract class ZoneRules protected {
    * Gets the list of transition rules for years beyond those defined in the transition list.
    * <p>
    * The complete set of transitions for this rules instance is defined by this method
-   * and   { @link # getTransitions ( ) }. This method returns instances of   { @link ZoneOffsetTransitionRule }
+   * and {@link #getTransitions()}. This method returns instances of {@link ZoneOffsetTransitionRule }
    * that define an algorithm for when transitions will occur.
    * The list will be empty for fixed offset rules.
    * <p>
-   * For any given   { @code ZoneRules }, this list contains the transition rules for years
+   * For any given {@code ZoneRules}, this list contains the transition rules for years
    * beyond those years that have been fully defined. These rules typically refer to future
    * daylight savings time rule changes.
    * <p>
@@ -140,7 +140,7 @@ abstract class ZoneRules protected {
    * The third case, a gap in the local time-line, cannot be returned by this
    * method as an instant will always represent a valid point and cannot be in a gap.
    * The returned object provides information about the offset or overlap and it
-   * is vital to check   { @link ZoneOffsetInfo # isTransition ( ) } to handle the overlap.
+   * is vital to check {@link ZoneOffsetInfo # isTransition()} to handle the overlap.
    *
    * @param instant the instant to find the offset information for, not null
    * @return the offset information, never null
@@ -154,9 +154,9 @@ abstract class ZoneRules protected {
   /**
    * Checks of the zone rules are fixed, such that the offset never varies.
    * <p>
-   * It is intended that   { @link OffsetDateTime },   { @link OffsetDate } and
-   * { @link OffsetTime } are used in preference to fixed offset time-zones
-   * in   { @link ZonedDateTime }.
+   * It is intended that {@link OffsetDateTime}, {@link OffsetDate} and
+   * {@link OffsetTime} are used in preference to fixed offset time-zones
+   * in {@link ZonedDateTime}.
    * <p>
    * The default implementation returns false.
    *
@@ -169,7 +169,7 @@ abstract class ZoneRules protected {
    * <p>
    * For any given instant there can only ever be one valid offset, which
    * is returned by this method. To access more detailed information about
-   * the offset at and around the instant use   { @link # getOffsetInfo ( Instant ) }.
+   * the offset at and around the instant use {@link #getOffsetInfo ( Instant )}.
    *
    * @param instant the instant to find the offset for,
    *   ignored for fixed offset rules, otherwise not null
@@ -211,7 +211,7 @@ abstract class ZoneRules protected {
    * Gets the complete list of fully defined transitions.
    * <p>
    * The complete set of transitions for this rules instance is defined by this method
-   * and   { @link # getTransitionRules ( ) }. This method returns those transitions that have
+   * and {@link #getTransitionRules()}. This method returns those transitions that have
    * been fully defined. These are typically historical, but may be in the future.
    * The list will be empty for fixed offset rules.
    * <p>
@@ -308,7 +308,7 @@ abstract class ZoneRules protected {
    * autumn cutover from daylight savings. There are two valid offsets during the overlap.</li>
    * </ul>
    * The returned object provides this information and it is vital to check
-   * { @link ZoneOffsetInfo # isTransition ( ) } to handle the gap or overlap.
+   * {@link ZoneOffsetInfo # isTransition()} to handle the gap or overlap.
    *
    * @param dateTime the date-time to find the offset information for, not null
    * @return the offset information, never null

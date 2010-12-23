@@ -87,7 +87,7 @@ object UTCRules extends UTCRules{
    * Calling this method is thread-safe.
    * Its effects are immediately visible in all threads.
    * Where possible, only call this method from a single thread to avoid the possibility of
-   * a   { @code ConcurrentModificationException }.
+   * a {@code ConcurrentModificationException}.
    * <p>
    * If the leap second being added matches a previous definition, then the method returns normally.
    * If the date is before the last registered date and doesn't match, then an exception is thrown.
@@ -108,7 +108,7 @@ abstract class UTCRules protected[time] {
   import UTCRules._
 
   /**
-   * Converts an   { @code Instant } to a   { @code UTCInstant }.
+   * Converts an {@code Instant} to a {@code UTCInstant}.
    * <p>
    * This method converts from an instant with 86400 seconds per day to the UTC
    * time-scale using the leap-second rules of the implementation.
@@ -117,11 +117,11 @@ abstract class UTCRules protected[time] {
    * Overriding this algorithm is possible, however doing so will conflict other parts
    * of the specification.
    * <p>
-   * The algorithm calculates the UTC nanos-of-day   { @code U } from the UTC-SLS nanos-of day   { @code US }.<br />
-   * Let   { @code L = getLeapAdjustment(mjd) }.<br />
-   * Let   { @code B = 86400 + L - 1000 }.<br />
-   * Let   { @code U = B + ((US - B) * 1000) / (1000 - L) }.<br />
-   * Where the algorithm is applied while   { @code US >= B }.<br />
+   * The algorithm calculates the UTC nanos-of-day {@code U} from the UTC-SLS nanos-of day {@code US}.<br />
+   * Let {@code L = getLeapAdjustment(mjd)}.<br />
+   * Let {@code B = 86400 + L - 1000}.<br />
+   * Let {@code U = B + ((US - B) * 1000) / (1000 - L)}.<br />
+   * Where the algorithm is applied while {@code US >= B}.<br />
    * (This algorithm has been tuned for integer arithmetic from the UTC-SLS specification.)
    *
    * @param instant the instant to convert, not null
@@ -129,11 +129,11 @@ abstract class UTCRules protected[time] {
    * @throws ArithmeticException if the capacity is exceeded
    */
   protected[time] def convertToUTC(instant: Instant): UTCInstant = {
-    var epochDay: Long = MathUtils.floorDiv(instant.seconds, SecondsPerDay)
-    var mjd: Long = epochDay + ModifiedJulianDaysEpochOffset
-    var slsNanos: Long = MathUtils.floorMod(instant.seconds, SecondsPerDay) * NanosPerSecond + instant.nanos
-    var leapAdj: Int = getLeapSecondAdjustment(mjd)
-    var startSlsNanos: Long = (SecondsPerDay + leapAdj - 1000) * NanosPerSecond
+    val epochDay: Long = MathUtils.floorDiv(instant.seconds, SecondsPerDay)
+    val mjd: Long = epochDay + ModifiedJulianDaysEpochOffset
+    val slsNanos: Long = MathUtils.floorMod(instant.seconds, SecondsPerDay) * NanosPerSecond + instant.nanos
+    val leapAdj: Int = getLeapSecondAdjustment(mjd)
+    val startSlsNanos: Long = (SecondsPerDay + leapAdj - 1000) * NanosPerSecond
     var utcNanos: Long = slsNanos
     if (leapAdj != 0 && slsNanos >= startSlsNanos) {
       utcNanos = startSlsNanos + ((slsNanos - startSlsNanos) * 1000) / (1000 - leapAdj)
@@ -144,7 +144,7 @@ abstract class UTCRules protected[time] {
   /**
    * Gets the leap second adjustment on the specified date.
    * <p>
-   * The UTC standard restricts the adjustment to a day to   { @code -1 } or   { @code 1 }.
+   * The UTC standard restricts the adjustment to a day to {@code -1} or {@code 1}.
    * <p>
    * Any leap seconds are added to, or removed from, the end of the specified date.
    * <p>
@@ -187,7 +187,7 @@ abstract class UTCRules protected[time] {
   override def toString: String = "UTCRules[" + getName + ']'
 
   /**
-   * Converts a   { @code TAIInstant } to a   { @code UTCInstant }.
+   * Converts a {@code TAIInstant} to a {@code UTCInstant}.
    * <p>
    * This method converts from the TAI to the UTC time-scale using the
    * leap-second rules of the implementation.
@@ -199,7 +199,7 @@ abstract class UTCRules protected[time] {
   protected[time] def convertToUTC(taiInstant: TAIInstant): UTCInstant
 
   /**
-   * Converts a   { @code UTCInstant } to an   { @code Instant }.
+   * Converts a {@code UTCInstant} to an {@code Instant}.
    * <p>
    * This method converts from the UTC time-scale to one with 86400 seconds per day
    * using the leap-second rules of the implementation.
@@ -208,11 +208,11 @@ abstract class UTCRules protected[time] {
    * Overriding this algorithm is possible, however doing so will conflict other parts
    * of the specification.
    * <p>
-   * The algorithm calculates the UTC-SLS nanos-of-day   { @code US } from the UTC nanos-of day   { @code U }.<br />
-   * Let   { @code L = getLeapAdjustment(mjd) }.<br />
-   * Let   { @code B = 86400 + L - 1000 }.<br />
-   * Let   { @code US = U - L * (U - B) / 1000 }.<br />
-   * Where the algorithm is applied while   { @code U >= B }.
+   * The algorithm calculates the UTC-SLS nanos-of-day {@code US} from the UTC nanos-of day {@code U}.<br />
+   * Let {@code L = getLeapAdjustment(mjd)}.<br />
+   * Let {@code B = 86400 + L - 1000}.<br />
+   * Let {@code US = U - L * (U - B) / 1000}.<br />
+   * Where the algorithm is applied while {@code U >= B}.
    *
    * @param utcInstant the UTC instant to convert, not null
    * @return the converted instant, not null
@@ -240,12 +240,12 @@ abstract class UTCRules protected[time] {
   def getName: String
 
   /**
-   * Converts a   { @code UTCInstant } to a   { @code TAIInstant }.
+   * Converts a {@code UTCInstant} to a {@code TAIInstant}.
    * <p>
    * This method converts from the UTC to the TAI time-scale using the
    * leap-second rules of the implementation.
    * <p>
-   * The standard implementation uses   { @code getTAIOffset }.
+   * The standard implementation uses {@code getTAIOffset}.
    *
    * @param utcInstant the UTC instant to convert, not null
    * @return the converted TAI instant, not null

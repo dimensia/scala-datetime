@@ -42,11 +42,11 @@ import javax.time.MathUtils
  * minute, second and nanosecond units, such as '3 Months, 4 Days and 7 Hours'.
  * <p>
  * A period is a human-scale description of an amount of time.
- * This class represents the 7 standard definitions from   { @link ISOChronology }.
+ * This class represents the 7 standard definitions from {@link ISOChronology}.
  * The period units used are 'Years', 'Months', 'Days', 'Hours', 'Minutes',
  * 'Seconds' and 'Nanoseconds'.
  * <p>
- * The   { @code ISOChronology } defines a relationship between some of the units:
+ * The {@code ISOChronology} defines a relationship between some of the units:
  * <ul>
  * <li>12 months in a year</li>
  * <li>24 hours in a day (ignoring time-zones)</li>
@@ -81,7 +81,7 @@ object Period {
     ISOChronology.periodNanos)
 
   /**
-   * Obtains a   { @code Period } from time-based fields.
+   * Obtains a {@code Period} from time-based fields.
    * <p>
    * This creates an instance based on hours, minutes, seconds and nanoseconds.
    *
@@ -95,11 +95,11 @@ object Period {
     of(0, 0, 0, hours, minutes, seconds, nanos)
 
   /**
-   * Obtains a   { @code Period } consisting of the number of years between two dates.
+   * Obtains a {@code Period} consisting of the number of years between two dates.
    * <p>
    * The start date is included, but the end date is not. Only whole years count.
-   * For example, from   { @code 2010 -01-15 } to   { @code 2012 -01-15 } is two years,
-   * whereas from   { @code 2010 -01-15 } to   { @code 2012 -01-14 } is only one year.
+   * For example, from {@code 2010 -01-15} to {@code 2012 -01-15} is two years,
+   * whereas from {@code 2010 -01-15} to {@code 2012 -01-14} is only one year.
    * <p>
    * The result of this method can be a negative period if the end is before the start.
    *
@@ -126,7 +126,7 @@ object Period {
   }
 
   /**
-   * Obtains a   { @code Period } from a number of years.
+   * Obtains a {@code Period} from a number of years.
    *
    * @param years the amount of years, may be negative
    * @return the period, never null
@@ -137,7 +137,7 @@ object Period {
   }
 
   /**
-   * Obtains a   { @code Period } from a number of minutes.
+   * Obtains a {@code Period} from a number of minutes.
    *
    * @param minutes the amount of minutes, may be negative
    * @return the period, never null
@@ -148,7 +148,7 @@ object Period {
   }
 
   /**
-   * Obtains a   { @code Period } from a number of days.
+   * Obtains a {@code Period} from a number of days.
    *
    * @param days the amount of days, may be negative
    * @return the period, never null
@@ -159,7 +159,7 @@ object Period {
   }
 
   /**
-   * Obtains a   { @code Period } from a number of seconds.
+   * Obtains a {@code Period} from a number of seconds.
    *
    * @param seconds the amount of seconds, may be negative
    * @return the period, never null
@@ -170,9 +170,9 @@ object Period {
   }
 
   /**
-   * Obtains a   { @code Period } from a provider of periods.
+   * Obtains a {@code Period} from a provider of periods.
    * <p>
-   * A   { @code Period } supports 7 units, ISO years, months, days, hours,
+   * A {@code Period} supports 7 units, ISO years, months, days, hours,
    * minutes, seconds and nanoseconds. Any period that contains amounts in
    * these units, or in units that can be converted to these units will be
    * accepted. If the provider contains any other unit, an exception is thrown.
@@ -200,15 +200,15 @@ object Period {
   }
 
   /**
-   * Obtains a   { @code Period } from a   { @code Duration }.
+   * Obtains a {@code Period} from a {@code Duration}.
    * <p>
    * The created period will have normalized values for the hours, minutes,
    * seconds and nanoseconds fields. The years, months and days fields will be zero.
    * <p>
-   * To populate the days field, call   { @link # normalizedWith24HourDays ( ) } on the created period.
+   * To populate the days field, call {@link #normalizedWith24HourDays()} on the created period.
    *
    * @param duration the duration to create from, not null
-   * @return the { @code PeriodFields } instance, never null
+   * @return the {@code PeriodFields} instance, never null
    * @throws ArithmeticException if the result exceeds the supported period range
    */
   def of(duration: Duration): Period = {
@@ -282,9 +282,9 @@ object Period {
   }
 
   /**
-   * Obtains a   { @code Period } from the time-based fields of a period.
+   * Obtains a {@code Period} from the time-based fields of a period.
    * <p>
-   * A   { @code Period } supports 7 units, ISO years, months, days, hours,
+   * A {@code Period} supports 7 units, ISO years, months, days, hours,
    * minutes, seconds and nanoseconds. Any period that contains amounts in
    * these units, or in units that can be converted to these units will be
    * accepted. If the provider contains any other unit, an exception is thrown.
@@ -301,11 +301,11 @@ object Period {
   def ofTimeFields(periodProvider: PeriodProvider): Period = of(periodProvider).withTimeFieldsOnly
 
   /**
-   * Obtains a   { @code Period } consisting of the number of days, months
+   * Obtains a {@code Period} consisting of the number of days, months
    * and years between two dates.
    * <p>
    * The start date is included, but the end date is not. Only whole years count.
-   * For example, from   { @code 2010 -01-15 } to   { @code 2011 -03-18 } is one year, two months and three days.
+   * For example, from {@code 2010 -01-15} to {@code 2011 -03-18} is one year, two months and three days.
    * <p>
    * The result of this method can be a negative period if the end is before the start.
    * The negative sign will be the same in each of year, month and day.
@@ -339,9 +339,9 @@ object Period {
   }
 
   /**
-   * Obtains a   { @code Period } from the date-based fields of a period.
+   * Obtains a {@code Period} from the date-based fields of a period.
    * <p>
-   * A   { @code Period } supports 7 units, ISO years, months, days, hours,
+   * A {@code Period} supports 7 units, ISO years, months, days, hours,
    * minutes, seconds and nanoseconds. Any period that contains amounts in
    * these units, or in units that can be converted to these units will be
    * accepted. If the provider contains any other unit, an exception is thrown.
@@ -358,7 +358,7 @@ object Period {
   def ofDateFields(periodProvider: PeriodProvider): Period = of(periodProvider).withDateFieldsOnly
 
   /**
-   * Obtains a   { @code Period } from date-based fields.
+   * Obtains a {@code Period} from date-based fields.
    * <p>
    * This creates an instance based on years, months and days.
    *
@@ -370,10 +370,10 @@ object Period {
   def ofDateFields(years: Int, months: Int, days: Int): Period = of(years, months, days, 0, 0, 0, 0)
 
   /**
-   * Obtains a   { @code Period } consisting of the number of days between two dates.
+   * Obtains a {@code Period} consisting of the number of days between two dates.
    * <p>
    * The start date is included, but the end date is not. For example, from
-   * { @code 2010 -01-15 } to   { @code 2010 -01-18 } is three days.
+   * {@code 2010 -01-15} to {@code 2010 -01-18} is three days.
    * <p>
    * The result of this method can be a negative period if the end is before the start.
    *
@@ -390,11 +390,11 @@ object Period {
   }
 
   /**
-   * Obtains a   { @code Period } consisting of the number of months between two dates.
+   * Obtains a {@code Period} consisting of the number of months between two dates.
    * <p>
    * The start date is included, but the end date is not. Only whole months count.
-   * For example, from   { @code 2010 -01-15 } to   { @code 2010 -03-15 } is two months,
-   * whereas from   { @code 2010 -01-15 } to   { @code 2010 -03-14 } is only one month.
+   * For example, from {@code 2010 -01-15} to {@code 2010 -03-15} is two months,
+   * whereas from {@code 2010 -01-15} to {@code 2010 -03-14} is only one month.
    * <p>
    * The result of this method can be a negative period if the end is before the start.
    *
@@ -419,7 +419,7 @@ object Period {
   }
 
   /**
-   * Obtains a   { @code Period } from time-based fields.
+   * Obtains a {@code Period} from time-based fields.
    * <p>
    * This creates an instance based on hours, minutes and seconds.
    *
@@ -431,11 +431,11 @@ object Period {
   def ofTimeFields(hours: Int, minutes: Int, seconds: Int): Period = of(0, 0, 0, hours, minutes, seconds, 0)
 
   /**
-   * Obtains a   { @code Period } from an amount and unit.
+   * Obtains a {@code Period} from an amount and unit.
    * <p>
    * The parameters represent the two parts of a phrase like '6 Days'.
    * <p>
-   * A   { @code Period } supports 7 units, ISO years, months, days, hours,
+   * A {@code Period} supports 7 units, ISO years, months, days, hours,
    * minutes, seconds and nanoseconds. The unit must be one of these, or be
    * able to be converted to one of these.
    *
@@ -462,7 +462,7 @@ object Period {
 //    of(years, months, days, hours, minutes, seconds, 0)
 
   /**
-   * Obtains a   { @code Period } from date-based and time-based fields.
+   * Obtains a {@code Period} from date-based and time-based fields.
    * <p>
    * This creates an instance based on years, months, days, hours, minutes, seconds and nanoseconds.
    * The resulting period will have normalized seconds and nanoseconds.
@@ -529,8 +529,8 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This instance is immutable and unaffected by this method call.
    *
    * @param days the days to add, positive or negative
-   * @return a { @code Period } based on this period with the requested days added, never null
-   * @throws ArithmeticException if the capacity of an   { @code int } is exceeded
+   * @return a {@code Period} based on this period with the requested days added, never null
+   * @throws ArithmeticException if the capacity of an {@code int} is exceeded
    */
   def plusDays(days: Int): Period = withDays(MathUtils.safeAdd(this.days, days))
 
@@ -543,8 +543,8 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This instance is immutable and unaffected by this method call.
    *
    * @param seconds the seconds to add, positive or negative
-   * @return a { @code Period } based on this period with the requested seconds added, never null
-   * @throws ArithmeticException if the capacity of an   { @code int } is exceeded
+   * @return a {@code Period} based on this period with the requested seconds added, never null
+   * @throws ArithmeticException if the capacity of an {@code int} is exceeded
    */
   def plusSeconds(seconds: Int): Period = withSeconds(MathUtils.safeAdd(this.seconds, seconds))
 
@@ -567,8 +567,8 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This instance is immutable and unaffected by this method call.
    *
    * @param years the years to subtract, positive or negative
-   * @return a { @code Period } based on this period with the requested years subtracted, never null
-   * @throws ArithmeticException if the capacity of an   { @code int } is exceeded
+   * @return a {@code Period} based on this period with the requested years subtracted, never null
+   * @throws ArithmeticException if the capacity of an {@code int} is exceeded
    */
   def minusYears(years: Int): Period = withYears(MathUtils.safeSubtract(this.years, years))
 
@@ -602,7 +602,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This instance is immutable and unaffected by this method call.
    *
    * @param minutes the minutes to represent
-   * @return a { @code Period } based on this period with the requested minutes, never null
+   * @return a {@code Period} based on this period with the requested minutes, never null
    */
   def withMinutes(minutes: Int): Period = {
     if (minutes == this.minutes) this
@@ -648,7 +648,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * </ul>
    * This method is only appropriate to call if these assumptions are met.
    *
-   * @return a { @code Duration } equivalent to this period, never null
+   * @return a {@code Duration} equivalent to this period, never null
    * @throws CalendricalException if the period cannot be converted as it contains years/months/days
    */
   def toDuration: Duration = {
@@ -668,8 +668,8 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This instance is immutable and unaffected by this method call.
    *
    * @param minutes the minutes to add, positive or negative
-   * @return a { @code Period } based on this period with the requested minutes added, never null
-   * @throws ArithmeticException if the capacity of an   { @code int } is exceeded
+   * @return a {@code Period} based on this period with the requested minutes added, never null
+   * @throws ArithmeticException if the capacity of an {@code int} is exceeded
    */
   def plusMinutes(minutes: Int): Period = withMinutes(MathUtils.safeAdd(this.minutes, minutes))
 
@@ -681,7 +681,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
-   * @return a { @code Period } based on this period with zero values for time-based fields, never null
+   * @return a {@code Period} based on this period with zero values for time-based fields, never null
    */
   def withDateFieldsOnly: Period = {
     if ((hours | minutes | seconds | nanos) == 0) this
@@ -697,7 +697,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This instance is immutable and unaffected by this method call.
    *
    * @param seconds the seconds to represent
-   * @return a { @code Period } based on this period with the requested seconds, never null
+   * @return a {@code Period} based on this period with the requested seconds, never null
    */
   def withSeconds(seconds: Int): Period = {
     if (seconds == this.seconds) this
@@ -713,8 +713,8 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This instance is immutable and unaffected by this method call.
    *
    * @param years the years to add, positive or negative
-   * @return a { @code Period } based on this period with the requested years added, never null
-   * @throws ArithmeticException if the capacity of an   { @code int } is exceeded
+   * @return a {@code Period} based on this period with the requested years added, never null
+   * @throws ArithmeticException if the capacity of an {@code int} is exceeded
    */
   def plusYears(years: Int): Period = withYears(MathUtils.safeAdd(this.years, years))
 
@@ -727,8 +727,8 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This instance is immutable and unaffected by this method call.
    *
    * @param hours the hours to add, positive or negative
-   * @return a { @code Period } based on this period with the requested hours added, never null
-   * @throws ArithmeticException if the capacity of an   { @code int } is exceeded
+   * @return a {@code Period} based on this period with the requested hours added, never null
+   * @throws ArithmeticException if the capacity of an {@code int} is exceeded
    */
   def plusHours(hours: Int): Period = withHours(MathUtils.safeAdd(this.hours, hours))
 
@@ -741,8 +741,8 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This instance is immutable and unaffected by this method call.
    *
    * @param days the days to subtract, positive or negative
-   * @return a { @code Period } based on this period with the requested days subtracted, never null
-   * @throws ArithmeticException if the capacity of an   { @code int } is exceeded
+   * @return a {@code Period} based on this period with the requested days subtracted, never null
+   * @throws ArithmeticException if the capacity of an {@code int} is exceeded
    */
   def minusDays(days: Int): Period = withDays(MathUtils.safeSubtract(this.days, days))
 
@@ -775,7 +775,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This instance is immutable and unaffected by this method call.
    *
    * @param hours the hours to represent
-   * @return a { @code Period } based on this period with the requested hours, never null
+   * @return a {@code Period} based on this period with the requested hours, never null
    */
   def withHours(hours: Int): Period = {
     if (hours == this.hours) this
@@ -801,8 +801,8 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This instance is immutable and unaffected by this method call.
    *
    * @param months the months to subtract, positive or negative
-   * @return a { @code Period } based on this period with the requested months subtracted, never null
-   * @throws ArithmeticException if the capacity of an   { @code int } is exceeded
+   * @return a {@code Period} based on this period with the requested months subtracted, never null
+   * @throws ArithmeticException if the capacity of an {@code int} is exceeded
    */
   def minusMonths(months: Int): Period = withMonths(MathUtils.safeSubtract(this.months, months))
 
@@ -811,7 +811,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * by the specified scalar.
    *
    * @param scalar the scalar to multiply by, not null
-   * @return a { @code Period } based on this period with the amounts multiplied by the scalar, never null
+   * @return a {@code Period} based on this period with the amounts multiplied by the scalar, never null
    * @throws ArithmeticException if the capacity of any field is exceeded
    */
   def multipliedBy(scalar: Int): Period = {
@@ -835,7 +835,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This instance is immutable and unaffected by this method call.
    *
    * @param months the months to represent
-   * @return a { @code Period } based on this period with the requested months, never null
+   * @return a {@code Period} based on this period with the requested months, never null
    */
   def withMonths(months: Int): Period = {
     if (months == this.months) this
@@ -858,7 +858,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This instance is immutable and unaffected by this method call.
    *
    * @param nanos the nanoseconds to represent
-   * @return a { @code Period } based on this period with the requested nanoseconds, never null
+   * @return a {@code Period} based on this period with the requested nanoseconds, never null
    */
   def withNanos(nanos: Long): Period = {
     if (nanos == this.nanos) this
@@ -874,10 +874,10 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
 
   /**
    * Gets the amount of nanoseconds of this period safely converted
-   * to an   { @code int }.
+   * to an {@code int}.
    *
    * @return the amount of nanoseconds of this period
-   * @throws ArithmeticException if the number of nanoseconds exceeds the capacity of an   { @code int }
+   * @throws ArithmeticException if the number of nanoseconds exceeds the capacity of an {@code int }
    */
   def getNanosInt: Int = MathUtils.safeToInt(nanos)
 
@@ -895,7 +895,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This method is only appropriate to call if these assumptions are met.
    *
    * @return the total number of nanoseconds
-   * @throws ArithmeticException if the capacity of a   { @code long } is exceeded
+   * @throws ArithmeticException if the capacity of a {@code long} is exceeded
    */
   def totalNanos: Long = {
     if (this == Zero) return 0
@@ -918,7 +918,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * <p>
    * Two normalizations occur, one for years and months, and one for
    * days, hours, minutes, seconds and nanoseconds.
-   * For example, a period of   { @code P1Y15M1DT28H } will be normalized to   { @code P2Y3M2DT4H }.
+   * For example, a period of {@code P1Y15M1DT28H} will be normalized to {@code P2Y3M2DT4H}.
    * <p>
    * Note that this method normalizes using assumptions:
    * <ul>
@@ -932,7 +932,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
-   * @return a { @code Period } based on this period with the amounts normalized, never null
+   * @return a {@code Period} based on this period with the amounts normalized, never null
    * @throws ArithmeticException if the capacity of any field is exceeded
    */
   def normalizedWith24HourDays: Period = {
@@ -974,8 +974,8 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This instance is immutable and unaffected by this method call.
    *
    * @param nanos the nanoseconds to add, positive or negative
-   * @return a { @code Period } based on this period with the requested nanoseconds added, never null
-   * @throws ArithmeticException if the capacity of a   { @code long } is exceeded
+   * @return a {@code Period} based on this period with the requested nanoseconds added, never null
+   * @throws ArithmeticException if the capacity of a {@code long} is exceeded
    */
   def plusNanos(nanos: Long): Period = withNanos(MathUtils.safeAdd(this.nanos, nanos))
 
@@ -988,8 +988,8 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This instance is immutable and unaffected by this method call.
    *
    * @param nanos the nanoseconds to subtract, positive or negative
-   * @return a { @code Period } based on this period with the requested nanoseconds subtracted, never null
-   * @throws ArithmeticException if the capacity of a   { @code long } is exceeded
+   * @return a {@code Period} based on this period with the requested nanoseconds subtracted, never null
+   * @throws ArithmeticException if the capacity of a {@code long} is exceeded
    */
   def minusNanos(nanos: Long): Period = withNanos(MathUtils.safeSubtract(this.nanos, nanos))
 
@@ -1029,7 +1029,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
-   * @return a { @code Period } based on this period with zero values for date-based fields, never null
+   * @return a {@code Period} based on this period with zero values for date-based fields, never null
    */
   def withTimeFieldsOnly: Period = {
     if ((years | months | days) == 0) this
@@ -1051,7 +1051,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This method is only appropriate to call if these assumptions are met.
    *
    * @return the total number of nanoseconds
-   * @throws ArithmeticException if the capacity of a   { @code long } is exceeded
+   * @throws ArithmeticException if the capacity of a {@code long} is exceeded
    */
   def totalNanosWith24HourDays: Long = {
     if (this == Zero) return 0
@@ -1143,7 +1143,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This method is only appropriate to call if these assumptions are met.
    *
    * @return the total number of years
-   * @throws ArithmeticException if the capacity of a   { @code long } is exceeded
+   * @throws ArithmeticException if the capacity of a {@code long} is exceeded
    */
   def totalMonths: Long = MathUtils.safeAdd(MathUtils.safeMultiply(years.asInstanceOf[Long], 12), months)
 
@@ -1156,8 +1156,8 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This instance is immutable and unaffected by this method call.
    *
    * @param hours the hours to subtract, positive or negative
-   * @return a { @code Period } based on this period with the requested hours subtracted, never null
-   * @throws ArithmeticException if the capacity of an   { @code int } is exceeded
+   * @return a {@code Period} based on this period with the requested hours subtracted, never null
+   * @throws ArithmeticException if the capacity of an {@code int} is exceeded
    */
   def minusHours(hours: Int): Period = withHours(MathUtils.safeSubtract(this.hours, hours))
 
@@ -1176,7 +1176,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * </ul>
    * This method is only appropriate to call if these assumptions are met.
    *
-   * @return a { @code Duration } equivalent to this period, never null
+   * @return a {@code Duration} equivalent to this period, never null
    * @throws CalendricalException if the period cannot be converted as it contains years/months/days
    */
   def toDurationWith24HourDays: Duration = {
@@ -1196,8 +1196,8 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This instance is immutable and unaffected by this method call.
    *
    * @param seconds the seconds to subtract, positive or negative
-   * @return a { @code Period } based on this period with the requested seconds subtracted, never null
-   * @throws ArithmeticException if the capacity of an   { @code int } is exceeded
+   * @return a {@code Period} based on this period with the requested seconds subtracted, never null
+   * @throws ArithmeticException if the capacity of an {@code int} is exceeded
    */
   def minusSeconds(seconds: Int): Period = withSeconds(MathUtils.safeSubtract(this.seconds, seconds))
 
@@ -1207,7 +1207,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This instance is immutable and unaffected by this method call.
    *
    * @param periodProvider the period to subtract, not null
-   * @return a { @code Period } based on this period with the requested period subtracted, never null
+   * @return a {@code Period} based on this period with the requested period subtracted, never null
    * @throws ArithmeticException if the capacity of any field is exceeded
    */
   def minus(periodProvider: PeriodProvider): Period = {
@@ -1267,15 +1267,15 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This instance is immutable and unaffected by this method call.
    *
    * @param minutes the minutes to subtract, positive or negative
-   * @return a { @code Period } based on this period with the requested minutes subtracted, never null
-   * @throws ArithmeticException if the capacity of an   { @code int } is exceeded
+   * @return a {@code Period} based on this period with the requested minutes subtracted, never null
+   * @throws ArithmeticException if the capacity of an {@code int} is exceeded
    */
   def minusMinutes(minutes: Int): Period = withMinutes(MathUtils.safeSubtract(this.minutes, minutes))
 
   /**
    * Returns a new instance with each amount in this period negated.
    *
-   * @return a { @code Period } based on this period with the amounts negated, never null
+   * @return a {@code Period} based on this period with the amounts negated, never null
    * @throws ArithmeticException if any field has the minimum value
    */
   def negated: Period = multipliedBy(-1)
@@ -1308,7 +1308,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * Two normalizations occur, one for years and months, and one for
    * hours, minutes, seconds and nanoseconds.
    * Days are not normalized, as a day may vary in length at daylight savings cutover.
-   * For example, a period of   { @code P1Y15M1DT28H61M } will be normalized to   { @code P2Y3M1DT29H1M }.
+   * For example, a period of {@code P1Y15M1DT28H61M} will be normalized to {@code P2Y3M1DT29H1M}.
    * <p>
    * Note that this method normalizes using assumptions:
    * <ul>
@@ -1321,7 +1321,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
-   * @return a { @code Period } based on this period with the amounts normalized, never null
+   * @return a {@code Period} based on this period with the amounts normalized, never null
    * @throws ArithmeticException if the capacity of any field is exceeded
    */
   def normalized: Period = {
@@ -1353,7 +1353,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * using integer division.
    *
    * @param divisor the value to divide by, not null
-   * @return a { @code Period } based on this period with the amounts divided by the divisor, never null
+   * @return a {@code Period} based on this period with the amounts divided by the divisor, never null
    * @throws ArithmeticException if dividing by zero
    */
   def dividedBy(divisor: Int): Period = {
@@ -1363,11 +1363,11 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
   }
 
   /**
-   * Converts this period to a   { @code PeriodFields }.
+   * Converts this period to a {@code PeriodFields}.
    * <p>
-   * The returned   { @code PeriodFields } will only contain the non-zero amounts.
+   * The returned {@code PeriodFields} will only contain the non-zero amounts.
    *
-   * @return a { @code PeriodFields } equivalent to this period, never null
+   * @return a {@code PeriodFields} equivalent to this period, never null
    */
   override def toPeriodFields: PeriodFields = {
     var fields: PeriodFields = periodFields
@@ -1405,9 +1405,9 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
   /**
    * Estimates the duration of this period.
    * <p>
-   * Each   { @link PeriodUnit } contains an estimated duration for that unit.
+   * Each {@link PeriodUnit} contains an estimated duration for that unit.
    * The per-unit estimate allows an estimate to be calculated for the whole period
-   * including years, months and days. The estimate will equal the   { @link # toDuration accurate }
+   * including years, months and days. The estimate will equal the {@link #toDuration accurate }
    * calculation if the years, months and days fields are zero.
    *
    * @return the estimated duration of this period, never null
@@ -1445,7 +1445,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This instance is immutable and unaffected by this method call.
    *
    * @param days the days to represent
-   * @return a { @code Period } based on this period with the requested days, never null
+   * @return a {@code Period} based on this period with the requested days, never null
    */
   def withDays(days: Int): Period = {
     if (days == this.days) this
@@ -1471,7 +1471,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This method is only appropriate to call if these assumptions are met.
    *
    * @return the total number of years
-   * @throws ArithmeticException if the capacity of a   { @code long } is exceeded
+   * @throws ArithmeticException if the capacity of a {@code long} is exceeded
    */
   def totalYears: Long = MathUtils.safeAdd(years.toLong, (months / 12).toLong)
 
@@ -1484,8 +1484,8 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This instance is immutable and unaffected by this method call.
    *
    * @param months the months to add, positive or negative
-   * @return a { @code Period } based on this period with the requested months added, never null
-   * @throws ArithmeticException if the capacity of an   { @code int } is exceeded
+   * @return a {@code Period} based on this period with the requested months added, never null
+   * @throws ArithmeticException if the capacity of an {@code int} is exceeded
    */
   def plusMonths(months: Int): Period = withMonths(MathUtils.safeAdd(this.months, months))
 
@@ -1518,7 +1518,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This instance is immutable and unaffected by this method call.
    *
    * @param years the years to represent
-   * @return a { @code Period } based on this period with the requested years, never null
+   * @return a {@code Period} based on this period with the requested years, never null
    */
   def withYears(years: Int): Period = {
     if (years == this.years) this
@@ -1531,7 +1531,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * This instance is immutable and unaffected by this method call.
    *
    * @param periodProvider the period to add, not null
-   * @return a { @code Period } based on this period with the requested period added, never null
+   * @return a {@code Period} based on this period with the requested period added, never null
    * @throws ArithmeticException if the capacity of any field is exceeded
    */
   def plus(periodProvider: PeriodProvider): Period = {

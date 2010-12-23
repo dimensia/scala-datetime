@@ -38,7 +38,7 @@ import javax.time.calendar.format.DateTimeFormatterBuilder.SignStyle
 import javax.time.calendar.format.DateTimeFormatterBuilder.TextStyle
 
 /**
- * Provides common implementations of                 { @code DateTimeFormatter }.
+ * Provides common implementations of {@code DateTimeFormatter}.
  * <p>
  * DateTimeFormatters is a utility class.
  * All formatters returned are immutable and thread-safe.
@@ -50,7 +50,7 @@ object DateTimeFormatters {
    * Returns the ISO date formatter that prints/parses a date without an offset.
    * <p>
    * This is the ISO-8601 extended format:<br />
-   * { @code yyyyMMdd }
+   * {@code yyyyMMdd }
    * <p>
    * The year is limited to printing and parsing 4 digits, as the lack of
    * separators makes it impossible to parse more than 4 digits.
@@ -101,7 +101,7 @@ object DateTimeFormatters {
    * '2007-12-03T10:15:30+01:00' or '2007-12-03T10:15:30+01:00[Europe/Paris]'.
    * <p>
    * This is the ISO-8601 extended format:<br />
-   * { @code yyyy -MM-dd'T'HH:mm[:ss[.S]][ZZ['['                { ZoneId } ']']] }
+   * {@code yyyy -MM-dd'T'HH:mm[:ss[.S]][ZZ['['                { ZoneId} ']']] }
    * <p>
    * The year will print 4 digits, unless this is insufficient, in which
    * case the full year will be printed together with a positive/negative sign.
@@ -147,7 +147,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a full length date format.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using                 { @link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate full
    * length date format for that new locale.
    *
@@ -161,7 +161,7 @@ object DateTimeFormatters {
    * such as '2007-12-03T10:15:30+01:00'.
    * <p>
    * This is the ISO-8601 extended format:<br />
-   * { @code yyyy -MM-dd'T'HH:mm[:ss[.S]]ZZ }
+   * {@code yyyy -MM-dd'T'HH:mm[:ss[.S]]ZZ }
    * <p>
    * The year will print 4 digits, unless this is insufficient, in which
    * case the full year will be printed together with a positive/negative sign.
@@ -184,7 +184,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a long length date format.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using                 { @link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate long
    * length date format for that new locale.
    *
@@ -197,10 +197,10 @@ object DateTimeFormatters {
    * Creates a formatter using the specified pattern.
    * <p>
    * This method will create a formatter based on a simple pattern of letters and symbols.
-   * For example,                 { @code d MMM yyyy } will format 2008-12-03 as '3 Dec 2008'.
+   * For example, {@code d MMM yyyy} will format 2008-12-03 as '3 Dec 2008'.
    * <p>
    * The returned formatter will use the default locale, but this can be changed
-   * using                 { @link DateTimeFormatter # withLocale ( Locale ) }.
+   * using {@link DateTimeFormatter # withLocale ( Locale )}.
    * <p>
    * All letters 'A' to 'Z' and 'a' to 'z' are reserved as pattern letters.
    * The following pattern letters are defined:
@@ -247,11 +247,11 @@ object DateTimeFormatters {
    * The count of pattern letters determine the format.
    * <p>
    * <b>Text</b>: If the number of pattern letters is 4 or more, the full textual form is used
-   * as per                 { @link TextStyle # Full }. Otherwise a short form is used, as per                 { @link TextStyle # Short }.
+   * as per {@link TextStyle # Full}. Otherwise a short form is used, as per {@link TextStyle # Short}.
    * <p>
    * <b>Number</b>: If the count of letters is one, then the value is printed using the minimum number
-   * of digits and without padding as per                 { @link # appendValue ( DateTimeFieldRule ) }. Otherwise, the
-   * count of digits is used as the width of the output field as per                 { @link # appendValue ( DateTimeFieldRule, int ) }.
+   * of digits and without padding as per {@link #appendValue ( DateTimeFieldRule )}. Otherwise, the
+   * count of digits is used as the width of the output field as per {@link #appendValue ( DateTimeFieldRule, int )}.
    * <p>
    * <b>Fraction modifier</b>: Modifies the pattern that immediately follows to be a fraction.
    * All fractional values must use the 'f' prefix to ensure correct parsing.
@@ -265,12 +265,12 @@ object DateTimeFormatters {
    * 'mmfss' outputs the minute followed by exactly 2 digits representing the second.
    * <p>
    * <b>Year</b>: The count of letters determines the minimum field width below which padding is used.
-   * If the count of letters is two, then a                 { @link DateTimeFormatterBuilder # appendValueReduced reduced } two digit form is used.
+   * If the count of letters is two, then a {@link DateTimeFormatterBuilder # appendValueReduced reduced} two digit form is used.
    * For printing, this outputs the rightmost two digits. For parsing, this will parse using the
    * base value of 2000, resulting in a year within the range 2000 to 2099 inclusive.
    * If the count of letters is less than four (but not two), then the sign is only output for negative
-   * years as per                 { @link SignStyle # Normal }.
-   * Otherwise, the sign is output if the pad width is exceeded, as per                 { @link SignStyle # ExceedsPad }
+   * years as per {@link SignStyle # Normal}.
+   * Otherwise, the sign is output if the pad width is exceeded, as per {@link SignStyle # ExceedsPad }
    * <p>
    * <b>Month</b>: If the count of letters is 3 or greater, use the Text rules above.
    * Otherwise use the Number rules above.
@@ -284,12 +284,12 @@ object DateTimeFormatters {
    * <p>
    * <b>Zone names</b>: Time zone names ('z') cannot be parsed.
    * <p>
-   * <b>Optional section</b>: The optional section markers work exactly like calling                 { @link # optionalStart ( ) }
-   * and                 { @link # optionalEnd ( ) }.
+   * <b>Optional section</b>: The optional section markers work exactly like calling {@link #optionalStart()}
+   * and {@link #optionalEnd()}.
    * <p>
    * <b>Pad modifier</b>: Modifies the pattern that immediately follows to be padded with spaces.
    * The pad width is determined by the number of pattern letters.
-   * This is the same as calling                 { @link # padNext ( int ) }.
+   * This is the same as calling {@link #padNext ( int )}.
    * <p>
    * For example, 'ppH' outputs the hour-of-day padded on the left with spaces to a width of 2.
    * <p>
@@ -299,7 +299,7 @@ object DateTimeFormatters {
    * Despite this, it is recommended to use single quotes around all characters that you want to
    * output directly to ensure that future changes do not break your application.
    * <p>
-   * The pattern string is similar, but not identical, to                 { @link SimpleDateFormat }.
+   * The pattern string is similar, but not identical, to {@link SimpleDateFormat}.
    * SimpleDateFormat pattern letters 'G', 'W' and 'k' are not available.
    * Pattern letters 'x', 'Q', 'q', 'e', 'n', 'I', 'f' and 'p' are added.
    * Letters 'y', 'z' and 'Z' have some differences.
@@ -317,7 +317,7 @@ object DateTimeFormatters {
    * or '10:15:30+01:00[Europe/Paris]'.
    * <p>
    * This is the ISO-8601 extended format:<br />
-   * { @code HH :mm[:ss[.S]][ZZ['['                { ZoneId } ']']] }
+   * {@code HH :mm[:ss[.S]][ZZ['['                { ZoneId} ']']] }
    * <p>
    * The seconds will be printed if present in the Calendrical, thus a LocalTime
    * will always print the seconds.
@@ -337,7 +337,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a medium length date-time format.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using                 { @link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate medium
    * length date-time format for that new locale.
    *
@@ -352,7 +352,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a date, time or date-time.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using                 { @link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate
    * format for that new locale.
    *
@@ -396,7 +396,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a short length date format.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using                 { @link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate short
    * length date format for that new locale.
    *
@@ -410,7 +410,7 @@ object DateTimeFormatters {
    * such as '10:15:30+01:00'.
    * <p>
    * This is the ISO-8601 extended format:<br />
-   * { @code HH :mm[:ss[.S]]ZZ }
+   * {@code HH :mm[:ss[.S]]ZZ }
    * <p>
    * The seconds will be printed if present in the Calendrical, thus an OffsetTime
    * will always print the seconds.
@@ -449,7 +449,7 @@ object DateTimeFormatters {
    * such as '2007-12-03'.
    * <p>
    * This is the ISO-8601 extended format:<br />
-   * { @code yyyy -MM-dd }
+   * {@code yyyy -MM-dd }
    * <p>
    * The year will print 4 digits, unless this is insufficient, in which
    * case the full year will be printed together with a positive/negative sign.
@@ -464,7 +464,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a time.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using                 { @link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate
    * time format for that new locale.
    *
@@ -483,7 +483,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a short length date-time format.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using                 { @link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate short
    * length date-time format for that new locale.
    *
@@ -498,7 +498,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a date-time.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using                 { @link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate
    * date-time format for that new locale.
    *
@@ -517,7 +517,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a short length time format.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using                 { @link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate short
    * length time format for that new locale.
    *
@@ -545,7 +545,7 @@ object DateTimeFormatters {
    * or '2007-12-03+01:00[Europe/Paris]'.
    * <p>
    * This is the ISO-8601 extended format:<br />
-   * { @code yyyy -MM-dd[ZZ['['                { ZoneId } ']']] }
+   * {@code yyyy -MM-dd[ZZ['['                { ZoneId} ']']] }
    * <p>
    * The year will print 4 digits, unless this is insufficient, in which
    * case the full year will be printed together with a positive/negative sign.
@@ -563,7 +563,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a long length date-time format.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using                 { @link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate long
    * length date-time format for that new locale.
    *
@@ -593,7 +593,7 @@ object DateTimeFormatters {
    * such as '10:15:30'.
    * <p>
    * This is the ISO-8601 extended format:<br />
-   * { @code HH :mm[:ss[.S]] }
+   * {@code HH :mm[:ss[.S]] }
    * <p>
    * The seconds will be printed if present in the Calendrical, thus a LocalTime
    * will always print the seconds.
@@ -610,7 +610,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a long length time format.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using                 { @link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate long
    * length time format for that new locale.
    *
@@ -624,7 +624,7 @@ object DateTimeFormatters {
    * such as '2007-12-03+01:00'.
    * <p>
    * This is the ISO-8601 extended format:<br />
-   * { @code yyyy -MM-ddZZ }
+   * {@code yyyy -MM-ddZZ }
    * <p>
    * The year will print 4 digits, unless this is insufficient, in which
    * case the full year will be printed together with a positive/negative sign.
@@ -642,7 +642,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a medium length date format.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using                 { @link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate medium
    * length date format for that new locale.
    *
@@ -657,7 +657,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a full length time format.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using                 { @link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate full
    * length time format for that new locale.
    *
@@ -670,7 +670,7 @@ object DateTimeFormatters {
    * Returns the ISO date formatter that prints/parses a date without an offset.
    * <p>
    * This is the ISO-8601 extended format:<br />
-   * { @code yyyy -DDD }
+   * {@code yyyy -DDD }
    * <p>
    * The year will print 4 digits, unless this is insufficient, in which
    * case the full year will be printed together with a positive/negative sign.
@@ -685,7 +685,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a date.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using                 { @link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate
    * date format for that new locale.
    *
@@ -719,12 +719,12 @@ object DateTimeFormatters {
    * Creates a formatter using the specified pattern.
    * <p>
    * This method will create a formatter based on a simple pattern of letters and symbols.
-   * For example,                 { @code d MMM yyyy } will format 2008-12-03 as '3 Dec 2008'.
+   * For example, {@code d MMM yyyy} will format 2008-12-03 as '3 Dec 2008'.
    * <p>
-   * See                 { @link # pattern ( String ) } for details of the pattern.
+   * See {@link #pattern ( String )} for details of the pattern.
    * <p>
    * The returned formatter will use the specified locale, but this can be changed
-   * using                 { @link DateTimeFormatter # withLocale ( Locale ) }.
+   * using {@link DateTimeFormatter # withLocale ( Locale )}.
    *
    * @param pattern the pattern to use, not null
    * @param locale the locale to use, not null
@@ -739,7 +739,7 @@ object DateTimeFormatters {
    * Returns the ISO date formatter that prints/parses a date without an offset.
    * <p>
    * This is the ISO-8601 extended format:<br />
-   * { @code yyyy -Www-D }
+   * {@code yyyy -Www-D }
    * <p>
    * The year will print 4 digits, unless this is insufficient, in which
    * case the full year will be printed together with a positive/negative sign.
@@ -754,7 +754,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a medium length time format.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using                 { @link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate medium
    * length time format for that new locale.
    *
@@ -783,7 +783,7 @@ object DateTimeFormatters {
    * This returns a formatter that will print/parse a full length date-time format.
    * The exact format pattern used varies by locale, which is determined from the
    * locale on the formatter. That locale is initialized by method.
-   * If a new formatter is obtained using                 { @link DateTimeFormatter # withLocale ( Locale ) }
+   * If a new formatter is obtained using {@link DateTimeFormatter # withLocale ( Locale ) }
    * then it will typically change the pattern in use to the appropriate full
    * length date-time format for that new locale.
    *
@@ -797,7 +797,7 @@ object DateTimeFormatters {
    * such as '2007-12-03T10:15:30'.
    * <p>
    * This is the ISO-8601 extended format:<br />
-   * { @code yyyy -MM-dd'T'HH:mm[:ss[.S]] }
+   * {@code yyyy -MM-dd'T'HH:mm[:ss[.S]] }
    * <p>
    * The year will print 4 digits, unless this is insufficient, in which
    * case the full year will be printed together with a positive/negative sign.
@@ -816,7 +816,7 @@ object DateTimeFormatters {
    * such as '2007-12-03T10:15:30+01:00[Europe/Paris]'.
    * <p>
    * This is the ISO-8601 extended format:<br />
-   * { @code yyyy -MM-dd'T'HH:mm[:ss[.S]]ZZ[        { ZoneId } ] }
+   * {@code yyyy -MM-dd'T'HH:mm[:ss[.S]]ZZ[        { ZoneId} ] }
    * <p>
    * The year will print 4 digits, unless this is insufficient, in which
    * case the full year will be printed together with a positive/negative sign.

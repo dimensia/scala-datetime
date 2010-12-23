@@ -119,7 +119,7 @@ object CopticChronology extends CopticChronology {
    * The period unit defines the concept of a period of a year.
    * This has an estimated duration equal to 365.25 days.
    * <p>
-   * See   { @link # yearRule ( ) } for the main date-time field.
+   * See {@link #yearRule()} for the main date-time field.
    *
    * @return the period unit for years, never null
    */
@@ -139,7 +139,7 @@ object CopticChronology extends CopticChronology {
    * Coptic months are typically 30 days long, except for the 13th month which is
    * 5 or 6 days long. The rule uses an estimated duration of 29.5 days.
    * <p>
-   * See   { @link # monthOfYearRule ( ) } for the main date-time field.
+   * See {@link #monthOfYearRule()} for the main date-time field.
    *
    * @return the period unit for months, never null
    */
@@ -224,7 +224,7 @@ object CopticChronology extends CopticChronology {
    * The period unit defines the concept of a period of a day.
    * This is equivalent to the ISO days period unit.
    * <p>
-   * See   { @link # dayOfMonthRule ( ) } for the main date-time field.
+   * See {@link #dayOfMonthRule()} for the main date-time field.
    *
    * @return the period unit for days, never null
    */

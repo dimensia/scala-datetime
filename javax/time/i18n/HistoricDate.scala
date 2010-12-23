@@ -44,14 +44,14 @@ import javax.time.calendar.MonthOfYear
  * A date in the Historic calendar system.
  * <p>
  * HistoricDate is an immutable class that represents a date in the Historic calendar system.
- * The rules of the calendar system are described in   { @link HistoricChronology }.
+ * The rules of the calendar system are described in {@link HistoricChronology}.
  * The date has a precision of one day and a range within the era from
  * year 1 to year 999,999,999 (inclusive).
  * <p>
  * Instances of this class may be created from any other object that implements
- * { @link DateProvider } including   { @link LocalDate }. Similarly, instances of
+ * {@link DateProvider} including {@link LocalDate}. Similarly, instances of
  * this class may be passed into the factory method of any other implementation
- * of   { @code DateProvider }.
+ * of {@code DateProvider}.
  * <p>
  * HistoricDate is immutable and thread-safe.
  *
@@ -71,10 +71,10 @@ object HistoricDate {
    */
   val StandardCutover: LocalDate = LocalDate.of(1582, 10, 15)
   /**
-   * Obtains an instance of   { @code HistoricDate } from a calendrical.
+   * Obtains an instance of {@code HistoricDate} from a calendrical.
    * <p>
    * This can be used extract the date directly from any implementation
-   * of   { @code Calendrical }, including those in other calendar systems.
+   * of {@code Calendrical}, including those in other calendar systems.
    *
    * @param calendrical the calendrical to extract from, not null
    * @return the Historic date, never null
@@ -83,7 +83,7 @@ object HistoricDate {
   def of(calendrical: Calendrical): HistoricDate = rule.getValueChecked(calendrical)
 
   /**
-   * Obtains an instance of   { @code LocalDate } from a year, month and day
+   * Obtains an instance of {@code LocalDate} from a year, month and day
    * using the standard cutover of 1582-10-15.
    * <p>
    * The day must be valid for the year and month or an exception will be thrown.
@@ -100,7 +100,7 @@ object HistoricDate {
   }
 
   /**
-   * Obtains an instance of   { @code LocalDate } from a year, month and day
+   * Obtains an instance of {@code LocalDate} from a year, month and day
    * specifying the cutover date to use.
    * <p>
    * The day must be valid for the year and month or an exception will be thrown.
@@ -144,7 +144,7 @@ object HistoricDate {
   }
 
   /**
-   * Gets the field rule for   { @code HistoricDate }.
+   * Gets the field rule for {@code HistoricDate}.
    *
    * @return the field rule for the date, never null
    */
@@ -173,7 +173,7 @@ final class HistoricDate private[i18n](val chrono: HistoricChronology, @transien
   def getMonthOfYear: MonthOfYear = month
 
   /**
-   * Obtains an instance of   { @code HistoricDate } using the previous valid algorithm.
+   * Obtains an instance of {@code HistoricDate} using the previous valid algorithm.
    *
    * @param historicYear the year to represent
    * @param monthOfYear the month-of-year to represent, not null
@@ -240,7 +240,7 @@ final class HistoricDate private[i18n](val chrono: HistoricChronology, @transien
    * This instance is immutable and unaffected by this method call.
    *
    * @param years the years to add, positive or negative
-   * @return a { @code HistoricDate } based on this date with the specified years added, never null
+   * @return a {@code HistoricDate} based on this date with the specified years added, never null
    * @throws IllegalCalendarFieldValueException if the year range is exceeded
    */
   def plusYears(years: Int): HistoricDate = {
@@ -254,7 +254,7 @@ final class HistoricDate private[i18n](val chrono: HistoricChronology, @transien
    * This instance is immutable and unaffected by this method call.
    *
    * @param dayOfYear the day-of-year to represent, from 1 to 366
-   * @return a { @code HistoricDate } based on this date with the specified day, never null
+   * @return a {@code HistoricDate} based on this date with the specified day, never null
    * @throws IllegalCalendarFieldValueException if the day-of-year is out of range
    * @throws InvalidCalendarFieldException if the day-of-year is invalid for the year
    */
@@ -281,14 +281,14 @@ final class HistoricDate private[i18n](val chrono: HistoricChronology, @transien
    * This instance is immutable and unaffected by this method call.
    *
    * @param dayOfMonth the day-of-month to represent, from 1 to 31
-   * @return a { @code HistoricDate } based on this date with the specified day, never null
+   * @return a {@code HistoricDate} based on this date with the specified day, never null
    * @throws IllegalCalendarFieldValueException if the day is out of range
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the year and month
    */
   def withDayOfMonth(dayOfMonth: Int): HistoricDate = of(getYear, getMonthOfYear, dayOfMonth)
 
   /**
-   * Outputs the date as a   { @code String }, such as '1723-13-01 (Historic 2010-10-15)'.
+   * Outputs the date as a {@code String}, such as '1723-13-01 (Historic 2010-10-15)'.
    * <p>
    * The output will be in the format 'yyyy-MM-dd (Historic 2010-10-15)' where
    * 2010-10-15 is the cutover date.
@@ -319,7 +319,7 @@ final class HistoricDate private[i18n](val chrono: HistoricChronology, @transien
    * This instance is immutable and unaffected by this method call.
    *
    * @param monthOfYear the month-of-year to represent, from 1 to 12
-   * @return a { @code HistoricDate } based on this date with the specified month, never null
+   * @return a {@code HistoricDate} based on this date with the specified month, never null
    */
   def withMonthOfYear(monthOfYear: MonthOfYear): HistoricDate = previousValid(getYear, monthOfYear, getDayOfMonth)
 
@@ -346,7 +346,7 @@ final class HistoricDate private[i18n](val chrono: HistoricChronology, @transien
    * This instance is immutable and unaffected by this method call.
    *
    * @param days the days to add, positive or negative
-   * @return a { @code HistoricDate } based on this date with the specified days added, never null
+   * @return a {@code HistoricDate} based on this date with the specified days added, never null
    * @throws IllegalCalendarFieldValueException if the year range is exceeded
    */
   def plusDays(days: Int): HistoricDate = of(toLocalDate.plusDays(days))
@@ -360,7 +360,7 @@ final class HistoricDate private[i18n](val chrono: HistoricChronology, @transien
    * This instance is immutable and unaffected by this method call.
    *
    * @param months the months to add, positive or negative
-   * @return a { @code HistoricDate } based on this date with the specified months added, never null
+   * @return a {@code HistoricDate} based on this date with the specified months added, never null
    * @throws IllegalCalendarFieldValueException if the year range is exceeded
    */
   def plusMonths(months: Int): HistoricDate = {
@@ -413,13 +413,13 @@ final class HistoricDate private[i18n](val chrono: HistoricChronology, @transien
    * This instance is immutable and unaffected by this method call.
    *
    * @param historicYear the year to represent, from MIN_YEAR to MAX_YEAR
-   * @return a { @code HistoricDate } based on this date with the specified year, never null
+   * @return a {@code HistoricDate} based on this date with the specified year, never null
    * @throws IllegalCalendarFieldValueException if the year is out of range
    */
   def withYear(historicYear: Int): HistoricDate = previousValid(historicYear, getMonthOfYear, getDayOfMonth)
 
   /**
-   * Converts this date to an ISO-8601 calendar system   { @code LocalDate }.
+   * Converts this date to an ISO-8601 calendar system {@code LocalDate}.
    *
    * @return the equivalent date in the ISO-8601 calendar system, never null
    */
@@ -428,7 +428,7 @@ final class HistoricDate private[i18n](val chrono: HistoricChronology, @transien
     if (possible.isBefore(chrono.getCutover)) {
       val julYear1Days: Long = (year - 1) * 365 + (year / 4) + chrono.getDayOfYear(this) - 1
       LocalDate.ofModifiedJulianDays(julYear1Days + 0)
-    } else possible
+   } else possible
   }
 
   /**

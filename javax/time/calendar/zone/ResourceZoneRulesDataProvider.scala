@@ -225,13 +225,13 @@ final class ResourceZoneRulesDataProvider private(url: URL) extends ZoneRulesDat
    */
   private var rules: AtomicReferenceArray[AnyRef] = null
   //FIXME? val
-  /**{ @inheritDoc }*/
+  /**{@inheritDoc}*/
   def getVersions: Set[ZoneRulesVersion] = versions
 
-  /**{ @inheritDoc }*/
+  /**{@inheritDoc}*/
   def getGroupID: String = groupID
 
-  /**{ @inheritDoc }*/
+  /**{@inheritDoc}*/
   def getRegionIDs: Set[String] = regions
 
   override def toString: String = groupID + ":#" + versions

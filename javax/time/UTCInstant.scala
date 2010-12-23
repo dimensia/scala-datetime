@@ -50,7 +50,7 @@ import javax.time.UTCRules._
  * When a leap second occurs, an accurate clock will show the time {@code 23 :59:60} just before midnight.
  * <p>
  * Leap-seconds are announced in advance, typically at least six months.
- * The {@link UTCRules } class models which dates have leap-seconds.
+ * The {@link UTCRules} class models which dates have leap-seconds.
  * Alternative implementations of the rules may be supplied.
  * <p>
  * The default rules implementation fixes the start point of UTC as 1972.
@@ -105,12 +105,12 @@ object UTCInstant {
   private val NanosPerSecond: Long = 1000000000
 
   /**
-   * Obtains an instance of {@code UTCInstant } from a TAI instant
+   * Obtains an instance of {@code UTCInstant} from a TAI instant
    * using the system default leap second rules.
    * <p>
    * This method converts from the TAI to the UTC time-scale using the
    * system default leap-second rules. This conversion does not lose information
-   * and the UTC instant may safely be converted back to a {@code TAIInstant }.
+   * and the UTC instant may safely be converted back to a {@code TAIInstant}.
    *
    * @param taiInstant the TAI instant to convert, not null
    * @return the UTC instant, never null
@@ -118,12 +118,12 @@ object UTCInstant {
   def of(taiInstant: TAIInstant): UTCInstant = of(taiInstant, UTCRules.system)
 
   /**
-   * Obtains an instance of {@code UTCInstant } from a TAI instant
+   * Obtains an instance of {@code UTCInstant} from a TAI instant
    * using the specified leap second rules.
    * <p>
    * This method converts from the TAI to the UTC time-scale using the
    * specified leap-second rules. This conversion does not lose information
-   * and the UTC instant may safely be converted back to a {@code TAIInstant }.
+   * and the UTC instant may safely be converted back to a {@code TAIInstant}.
    *
    * @param taiInstant the TAI instant to convert, not null
    * @param rules the leap second rules, not null
@@ -132,17 +132,17 @@ object UTCInstant {
   def of(taiInstant: TAIInstant, rules: UTCRules): UTCInstant = rules.convertToUTC(taiInstant)
 
   /**
-   * Obtains an instance of {@code UTCInstant } from a Modified Julian Day with
+   * Obtains an instance of {@code UTCInstant} from a Modified Julian Day with
    * a nanosecond fraction of second using the specified leap second rules.
    * <p>
    * This factory creates an instance of a UTC instant.
    * The nanosecond of day value includes any leap second and has a valid range from
-   * { @code 0 } to {@code 86, 400, 000, 000, 000 - 1 } on days other than leap-second-days
+   * {@code 0} to {@code 86, 400, 000, 000, 000 - 1} on days other than leap-second-days
    * and other lengths on leap-second-days.
    * <p>
    * The nanosecond value must be positive even for negative values of Modified
    * Julian Days. One nanosecond before Modified Julian Day zero will be
-   * { @code -1 } days and the maximum nanosecond value.
+   * {@code -1} days and the maximum nanosecond value.
    *
    * @param mjDay the date as a Modified Julian Day (number of days from the epoch of 1858-11-17)
    * @param nanoOfDay the nanoseconds within the day, including leap seconds
@@ -160,13 +160,13 @@ object UTCInstant {
   }
 
   /**
-   * Obtains an instance of {@code UTCInstant } from a provider of instants
+   * Obtains an instance of {@code UTCInstant} from a provider of instants
    * using the system default leap second rules.
    * <p>
    * This method converts from the UTC-SLS to the UTC time-scale using the
    * system default leap-second rules. This conversion will lose information
    * around a leap second in accordance with UTC-SLS.
-   * Converting back to an {@code Instant } may result in a slightly different instant.
+   * Converting back to an {@code Instant} may result in a slightly different instant.
    *
    * @param instant the instant to convert, not null
    * @return the UTC instant, never null
@@ -174,13 +174,13 @@ object UTCInstant {
   def of(instant: Instant): UTCInstant = of(instant, UTCRules.system)
 
   /**
-   * Obtains an instance of {@code UTCInstant } from a provider of instants
+   * Obtains an instance of {@code UTCInstant} from a provider of instants
    * using the specified leap second rules.
    * <p>
    * This method converts from the UTC-SLS to the UTC time-scale using the
    * specified leap-second rules. This conversion will lose information
    * around a leap second in accordance with UTC-SLS.
-   * Converting back to an {@code Instant } may result in a slightly different instant.
+   * Converting back to an {@code Instant} may result in a slightly different instant.
    *
    * @param instant the instant to convert, not null
    * @param rules the leap second rules, not null
@@ -189,17 +189,17 @@ object UTCInstant {
   def of(instant: Instant, rules: UTCRules): UTCInstant = rules.convertToUTC(instant)
 
   /**
-   * Obtains an instance of {@code UTCInstant } from a Modified Julian Day with
+   * Obtains an instance of {@code UTCInstant} from a Modified Julian Day with
    * a nanosecond fraction of second using the system default leap second rules.
    * <p>
    * This factory creates an instance of a UTC instant.
    * The nanosecond of day value includes any leap second and has a valid range from
-   * { @code 0 } to {@code 86, 400, 000, 000, 000 - 1 } on days other than leap-second-days
+   * {@code 0} to {@code 86, 400, 000, 000, 000 - 1} on days other than leap-second-days
    * and other lengths on leap-second-days.
    * <p>
    * The nanosecond value must be positive even for negative values of Modified
    * Julian Days. One nanosecond before Modified Julian Day zero will be
-   * { @code -1 } days and the maximum nanosecond value.
+   * {@code -1} days and the maximum nanosecond value.
    *
    * @param mjDay the date as a Modified Julian Day (number of days from the epoch of 1858-11-17)
    * @param nanoOfDay the nanoseconds within the day, including leap seconds
@@ -229,7 +229,7 @@ final case class UTCInstant(mjDay: Long, nanos: Long, rules: UTCRules) extends C
    * The comparison is based on the positions on the time-line and the rules.
    * This definition means that two instants representing the same instant on
    * the time-line will differ if the rules differ. To compare the time-line
-   * instant, convert both instants to a {@code TAIInstant }.
+   * instant, convert both instants to a {@code TAIInstant}.
    *
    * @param otherInstant the other instant to compare to, not null
    * @return the comparator value, negative if less, positive if greater
@@ -269,15 +269,15 @@ final case class UTCInstant(mjDay: Long, nanos: Long, rules: UTCRules) extends C
   }
 
   /**
-   * Converts this instant to an {@code Instant } using the system default
+   * Converts this instant to an {@code Instant} using the system default
    * leap second rules.
    * <p>
    * This method converts this instant from the UTC to the UTC-SLS time-scale using the
    * stored leap-second rules.
    * This conversion will lose information around a leap second in accordance with UTC-SLS.
-   * Converting back to a {@code UTCInstant } may result in a slightly different instant.
+   * Converting back to a {@code UTCInstant} may result in a slightly different instant.
    *
-   * @return an { @code Instant } representing the best approximation of this instant, never null
+   * @return an {@code Instant} representing the best approximation of this instant, never null
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   def toInstant: Instant = rules.convertToInstant(this)
@@ -287,7 +287,7 @@ final case class UTCInstant(mjDay: Long, nanos: Long, rules: UTCRules) extends C
    * <p>
    * The Modified Julian Day count is a simple incrementing count of days
    * where day 0 is 1858-11-17.
-   * The nanosecond part of the day is returned by {@code getNanosOfDay }.
+   * The nanosecond part of the day is returned by {@code getNanosOfDay}.
    * <p>
    * A Modified Julian Day varies in length, being one second longer on a leap day.
    *
@@ -296,12 +296,12 @@ final case class UTCInstant(mjDay: Long, nanos: Long, rules: UTCRules) extends C
   def getModifiedJulianDays: Long = mjDay
 
   /**
-   * Checks if this instant is equal to the specified {@code UTCInstant }.
+   * Checks if this instant is equal to the specified {@code UTCInstant}.
    * <p>
    * The comparison is based on the positions on the time-line and the rules.
    * This definition means that two instants representing the same instant on
    * the time-line will differ if the rules differ. To compare the time-line
-   * instant, convert both instants to a {@code TAIInstant }.
+   * instant, convert both instants to a {@code TAIInstant}.
    *
    * @param otherInstant the other instant, null returns false
    * @return true if the other instant is equal to this one
@@ -330,7 +330,7 @@ final case class UTCInstant(mjDay: Long, nanos: Long, rules: UTCRules) extends C
    * <p>
    * This calculates the duration between this instant and another based on
    * the UTC time-scale. Any leap seconds that occur will be included in the duration.
-   * Adding the duration to this instant using {@link # plus } will always result
+   * Adding the duration to this instant using {@link #plus} will always result
    * in an instant equal to the specified instant.
    *
    * @param utcInstant the instant to calculate the duration until, not null
@@ -354,7 +354,7 @@ final case class UTCInstant(mjDay: Long, nanos: Long, rules: UTCRules) extends C
    * This instance is immutable and unaffected by this method call.
    *
    * @param duration the duration to add, not null
-   * @return a { @code UTCInstant } with the duration added, never null
+   * @return a {@code UTCInstant} with the duration added, never null
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   def plus(duration: Duration): UTCInstant = UTCInstant.of(toTAIInstant.plus(duration), rules)
@@ -372,7 +372,7 @@ final case class UTCInstant(mjDay: Long, nanos: Long, rules: UTCRules) extends C
    * This instance is immutable and unaffected by this method call.
    *
    * @param duration the duration to subtract, not null
-   * @return a { @code UTCInstant } with the duration subtracted, never null
+   * @return a {@code UTCInstant} with the duration subtracted, never null
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   def minus(duration: Duration): UTCInstant = UTCInstant.of(toTAIInstant.minus(duration), rules)
@@ -380,15 +380,15 @@ final case class UTCInstant(mjDay: Long, nanos: Long, rules: UTCRules) extends C
   def -(duration: Duration): UTCInstant = minus(duration)
 
   /**
-   * Converts this instant to a {@code TAIInstant } using the stored
+   * Converts this instant to a {@code TAIInstant} using the stored
    * leap second rules.
    * <p>
    * This method converts from the UTC to the TAI time-scale using the stored leap-second rules.
-   * Conversion to a {@code TAIInstant } retains the same point on the time-line
+   * Conversion to a {@code TAIInstant} retains the same point on the time-line
    * but loses the stored rules. If the TAI instant is converted back to a UTC instant
    * with different or updated rules then the calculated UTC instant may be different.
    *
-   * @return a { @code TAIInstant } representing the same instant, never null
+   * @return a {@code TAIInstant} representing the same instant, never null
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   def toTAIInstant: TAIInstant = rules.convertToTAI(this)

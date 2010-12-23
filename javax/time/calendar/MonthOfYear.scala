@@ -37,22 +37,22 @@ import javax.time.calendar.format.DateTimeFormatterBuilder.TextStyle
 /**
  * A month-of-year, such as 'July'.
  * <p>
- * { @code MonthOfYear } is an enum representing the 12 months of the year -
+ * {@code MonthOfYear} is an enum representing the 12 months of the year -
  * January, February, March, April, May, June, July, August, September, October,
  * November and December.
  * <p>
- * In addition to the textual enum name, each month-of-year has an  { @code int } value.
- * The  { @code int } value follows normal usage and the ISO-8601 standard,
+ * In addition to the textual enum name, each month-of-year has an {@code int} value.
+ * The {@code int} value follows normal usage and the ISO-8601 standard,
  * from 1 (January) to 12 (December). It is recommended that applications use the enum
- * rather than the  { @code int } value to ensure code clarity.
+ * rather than the {@code int} value to ensure code clarity.
  * <p>
- * <b>Do not use  { @code ordinal ( ) } to obtain the numeric representation of  { @code MonthOfYear }.
- * Use  { @code getValue ( ) } instead.</b>
+ * <b>Do not use {@code ordinal()} to obtain the numeric representation of {@code MonthOfYear}.
+ * Use {@code getValue()} instead.</b>
  * <p>
  * This enum represents a common concept that is found in many calendar systems.
  * As such, this enum may be used by any calendar system that has the month-of-year
  * concept with a twelve month year where the names are equivalent to those defined.
- * Note that the implementation of  { @link DateTimeFieldRule } for month-of-year may
+ * Note that the implementation of {@link DateTimeFieldRule} for month-of-year may
  * vary by calendar system.
  * <p>
  * MonthOfYear is an immutable and thread-safe enum.
@@ -64,87 +64,87 @@ object MonthOfYear {
 
   /**
    * The singleton instance for the month of January.
-   * This has the numeric value of  { @code 1 }.
+   * This has the numeric value of {@code 1}.
    */
   object January extends MonthOfYear(1)
 
   /**
    * The singleton instance for the month of February.
-   * This has the numeric value of  { @code 2 }.
+   * This has the numeric value of {@code 2}.
    */
   object February extends MonthOfYear(2)
 
   /**
    * The singleton instance for the month of March.
-   * This has the numeric value of  { @code 3 }.
+   * This has the numeric value of {@code 3}.
    */
   object March extends MonthOfYear(3)
 
   /**
    * The singleton instance for the month of April.
-   * This has the numeric value of  { @code 4 }.
+   * This has the numeric value of {@code 4}.
    */
   object April extends MonthOfYear(4)
 
   /**
    * The singleton instance for the month of May.
-   * This has the numeric value of  { @code 5 }.
+   * This has the numeric value of {@code 5}.
    */
   object May extends MonthOfYear(5)
 
   /**
    * The singleton instance for the month of June.
-   * This has the numeric value of  { @code 6 }.
+   * This has the numeric value of {@code 6}.
    */
   object June extends MonthOfYear(6)
 
   /**
    * The singleton instance for the month of July.
-   * This has the numeric value of  { @code 7 }.
+   * This has the numeric value of {@code 7}.
    */
   object July extends MonthOfYear(7)
 
   /**
    * The singleton instance for the month of August.
-   * This has the numeric value of  { @code 8 }.
+   * This has the numeric value of {@code 8}.
    */
   object August extends MonthOfYear(8)
 
   /**
    * The singleton instance for the month of September.
-   * This has the numeric value of  { @code 9 }.
+   * This has the numeric value of {@code 9}.
    */
   object September extends MonthOfYear(9)
 
   /**
    * The singleton instance for the month of October.
-   * This has the numeric value of  { @code 10 }.
+   * This has the numeric value of {@code 10}.
    */
   object October extends MonthOfYear(10)
 
   /**
    * The singleton instance for the month of November.
-   * This has the numeric value of  { @code 11 }.
+   * This has the numeric value of {@code 11}.
    */
   object November extends MonthOfYear(11)
 
   /**
    * The singleton instance for the month of December.
-   * This has the numeric value of  { @code 12 }.
+   * This has the numeric value of {@code 12}.
    */
   object December extends MonthOfYear(12)
 
   lazy val values = Array(January, February, March, April, May, June, July, August, September, October, November, December)
 
   /**
-   * Obtains an instance of  { @code MonthOfYear } from an  { @code int } value.
+   * Obtains an instance of {@code MonthOfYear} from an {@code int} value.
    * <p>
-   * { @code MonthOfYear } is an enum representing the 12 months of the year.
-   * This factory allows the enum to be obtained from the  { @code int } value.
-   * The  { @code int } value follows the ISO-8601 standard, from 1 (January) to 12 (December).
+   * {@code MonthOfYear} is an enum representing the 12 months of the year.
+   * This factory allows the enum to be obtained from the {@code int} value.
+   * The {@code int} value follows the ISO-8601 standard, from 1 (January) to 12 (December).
    * <p>
    * An exception is thrown if the value is invalid. The exception uses the
-   * { @link ISOChronology } month-of-year rule to indicate the failed rule.
+   * {@link ISOChronology} month-of-year rule to indicate the failed rule.
    *
    * @param monthOfYear the month-of-year to represent, from 1 (January) to 12 (December)
    * @return the MonthOfYear singleton, never null
@@ -260,7 +260,7 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Calendrical {
   def isDecember: Boolean = (this == December)
 
   /**
-   * Gets the month-of-year  { @code int } value.
+   * Gets the month-of-year {@code int} value.
    * <p>
    * The values are numbered following the ISO-8601 standard,
    * from 1 (January) to 12 (December).
@@ -306,7 +306,7 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Calendrical {
    * Gets the value of the specified calendrical rule.
    * <p>
    * This returns the one of the month values if the type of the rule
-   * is  { @code MonthOfYear }. Other rules will return  { @code null }.
+   * is {@code MonthOfYear}. Other rules will return {@code null}.
    *
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
@@ -373,13 +373,13 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Calendrical {
   /**
    * Gets the full textual representation of this month-of-year, such as 'January' or 'December'.
    * <p>
-   * This method is notionally specific to  { @link ISOChronology } as it uses
+   * This method is notionally specific to {@link ISOChronology} as it uses
    * the month-of-year rule to obtain the text. However, it is expected that
    * the text will be equivalent for all month-of-year rules, thus this aspect
    * of the implementation should be irrelevant to applications.
    * <p>
    * If there is no textual mapping for the locale, then the value is
-   * returned as per  { @link Integer # toString ( ) }.
+   * returned as per {@link Integer # toString()}.
    *
    * @param locale the locale to use, not null
    * @return the full text value of the month-of-year, never null
@@ -418,13 +418,13 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Calendrical {
   /**
    * Gets the short textual representation of this month-of-year, such as 'Jan' or 'Dec'.
    * <p>
-   * This method is notionally specific to  { @link ISOChronology } as it uses
+   * This method is notionally specific to {@link ISOChronology} as it uses
    * the month-of-year rule to obtain the text. However, it is expected that
    * the text will be equivalent for all month-of-year rules, thus this aspect
    * of the implementation should be irrelevant to applications.
    * <p>
    * If there is no textual mapping for the locale, then the value is
-   * returned as per  { @link Integer # toString ( ) }.
+   * returned as per {@link Integer # toString()}.
    *
    * @param locale the locale to use, not null
    * @return the short text value of the month-of-year, never null
@@ -434,7 +434,7 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Calendrical {
   /**
    * Gets the day-of-month for last day of this month.
    * <p>
-   * This is a synonym for  { @link # lengthInDays ( boolean ) } and exists to provide
+   * This is a synonym for {@link #lengthInDays ( boolean )} and exists to provide
    * a more meaningful API.
    *
    * @param leapYear true if the length is required for a leap year

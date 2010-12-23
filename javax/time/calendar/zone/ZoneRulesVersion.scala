@@ -51,7 +51,7 @@ trait ZoneRulesVersion {
   /**
    * Gets the zone rules for the specified region ID.
    * <p>
-   * The region ID should be one of those returned by  { @code # getRegionIDs ( ) }.
+   * The region ID should be one of those returned by {@code # getRegionIDs()}.
    *
    * @param regionID the region ID, not null
    * @return the matched zone rules, null if not found
@@ -61,7 +61,7 @@ trait ZoneRulesVersion {
   /**
    * Gets the complete set of provided region IDs, such as 'Europe/Paris'.
    * <p>
-   * Region IDs must match regex  { @code[A -Za-z0-9%@~/+._-]+ }.
+   * Region IDs must match regex {@code[A -Za-z0-9%@~/+._-]+}.
    *
    * @return the provided region IDs, unmodifiable, never null
    */
@@ -70,7 +70,7 @@ trait ZoneRulesVersion {
   /**
    * Gets the time-zone version ID of the data available via this provider, such as '2010e'.
    * <p>
-   * Version IDs must match regex  { @code[A -Za-z0-9._-]+ }.
+   * Version IDs must match regex {@code[A -Za-z0-9._-]+}.
    *
    * @return the ID of the group, never null
    */

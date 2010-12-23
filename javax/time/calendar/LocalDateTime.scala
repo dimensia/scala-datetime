@@ -56,14 +56,14 @@ import javax.time.calendar.format.DateTimeFormatters
  */
 object LocalDateTime {
   /**
-   * Gets the field rule for   { @code LocalDateTime }.
+   * Gets the field rule for {@code LocalDateTime}.
    *
    * @return the field rule for the date-time, never null
    */
   def rule: CalendricalRule[LocalDateTime] = Rule
 
   /**
-   * Obtains an instance of   { @code LocalDateTime } from year, month,
+   * Obtains an instance of {@code LocalDateTime} from year, month,
    * day, hour and minute, setting the second and nanosecond to zero.
    * <p>
    * The day must be valid for the year and month or an exception will be thrown.
@@ -86,7 +86,7 @@ object LocalDateTime {
   }
 
   /**
-   * Obtains an instance of   { @code LocalDateTime } using seconds from the
+   * Obtains an instance of {@code LocalDateTime} using seconds from the
    * local epoch of 1970-01-01T00:00:00.
    * <p>
    * The nanosecond field is set to zero.
@@ -116,10 +116,10 @@ object LocalDateTime {
   def now: LocalDateTime = now(Clock.systemDefaultZone)
 
   /**
-   * Obtains an instance of   { @code LocalTime } from a date-time provider.
+   * Obtains an instance of {@code LocalTime} from a date-time provider.
    * <p>
-   * The purpose of this method is to convert a   { @code DateTimeProvider }
-   * to a   { @code LocalDateTime } in the safest possible way. Specifically,
+   * The purpose of this method is to convert a {@code DateTimeProvider }
+   * to a {@code LocalDateTime} in the safest possible way. Specifically,
    * the means checking whether the input parameter is null and
    * whether the result of the provider is null.
    *
@@ -134,7 +134,7 @@ object LocalDateTime {
   }
 
   /**
-   * Obtains an instance of   { @code LocalDateTime } from year, month,
+   * Obtains an instance of {@code LocalDateTime} from year, month,
    * day, hour, minute, second and nanosecond.
    * <p>
    * The day must be valid for the year and month or an exception will be thrown.
@@ -157,7 +157,7 @@ object LocalDateTime {
   }
 
   /**
-   * Obtains an instance of   { @code LocalDateTime } from year, month and
+   * Obtains an instance of {@code LocalDateTime} from year, month and
    * day with the time set to midnight at the start of day.
    * <p>
    * The day must be valid for the year and month or an exception will be thrown.
@@ -177,7 +177,7 @@ object LocalDateTime {
   }
 
   /**
-   * Obtains an instance of   { @code LocalDateTime } from year, month,
+   * Obtains an instance of {@code LocalDateTime} from year, month,
    * day, hour and minute, setting the second and nanosecond to zero.
    * <p>
    * The day must be valid for the year and month or an exception will be thrown.
@@ -200,7 +200,7 @@ object LocalDateTime {
   }
 
   /**
-   * Obtains an instance of   { @code LocalDateTime } from a date with the
+   * Obtains an instance of {@code LocalDateTime} from a date with the
    * time set to midnight at the start of day.
    * <p>
    * The day must be valid for the year and month or an exception will be thrown.
@@ -216,7 +216,7 @@ object LocalDateTime {
   }
 
   /**
-   * Obtains an instance of   { @code LocalDateTime } from year, month,
+   * Obtains an instance of {@code LocalDateTime} from year, month,
    * day, hour, minute and second, setting the nanosecond to zero.
    * <p>
    * The day must be valid for the year and month or an exception will be thrown.
@@ -240,7 +240,7 @@ object LocalDateTime {
   }
 
   /**
-   * Obtains an instance of   { @code LocalDateTime } from year, month and
+   * Obtains an instance of {@code LocalDateTime} from year, month and
    * day with the time set to midnight at the start of day.
    * <p>
    * The day must be valid for the year and month or an exception will be thrown.
@@ -260,7 +260,7 @@ object LocalDateTime {
   }
 
   /**
-   * Obtains an instance of   { @code LocalDateTime } from year, month,
+   * Obtains an instance of {@code LocalDateTime} from year, month,
    * day, hour, minute, second and nanosecond.
    * <p>
    * The day must be valid for the year and month or an exception will be thrown.
@@ -283,7 +283,7 @@ object LocalDateTime {
   }
 
   /**
-   * Obtains an instance of   { @code LocalDateTime } from year, month,
+   * Obtains an instance of {@code LocalDateTime} from year, month,
    * day, hour, minute and second, setting the nanosecond to zero.
    * <p>
    * The day must be valid for the year and month or an exception will be thrown.
@@ -336,7 +336,7 @@ object LocalDateTime {
   }
 
   /**
-   * Obtains an instance of   { @code LocalDateTime } from a date and time.
+   * Obtains an instance of {@code LocalDateTime} from a date and time.
    *
    * @param dateProvider the date provider to use, not null
    * @param timeProvider the time provider to use, not null
@@ -349,7 +349,7 @@ object LocalDateTime {
   }
 
   /**
-   * Obtains an instance of   { @code LocalDateTime } from a text string using a specific formatter.
+   * Obtains an instance of {@code LocalDateTime} from a text string using a specific formatter.
    * <p>
    * The text is parsed using the formatter, returning a date-time.
    *
@@ -369,7 +369,7 @@ object LocalDateTime {
    * <p>
    * This will query the specified clock to obtain the current date-time.
    * Using this method allows the use of an alternate clock for testing.
-   * The alternate clock may be introduced using   { @link Clock dependency injection }.
+   * The alternate clock may be introduced using {@link Clock dependency injection}.
    *
    * @param clock the clock to use, not null
    * @return the current date-time, never null
@@ -383,13 +383,13 @@ object LocalDateTime {
   }
 
   /**
-   * Obtains an instance of   { @code LocalDateTime } from a text string.
+   * Obtains an instance of {@code LocalDateTime} from a text string.
    * <p>
    * The following formats are accepted in ASCII:
    * <ul>
-   * <li>  { @code  { Year } -  { MonthOfYear } -  { DayOfMonth } T  { Hour } :  { Minute } }
-   * <li>  { @code  { Year } -  { MonthOfYear } -  { DayOfMonth } T  { Hour } :  { Minute } :  { Second } }
-   * <li>  { @code  { Year } -  { MonthOfYear } -  { DayOfMonth } T  { Hour } :  { Minute } :  { Second }.  { NanosecondFraction } }
+   * <li> {@code  { Year} -  { MonthOfYear} -  { DayOfMonth} T  { Hour} :  { Minute} }
+   * <li> {@code  { Year} -  { MonthOfYear} -  { DayOfMonth} T  { Hour} :  { Minute} :  { Second} }
+   * <li> {@code  { Year} -  { MonthOfYear} -  { DayOfMonth} T  { Hour} :  { Minute} :  { Second}.  { NanosecondFraction} }
    * </ul>
    * <p>
    * The year has between 4 and 10 digits with values from MIN_YEAR to MAX_YEAR.
@@ -427,35 +427,35 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   def getSecondOfMinute: Int = time.getSecondOfMinute
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the month-of-year altered.
-   * If the resulting   { @code LocalDateTime } is invalid, it will be resolved using   { @link DateResolvers # previousValid ( ) }.
+   * Returns a copy of this {@code LocalDateTime} with the month-of-year altered.
+   * If the resulting {@code LocalDateTime} is invalid, it will be resolved using {@link DateResolvers # previousValid()}.
    * The time does not affect the calculation and will be the same in the result.
    * <p>
-   * This method does the same as   { @code withMonthOfYear ( monthOfYear, DateResolvers.previousValid ( ) ) }.
+   * This method does the same as {@code withMonthOfYear ( monthOfYear, DateResolvers.previousValid ( ) )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param monthOfYear the month-of-year to set in the returned date, from 1 (January) to 12 (December)
-   * @return a { @code LocalDateTime } based on this date-time with the requested month, never null
+   * @return a {@code LocalDateTime} based on this date-time with the requested month, never null
    * @throws IllegalCalendarFieldValueException if the month-of-year value is invalid
    */
   def withMonthOfYear(monthOfYear: Int): LocalDateTime = `with`(date.withMonthOfYear(monthOfYear), time)
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the specified period in months subtracted.
+   * Returns a copy of this {@code LocalDateTime} with the specified period in months subtracted.
    * <p>
    * This method subtract the specified amount to the months field in three steps:
    * <ol>
    * <li>subtract the input months to the month-of-year field</li>
    * <li>Check if the resulting date would be invalid</li>
-   * <li>Adjust the date using   { @code dateResolver } if necessary</li>
+   * <li>Adjust the date using {@code dateResolver} if necessary</li>
    * </ol>
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param months the months to subtract, may be negative
    * @param dateResolver the DateResolver to be used if the resulting date would be invalid
-   * @return a { @code LocalDateTime } based on this date-time with the months subtracted, never null
+   * @return a {@code LocalDateTime} based on this date-time with the months subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def minusMonths(months: Int, dateResolver: DateResolver): LocalDateTime = {
@@ -464,13 +464,13 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
-   * Compares this   { @code LocalDateTime } to another date-time.
+   * Compares this {@code LocalDateTime} to another date-time.
    * <p>
    * The comparison is based on the time-line position of the date-times.
    *
    * @param other the other date-time to compare to, not null
    * @return the comparator value, negative if less, positive if greater
-   * @throws NullPointerException if   { @code other } is null
+   * @throws NullPointerException if {@code other} is null
    */
   def compareTo(other: LocalDateTime): Int = {
     var cmp: Int = date.compareTo(other.date)
@@ -488,7 +488,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   def getChronology: ISOChronology = ISOChronology
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the specified period in years added.
+   * Returns a copy of this {@code LocalDateTime} with the specified period in years added.
    * <p>
    * This method add the specified amount to the years field in three steps:
    * <ol>
@@ -501,12 +501,12 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * invalid date 2009-02-29 (standard year). Instead of returning an invalid
    * result, the last valid day of the month, 2009-02-28, is selected instead.
    * <p>
-   * This method does the same as   { @code plusYears ( years, DateResolvers.previousValid ( ) ) }.
+   * This method does the same as {@code plusYears ( years, DateResolvers.previousValid ( ) )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param years the years to add, may be negative
-   * @return a { @code LocalDateTime } based on this date-time with the period added, never null
+   * @return a {@code LocalDateTime} based on this date-time with the period added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    * @see # plusYears ( int, javax.time.calendar.DateResolver )
    */
@@ -516,15 +516,15 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
-   * Outputs this date-time as a   { @code String }, such as   { @code 2007 -12-03T10:15:30 }.
+   * Outputs this date-time as a {@code String}, such as {@code 2007 -12-03T10:15:30}.
    * <p>
    * The output will be one of the following formats:
    * <ul>
-   * <li>  { @code yyyy -MM-dd'T'HH:mm } </li>
-   * <li>  { @code yyyy -MM-dd'T'HH:mm:ss } </li>
-   * <li>  { @code yyyy -MM-dd'T'HH:mm:ssfnnn } </li>
-   * <li>  { @code yyyy -MM-dd'T'HH:mm:ssfnnnnnn } </li>
-   * <li>  { @code yyyy -MM-dd'T'HH:mm:ssfnnnnnnnnn } </li>
+   * <li> {@code yyyy -MM-dd'T'HH:mm} </li>
+   * <li> {@code yyyy -MM-dd'T'HH:mm:ss} </li>
+   * <li> {@code yyyy -MM-dd'T'HH:mm:ssfnnn} </li>
+   * <li> {@code yyyy -MM-dd'T'HH:mm:ssfnnnnnn} </li>
+   * <li> {@code yyyy -MM-dd'T'HH:mm:ssfnnnnnnnnn} </li>
    * </ul>
    * The format used will be the shortest that outputs the full value of
    * the time where the omitted parts are implied to be zero.
@@ -547,7 +547,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the specified period in days subtracted.
+   * Returns a copy of this {@code LocalDateTime} with the specified period in days subtracted.
    * <p>
    * This method subtract the specified amount to the days field incrementing the
    * month and year fields as necessary to ensure the result remains valid.
@@ -558,7 +558,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * This instance is immutable and unaffected by this method call.
    *
    * @param days the days to subtract, may be negative
-   * @return a { @code LocalDateTime } based on this date-time with the days subtracted, never null
+   * @return a {@code LocalDateTime} based on this date-time with the days subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def minusDays(days: Long): LocalDateTime = {
@@ -567,14 +567,14 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
-   * Gets the month-of-year field, which is an enum   { @code MonthOfYear }.
+   * Gets the month-of-year field, which is an enum {@code MonthOfYear}.
    * <p>
-   * This method returns the enum   { @link MonthOfYear } for the month.
-   * This avoids confusion as to what   { @code int } values mean.
-   * If you need access to the primitive   { @code int } value then the enum
-   * provides the   { @link MonthOfYear # getValue ( ) int value }.
+   * This method returns the enum {@link MonthOfYear} for the month.
+   * This avoids confusion as to what {@code int} values mean.
+   * If you need access to the primitive {@code int} value then the enum
+   * provides the {@link MonthOfYear # getValue ( ) int value}.
    * <p>
-   * Additional information can be obtained from the   { @code MonthOfYear }.
+   * Additional information can be obtained from the {@code MonthOfYear}.
    * This includes month lengths, textual names and access to the quarter-of-year
    * and month-of-quarter values.
    *
@@ -583,7 +583,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   def getMonthOfYear: MonthOfYear = date.getMonthOfYear
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the specified period in years subtracted.
+   * Returns a copy of this {@code LocalDateTime} with the specified period in years subtracted.
    * <p>
    * This method subtract the specified amount to the years field in three steps:
    * <ol>
@@ -596,12 +596,12 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * invalid date 2009-02-29 (standard year). Instead of returning an invalid
    * result, the last valid day of the month, 2009-02-28, is selected instead.
    * <p>
-   * This method does the same as   { @code minusYears ( years, DateResolvers.previousValid ( ) ) }.
+   * This method does the same as {@code minusYears ( years, DateResolvers.previousValid ( ) )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param years the years to subtract, may be negative
-   * @return a { @code LocalDateTime } based on this date-time with the years subtracted, never null
+   * @return a {@code LocalDateTime} based on this date-time with the years subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    * @see # minusYears ( int, javax.time.calendar.DateResolver )
    */
@@ -611,7 +611,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the specified period in weeks added.
+   * Returns a copy of this {@code LocalDateTime} with the specified period in weeks added.
    * <p>
    * This method add the specified amount in weeks to the days field incrementing
    * the month and year fields as necessary to ensure the result remains valid.
@@ -622,7 +622,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * This instance is immutable and unaffected by this method call.
    *
    * @param weeks the weeks to add, may be negative
-   * @return a { @code LocalDateTime } based on this date-time with the weeks added, never null
+   * @return a {@code LocalDateTime} based on this date-time with the weeks added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def plusWeeks(weeks: Int): LocalDateTime = {
@@ -631,12 +631,12 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the specified period in hours subtracted.
+   * Returns a copy of this {@code LocalDateTime} with the specified period in hours subtracted.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param hours the hours to subtract, may be negative
-   * @return a { @code LocalDateTime } based on this date-time with the hours subtracted, never null
+   * @return a {@code LocalDateTime} based on this date-time with the hours subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def minusHours(hours: Int): LocalDateTime = {
@@ -650,13 +650,13 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * <p>
    * Time-zone rules, such as daylight savings, mean that not every time on the
    * local time-line exists. When this method converts the date to a date-time it adjusts
-   * the time and offset according to the   { @link ZoneResolvers # postTransition ( ) } rules.
+   * the time and offset according to the {@link ZoneResolvers # postTransition()} rules.
    * This selects the date-time immediately after a gap and the later offset in overlaps.
    * <p>
    * Finer control over gaps and overlaps is available in two ways.
    * If you simply want to use the earlier offset at overlaps then call
-   * { @link ZonedDateTime # withEarlierOffsetAtOverlap ( ) } immediately after this method.
-   * Alternately, pass a specific resolver to   { @link # atZone ( TimeZone, ZoneResolver ) }.
+   * {@link ZonedDateTime # withEarlierOffsetAtOverlap()} immediately after this method.
+   * Alternately, pass a specific resolver to {@link #atZone ( TimeZone, ZoneResolver )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -666,25 +666,25 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   def atZone(zone: TimeZone): ZonedDateTime = ZonedDateTime.of(this, zone, ZoneResolvers.postTransition)
 
   /**
-   * Checks if this   { @code LocalDateTime } is before the specified date-time.
+   * Checks if this {@code LocalDateTime} is before the specified date-time.
    * <p>
    * The comparison is based on the time-line position of the date-times.
    *
    * @param other the other date-time to compare to, not null
    * @return true if this point is before the specified date-time
-   * @throws NullPointerException if   { @code other } is null
+   * @throws NullPointerException if {@code other} is null
    */
   def isBefore(other: LocalDateTime): Boolean = compareTo(other) < 0
 
   /**
-   * Converts this date-time to a   { @code LocalTime }.
+   * Converts this date-time to a {@code LocalTime}.
    *
    * @return a LocalTime representing the time fields of this date-time, never null
    */
   def toLocalTime: LocalTime = time
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the date altered using the adjuster.
+   * Returns a copy of this {@code LocalDateTime} with the date altered using the adjuster.
    * <p>
    * Adjusters can be used to alter the date in various ways.
    * A simple adjuster might simply set the one of the fields, such as the year field.
@@ -695,18 +695,18 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * This instance is immutable and unaffected by this method call.
    *
    * @param adjuster the adjuster to use, not null
-   * @return a { @code LocalDateTime } based on this date-time with the date adjusted, never null
+   * @return a {@code LocalDateTime} based on this date-time with the date adjusted, never null
    * @throws NullPointerException if the adjuster returned null
    */
   def `with`(adjuster: DateAdjuster): LocalDateTime = `with`(date.`with`(adjuster), time)
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the nano-of-second value altered.
+   * Returns a copy of this {@code LocalDateTime} with the nano-of-second value altered.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param nanoOfSecond the nano-of-second to represent, from 0 to 999,999,999
-   * @return a { @code LocalDateTime } based on this date-time with the requested nanosecond, never null
+   * @return a {@code LocalDateTime} based on this date-time with the requested nanosecond, never null
    * @throws IllegalCalendarFieldValueException if the nano value is invalid
    */
   def withNanoOfSecond(nanoOfSecond: Int): LocalDateTime = {
@@ -715,14 +715,14 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the day-of-month altered.
-   * If the resulting   { @code LocalDateTime } is invalid, an exception is thrown.
+   * Returns a copy of this {@code LocalDateTime} with the day-of-month altered.
+   * If the resulting {@code LocalDateTime} is invalid, an exception is thrown.
    * The time does not affect the calculation and will be the same in the result.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param dayOfMonth the day-of-month to set in the returned date, from 1 to 28-31
-   * @return a { @code LocalDateTime } based on this date-time with the requested day, never null
+   * @return a {@code LocalDateTime} based on this date-time with the requested day, never null
    * @throws IllegalCalendarFieldValueException if the day-of-month value is invalid
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
@@ -736,12 +736,12 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   def getMinuteOfHour: Int = time.getMinuteOfHour
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the specified period in nanoseconds added.
+   * Returns a copy of this {@code LocalDateTime} with the specified period in nanoseconds added.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param nanos the nanos to add, may be negative
-   * @return a { @code LocalDateTime } based on this date-time with the nanoseconds added, never null
+   * @return a {@code LocalDateTime} based on this date-time with the nanoseconds added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def plusNanos(nanos: Long): LocalDateTime = {
@@ -753,14 +753,14 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   /**
    * Gets the day-of-year field.
    * <p>
-   * This method returns the primitive   { @code int } value for the day-of-year.
+   * This method returns the primitive {@code int} value for the day-of-year.
    *
    * @return the day-of-year, from 1 to 365, or 366 in a leap year
    */
   def getDayOfYear: Int = date.getDayOfYear
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the specified period in days added.
+   * Returns a copy of this {@code LocalDateTime} with the specified period in days added.
    * <p>
    * This method add the specified amount to the days field incrementing the
    * month and year fields as necessary to ensure the result remains valid.
@@ -771,7 +771,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * This instance is immutable and unaffected by this method call.
    *
    * @param days the days to add, may be negative
-   * @return a { @code LocalDateTime } based on this date-time with the days added, never null
+   * @return a {@code LocalDateTime} based on this date-time with the days added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def plusDays(days: Long): LocalDateTime = {
@@ -780,36 +780,36 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the year altered.
-   * If the resulting   { @code LocalDateTime } is invalid, it will be resolved using   { @link DateResolvers # previousValid ( ) }.
+   * Returns a copy of this {@code LocalDateTime} with the year altered.
+   * If the resulting {@code LocalDateTime} is invalid, it will be resolved using {@link DateResolvers # previousValid()}.
    * The time does not affect the calculation and will be the same in the result.
    * <p>
-   * This method does the same as   { @code withYear ( year, DateResolvers.previousValid ( ) ) }.
+   * This method does the same as {@code withYear ( year, DateResolvers.previousValid ( ) )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param year the year to set in the returned date, from MIN_YEAR to MAX_YEAR
-   * @return a { @code LocalDateTime } based on this date-time with the requested year, never null
+   * @return a {@code LocalDateTime} based on this date-time with the requested year, never null
    * @throws IllegalCalendarFieldValueException if the year value is invalid
    */
   def withYear(year: Int): LocalDateTime = `with`(date.withYear(year), time)
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the month-of-year altered.
-   * If the resulting   { @code LocalDateTime } is invalid, it will be resolved using   { @link DateResolvers # previousValid ( ) }.
+   * Returns a copy of this {@code LocalDateTime} with the month-of-year altered.
+   * If the resulting {@code LocalDateTime} is invalid, it will be resolved using {@link DateResolvers # previousValid()}.
    * The time does not affect the calculation and will be the same in the result.
    * <p>
-   * This method does the same as   { @code with ( monthOfYear, DateResolvers.previousValid ( ) ) }.
+   * This method does the same as {@code with ( monthOfYear, DateResolvers.previousValid ( ) )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param monthOfYear the month-of-year to set in the returned date, not null
-   * @return a { @code LocalDateTime } based on this date-time with the requested month, never null
+   * @return a {@code LocalDateTime} based on this date-time with the requested month, never null
    */
   def `with`(monthOfYear: MonthOfYear): LocalDateTime = `with`(date.`with`(monthOfYear), time)
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the time values altered.
+   * Returns a copy of this {@code LocalDateTime} with the time values altered.
    * <p>
    * This method will return a new instance with the same date fields,
    * but altered time fields.
@@ -820,7 +820,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @param minuteOfHour the minute-of-hour to represent, from 0 to 59
    * @param secondOfMinute the second-of-minute to represent, from 0 to 59
    * @param nanoOfSecond the nano-of-second to represent, from 0 to 999,999,999
-   * @return a { @code LocalDateTime } based on this date-time with the requested time, never null
+   * @return a {@code LocalDateTime} based on this date-time with the requested time, never null
    * @throws IllegalCalendarFieldValueException if any field value is invalid
    */
   def withTime(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int): LocalDateTime = {
@@ -832,12 +832,12 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the specified period in minutes added.
+   * Returns a copy of this {@code LocalDateTime} with the specified period in minutes added.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param minutes the minutes to add, may be negative
-   * @return a { @code LocalDateTime } based on this date-time with the minutes added, never null
+   * @return a {@code LocalDateTime} based on this date-time with the minutes added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def plusMinutes(minutes: Int): LocalDateTime = {
@@ -847,7 +847,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
-   * Checks if this   { @code LocalDateTime } is equal to the specified date-time.
+   * Checks if this {@code LocalDateTime} is equal to the specified date-time.
    * <p>
    * The comparison is based on the time-line position of the date-times.
    *
@@ -864,19 +864,19 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
-   * A hash code for this   { @code LocalDateTime }.
+   * A hash code for this {@code LocalDateTime}.
    *
    * @return a suitable hash code
    */
   override def hashCode: Int = date.hashCode ^ time.hashCode
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the specified period in hours added.
+   * Returns a copy of this {@code LocalDateTime} with the specified period in hours added.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param hours the hours to add, may be negative
-   * @return a { @code LocalDateTime } based on this date-time with the hours added, never null
+   * @return a {@code LocalDateTime} based on this date-time with the hours added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def plusHours(hours: Int): LocalDateTime = {
@@ -886,20 +886,20 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the specified period in years subtracted.
+   * Returns a copy of this {@code LocalDateTime} with the specified period in years subtracted.
    * <p>
    * This method subtract the specified amount to the years field in three steps:
    * <ol>
    * <li>subtract the input years to the year field</li>
    * <li>Check if the resulting date would be invalid</li>
-   * <li>Adjust the date using   { @code dateResolver } if necessary</li>
+   * <li>Adjust the date using {@code dateResolver} if necessary</li>
    * </ol>
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param years the years to subtract, may be negative
    * @param dateResolver the DateResolver to be used if the resulting date would be invalid
-   * @return a { @code LocalDateTime } based on this date-time with the years subtracted, never null
+   * @return a {@code LocalDateTime} based on this date-time with the years subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def minusYears(years: Int, dateResolver: DateResolver): LocalDateTime = {
@@ -908,20 +908,20 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the specified period in years added.
+   * Returns a copy of this {@code LocalDateTime} with the specified period in years added.
    * <p>
    * This method add the specified amount to the years field in three steps:
    * <ol>
    * <li>Add the input years to the year field</li>
    * <li>Check if the resulting date would be invalid</li>
-   * <li>Adjust the date using   { @code dateResolver } if necessary</li>
+   * <li>Adjust the date using {@code dateResolver} if necessary</li>
    * </ol>
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param years the years to add, may be negative
    * @param dateResolver the DateResolver to be used if the resulting date would be invalid
-   * @return a { @code LocalDateTime } based on this date-time with the years added, never null
+   * @return a {@code LocalDateTime} based on this date-time with the years added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def plusYears(years: Int, dateResolver: DateResolver): LocalDateTime = {
@@ -937,7 +937,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   def getHourOfDay: Int = time.getHourOfDay
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the specified period in weeks subtracted.
+   * Returns a copy of this {@code LocalDateTime} with the specified period in weeks subtracted.
    * <p>
    * This method subtract the specified amount in weeks to the days field incrementing
    * the month and year fields as necessary to ensure the result remains valid.
@@ -948,7 +948,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * This instance is immutable and unaffected by this method call.
    *
    * @param weeks the weeks to subtract, may be negative
-   * @return a { @code LocalDateTime } based on this date-time with the weeks subtracted, never null
+   * @return a {@code LocalDateTime} based on this date-time with the weeks subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def minusWeeks(weeks: Int): LocalDateTime = {
@@ -957,7 +957,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the date values altered.
+   * Returns a copy of this {@code LocalDateTime} with the date values altered.
    * <p>
    * This method will return a new instance with the same time fields,
    * but altered date fields.
@@ -967,7 +967,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @param year the year to represent, from MIN_YEAR to MAX_YEAR
    * @param monthOfYear the month-of-year to represent, not null
    * @param dayOfMonth the day-of-month to represent, from 1 to 31
-   * @return a { @code LocalDateTime } based on this date-time with the requested date, never null
+   * @return a {@code LocalDateTime} based on this date-time with the requested date, never null
    * @throws IllegalCalendarFieldValueException if any field value is invalid
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
@@ -980,11 +980,11 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the specified period added.
+   * Returns a copy of this {@code LocalDateTime} with the specified period added.
    * <p>
    * This adds the specified period to this date-time, returning a new date-time.
-   * Before addition, the period is converted to a   { @code Period } using
-   * { @link Period # of ( PeriodProvider ) }.
+   * Before addition, the period is converted to a {@code Period} using
+   * {@link Period # of ( PeriodProvider )}.
    * <p>
    * The detailed rules for the addition effectively treat the date and time parts of
    * this date-time completely separately during the calculation.
@@ -992,9 +992,9 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * The rules are expressed in four steps:
    * <ol>
    * <li>Add the date part of the period to the date part of this date-time
-   * using   { @link LocalDate # plus ( PeriodProvider ) } - which has some complex rules</li>
+   * using {@link LocalDate # plus ( PeriodProvider )} - which has some complex rules</li>
    * <li>Add the time part of the period to the time part of this date-time using
-   * { @link LocalTime # plusWithOverflow ( int, int, int, long ) < / li >
+   * {@link LocalTime # plusWithOverflow ( int, int, int, long ) < / li >
    * <li>Add the overflow days from the time calculation to the calculated date</li>
    * <li>Combine the new date and time parts to form the result</li>
    * </ol>
@@ -1003,7 +1003,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * For example, adding 5 hours will always result in a date-time one hour later
    * than adding 4 hours. However, another effect of the definition is that adding
    * 24 hour periods is not the same as adding 1 day periods. See the rules of
-   * { @link LocalDate # plus ( PeriodProvider ) date addition } to understand why.
+   * {@link LocalDate # plus ( PeriodProvider ) date addition} to understand why.
    * <p>
    * For example, this table shows what happens when for various inputs and periods:
    * <pre>
@@ -1035,8 +1035,8 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * This instance is immutable and unaffected by this method call.
    *
    * @param periodProvider the period to add, not null
-   * @return a { @code LocalDateTime } based on this date-time with the period added, never null
-   * @throws CalendricalException if the specified period cannot be converted to a   { @code Period }
+   * @return a {@code LocalDateTime} based on this date-time with the period added, never null
+   * @throws CalendricalException if the specified period cannot be converted to a {@code Period }
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def plus(periodProvider: PeriodProvider): LocalDateTime = {
@@ -1050,12 +1050,12 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   def +(periodProvider: PeriodProvider): LocalDateTime = plus(periodProvider)
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the second-of-minute value altered.
+   * Returns a copy of this {@code LocalDateTime} with the second-of-minute value altered.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param secondOfMinute the second-of-minute to represent, from 0 to 59
-   * @return a { @code LocalDateTime } based on this date-time with the requested second, never null
+   * @return a {@code LocalDateTime} based on this date-time with the requested second, never null
    * @throws IllegalCalendarFieldValueException if the second value is invalid
    */
   def withSecondOfMinute(secondOfMinute: Int): LocalDateTime = {
@@ -1064,12 +1064,12 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the specified period in seconds added.
+   * Returns a copy of this {@code LocalDateTime} with the specified period in seconds added.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param seconds the seconds to add, may be negative
-   * @return a { @code LocalDateTime } based on this date-time with the seconds added, never null
+   * @return a {@code LocalDateTime} based on this date-time with the seconds added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def plusSeconds(seconds: Int): LocalDateTime = {
@@ -1079,20 +1079,20 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the day-of-year altered.
-   * If the resulting   { @code LocalDateTime } is invalid, an exception is thrown.
+   * Returns a copy of this {@code LocalDateTime} with the day-of-year altered.
+   * If the resulting {@code LocalDateTime} is invalid, an exception is thrown.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param dayOfYear the day-of-year to set in the returned date, from 1 to 365-366
-   * @return a { @code LocalDateTime } based on this date with the requested day, never null
+   * @return a {@code LocalDateTime} based on this date with the requested day, never null
    * @throws IllegalCalendarFieldValueException if the day-of-year value is invalid
    * @throws InvalidCalendarFieldException if the day-of-year is invalid for the year
    */
   def withDayOfYear(dayOfYear: Int): LocalDateTime = `with`(date.withDayOfYear(dayOfYear), time)
 
   /**
-   * Outputs this date-time as a   { @code String } using the formatter.
+   * Outputs this date-time as a {@code String} using the formatter.
    *
    * @param formatter the formatter to use, not null
    * @return the formatted date-time string, never null
@@ -1113,12 +1113,12 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   override def adjustDate(date: LocalDate): LocalDate = this.date.adjustDate(date)
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the hour-of-day value altered.
+   * Returns a copy of this {@code LocalDateTime} with the hour-of-day value altered.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param hourOfDay the hour-of-day to represent, from 0 to 23
-   * @return a { @code LocalDateTime } based on this date-time with the requested hour, never null
+   * @return a {@code LocalDateTime} based on this date-time with the requested hour, never null
    * @throws IllegalCalendarFieldValueException if the hour value is invalid
    */
   def withHourOfDay(hourOfDay: Int): LocalDateTime = {
@@ -1127,15 +1127,15 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the month-of-year altered.
-   * If the resulting   { @code LocalDateTime } is invalid, it will be resolved using   { @code dateResolver }.
+   * Returns a copy of this {@code LocalDateTime} with the month-of-year altered.
+   * If the resulting {@code LocalDateTime} is invalid, it will be resolved using {@code dateResolver}.
    * The time does not affect the calculation and will be the same in the result.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param monthOfYear the month-of-year to set in the returned date, from 1 (January) to 12 (December)
    * @param dateResolver the DateResolver to be used if the resulting date would be invalid
-   * @return a { @code LocalDateTime } based on this date-time with the requested month, never null
+   * @return a {@code LocalDateTime} based on this date-time with the requested month, never null
    * @throws IllegalCalendarFieldValueException if the month-of-year value is invalid
    */
   def withMonthOfYear(monthOfYear: Int, dateResolver: DateResolver): LocalDateTime = {
@@ -1143,12 +1143,12 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the specified period in seconds subtracted.
+   * Returns a copy of this {@code LocalDateTime} with the specified period in seconds subtracted.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param seconds the seconds to subtract, may be negative
-   * @return a { @code LocalDateTime } based on this date-time with the seconds subtracted, never null
+   * @return a {@code LocalDateTime} based on this date-time with the seconds subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def minusSeconds(seconds: Int): LocalDateTime = {
@@ -1160,8 +1160,8 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   /**
    * Returns an offset date-time formed from this date-time and the specified offset.
    * <p>
-   * This merges the two objects -   { @code this } and the specified offset -
-   * to form an instance of   { @code OffsetDateTime }.
+   * This merges the two objects - {@code this} and the specified offset -
+   * to form an instance of {@code OffsetDateTime}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -1171,22 +1171,22 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   def atOffset(offset: ZoneOffset): OffsetDateTime = OffsetDateTime.of(this, offset)
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the month-of-year altered.
-   * If the resulting   { @code LocalDateTime } is invalid, it will be resolved using   { @code dateResolver }.
+   * Returns a copy of this {@code LocalDateTime} with the month-of-year altered.
+   * If the resulting {@code LocalDateTime} is invalid, it will be resolved using {@code dateResolver}.
    * The time does not affect the calculation and will be the same in the result.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param monthOfYear the month-of-year to set in the returned date, not null
    * @param dateResolver the DateResolver to be used if the resulting date would be invalid
-   * @return a { @code LocalDateTime } based on this date-time with the requested month, never null
+   * @return a {@code LocalDateTime} based on this date-time with the requested month, never null
    */
   def `with`(monthOfYear: MonthOfYear, dateResolver: DateResolver): LocalDateTime = {
     `with`(date.`with`(monthOfYear, dateResolver), time)
   }
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the time altered using the adjuster.
+   * Returns a copy of this {@code LocalDateTime} with the time altered using the adjuster.
    * <p>
    * Adjusters can be used to alter the time in various ways.
    * A simple adjuster might simply set the one of the fields, such as the hour field.
@@ -1197,18 +1197,18 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * This instance is immutable and unaffected by this method call.
    *
    * @param adjuster the adjuster to use, not null
-   * @return a { @code LocalDateTime } based on this date-time with the time adjusted, never null
+   * @return a {@code LocalDateTime} based on this date-time with the time adjusted, never null
    * @throws IllegalArgumentException if the adjuster returned null
    */
   def `with`(adjuster: TimeAdjuster): LocalDateTime = `with`(date, time.`with`(adjuster))
 
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the time values altered.
+   * Returns a copy of this {@code LocalDateTime} with the time values altered.
    * <p>
    * This method will return a new instance with the same date fields,
    * but altered time fields.
-   * This is a shorthand for   { @link # withTime ( int, int, int, int ) } and sets
+   * This is a shorthand for {@link #withTime ( int, int, int, int )} and sets
    * the nanosecond fields to zero.
    * <p>
    * This instance is immutable and unaffected by this method call.
@@ -1216,7 +1216,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @param hourOfDay the hour-of-day to represent, from 0 to 23
    * @param minuteOfHour the minute-of-hour to represent, from 0 to 59
    * @param secondOfMinute the second-of-minute to represent, from 0 to 59
-   * @return a { @code LocalDateTime } based on this date-time with the requested time, never null
+   * @return a {@code LocalDateTime} based on this date-time with the requested time, never null
    * @throws IllegalCalendarFieldValueException if any field value is invalid
    */
   def withTime(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int): LocalDateTime = {
@@ -1224,20 +1224,20 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the specified period in months added.
+   * Returns a copy of this {@code LocalDateTime} with the specified period in months added.
    * <p>
    * This method add the specified amount to the months field in three steps:
    * <ol>
    * <li>Add the input months to the month-of-year field</li>
    * <li>Check if the resulting date would be invalid</li>
-   * <li>Adjust the date using   { @code dateResolver } if necessary</li>
+   * <li>Adjust the date using {@code dateResolver} if necessary</li>
    * </ol>
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param months the months to add, may be negative
    * @param dateResolver the DateResolver to be used if the resulting date would be invalid
-   * @return a { @code LocalDateTime } based on this date-time with the months added, never null
+   * @return a {@code LocalDateTime} based on this date-time with the months added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def plusMonths(months: Int, dateResolver: DateResolver): LocalDateTime = {
@@ -1263,11 +1263,11 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the specified period subtracted.
+   * Returns a copy of this {@code LocalDateTime} with the specified period subtracted.
    * <p>
    * This subtracts the specified period from this date-time, returning a new date-time.
-   * Before subtraction, the period is converted to a   { @code Period } using
-   * { @link Period # of ( PeriodProvider ) }.
+   * Before subtraction, the period is converted to a {@code Period} using
+   * {@link Period # of ( PeriodProvider )}.
    * <p>
    * The detailed rules for the subtraction effectively treat the date and time parts of
    * this date-time completely separately during the calculation.
@@ -1275,9 +1275,9 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * The rules are expressed in four steps:
    * <ol>
    * <li>Subtract the date part of the period from the date part of this date-time
-   * using   { @link LocalDate # minus ( PeriodProvider ) } - which has some complex rules</li>
+   * using {@link LocalDate # minus ( PeriodProvider )} - which has some complex rules</li>
    * <li>Subtract the time part of the period from the time part of this date-time using
-   * { @link LocalTime # minusWithOverflow ( int, int, int, long ) < / li >
+   * {@link LocalTime # minusWithOverflow ( int, int, int, long ) < / li >
    * <li>Subtract the overflow days from the time calculation from the calculated date</li>
    * <li>Combine the new date and time parts to form the result</li>
    * </ol>
@@ -1286,7 +1286,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * For example, subtracting 5 hours will always result in a date-time one hour earlier
    * than adding 4 hours. However, another effect of the definition is that subtracting
    * 24 hour periods is not the same as subtracting 1 day periods. See the rules of
-   * { @link LocalDate # minus ( PeriodProvider ) date subtraction } to understand why.
+   * {@link LocalDate # minus ( PeriodProvider ) date subtraction} to understand why.
    * <p>
    * For example, this table shows what happens when for various inputs and periods:
    * <pre>
@@ -1318,8 +1318,8 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * This instance is immutable and unaffected by this method call.
    *
    * @param periodProvider the period to subtract, not null
-   * @return a { @code LocalDateTime } based on this date-time with the period subtracted, never null
-   * @throws CalendricalException if the specified period cannot be converted to a   { @code Period }
+   * @return a {@code LocalDateTime} based on this date-time with the period subtracted, never null
+   * @throws CalendricalException if the specified period cannot be converted to a {@code Period }
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def minus(periodProvider: PeriodProvider): LocalDateTime = {
@@ -1334,13 +1334,13 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
 
 
   /**
-   * Checks if this   { @code LocalDateTime } is after the specified date-time.
+   * Checks if this {@code LocalDateTime} is after the specified date-time.
    * <p>
    * The comparison is based on the time-line position of the date-times.
    *
    * @param other the other date-time to compare to, not null
    * @return true if this is after the specified date-time
-   * @throws NullPointerException if   { @code other } is null
+   * @throws NullPointerException if {@code other} is null
    */
   def isAfter(other: LocalDateTime): Boolean = compareTo(other) > 0
 
@@ -1362,15 +1362,15 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   def atZone(zone: TimeZone, resolver: ZoneResolver): ZonedDateTime = ZonedDateTime.of(this, zone, resolver)
 
   /**
-   * Converts this date-time to a   { @code LocalDateTime },
-   * trivially returning   { @code this }.
+   * Converts this date-time to a {@code LocalDateTime},
+   * trivially returning {@code this}.
    *
-   * @return { @code this }, never null
+   * @return {@code this}, never null
    */
   override def toLocalDateTime: LocalDateTime = this
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the specified period in months added.
+   * Returns a copy of this {@code LocalDateTime} with the specified period in months added.
    * <p>
    * This method add the specified amount to the months field in three steps:
    * <ol>
@@ -1383,12 +1383,12 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * 2007-04-31. Instead of returning an invalid result, the last valid day
    * of the month, 2007-04-30, is selected instead.
    * <p>
-   * This method does the same as   { @code plusMonths ( months, DateResolvers.previousValid ( ) ) }.
+   * This method does the same as {@code plusMonths ( months, DateResolvers.previousValid ( ) )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param months the months to add, may be negative
-   * @return a { @code LocalDateTime } based on this date-time with the months added, never null
+   * @return a {@code LocalDateTime} based on this date-time with the months added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    * @see # plusMonths ( int, javax.time.calendar.DateResolver )
    */
@@ -1398,12 +1398,12 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the specified period in minutes subtracted.
+   * Returns a copy of this {@code LocalDateTime} with the specified period in minutes subtracted.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param minutes the minutes to subtract, may be negative
-   * @return a { @code LocalDateTime } based on this date-time with the minutes subtracted, never null
+   * @return a {@code LocalDateTime} based on this date-time with the minutes subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def minusMinutes(minutes: Int): LocalDateTime = {
@@ -1413,7 +1413,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the date values altered.
+   * Returns a copy of this {@code LocalDateTime} with the date values altered.
    * <p>
    * This method will return a new instance with the same time fields,
    * but altered date fields.
@@ -1423,7 +1423,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @param year the year to represent, from MIN_YEAR to MAX_YEAR
    * @param monthOfYear the month-of-year to represent, from 1 (January) to 12 (December)
    * @param dayOfMonth the day-of-month to represent, from 1 to 31
-   * @return a { @code LocalDateTime } based on this date-time with the requested date, never null
+   * @return a {@code LocalDateTime} based on this date-time with the requested date, never null
    * @throws IllegalCalendarFieldValueException if any field value is invalid
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
@@ -1436,14 +1436,14 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
-   * Gets the day-of-week field, which is an enum   { @code DayOfWeek }.
+   * Gets the day-of-week field, which is an enum {@code DayOfWeek}.
    * <p>
-   * This method returns the enum   { @link DayOfWeek } for the day-of-week.
-   * This avoids confusion as to what   { @code int } values mean.
-   * If you need access to the primitive   { @code int } value then the enum
-   * provides the   { @link DayOfWeek # getValue ( ) int value }.
+   * This method returns the enum {@link DayOfWeek} for the day-of-week.
+   * This avoids confusion as to what {@code int} values mean.
+   * If you need access to the primitive {@code int} value then the enum
+   * provides the {@link DayOfWeek # getValue ( ) int value}.
    * <p>
-   * Additional information can be obtained from the   { @code DayOfWeek }.
+   * Additional information can be obtained from the {@code DayOfWeek}.
    * This includes textual names of the values.
    *
    * @return the day-of-week, never null
@@ -1451,15 +1451,15 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   def getDayOfWeek: DayOfWeek = date.getDayOfWeek
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the year altered.
-   * If the resulting   { @code LocalDateTime } is invalid, it will be resolved using   { @code dateResolver }.
+   * Returns a copy of this {@code LocalDateTime} with the year altered.
+   * If the resulting {@code LocalDateTime} is invalid, it will be resolved using {@code dateResolver}.
    * The time does not affect the calculation and will be the same in the result.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param year the year to set in the returned date, from MIN_YEAR to MAX_YEAR
    * @param dateResolver the DateResolver to be used if the resulting date would be invalid
-   * @return a { @code LocalDateTime } based on this date-time with the requested year, never null
+   * @return a {@code LocalDateTime} based on this date-time with the requested year, never null
    * @throws IllegalCalendarFieldValueException if the year value is invalid
    */
   def withYear(year: Int, dateResolver: DateResolver): LocalDateTime = {
@@ -1467,15 +1467,15 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the day-of-month altered.
-   * If the resulting   { @code LocalDateTime } is invalid, it will be resolved using   { @code dateResolver }.
+   * Returns a copy of this {@code LocalDateTime} with the day-of-month altered.
+   * If the resulting {@code LocalDateTime} is invalid, it will be resolved using {@code dateResolver}.
    * The time does not affect the calculation and will be the same in the result.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param dayOfMonth the day-of-month to set in the returned date, from 1 to 31
    * @param dateResolver the DateResolver to be used if the resulting date would be invalid
-   * @return a { @code LocalDateTime } based on this date-time with the requested day, never null
+   * @return a {@code LocalDateTime} based on this date-time with the requested day, never null
    * @throws IllegalCalendarFieldValueException if the day-of-month value is invalid
    */
   def withDayOfMonth(dayOfMonth: Int, dateResolver: DateResolver): LocalDateTime = {
@@ -1485,14 +1485,14 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   /**
    * Gets the day-of-month field.
    * <p>
-   * This method returns the primitive   { @code int } value for the day-of-month.
+   * This method returns the primitive {@code int} value for the day-of-month.
    *
    * @return the day-of-month, from 1 to 31
    */
   def getDayOfMonth: Int = date.getDayOfMonth
 
   /**
-   * Converts this date-time to a   { @code LocalDate }.
+   * Converts this date-time to a {@code LocalDate}.
    *
    * @return a LocalDate representing the date fields of this date-time, never null
    */
@@ -1501,10 +1501,10 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   /**
    * Gets the year field.
    * <p>
-   * This method returns the primitive   { @code int } value for the year.
+   * This method returns the primitive {@code int} value for the year.
    * <p>
-   * Additional information about the year can be obtained via   { @link # toYear }.
-   * This returns a   { @code Year } object which includes information on whether
+   * Additional information about the year can be obtained via {@link #toYear}.
+   * This returns a {@code Year} object which includes information on whether
    * this is a leap year and its length in days.
    *
    * @return the year, from MIN_YEAR to MAX_YEAR
@@ -1512,12 +1512,12 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   def getYear: Int = date.getYear
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the minute-of-hour value altered.
+   * Returns a copy of this {@code LocalDateTime} with the minute-of-hour value altered.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param minuteOfHour the minute-of-hour to represent, from 0 to 59
-   * @return a { @code LocalDateTime } based on this date-time with the requested minute, never null
+   * @return a {@code LocalDateTime} based on this date-time with the requested minute, never null
    * @throws IllegalCalendarFieldValueException if the minute value is invalid
    */
   def withMinuteOfHour(minuteOfHour: Int): LocalDateTime = {
@@ -1526,10 +1526,10 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
-   * Gets the year field as a   { @code Year }.
+   * Gets the year field as a {@code Year}.
    * <p>
    * This method provides access to an object representing the year field.
-   * { @code Year } has methods for querying addition year-based information.
+   * {@code Year} has methods for querying addition year-based information.
    *
    * @return the year, never null
    */
@@ -1544,12 +1544,12 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   override def adjustTime(time: LocalTime): LocalTime = this.time.adjustTime(time)
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the specified period in nanoseconds subtracted.
+   * Returns a copy of this {@code LocalDateTime} with the specified period in nanoseconds subtracted.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param nanos the nanos to subtract, may be negative
-   * @return a { @code LocalDateTime } based on this date-time with the nanoseconds subtracted, never null
+   * @return a {@code LocalDateTime} based on this date-time with the nanoseconds subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
   def minusNanos(nanos: Long): LocalDateTime = {
@@ -1563,7 +1563,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * <p>
    * This method queries the value of the specified calendrical rule.
    * If the value cannot be returned for the rule from this date-time then
-   * { @code null } will be returned.
+   * {@code null} will be returned.
    *
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
@@ -1571,7 +1571,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   def get[T](rule: CalendricalRule[T]): Option[T] = Some(rule.deriveValueFor(rule, this, this))
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the specified period in months subtracted.
+   * Returns a copy of this {@code LocalDateTime} with the specified period in months subtracted.
    * <p>
    * This method subtract the specified amount to the months field in three steps:
    * <ol>
@@ -1584,12 +1584,12 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * 2007-04-31. Instead of returning an invalid result, the last valid day
    * of the month, 2007-04-30, is selected instead.
    * <p>
-   * This method does the same as   { @code minusMonts ( months, DateResolvers.previousValid ( ) ) }.
+   * This method does the same as {@code minusMonts ( months, DateResolvers.previousValid ( ) )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param months the months to subtract, may be negative
-   * @return a { @code LocalDateTime } based on this date-time with the months subtracted, never null
+   * @return a {@code LocalDateTime} based on this date-time with the months subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    * @see # minusMonths ( int, javax.time.calendar.DateResolver )
    */
@@ -1611,18 +1611,18 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   def matches(matcher: CalendricalMatcher): Boolean = matcher.matchesCalendrical(this)
 
   /**
-   * Returns a copy of this   { @code LocalDateTime } with the time values altered.
+   * Returns a copy of this {@code LocalDateTime} with the time values altered.
    * <p>
    * This method will return a new instance with the same date fields,
    * but altered time fields.
-   * This is a shorthand for   { @link # withTime ( int, int, int, int ) } and sets
+   * This is a shorthand for {@link #withTime ( int, int, int, int )} and sets
    * the second and nanosecond fields to zero.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param hourOfDay the hour-of-day to represent, from 0 to 23
    * @param minuteOfHour the minute-of-hour to represent, from 0 to 59
-   * @return a { @code LocalDateTime } based on this date-time with the requested time, never null
+   * @return a {@code LocalDateTime} based on this date-time with the requested time, never null
    * @throws IllegalCalendarFieldValueException if any field value is invalid
    */
   def withTime(hourOfDay: Int, minuteOfHour: Int): LocalDateTime = withTime(hourOfDay, minuteOfHour, 0, 0)

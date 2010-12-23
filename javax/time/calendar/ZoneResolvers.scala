@@ -37,9 +37,9 @@ import javax.time.calendar.zone.ZoneOffsetTransition
 import javax.time.calendar.zone.ZoneRules
 
 /**
- * Provides common implementations of     { @code ZoneResolver }.
+ * Provides common implementations of {@code ZoneResolver}.
  * <p>
- * A     { @link ZoneResolver } provides a strategy for handling the gaps and overlaps
+ * A {@link ZoneResolver} provides a strategy for handling the gaps and overlaps
  * on the time-line that occur due to changes in the offset from UTC, usually
  * caused by Daylight Savings Time.
  * <p>
@@ -63,12 +63,12 @@ object ZoneResolvers {
    * Class implementing strict resolver.
    */
   private class Strict extends ZoneResolver {
-    /**{ @inheritDoc }*/
+    /**{@inheritDoc}*/
     protected def handleGap(zone: TimeZone, rules: ZoneRules, discontinuity: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime = {
       throw new CalendricalException("Local time " + newDateTime + " does not exist in time-zone " + zone + " due to a gap in the local time-line")
     }
 
-    /**{ @inheritDoc }*/
+    /**{@inheritDoc}*/
     protected def handleOverlap(zone: TimeZone, rules: ZoneRules, discontinuity: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime = {
       throw new CalendricalException("Local time " + newDateTime + " has two matching offsets, " + discontinuity.getOffsetBefore + " and " + discontinuity.getOffsetAfter + ", in time-zone " + zone)
     }
@@ -89,13 +89,13 @@ object ZoneResolvers {
    * Class implementing preTransition resolver.
    */
   private class PreTransition extends ZoneResolver {
-    /**{ @inheritDoc }*/
+    /**{@inheritDoc}*/
     protected def handleGap(zone: TimeZone, rules: ZoneRules, discontinuity: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime = {
       val instantBefore: Instant = discontinuity.getInstant.minusNanos(1)
       OffsetDateTime.ofInstant(instantBefore, discontinuity.getOffsetBefore)
     }
 
-    /**{ @inheritDoc }*/
+    /**{@inheritDoc}*/
     protected def handleOverlap(zone: TimeZone, rules: ZoneRules, discontinuity: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime = {
       OffsetDateTime.of(newDateTime, discontinuity.getOffsetBefore)
     }
@@ -115,12 +115,12 @@ object ZoneResolvers {
    * Class implementing postTransition resolver.
    */
   private class PostTransition extends ZoneResolver {
-    /**{ @inheritDoc }*/
+    /**{@inheritDoc}*/
     protected def handleGap(zone: TimeZone, rules: ZoneRules, discontinuity: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime = {
       return discontinuity.getDateTimeAfter
     }
 
-    /**{ @inheritDoc }*/
+    /**{@inheritDoc}*/
     protected def handleOverlap(zone: TimeZone, rules: ZoneRules, discontinuity: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime = {
       return OffsetDateTime.of(newDateTime, discontinuity.getOffsetAfter)
     }
@@ -140,12 +140,12 @@ object ZoneResolvers {
    * Class implementing postGapPreOverlap resolver.
    */
   private class PostGapPreOverlap extends ZoneResolver {
-    /**{ @inheritDoc }*/
+    /**{@inheritDoc}*/
     protected def handleGap(zone: TimeZone, rules: ZoneRules, discontinuity: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime = {
       return discontinuity.getDateTimeAfter
     }
 
-    /**{ @inheritDoc }*/
+    /**{@inheritDoc}*/
     protected def handleOverlap(zone: TimeZone, rules: ZoneRules, discontinuity: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime = {
       return OffsetDateTime.of(newDateTime, discontinuity.getOffsetBefore)
     }
@@ -155,13 +155,13 @@ object ZoneResolvers {
    * Returns the retain offset resolver, which returns the instant after the
    * transition for gaps, and the same offset for overlaps.
    * <p>
-   * This resolver is the same as the     { { @link # postTransition ( ) } resolver with
+   * This resolver is the same as the     { {@link #postTransition()} resolver with
    * one additional rule. When processing an overlap, this resolver attempts
    * to use the same offset as the offset specified in the old date-time.
    * If that offset is invalid then the later offset is chosen
    * <p>
    * This resolver is most commonly useful when adding or subtracting time
-   * from a     { @code ZonedDateTime }.
+   * from a {@code ZonedDateTime}.
    *
    * @return the retain offset resolver, never null
    */
@@ -173,12 +173,12 @@ object ZoneResolvers {
    * Class implementing retain offset resolver.
    */
   private class RetainOffset extends ZoneResolver {
-    /**{ @inheritDoc }*/
+    /**{@inheritDoc}*/
     protected def handleGap(zone: TimeZone, rules: ZoneRules, discontinuity: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime = {
       return discontinuity.getDateTimeAfter
     }
 
-    /**{ @inheritDoc }*/
+    /**{@inheritDoc}*/
     protected def handleOverlap(zone: TimeZone, rules: ZoneRules, discontinuity: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime = {
       if (oldDateTime != null && discontinuity.isValidOffset(oldDateTime.getOffset)) {
         return OffsetDateTime.of(newDateTime, oldDateTime.getOffset)
@@ -209,13 +209,13 @@ object ZoneResolvers {
    * Class implementing push forward resolver.
    */
   private class PushForward extends ZoneResolver {
-    /**{ @inheritDoc }*/
+    /**{@inheritDoc}*/
     protected def handleGap(zone: TimeZone, rules: ZoneRules, discontinuity: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime = {
       val result: LocalDateTime = newDateTime.plus(discontinuity.getTransitionSize)
       return OffsetDateTime.of(result, discontinuity.getOffsetAfter)
     }
 
-    /**{ @inheritDoc }*/
+    /**{@inheritDoc}*/
     protected def handleOverlap(zone: TimeZone, rules: ZoneRules, discontinuity: ZoneOffsetTransition, newDateTime: LocalDateTime, oldDateTime: OffsetDateTime): OffsetDateTime = {
       return OffsetDateTime.of(newDateTime, discontinuity.getOffsetAfter)
     }

@@ -50,15 +50,15 @@ import javax.time.calendar.UnsupportedRuleException
  * or by using one of the predefined constants on DateTimeFormatters.
  * <p>
  * Some aspects of printing and parsing are dependent on the locale.
- * The locale can be changed using the  { @link # withLocale ( Locale ) } method
+ * The locale can be changed using the {@link #withLocale ( Locale )} method
  * which returns a new formatter in the requested locale.
  * <p>
  * Not all formatters can print and parse. Some can only print, while others can only parse.
- * The  { @link # isPrintSupported ( ) } and  { @link # isParseSupported ( ) } methods determine
+ * The {@link #isPrintSupported()} and {@link #isParseSupported()} methods determine
  * which operations are available.
  * <p>
- * Some applications may need to use the older  { @link Format } class for formatting.
- * The  { @link # toFormat ( ) } method returns an implementation of the old API.
+ * Some applications may need to use the older {@link Format} class for formatting.
+ * The {@link #toFormat()} method returns an implementation of the old API.
  * <p>
  * DateTimeFormatter is immutable and thread-safe.
  *
@@ -98,15 +98,15 @@ final class DateTimeFormatter private[format](symbols: DateTimeFormatSymbols, pr
   }
 
   /**
-   * Returns this formatter as a  { @code java.text.Format } instance.
+   * Returns this formatter as a {@code java.text.Format} instance.
    * <p>
-   * The  { @link Format } instance will print any  { @link Calendrical }
-   * and parses to a merged  { @link CalendricalMerger }.
+   * The {@link Format} instance will print any {@link Calendrical}
+   * and parses to a merged {@link CalendricalMerger}.
    * <p>
-   * The format will throw  { @code UnsupportedOperationException } and
-   * { @code IndexOutOfBoundsException } in line with those thrown by the
-   * { @link # print ( Calendrical, Appendable ) print } and
-   * { @link # parse ( String, ParsePosition ) parse } methods.
+   * The format will throw {@code UnsupportedOperationException} and
+   * {@code IndexOutOfBoundsException} in line with those thrown by the
+   * {@link #print(Calendrical, Appendable) print} and
+   * {@link #parse(String, ParsePosition) parse} methods.
    * <p>
    * The format does not support attributing of the returned format string.
    *
@@ -120,7 +120,7 @@ final class DateTimeFormatter private[format](symbols: DateTimeFormatSymbols, pr
    * @return the pattern that will be used, never null
    */
   override def toString: String = {
-    var pattern: String = printerParser.toString
+    val pattern: String = printerParser.toString
     return if (pattern.startsWith("[")) pattern else pattern.substring(1, pattern.length - 1)
   }
 
@@ -136,13 +136,13 @@ final class DateTimeFormatter private[format](symbols: DateTimeFormatSymbols, pr
    * Implements the classic Java Format API.
    */
   private[format] class ClassicFormat extends Format {
-    /**{ @inheritDoc }*/
+    /**{@inheritDoc}*/
     def parseObject(source: String, pos: ParsePosition): AnyRef = {
-      var context: DateTimeParseContext = parse(source, pos)
+      val context: DateTimeParseContext = parse(source, pos)
       return if (context != null) context.toCalendricalMerger.merge else null
     }
 
-    /**{ @inheritDoc }*/
+    /**{@inheritDoc}*/
     def format(obj: AnyRef, toAppendTo: StringBuffer, pos: FieldPosition): StringBuffer = {
       DateTimeFormatter.checkNotNull(obj, "Object to be printed must not be null")
       DateTimeFormatter.checkNotNull(toAppendTo, "StringBuffer must not be null")
@@ -156,7 +156,7 @@ final class DateTimeFormatter private[format](symbols: DateTimeFormatSymbols, pr
       return toAppendTo
     }
 
-    /**{ @inheritDoc }*/
+    /**{@inheritDoc}*/
     override def parseObject(source: String): AnyRef = {
       try {
         return parse(source)
@@ -222,7 +222,7 @@ final class DateTimeFormatter private[format](symbols: DateTimeFormatSymbols, pr
    * <p>
    * Although Appendable methods throw an IOException, this method does not.
    * Instead, any IOException is wrapped in a runtime exception.
-   * See  { @link CalendricalPrintException # rethrowIOException ( ) } for a means
+   * See {@link CalendricalPrintException # rethrowIOException()} for a means
    * to extract the IOException.
    *
    * @param calendrical the calendrical to print, not null

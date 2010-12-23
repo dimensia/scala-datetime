@@ -44,7 +44,7 @@ import javax.time.calendar.PeriodUnit
  * The Julian calendar was introduced by Julius Caesar in 46 BCE to replace the
  * previous Roman calendar system.
  * <p>
- * The calendar system is the same as the   { @code ISOChronology ISO-8601 } calendar
+ * The calendar system is the same as the {@code ISOChronology ISO-8601} calendar
  * system with the exception of the rule for the leap year. The Julian definition
  * has a leap year every four years without fail.
  * <p>
@@ -79,7 +79,7 @@ object JulianChronology extends JulianChronology {
    * The period unit defines the concept of a period of a year in the Julian calendar system.
    * This has an estimated duration equal to 365.25 days.
    * <p>
-   * See   { @link # yearRule ( ) } for the main date-time field.
+   * See {@link #yearRule()} for the main date-time field.
    *
    * @return the period unit for years, never null
    */
@@ -101,7 +101,7 @@ object JulianChronology extends JulianChronology {
    * The period unit defines the concept of a period of a month in the Julian calendar system.
    * This has an estimated duration equal to one-twelfth of 365.25 days.
    * <p>
-   * See   { @link # monthOfYearRule ( ) } for the main date-time field.
+   * See {@link #monthOfYearRule()} for the main date-time field.
    *
    * @return the period unit for months, never null
    */
@@ -113,7 +113,7 @@ object JulianChronology extends JulianChronology {
    * The period unit defines the concept of a period of a day.
    * This is equivalent to the ISO days period unit.
    * <p>
-   * See   { @link # dayOfMonthRule ( ) } for the main date-time field.
+   * See {@link #dayOfMonthRule()} for the main date-time field.
    *
    * @return the period unit for days, never null
    */

@@ -34,7 +34,7 @@ package javax.time.calendar
 import java.io.Serializable
 
 /**
- * Provides common implementations of  { @code DateResolver }.
+ * Provides common implementations of {@code DateResolver}.
  * <p>
  * DateResolvers is a utility class.
  * All resolvers returned are immutable and thread-safe.
@@ -61,7 +61,7 @@ object DateResolvers {
   private class Strict extends DateResolver with Serializable {
     private def readResolve: AnyRef = Strict
 
-    /** { @inheritDoc }*/
+    /** {@inheritDoc} */
     override def resolveDate(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int): LocalDate = {
       LocalDate.of(year, monthOfYear, dayOfMonth)
     }
@@ -82,7 +82,7 @@ object DateResolvers {
    */
   @SerialVersionUID(1L)
   private class PreviousValid extends DateResolver with Serializable {
-    /** { @inheritDoc }*/
+    /** {@inheritDoc} */
     override def resolveDate(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int): LocalDate = {
       var lastDay: Int = monthOfYear.getLastDayOfMonth(ISOChronology.isLeapYear(year))
       if (dayOfMonth > lastDay) {
@@ -111,7 +111,7 @@ object DateResolvers {
   private class NextValid extends DateResolver with Serializable {
     private def readResolve: AnyRef = NextValid
 
-    /** { @inheritDoc }*/
+    /** {@inheritDoc} */
     override def resolveDate(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int): LocalDate = {
       var len: Int = monthOfYear.lengthInDays(ISOChronology.isLeapYear(year))
       if (dayOfMonth > len) {
@@ -139,7 +139,7 @@ object DateResolvers {
   private class PartLenient extends DateResolver with Serializable {
     private def readResolve: AnyRef = PartLenient
 
-    /** { @inheritDoc }*/
+    /** {@inheritDoc} */
     override def resolveDate(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int): LocalDate = {
       var len: Int = monthOfYear.lengthInDays(ISOChronology.isLeapYear(year))
       if (dayOfMonth > len) {
