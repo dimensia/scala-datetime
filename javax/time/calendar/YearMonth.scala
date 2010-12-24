@@ -502,7 +502,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
   def compare(other: YearMonth): Int = {
     var cmp: Int = MathUtils.safeCompare(year, other.year)
     if (cmp == 0) cmp = month.compareTo(other.month)
-    return cmp
+    cmp
   }
 
   /**
@@ -526,7 +526,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    * @return true if this point is equal to the specified year-month
    */
   override def equals(other: AnyRef): Boolean = {
-    if (this == other) {
+    if (this eq other) {
       return true
     }
     if (other.isInstanceOf[YearMonth]) {

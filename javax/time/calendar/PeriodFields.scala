@@ -511,6 +511,8 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    */
   def negated: PeriodFields = multipliedBy(-1)
 
+  def unary_- : PeriodFields = multipliedBy(-1)
+
   /**
    * Gets the amount of this period for the specified unit converted
    * to an {@code int}.

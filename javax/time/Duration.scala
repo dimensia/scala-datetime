@@ -821,7 +821,6 @@ final case class Duration private(seconds: Long, nanos: Int) extends Ordered[Dur
    */
   def negated: Duration = multipliedBy(-1)
 
-  //TODO: TEST
   def unary_- : Duration = multipliedBy(-1)
 
   /**

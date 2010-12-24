@@ -137,6 +137,8 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
    */
   def negated: PeriodField = withAmount(MathUtils.safeNegate(amount))
 
+  def unary_- : PeriodField = negated
+
   /**
    * Returns a copy of this period with the amount as the remainder following
    * division by the specified divisor.

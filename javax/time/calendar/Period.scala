@@ -1279,6 +1279,8 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    */
   def negated: Period = multipliedBy(-1)
 
+  def unary_- : Period = multipliedBy(-1)
+
   /**
    * Gets the total number of hours represented by this period using standard
    * assumptions for the meaning of hour, minute and second.

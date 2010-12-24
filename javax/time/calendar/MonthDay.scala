@@ -148,21 +148,10 @@ object MonthDay {
    * @param clock the clock to use, not null
    * @return the current month-day, never null
    */
-  def now(clock: Clock): MonthDay = {
+  def now(clock: Clock = Clock.systemDefaultZone): MonthDay = {
     val now: LocalDate = LocalDate.now(clock)
-    MonthDay.of(date.getMonthOfYear, date.getDayOfMonth)
+    MonthDay.of(now.getMonthOfYear, now.getDayOfMonth)
   }
-
-  /**
-   * Obtains the current month-day from the system clock in the default time-zone.
-   * <p>
-   * This will query the system clock in the default time-zone to obtain the current month-day.
-   * Using this method will prevent the ability to use an alternate clock for testing
-   * because the clock is hard-coded.
-   *
-   * @return the current month-day using the system clock, never null
-   */
-  def now: MonthDay = now(Clock.systemDefaultZone)
 
   /**
    * Obtains an instance of {@code MonthDay} from a text string using a specific formatter.
