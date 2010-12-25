@@ -366,12 +366,10 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
     else if (str.equals("only")) {
       return defaultYear
     }
-    return Integer.parseInt(str)
+    return str.toInt
   }
 
-  private def parseOptional(str: String): String = {
-    return if (str.equals("-")) null else str
-  }
+  private def parseOptional(str: String): String = if (str.equals("-")) null else str
 
   /**
    * Parses a Rule line.
@@ -401,10 +399,10 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
             dayRule = dayRule.substring(index + 2)
           }
         }
-        mdt.dayOfMonth = Integer.parseInt(dayRule)
+        mdt.dayOfMonth = dayRule.toInt
       }
       if (st.hasMoreTokens) {
-        var timeStr: String = st.nextToken
+        val timeStr: String = st.nextToken
         var secsOfDay: Int = parseSecs(timeStr)
         if (secsOfDay == 86400) {
           mdt.endOfDay = true
@@ -484,9 +482,9 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
     if (pp.getErrorIndex >= 0) {
       throw new IllegalArgumentException(str)
     }
-    var hour: Int = cal.getParsed(ISOChronology.hourOfDayRule).asInstanceOf[Int]
-    var min: Int = cal.getParsed(ISOChronology.minuteOfHourRule).asInstanceOf[Int]
-    var sec: Int = cal.getParsed(ISOChronology.secondOfMinuteRule).asInstanceOf[Int]
+    var hour: Int = cal.getParsed(ISOChronology.hourOfDayRule).toInt
+    var min: Int = cal.getParsed(ISOChronology.minuteOfHourRule).toInt
+    var sec: Int = cal.getParsed(ISOChronology.secondOfMinuteRule).toInt
     var secs: Int = hour * 60 * 60 + (if (min != null) min else 0) * 60 + (if (sec != null) sec else 0)
     if (pos == 1) {
       secs = -secs
@@ -696,7 +694,7 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
     }
     zone.text = st.nextToken
     if (st.hasMoreTokens) {
-      zone.year = Year.of(Integer.parseInt(st.nextToken))
+      zone.year = Year.of(st.nextToken.toInt)
       if (st.hasMoreTokens) {
         parseMonthDayTime(st, zone)
       }

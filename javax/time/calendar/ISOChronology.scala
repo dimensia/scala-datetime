@@ -116,6 +116,11 @@ object ISOChronology extends ISOChronology {
   private val Quarters: ChronoUnit = new ChronoUnit(11 * 16, "Quarters", PeriodField.of(3, Months), Duration.ofSeconds(31556952L / 4))
 
   /**
+   * Period unit for week-based-years.
+   */
+  private val WeekBasedYears: ChronoUnit = new ChronoUnit(12 * 16, "WeekBasedYears", null, Duration.ofSeconds(364L * 86400L + 43200L))
+
+  /**
    * Period unit for years.
    */
   private val Years: ChronoUnit = new ChronoUnit(13 * 16, "Years", PeriodField.of(4, Quarters), Duration.ofSeconds(31556952L))
@@ -155,6 +160,30 @@ object ISOChronology extends ISOChronology {
   def periodNanos: PeriodUnit = Nanos
 
   /**
+   * Gets the period unit for microseconds.
+   * <p>
+   * The period unit defines the concept of a period of a microsecond.
+   * <p>
+   * The equivalent period and estimated duration are equal to 1000 nanoseconds.
+   *
+   * @return the period unit for microseconds, never null
+   */
+  def periodMicros: PeriodUnit = Micros
+
+  /**
+   * Gets the period unit for milliseconds.
+   * <p>
+   * The period unit defines the concept of a period of a millisecond.
+   * <p>
+   * The equivalent period and estimated duration are equal to 1000 microseconds.
+   * <p>
+   * See {@link #milliOfSecondRule()} for the main date-time field.
+   *
+   * @return the period unit for milliseconds, never null
+   */
+  def periodMillis: PeriodUnit = Millis
+
+  /**
    * Gets the period unit for seconds.
    * <p>
    * The period unit defines the concept of a period of a second.
@@ -166,6 +195,89 @@ object ISOChronology extends ISOChronology {
    * @return the period unit for seconds, never null
    */
   def periodSeconds: PeriodUnit = Seconds
+
+  /**
+   * Gets the period unit for minutes of 60 seconds.
+   * <p>
+   * The period unit defines the concept of a period of a minute.
+   * <p>
+   * The equivalent period and estimated duration are equal to 60 seconds.
+   * <p>
+   * See {@link #minuteOfHourRule()} for the main date-time field.
+   *
+   * @return the period unit for minutes, never null
+   */
+  def periodMinutes: PeriodUnit = Minutes
+
+  /**
+   * Gets the period unit for hours of 60 minutes.
+   * <p>
+   * The period unit defines the concept of a period of a hour.
+   * <p>
+   * The equivalent period and estimated duration are equal to 60 minutes.
+   * <p>
+   * See {@link #hourOfDayRule()} for the main date-time field.
+   *
+   * @return the period unit for hours, never null
+   */
+  def periodHours: PeriodUnit = Hours
+
+  /**
+   * Gets the period unit for twelve hours, as used by AM/PM.
+   * <p>
+   * The period unit defines the concept of a period of 12 hours.
+   * <p>
+   * The equivalent period and estimated duration are equal to 12 hours.
+   * <p>
+   * See {@link #amPmOfDayRule()} for the main date-time field.
+   *
+   * @return the period unit for twelve hours, never null
+   */
+  def period12Hours: PeriodUnit = _12Hours
+
+  /**
+   * Gets the period unit for twenty-four hours, that is often treated as a day.
+   * <p>
+   * The period unit defines the concept of a period of exactly 24 hours that
+   * is often treated as a day. The unit name of "24Hours" is intended to convey
+   * the fact that this is primarily a 24 hour unit that happens to be used as
+   * a day unit on occasion. In most scenarios, the standard {@link #periodDays ( ) Days }
+   * unit is more applicable and accurate.
+   * <p>
+   * This chronology defines two units that could represent a day.
+   * This unit, {@code 24Hours}, represents a fixed length of exactly 24 hours,
+   * allowing it to be converted to seconds, nanoseconds and {@link Duration}.
+   * By contrast, the {@code Days} unit varies in length based on time-zone (daylight
+   * savings time) changes and cannot be converted to seconds, nanoseconds or {@code Duration}.
+   * <p>
+   * The equivalent period and estimated duration are equal to twice the
+   * 12 hours unit, making it also equivalent to 24 hours.
+   *
+   * @return the period unit for fixed, 24 hour, days, never null
+   */
+  def period24Hours: PeriodUnit = _24Hours
+
+  /**
+   * Gets the period unit for days.
+   * <p>
+   * The period unit defines the concept of a period of a day.
+   * This is typically equal to 24 hours, but may vary due to time-zone changes.
+   * <p>
+   * This chronology defines two units that could represent a day.
+   * This unit, {@code Days}, represents a day that varies in length based on
+   * time-zone (daylight savings time) changes. It is a basic unit that cannot
+   * be converted to seconds, nanoseconds or {@link Duration}.
+   * By contrast, the {@link #period24Hours ( ) 24Hours} unit has a fixed length of
+   * exactly 24 hours allowing it to be converted to seconds, nanoseconds and {@code Duration}.
+   * <p>
+   * This is a basic unit and has no equivalent period.
+   * The estimated duration is equal to 24 hours.
+   * <p>
+   * See {@link #dayOfMonthRule()} for the main date-time field.
+   *
+   * @return the period unit for accurate, variable length, days, never null
+   */
+  def periodDays: PeriodUnit = Days
 
   /**
    * Gets the period unit for weeks of 7 days.
@@ -209,6 +321,21 @@ object ISOChronology extends ISOChronology {
   def periodQuarters: PeriodUnit = Quarters
 
   /**
+   * Gets the period unit for week-based-years.
+   * <p>
+   * The period unit defines the concept of a period of a week-based-year.
+   * This is typically 52 weeks, and occasionally 53 weeks.
+   * <p>
+   * This is a basic unit and has no equivalent period.
+   * The estimated duration is equal to 364.5 days, which is just over 5 weeks.
+   * <p>
+   * See {@link #weekBasedYearRule()} for the main date-time field.
+   *
+   * @return the period unit for week-based-years, never null
+   */
+  def periodWeekBasedYears: PeriodUnit = WeekBasedYears
+
+  /**
    * Gets the period unit for years of 12 months.
    * <p>
    * The period unit defines the concept of a period of a year.
@@ -222,6 +349,28 @@ object ISOChronology extends ISOChronology {
   def periodYears: PeriodUnit = Years
 
   /**
+   * Gets the period unit for decades of 10 years.
+   * <p>
+   * The period unit defines the concept of a period of a decade.
+   * <p>
+   * The equivalent period and estimated duration are equal to 10 years.
+   *
+   * @return the period unit for decades, never null
+   */
+  def periodDecades: PeriodUnit = Decades
+
+  /**
+   * Gets the period unit for centuries of 100 years.
+   * <p>
+   * The period unit defines the concept of a period of a century.
+   * <p>
+   * The equivalent period and estimated duration are equal to 10 decades.
+   *
+   * @return the period unit for centuries, never null
+   */
+  def periodCenturies: PeriodUnit = Centuries
+
+  /**
    * Gets the period unit for millennia of 1000 years.
    * <p>
    * The period unit defines the concept of a period of a century.
@@ -231,6 +380,54 @@ object ISOChronology extends ISOChronology {
    * @return the period unit for millennia, never null
    */
   def periodMillennia: PeriodUnit = Millennia
+
+  /**
+   * Gets the period unit for eras.
+   * <p>
+   * The period unit defines the concept of a period of a eras.
+   * An era, based on a simple before/after point on the time-line, is infinite
+   * in length. For this rule, an era has an estimated duration of 2,000,000,000 years.
+   * <p>
+   * This is a basic unit and has no equivalent period.
+   * The estimated duration is equal to 2,000,000,000 years.
+   *
+   * @return the period unit for eras, never null
+   */
+  def periodEras: PeriodUnit = Eras
+
+  private val NanoOfSecondOrdinal: Int = 0 * 16
+
+  private val MilliOfSecondOrdinal: Int = 1 * 16
+
+  private val MilliOfDayOrdinal: Int = 2 * 16
+
+  private val SecondOfMinuteOrdinal: Int = 3 * 16
+
+  private val SecondOfDayOrdinal: Int = 4 * 16
+
+  private val MinuteOfHourOrdinal: Int = 5 * 16
+
+  private val ClockHourOfAmPmOrdinal: Int = 6 * 16
+
+  private val HourOfAmPmOrdinal: Int = 7 * 16
+
+  private val ClockHourOfDayOrdinal: Int = 8 * 16
+
+  private val HoursOfDayOrdinal: Int = 9 * 16
+
+  private val DayOfMonthOrdinal: Int = 10 * 16
+
+  private val DayOfYearOrdinal: Int = 11 * 16
+
+  private val WeekOfWeekBasedYearOrdinal: Int = 13 * 16
+
+  private val WeekOfYearOrdinal: Int = 14 * 16
+
+  private val MonthOfQuarterOrdinal: Int = 15 * 16
+
+  private val WeekBasedYearOrdinal: Int = 16 * 16
+
+  private val YearOrdinal: Int = 17 * 16
 
   /**
    * Gets the rule for the nano-of-second field.
@@ -244,13 +441,7 @@ object ISOChronology extends ISOChronology {
 
   private val NanoOfSecondRule: Rule = new Rule(NanoOfSecondOrdinal, "NanoOfSecond", Nanos, Seconds, 0, 999999999, 999999999)
 
-  private val MilliOfSecondOrdinal: Int = 1 * 16
-
-  private val MinuteOfHourOrdinal: Int = 5 * 16
-
   private val MilliOfDayRule: Rule = new Rule(MilliOfDayOrdinal, "MilliOfDay", Millis, Days, 0, 86399999, 86399999)
-
-  private val ClockHourOfAmPmOrdinal: Int = 6 * 16
 
   /**
    * Rule implementation.
@@ -301,7 +492,7 @@ object ISOChronology extends ISOChronology {
 
 
       if (value.isInstanceOf[Int]) {
-        var value: Int = value.asInstanceOf[Int]
+        var value: Int = value.toInt
 
         if (value < 1 || value > 12) {
           merger.addToOverflow(Period.ofMonths(value - 1))
@@ -521,7 +712,7 @@ object ISOChronology extends ISOChronology {
 
     protected def interpret(merger: CalendricalMerger, value: AnyRef): DayOfWeek = {
       if (value.isInstanceOf[Int]) {
-        var intVal: Int = value.asInstanceOf[Int]
+        var intVal: Int = value.toInt
         if (intVal < 1 || intVal > 7) {
           merger.addToOverflow(Period.ofDays(intVal - 1))
           intVal = 1
@@ -543,22 +734,6 @@ object ISOChronology extends ISOChronology {
    * @return the rule for the hour-of-day field, never null
    */
   def hourOfDayRule: DateTimeFieldRule[Int] = HourOfDayRule
-
-  private val WeekOfWeekBasedYearOrdinal: Int = 13 * 16
-
-  /**
-   * Gets the period unit for eras.
-   * <p>
-   * The period unit defines the concept of a period of a eras.
-   * An era, based on a simple before/after point on the time-line, is infinite
-   * in length. For this rule, an era has an estimated duration of 2,000,000,000 years.
-   * <p>
-   * This is a basic unit and has no equivalent period.
-   * The estimated duration is equal to 2,000,000,000 years.
-   *
-   * @return the period unit for eras, never null
-   */
-  def periodEras: PeriodUnit = Eras
 
   /**
    * The number of days from year zero to year 1970.
@@ -605,62 +780,9 @@ object ISOChronology extends ISOChronology {
    */
   private[calendar] val Days0000ToModifiedJulianDaysEpoch: Long = 678941
 
-  /**
-   * Gets the period unit for twenty-four hours, that is often treated as a day.
-   * <p>
-   * The period unit defines the concept of a period of exactly 24 hours that
-   * is often treated as a day. The unit name of "24Hours" is intended to convey
-   * the fact that this is primarily a 24 hour unit that happens to be used as
-   * a day unit on occasion. In most scenarios, the standard {@link #periodDays ( ) Days }
-   * unit is more applicable and accurate.
-   * <p>
-   * This chronology defines two units that could represent a day.
-   * This unit, {@code 24Hours}, represents a fixed length of exactly 24 hours,
-   * allowing it to be converted to seconds, nanoseconds and {@link Duration}.
-   * By contrast, the {@code Days} unit varies in length based on time-zone (daylight
-   * savings time) changes and cannot be converted to seconds, nanoseconds or {@code Duration}.
-   * <p>
-   * The equivalent period and estimated duration are equal to twice the
-   * 12 hours unit, making it also equivalent to 24 hours.
-   *
-   * @return the period unit for fixed, 24 hour, days, never null
-   */
-  def period24Hours: PeriodUnit = _24Hours
-
-  private val WeekOfYearOrdinal: Int = 14 * 16
-  private val SecondOfMinuteOrdinal: Int = 3 * 16
   private val MonthOfQuarterRule: Rule = new Rule(MonthOfQuarterOrdinal, "MonthOfQuarter", Months, Quarters, 1, 3, 3)
 
-  /**
-   * Gets the period unit for week-based-years.
-   * <p>
-   * The period unit defines the concept of a period of a week-based-year.
-   * This is typically 52 weeks, and occasionally 53 weeks.
-   * <p>
-   * This is a basic unit and has no equivalent period.
-   * The estimated duration is equal to 364.5 days, which is just over 5 weeks.
-   * <p>
-   * See {@link #weekBasedYearRule()} for the main date-time field.
-   *
-   * @return the period unit for week-based-years, never null
-   */
-  def periodWeekBasedYears: PeriodUnit = WeekBasedYears
-
-  private val MonthOfQuarterOrdinal: Int = 15 * 16
   private val WeekOfMonthRule: Rule = new Rule(WeekOfMonthOrdinal, "WeekOfMonth", Weeks, Months, 1, 5, 4)
-
-  /**
-   * Gets the period unit for microseconds.
-   * <p>
-   * The period unit defines the concept of a period of a microsecond.
-   * <p>
-   * The equivalent period and estimated duration are equal to 1000 nanoseconds.
-   *
-   * @return the period unit for microseconds, never null
-   */
-  def periodMicros: PeriodUnit = Micros
-
-  private val SecondOfDayOrdinal: Int = 4 * 16
 
   /**
    * Gets the rule for the second-of-minute field.
@@ -688,21 +810,6 @@ object ISOChronology extends ISOChronology {
     return DayOfWeek.of(dow0 + 1)
   }
 
-  private val HourOfAmPmOrdinal: Int = 7 * 16
-
-  /**
-   * Gets the period unit for milliseconds.
-   * <p>
-   * The period unit defines the concept of a period of a millisecond.
-   * <p>
-   * The equivalent period and estimated duration are equal to 1000 microseconds.
-   * <p>
-   * See {@link #milliOfSecondRule()} for the main date-time field.
-   *
-   * @return the period unit for milliseconds, never null
-   */
-  def periodMillis: PeriodUnit = Millis
-
   /**
    * Gets the rule for the AM/PM of day field.
    * <p>
@@ -717,17 +824,6 @@ object ISOChronology extends ISOChronology {
    * @return the rule for the am/pm of day field, never null
    */
   def amPmOfDayRule: DateTimeFieldRule[AmPmOfDayRule] = AmPmOfDayRule
-
-  /**
-   * Gets the period unit for decades of 10 years.
-   * <p>
-   * The period unit defines the concept of a period of a decade.
-   * <p>
-   * The equivalent period and estimated duration are equal to 10 years.
-   *
-   * @return the period unit for decades, never null
-   */
-  def periodDecades: PeriodUnit = Decades
 
   /**
    * Gets the rule for the milli-of-day field.
@@ -783,9 +879,6 @@ object ISOChronology extends ISOChronology {
    * Constant for the minimum week-based-year.
    */
   val MinWeekBasedRule: Int = Year.MinYear
-  private val YearOrdinal: Int = 17 * 16
-
-  private val DayOfYearOrdinal: Int = 11 * 16
 
   /**
    * Gets the rule for the quarter-of-year field in the ISO chronology.
@@ -825,19 +918,6 @@ object ISOChronology extends ISOChronology {
   def weekOfMonthRule: DateTimeFieldRule[Int] = WeekOfMonthRule
 
   /**
-   * Gets the period unit for twelve hours, as used by AM/PM.
-   * <p>
-   * The period unit defines the concept of a period of 12 hours.
-   * <p>
-   * The equivalent period and estimated duration are equal to 12 hours.
-   * <p>
-   * See {@link #amPmOfDayRule()} for the main date-time field.
-   *
-   * @return the period unit for twelve hours, never null
-   */
-  def period12Hours: PeriodUnit = _12Hours
-
-  /**
    * Rule implementation.
    */
   //TODO Check if this is right
@@ -866,7 +946,7 @@ object ISOChronology extends ISOChronology {
 
     protected def interpret(merger: CalendricalMerger, value: AnyRef): AmPmOfDay = {
       if (value.isInstanceOf[Int]) {
-        var intVal: Int = value.asInstanceOf[Int]
+        var intVal: Int = value.toInt
 
         if (intVal < 0 || intVal > 1) {
           val days: Int = if (intVal > 0) intVal / 2 else ((intVal + 1) / 2) - 1
@@ -926,26 +1006,6 @@ object ISOChronology extends ISOChronology {
   def weekOfWeekBasedYearRule: DateTimeFieldRule[Int] = WeekOfWeekBasedYearRule
 
   /**
-   * Gets the period unit for minutes of 60 seconds.
-   * <p>
-   * The period unit defines the concept of a period of a minute.
-   * <p>
-   * The equivalent period and estimated duration are equal to 60 seconds.
-   * <p>
-   * See {@link #minuteOfHourRule()} for the main date-time field.
-   *
-   * @return the period unit for minutes, never null
-   */
-  def periodMinutes: PeriodUnit = Minutes
-
-  private val HoursOfDayOrdinal: Int = 9 * 16
-  private val ClockHourOfDayOrdinal: Int = 8 * 16
-  /**
-   * Period unit for week-based-years.
-   */
-  private val WeekBasedYears: ChronoUnit = new ChronoUnit(12 * 16, "WeekBasedYears", null, Duration.ofSeconds(364L * 86400L + 43200L))
-
-  /**
    * Rule implementation.
    */
   private[calendar] object NanoOfDayRule extends NanoOfDayRule
@@ -969,8 +1029,6 @@ object ISOChronology extends ISOChronology {
     }
 
   }
-
-  private val NanoOfSecondOrdinal: Int = 0 * 16
 
   /**
    * The singleton instance of {@code ISOChronology}.
@@ -1051,8 +1109,6 @@ object ISOChronology extends ISOChronology {
    */
   def weekOfYearRule: DateTimeFieldRule[Int] = WeekOfYearRule
 
-  private val MilliOfDayOrdinal: Int = 2 * 16
-
   /**
    * Cache of units for deserialization.
    * Indices must match ordinal passed to unit constructor.
@@ -1084,8 +1140,6 @@ object ISOChronology extends ISOChronology {
 
     override def convertIntToValue(value: Int): QuarterOfYear = QuarterOfYear.of(value)
   }
-
-  private val DayOfMonthOrdinal: Int = 10 * 16
 
   /**
    * Calculates the date from a year and day-of-year.
@@ -1120,17 +1174,6 @@ object ISOChronology extends ISOChronology {
    * @return the rule for the hour of AM/PM field, never null
    */
   def hourOfAmPmRule: DateTimeFieldRule[Int] = HourOfAmPmRule
-
-  /**
-   * Gets the period unit for centuries of 100 years.
-   * <p>
-   * The period unit defines the concept of a period of a century.
-   * <p>
-   * The equivalent period and estimated duration are equal to 10 decades.
-   *
-   * @return the period unit for centuries, never null
-   */
-  def periodCenturies: PeriodUnit = Centuries
 
   /**
    * Single rule subclass, which means fewer classes to load at startup.
@@ -1288,19 +1331,6 @@ object ISOChronology extends ISOChronology {
   }
 
   /**
-   * Gets the period unit for hours of 60 minutes.
-   * <p>
-   * The period unit defines the concept of a period of a hour.
-   * <p>
-   * The equivalent period and estimated duration are equal to 60 minutes.
-   * <p>
-   * See {@link #hourOfDayRule()} for the main date-time field.
-   *
-   * @return the period unit for hours, never null
-   */
-  def periodHours: PeriodUnit = Hours
-
-  /**
    * The start of months in a leap year.
    */
   private val LeapMonthStart: Array[Int] = Array[Int](0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335)
@@ -1328,30 +1358,6 @@ object ISOChronology extends ISOChronology {
    * @return the rule for the epoch-days field, never null
    */
   def epochDays: CalendricalRule[Long] = EpochDaysRule
-
-  /**
-   * Gets the period unit for days.
-   * <p>
-   * The period unit defines the concept of a period of a day.
-   * This is typically equal to 24 hours, but may vary due to time-zone changes.
-   * <p>
-   * This chronology defines two units that could represent a day.
-   * This unit, {@code Days}, represents a day that varies in length based on
-   * time-zone (daylight savings time) changes. It is a basic unit that cannot
-   * be converted to seconds, nanoseconds or {@link Duration}.
-   * By contrast, the {@link #period24Hours ( ) 24Hours} unit has a fixed length of
-   * exactly 24 hours allowing it to be converted to seconds, nanoseconds and {@code Duration}.
-   * <p>
-   * This is a basic unit and has no equivalent period.
-   * The estimated duration is equal to 24 hours.
-   * <p>
-   * See {@link #dayOfMonthRule()} for the main date-time field.
-   *
-   * @return the period unit for accurate, variable length, days, never null
-   */
-  def periodDays: PeriodUnit = Days
-
-  private val WeekBasedYearOrdinal: Int = 16 * 16
   /**
    * Gets the rule for the milli-of-second field.
    * <p>

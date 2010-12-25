@@ -265,31 +265,10 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
                                               periodRange: PeriodUnit,
                                               minimumValue: Int,
                                               maximumValue: Int,
-                                              hasText: Boolean)
+                                              hasText: Boolean = false)
   extends CalendricalRule[T](reifiedClass, chronology, name, periodUnit, periodRange) {
 
   import DateTimeFieldRule._
-
-  /**
-   * Constructor.
-   *
-   * @param reifiedClass the reified class, not null
-   * @param chronology the chronology, not null
-   * @param name the name of the type, not null
-   * @param periodUnit the period unit, not null
-   * @param periodRange the period range, not null
-   * @param minimumValue the minimum value
-   * @param maximumValue the minimum value
-   */
-  protected def this(reifiedClass: Class[T],
-                     chronology: Chronology,
-                     name: String,
-                     periodUnit: PeriodUnit,
-                     periodRange: PeriodUnit,
-                     minimumValue: Int,
-                     maximumValue: Int) {
-    this (reifiedClass, chronology, name, periodUnit, periodRange, minimumValue, maximumValue, false)
-  }
 
   /**
    * Converts the typed value of the rule to the {@code int} equivalent.
@@ -304,7 +283,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
   def convertValueToInt(value: T): Int = {
     //FIXME
     if (value.isInstanceOf[Enum[_]]) (value.asInstanceOf[Enum[_]]).ordinal + getMinimumValue
-    else value.asInstanceOf[Int]
+    else value.toInt
   }
 
   /**
@@ -348,7 +327,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
   def getText(value: Int, locale: Locale, textStyle: DateTimeFormatterBuilder.TextStyle): String = {
     val textStore: DateTimeFieldRule.TextStore = getTextStore(locale, textStyle)
     val text: String = (if (textStore != null) textStore.getValueText(value) else null)
-    return if (text == null) value.toString else text
+    if (text == null) value.toString else text
   }
 
   /**
@@ -566,10 +545,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
     }
     checkValue(value)
     var range: Long = getMaximumValue
-    ({
-      range += 1;
-      range
-    })
+    range += 1
     val decimal: BigDecimal = new BigDecimal(value)
     return decimal.divide(new BigDecimal(range), FractionContext)
   }
@@ -627,7 +603,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * @return the int value of the field
    */
   private def convertValueToInteger(value: T): Int = {
-    if (getReifiedType == classOf[Int]) value.asInstanceOf[Int]
+    if (getReifiedType == classOf[Int]) value.toInt
     else convertValueToInt(value)
   }
 
@@ -642,9 +618,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * @param value the value to check
    * @return true if the value is valid, false if invalid
    */
-  def isValidValue(value: Int): Boolean = {
-    return (value >= getMinimumValue && value <= getMaximumValue)
-  }
+  def isValidValue(value: Int): Boolean = value >= getMinimumValue && value <= getMaximumValue
 
   /**
    * Gets the {@code Integer} value of this field from the specified calendrical

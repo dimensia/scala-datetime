@@ -31,6 +31,7 @@
  */
 package javax.time.i18n
 
+import scala.util.control.Breaks._
 import javax.time.Duration
 import javax.time.calendar.Calendrical
 import javax.time.calendar.CalendricalMerger
@@ -255,7 +256,7 @@ object HistoricChronology {
       val yearVal: Int = merger.getValue(chrono.yearRule).get
       if (yearVal != null) {
         val doy: Int = merger.getValue(this).get
-        var date: HistoricDate =
+        val date: HistoricDate =
           if (merger.getContext.isStrict) HistoricDate.of(yearVal, MonthOfYear.January, 1).withDayOfYear(doy)
           else HistoricDate.of(yearVal, MonthOfYear.January, 1).plusDays(doy).plusDays(-1)
         merger.storeMerged(LocalDate.rule, date.toLocalDate)
@@ -445,16 +446,13 @@ final class HistoricChronology private(cutover: LocalDate) extends Chronology wi
     val doy0: Int = dayOfYear - 1
     val array: Array[Int] = (if (leap) LeapMonthStart else StandardMonthStart)
     var month: Int = 1
-    while (month < 12) {
-      {
+    breakable{
+      while (month < 12) {
         if (doy0 < array(month)) {
-          //break //todo: break is not supported
+          break
         }
-      }
-      ({
         month += 1;
-        month
-      })
+      }
     }
     val moy: MonthOfYear = MonthOfYear.of(month)
     val dom: Int = dayOfYear - array(month - 1)

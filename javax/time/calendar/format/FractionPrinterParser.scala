@@ -31,6 +31,7 @@
  */
 package javax.time.calendar.format
 
+import scala.util.control.Breaks._
 import java.math.BigDecimal
 import java.math.RoundingMode
 import javax.time.calendar.Calendrical
@@ -59,7 +60,7 @@ final class FractionPrinterParser private[format](val rule: DateTimeFieldRule[_]
 
   /**{@inheritDoc}*/
   override def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = {
-    var value: Int = rule.getInt(calendrical)
+    val value: Int = rule.getInt(calendrical)
     var fraction: BigDecimal = rule.convertIntToFraction(value)
     if (fraction.scale == 0) {
       if (minWidth > 0) {
@@ -73,7 +74,7 @@ final class FractionPrinterParser private[format](val rule: DateTimeFieldRule[_]
       }
     }
     else {
-      var outputScale: Int = Math.min(Math.max(fraction.scale, minWidth), maxWidth)
+      val outputScale: Int = math.min(math.max(fraction.scale, minWidth), maxWidth)
       fraction = fraction.setScale(outputScale, RoundingMode.FLOOR)
       var str: String = fraction.toPlainString.substring(2)
       str = symbols.convertNumberToI18N(str)
@@ -95,7 +96,7 @@ final class FractionPrinterParser private[format](val rule: DateTimeFieldRule[_]
       }
       return position
     }
-    var point: Char = parseText.charAt(position)
+    val point: Char = parseText.charAt(position)
     if (point != context.getSymbols.getDecimalPointChar) {
       if (minWidth > 0) {
         return ~position
@@ -103,30 +104,32 @@ final class FractionPrinterParser private[format](val rule: DateTimeFieldRule[_]
       return position
     }
     position += 1;
-    var minEndPos: Int = position + minWidth
+    val minEndPos: Int = position + minWidth
     if (minEndPos > length) {
       return ~position
     }
-    var maxEndPos: Int = Math.min(position + maxWidth, length)
+    val maxEndPos: Int = math.min(position + maxWidth, length)
     var total: Int = 0
     var pos: Int = position
-    while (pos < maxEndPos) {
-      var ch: Char = parseText.charAt(({
-        pos += 1;
-        pos
-      }))
-      var digit: Int = context.getSymbols.convertToDigit(ch)
-      if (digit < 0) {
-        if (pos < minEndPos) {
-          return ~position
+    breakable{
+      while (pos < maxEndPos) {
+        val ch: Char = parseText.charAt(({
+          pos += 1;
+          pos
+        }))
+        val digit: Int = context.getSymbols.convertToDigit(ch)
+        if (digit < 0) {
+          if (pos < minEndPos) {
+            return ~position
+          }
+          pos -= 1;
+          break
         }
-        pos -= 1;
-        //break //todo: break is not supported
+        total = total * 10 + digit
       }
-      total = total * 10 + digit
     }
-    var fraction: BigDecimal = new BigDecimal(total).movePointLeft(pos - position)
-    var value: Int = rule.convertFractionToInt(fraction)
+    val fraction: BigDecimal = new BigDecimal(total).movePointLeft(pos - position)
+    val value: Int = rule.convertFractionToInt(fraction)
     context.setParsed(rule, value)
     return pos
   }

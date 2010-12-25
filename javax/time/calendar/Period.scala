@@ -216,7 +216,7 @@ object Period {
       return Zero
     }
     val hours: Int = MathUtils.safeToInt(duration.getSeconds / 3600)
-    val amount: Int = (duration.getSeconds.asInstanceOf[Int] % 3600)
+    val amount: Int = (duration.getSeconds.toInt % 3600)
     return new Period(0, 0, 0, hours, amount / 60, amount % 60, duration.getNanoOfSecond)
   }
 
@@ -326,14 +326,14 @@ object Period {
     if (totalMonths > 0 && days < 0) {
       totalMonths -= 1
       val calcDate: LocalDate = startDate.plusMonths(totalMonths)
-      days = (endDate.toEpochDays - calcDate.toEpochDays).asInstanceOf[Int]
+      days = (endDate.toEpochDays - calcDate.toEpochDays).toInt
     }
     else if (totalMonths < 0 && days > 0) {
       totalMonths += 1
       days -= endDate.getMonthOfYear.lengthInDays(endDate.isLeapYear)
     }
     val years: Long = totalMonths / 12
-    val months: Int = (totalMonths % 12).asInstanceOf[Int]
+    val months: Int = (totalMonths % 12).toInt
     ofDateFields(MathUtils.safeToInt(years), months, days)
   }
 
@@ -1144,7 +1144,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * @return the total number of years
    * @throws ArithmeticException if the capacity of a {@code long} is exceeded
    */
-  def totalMonths: Long = MathUtils.safeAdd(MathUtils.safeMultiply(years.asInstanceOf[Long], 12), months)
+  def totalMonths: Long = MathUtils.safeAdd(MathUtils.safeMultiply(years.toLong, 12), months)
 
   /**
    * Returns a copy of this period with the specified number of hours subtracted.
@@ -1242,7 +1242,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * @return true if this instance is equal to the specified period
    */
   override def equals(obj: AnyRef): Boolean = {
-    if (this == obj) true
+    if (this eq obj) true
     else if (obj.isInstanceOf[Period]) {
       val other: Period = obj.asInstanceOf[Period]
       years == other.years && months == other.months && days == other.days & hours == other.hours && minutes == other.minutes && seconds == other.seconds && nanos == other.nanos
@@ -1338,9 +1338,9 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
     total = MathUtils.safeAdd(total, nanos)
     val nanos: Long = total % 1000000000L
     total /= 1000000000L
-    val seconds: Int = (total % 60).asInstanceOf[Int]
+    val seconds: Int = (total % 60).toInt
     total /= 60
-    val minutes: Int = (total % 60).asInstanceOf[Int]
+    val minutes: Int = (total % 60).toInt
     total /= 60
     val hours: Int = MathUtils.safeToInt(total)
     return of(years, months, days, hours, minutes, seconds, nanos)

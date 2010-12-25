@@ -103,8 +103,8 @@ final class CalendricalContext(val isStrict: Boolean, val checkUnusedFields: Boo
       if (dayOfMonth >= 1 && dayOfMonth <= 28) {
         return LocalDate.of(year, month, dayOfMonth)
       }
-      return LocalDate.of(year, month, 1).plusDays((dayOfMonth.asInstanceOf[Long]) - 1)
+      return LocalDate.of(year, month, 1).plusDays((dayOfMonth.toLong) - 1)
     }
-    return LocalDate.of(year, 1, 1).plusMonths(month).plusMonths(-1).plusDays((dayOfMonth.asInstanceOf[Long]) - 1)
+    return LocalDate.of(year, 1, 1).plusMonths(month).plusMonths(-1).plusDays((dayOfMonth.toLong) - 1)
   }
 }

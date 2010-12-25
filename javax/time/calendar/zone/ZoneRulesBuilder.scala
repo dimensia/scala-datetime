@@ -31,6 +31,7 @@
  */
 package javax.time.calendar.zone
 
+import scala.util.control.Breaks._
 import java.util.ArrayList
 import java.util.Collections
 import java.util.HashMap
@@ -592,12 +593,14 @@ class ZoneRulesBuilder {
       var effectiveSavings: Period = window.fixedSavingAmount
       if (effectiveSavings == null) {
         effectiveSavings = Period.Zero
-        for (rule <- window.ruleList) {
-          var trans: ZoneOffsetTransition = rule.toTransition(standardOffset, savings)
-          if (trans.getDateTime.isAfter(windowStart)) {
-            break //todo: break is not supported
+        breakable{
+          for (rule <- window.ruleList) {
+            var trans: ZoneOffsetTransition = rule.toTransition(standardOffset, savings)
+            if (trans.getDateTime.isAfter(windowStart)) {
+              break
+            }
+            effectiveSavings = rule.savingAmount
           }
-          effectiveSavings = rule.savingAmount
         }
       }
       if (standardOffset.equals(window.standardOffset) == false) {
@@ -611,14 +614,14 @@ class ZoneRulesBuilder {
       }
       savings = effectiveSavings
       for (rule <- window.ruleList) {
-        var trans: ZoneOffsetTransition = deduplicate(rule.toTransition(standardOffset, savings))
+        val trans: ZoneOffsetTransition = deduplicate(rule.toTransition(standardOffset, savings))
         if (trans.getDateTime.isBefore(windowStart) == false && trans.getDateTime.isBefore(window.createDateTime(savings)) && trans.getOffsetBefore.equals(trans.getOffsetAfter) == false) {
           transitionList.add(trans)
           savings = rule.savingAmount
         }
       }
       for (lastRule <- window.lastRuleList) {
-        var transitionRule: ZoneOffsetTransitionRule = deduplicate(lastRule.toTransitionRule(standardOffset, savings))
+        val transitionRule: ZoneOffsetTransitionRule = deduplicate(lastRule.toTransitionRule(standardOffset, savings))
         lastTransitionRuleList.add(transitionRule)
         savings = lastRule.savingAmount
       }

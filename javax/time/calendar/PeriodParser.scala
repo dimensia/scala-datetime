@@ -32,6 +32,7 @@
 package javax.time.calendar
 
 import javax.time.calendar.format.CalendricalParseException
+import scala.util.control.Breaks._
 
 /**
  * An period parser that creates an instance of {@code Period} from a string
@@ -117,7 +118,7 @@ class PeriodParser protected {
 
   private def parseInt(values: PeriodParser.ParseValues, s: String, baseIndex: Int): Int = {
     try {
-      var value: Int = Integer.parseInt(s)
+      var value: Int = s.toInt
       if (s.charAt(0) == '-' && value == 0) {
         throw new CalendricalParseException("Period could not be parsed, invalid number '" + s + "': " + values.text, values.text, baseIndex + values.index - s.length)
       }
@@ -132,8 +133,8 @@ class PeriodParser protected {
 
   private def prepareTime(values: PeriodParser.ParseValues, _s: String, baseIndex: Int): String = {
     var s = _s
-    if (s.contains(".")) {
-      var i: Int = s.indexOf(".") + 1
+    if (s.contains('.')) {
+      var i: Int = s.indexOf('.') + 1
       if (Character.isDigit(s.charAt(i))) {
         i += 1;
       }
@@ -159,13 +160,13 @@ class PeriodParser protected {
   }
 
   private def parseNumber(values: PeriodParser.ParseValues, s: String): String = {
-    var start: Int = values.index
-    while (values.index < s.length) {
-      var c: Char = s.charAt(values.index)
-      if ((c < '0' || c > '9') && c != '-') {
-        //break //todo: break is not supported
+    val start: Int = values.index
+    breakable{
+      while (values.index < s.length) {
+        val c: Char = s.charAt(values.index)
+        if ((c < '0' || c > '9') && c != '-') break
+        values.index += 1;
       }
-      values.index += 1;
     }
     return s.substring(start, values.index)
   }

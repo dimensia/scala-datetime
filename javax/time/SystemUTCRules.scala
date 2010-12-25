@@ -167,7 +167,7 @@ object SystemUTCRules extends SystemUTCRules {
               throw new CalendricalException("LeapSeconds.txt has invalid line format")
             }
             val date: LocalDate = LocalDate.parse(split(0))
-            val offset: Int = Integer.parseInt(split(1))
+            val offset: Int = split(1).toInt
             leaps.put(date.toModifiedJulianDays, offset)
           }
         }

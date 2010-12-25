@@ -31,6 +31,7 @@
  */
 package javax.time.calendar.format
 
+import scala.util.control.Breaks._
 import javax.time.calendar.Calendrical
 import javax.time.calendar.DateTimeFieldRule
 import javax.time.calendar.format.DateTimeFormatterBuilder.SignStyle
@@ -60,25 +61,13 @@ object NumberPrinterParser {
  * @param signStyle the positive/negative sign style, not null
  * @param subsequentWidth the width of subsequent non-negative numbers, 0 or greater
  */
-class NumberPrinterParser private[format](rule: DateTimeFieldRule[_], val minWidth: Int, maxWidth: Int, signStyle: SignStyle, subsequentWidth: Int)
+class NumberPrinterParser private[format](rule: DateTimeFieldRule[_], val minWidth: Int, maxWidth: Int, signStyle: SignStyle, subsequentWidth: Int = 0)
   extends DateTimePrinter with DateTimeParser {
-
-  /**
-   * Constructor.
-   *
-   * @param rule the rule of the field to print, not null
-   * @param minWidth the minimum field width, from 1 to 10
-   * @param maxWidth the maximum field width, from minWidth to 10
-   * @param signStyle the positive/negative sign style, not null
-   */
-  private[format] def this(rule: DateTimeFieldRule[_], minWidth: Int, maxWidth: Int, signStyle: SignStyle) {
-    this (rule, minWidth, maxWidth, signStyle, 0)
-  }
 
   /**{@inheritDoc}*/
   def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = {
     var value: Int = getValue(calendrical)
-    var str: String = (if (value == Int.MinValue) "2147483648" else Integer.toString(math.abs(value)))
+    var str: String = (if (value == Int.MinValue) "2147483648" else math.abs(value).toString)
     if (str.length > maxWidth) {
       throw new CalendricalPrintFieldException(rule, value, maxWidth)
     }
@@ -101,25 +90,18 @@ class NumberPrinterParser private[format](rule: DateTimeFieldRule[_], val minWid
           throw new CalendricalPrintFieldException(rule, value)
       }
     }
-    {
-      var i: Int = 0
-      while (i < minWidth - str.length) {
-        {
-          appendable.append(symbols.getZeroChar)
-        }
-        ({
-          i += 1;
-          i
-        })
-      }
+
+    var i: Int = 0
+    while (i < minWidth - str.length) {
+      appendable.append(symbols.getZeroChar)
+      i += 1;
     }
+
     appendable.append(str)
   }
 
   /**{@inheritDoc}*/
-  override def isPrintDataAvailable(calendrical: Calendrical): Boolean = {
-    return calendrical.get(rule) != null
-  }
+  override def isPrintDataAvailable(calendrical: Calendrical): Boolean = calendrical.get(rule) != null
 
   /**{@inheritDoc}*/
   override def toString: String = {
@@ -165,7 +147,7 @@ class NumberPrinterParser private[format](rule: DateTimeFieldRule[_], val minWid
         return ~position
       }
     }
-    var minEndPos: Int = position + minWidth
+    val minEndPos: Int = position + minWidth
     if (minEndPos > length) {
       return ~position
     }
@@ -173,45 +155,40 @@ class NumberPrinterParser private[format](rule: DateTimeFieldRule[_], val minWid
     var total: Long = 0
     var pos: Int = position
 
-    {
-      var pass: Int = 0
+    var pass: Int = 0
+    breakable{
       while (pass < 2) {
-        {
-          var maxEndPos: Int = math.min(pos + effMaxWidth, length)
+        val maxEndPos: Int = math.min(pos + effMaxWidth, length)
+        breakable{
           while (pos < maxEndPos) {
-            var ch: Char = parseText.charAt(({
+            val ch: Char = parseText.charAt(({
               pos += 1;
               pos
             }))
-            var digit: Int = context.getSymbols.convertToDigit(ch)
+            val digit: Int = context.getSymbols.convertToDigit(ch)
             if (digit < 0) {
-              ({
-                pos -= 1;
-                pos
-              })
+              pos -= 1;
               if (pos < minEndPos) {
                 return ~position
               }
-              //break //todo: break is not supported
+              break
             }
             total = total * 10 + digit
           }
-          if (subsequentWidth > 0 && pass == 0) {
-            var parseLen: Int = pos - position
-            effMaxWidth = math.max(minWidth, parseLen - subsequentWidth)
-            pos = position
-            total = 0
-          }
-          else {
-            //break //todo: break is not supported
-          }
         }
-        ({
-          pass += 1;
-          pass
-        })
+        if (subsequentWidth > 0 && pass == 0) {
+          val parseLen: Int = pos - position
+          effMaxWidth = math.max(minWidth, parseLen - subsequentWidth)
+          pos = position
+          total = 0
+        }
+        else {
+          break
+        }
+        pass += 1;
       }
     }
+
     if (negative) {
       if (total == 0) {
         return ~(position - 1)
@@ -219,7 +196,7 @@ class NumberPrinterParser private[format](rule: DateTimeFieldRule[_], val minWid
       total = -total
     }
     else if (signStyle == SignStyle.ExceedsPad && context.isStrict) {
-      var parseLen: Int = pos - position
+      val parseLen: Int = pos - position
       if (positive) {
         if (parseLen <= minWidth) {
           return ~(position - 1)
@@ -244,18 +221,14 @@ class NumberPrinterParser private[format](rule: DateTimeFieldRule[_], val minWid
    * @param calendrical the calendrical, not null
    * @return the value
    */
-  private[format] def getValue(calendrical: Calendrical): Int = {
-    return rule.getInt(calendrical)
-  }
+  private[format] def getValue(calendrical: Calendrical): Int = rule.getInt(calendrical)
 
   /**
    * Stores the value.
    * @param context the context to store into, not null
    * @param value the value
    */
-  private[format] def setValue(context: DateTimeParseContext, value: Long): Unit = {
-    context.setParsed(rule, value.asInstanceOf[Int])
-  }
+  private[format] def setValue(context: DateTimeParseContext, value: Long): Unit = context.setParsed(rule, value.toInt)
 
   /**
    * Returns a new instance with an updated subsequent width.
@@ -264,6 +237,6 @@ class NumberPrinterParser private[format](rule: DateTimeFieldRule[_], val minWid
    * @return a new updated printer-parser, never null
    */
   private[format] def withSubsequentWidth(subsequentWidth: Int): NumberPrinterParser = {
-    return new NumberPrinterParser(rule, minWidth, maxWidth, signStyle, this.subsequentWidth + subsequentWidth)
+    new NumberPrinterParser(rule, minWidth, maxWidth, signStyle, this.subsequentWidth + subsequentWidth)
   }
 }

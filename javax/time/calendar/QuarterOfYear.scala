@@ -43,9 +43,6 @@ package javax.time.calendar
  * It is recommended that applications use the enum rather than the {@code int} value
  * to ensure code clarity.
  * <p>
- * <b>Do not use {@code ordinal()} to obtain the numeric representation of {@code QuarterOfYear}.
- * Use {@code getValue()} instead.</b>
- * <p>
  * This enum represents a common concept that is found in many calendar systems.
  * As such, this enum may be used by any calendar system that has the quarter-of-year
  * concept with a 4 quarter year where the names are equivalent to those defined.

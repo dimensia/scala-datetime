@@ -256,7 +256,7 @@ abstract class UTCRules protected[time] {
     var nod: Long = utcInstant.getNanoOfDay
     var taiUtcDaySeconds: Long = MathUtils.safeMultiply(mjd - ModifiedJulianDaysTAIOffset, SecondsPerDay)
     var taiSecs: Long = MathUtils.safeAdd(taiUtcDaySeconds, nod / NanosPerSecond + getTAIOffset(mjd))
-    var nos: Int = (nod % NanosPerSecond).asInstanceOf[Int]
+    var nos: Int = (nod % NanosPerSecond).toInt
     return TAIInstant.ofTAISeconds(taiSecs, nos)
   }
 }

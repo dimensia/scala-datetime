@@ -363,7 +363,7 @@ object LocalTime {
      * @return true if equal
      */
     override def equals(obj: AnyRef): Boolean = {
-      if (this == obj) true
+      if (this eq obj) true
       else if (obj.isInstanceOf[LocalTime.Overflow]) {
         val other: LocalTime.Overflow = obj.asInstanceOf[LocalTime.Overflow]
         time.equals(other.time) && days == other.days
@@ -490,7 +490,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
     var nofd: Long = toNanoOfDay
     var newNofd: Long = ((nanos % NanosPerDay) + nofd + NanosPerDay) % NanosPerDay
     if (nofd == newNofd) return this
-    val newHour: Int = (newNofd / NanosPerHour).asInstanceOf[Int]
+    val newHour: Int = (newNofd / NanosPerHour).toInt
     val newMinute: Int = ((newNofd / NanosPerMinute) % MinutesPerHour).toInt
     val newSecond: Int = ((newNofd / NanosPerSecond) % SecondsPerMinute).toInt
     val newNano: Int = (newNofd % NanosPerSecond).toInt
@@ -525,13 +525,13 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
       if (nanoValue > 0) {
         buf.append('.')
         if (nanoValue % 1000000 == 0) {
-          buf.append(Integer.toString((nanoValue / 1000000) + 1000).substring(1))
+          buf.append(((nanoValue / 1000000) + 1000).toString.substring(1))
         }
         else if (nanoValue % 1000 == 0) {
-          buf.append(Integer.toString((nanoValue / 1000) + 1000000).substring(1))
+          buf.append(((nanoValue / 1000) + 1000000).toString.substring(1))
         }
         else {
-          buf.append(Integer.toString((nanoValue) + 1000000000).substring(1))
+          buf.append(((nanoValue) + 1000000000).toString.substring(1))
         }
       }
     }
@@ -554,7 +554,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    * @return an {@code Overflow} instance with the resulting time and overflow, never null
    */
   private def plusWithOverflow(hours: Int, minutes: Int, seconds: Int, nanos: Long, sign: Int): LocalTime.Overflow = {
-    var totDays: Int = (nanos / NanosPerDay).asInstanceOf[Int] + seconds / SecondsPerDay + minutes / MinutesPerDay + hours / HoursPerDay
+    var totDays: Int = (nanos / NanosPerDay).toInt + seconds / SecondsPerDay + minutes / MinutesPerDay + hours / HoursPerDay
     totDays *= sign
     var totNanos: Long = nanos % NanosPerDay + (seconds % SecondsPerDay) * NanosPerSecond + (minutes % MinutesPerDay) * NanosPerMinute + (hours % HoursPerDay) * NanosPerHour
     if (totNanos == 0) {
@@ -562,7 +562,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
     }
     var thisNanos: Long = toNanoOfDay
     totNanos = totNanos * sign + thisNanos
-    totDays += MathUtils.floorDiv(totNanos, NanosPerDay).asInstanceOf[Int]
+    totDays += MathUtils.floorDiv(totNanos, NanosPerDay).toInt
     totNanos = MathUtils.floorMod(totNanos, NanosPerDay)
     val newTime: LocalTime = (if (totNanos == thisNanos) this else ofNanoOfDay(totNanos))
     return new LocalTime.Overflow(newTime, totDays)
@@ -646,7 +646,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   def minusHours(hours: Long): LocalTime = {
     if (hours == 0) this
     else {
-      val newHour: Int = (-(hours % HoursPerDay).asInstanceOf[Int] + hour + HoursPerDay) % HoursPerDay
+      val newHour: Int = (-(hours % HoursPerDay).toInt + hour + HoursPerDay) % HoursPerDay
       create(newHour, minute, second, nano)
     }
   }
@@ -781,7 +781,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
   def plusHours(hours: Long): LocalTime = {
     if (hours == 0) this
     else {
-      val newHour: Int = ((hours % HoursPerDay).asInstanceOf[Int] + hour + HoursPerDay) % HoursPerDay
+      val newHour: Int = ((hours % HoursPerDay).toInt + hour + HoursPerDay) % HoursPerDay
       create(newHour, minute, second, nano)
     }
   }

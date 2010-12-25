@@ -31,6 +31,7 @@
  */
 package javax.time.calendar.format
 
+import scala.util.control.Breaks._
 import java.util.HashMap
 import java.util.HashSet
 import java.util.Map
@@ -95,7 +96,7 @@ object ZonePrinterParser {
         substringMap.put(newSubstring, null)
       }
       else if (idLen > length) {
-        var substring: String = newSubstring.substring(0, length)
+        val substring: String = newSubstring.substring(0, length)
         var parserTree: ZonePrinterParser.SubstringTree = substringMap.get(substring)
         if (parserTree == null) {
           parserTree = new ZonePrinterParser.SubstringTree(idLen)
@@ -183,7 +184,7 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
    * all other time-zones.
    */
   def parse(context: DateTimeParseContext, parseText: String, position: Int): Int = {
-    var length: Int = parseText.length
+    val length: Int = parseText.length
     if (position > length) {
       throw new IndexOutOfBoundsException
     }
@@ -201,9 +202,9 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
       tree = preparedTree
     }
     if (parseText.substring(position).startsWith("UTC")) {
-      var newContext: DateTimeParseContext = new DateTimeParseContext(context.getSymbols)
-      var startPos: Int = position + 3
-      var endPos: Int = new ZoneOffsetPrinterParser("", true, true).parse(newContext, parseText, startPos)
+      val newContext: DateTimeParseContext = new DateTimeParseContext(context.getSymbols)
+      val startPos: Int = position + 3
+      val endPos: Int = new ZoneOffsetPrinterParser("", true, true).parse(newContext, parseText, startPos)
       if (endPos < 0) {
         context.setParsed(TimeZone.rule, TimeZone.UTC)
         return startPos
@@ -214,25 +215,29 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
     }
     var parsedZoneId: String = null
     var count: Int = 0
-    while (tree != null) {
-      var nodeLength: Int = tree.length
-      if (position + nodeLength > length) {
-        //break //todo: break is not supported
+    breakable{
+      while (tree != null) {
+        val nodeLength: Int = tree.length
+        if (position + nodeLength > length) {
+          break
+        }
+        parsedZoneId = parseText.substring(position, position + nodeLength)
+        tree = tree.get(parsedZoneId)
+        count += 1;
       }
-      parsedZoneId = parseText.substring(position, position + nodeLength)
-      tree = tree.get(parsedZoneId)
-      count += 1;
     }
     if (parsedZoneId != null && preparedIDs.contains(parsedZoneId)) {
       var zone: TimeZone = TimeZone.of(parsedZoneId)
       var pos: Int = position + parsedZoneId.length
       if (pos + 1 < length && parseText.charAt(pos) == '#') {
-        var versions: Set[String] = zone.getGroup.getAvailableVersionIDs
-        for (version <- versions) {
-          if (parseText.regionMatches(pos + 1, version, 0, version.length)) {
-            zone = zone.withVersion(version)
-            pos += version.length + 1
-            //break //todo: break is not supported
+        val versions: Set[String] = zone.getGroup.getAvailableVersionIDs
+        breakable{
+          for (version <- versions) {
+            if (parseText.regionMatches(pos + 1, version, 0, version.length)) {
+              zone = zone.withVersion(version)
+              pos += version.length + 1
+              break
+            }
           }
         }
       }

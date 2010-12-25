@@ -70,10 +70,10 @@ object PeriodUnit {
     if (equivalentPeriod == null) {
       return Collections.emptyList[PeriodField]
     }
-    var equivalents: List[PeriodField] = new ArrayList[PeriodField]
+    val equivalents: List[PeriodField] = new ArrayList[PeriodField]
     equivalents.add(equivalentPeriod)
-    var multiplier: Long = equivalentPeriod.getAmount
-    var baseEquivalents: List[PeriodField] = equivalentPeriod.getUnit.getEquivalentPeriods
+    val multiplier: Long = equivalentPeriod.getAmount
+    val baseEquivalents: List[PeriodField] = equivalentPeriod.getUnit.getEquivalentPeriods
     var i: Int = 0
     while (i < baseEquivalents.size) {
       equivalents.add(baseEquivalents.get(i).multipliedBy(multiplier))
@@ -81,9 +81,7 @@ object PeriodUnit {
     }
     return Collections.unmodifiableList(equivalents)
   }
-
 }
-
 
 /**
  * @param name the name of the unit, never null

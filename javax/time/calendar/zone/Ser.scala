@@ -104,7 +104,7 @@ object Ser {
    */
   private[zone] def writeEpochSecs(epochSecs: Long, out: DataOutput): Unit = {
     if (epochSecs >= -4575744000L && epochSecs < 10413792000L && epochSecs % 900 == 0) {
-      var store: Int = ((epochSecs + 4575744000L) / 900).asInstanceOf[Int]
+      var store: Int = ((epochSecs + 4575744000L) / 900).toInt
       out.writeByte((store >>> 16) & 255)
       out.writeByte((store >>> 8) & 255)
       out.writeByte(store & 255)

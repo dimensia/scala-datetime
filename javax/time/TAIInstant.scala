@@ -196,7 +196,7 @@ final case class TAIInstant(seconds: Long, nanos: Int) extends Ordered[TAIInstan
       return this
     }
     val secs: Long = MathUtils.safeSubtract(seconds, secsToSubtract)
-    val nanoAdjustment: Long = (nanos.asInstanceOf[Long]) - nanosToSubtract
+    val nanoAdjustment: Long = (nanos.toLong) - nanosToSubtract
     return ofTAISeconds(secs, nanoAdjustment)
   }
 
@@ -266,7 +266,7 @@ final case class TAIInstant(seconds: Long, nanos: Int) extends Ordered[TAIInstan
    *
    * @return a suitable hash code
    */
-  //override def hashCode: Int = ((seconds ^ (seconds >>> 32)).asInstanceOf[Int]) + 51 * nanos
+  //override def hashCode: Int = ((seconds ^ (seconds >>> 32)).toInt) + 51 * nanos
 
   /**
    * Returns a copy of this instant with the specified duration added.
@@ -287,7 +287,7 @@ final case class TAIInstant(seconds: Long, nanos: Int) extends Ordered[TAIInstan
     val nanosToAdd: Int = duration.getNanoOfSecond
     if ((secsToAdd | nanosToAdd) == 0) return this
     val secs: Long = MathUtils.safeAdd(seconds, secsToAdd)
-    val nanoAdjustment: Long = (nanos.asInstanceOf[Long]) + nanosToAdd
+    val nanoAdjustment: Long = (nanos.toLong) + nanosToAdd
     return ofTAISeconds(secs, nanoAdjustment)
   }
 

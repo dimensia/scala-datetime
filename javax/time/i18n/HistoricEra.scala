@@ -31,11 +31,9 @@
  */
 package javax.time.i18n
 
-import java.util.Calendar
 import java.util.Locale
 import javax.time.calendar.Calendrical
 import javax.time.calendar.CalendricalRule
-import javax.time.calendar.ISOChronology
 import javax.time.calendar.IllegalCalendarFieldValueException
 import javax.time.calendar.format.DateTimeFormatterBuilder.TextStyle
 

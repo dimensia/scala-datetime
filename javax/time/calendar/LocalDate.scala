@@ -218,7 +218,7 @@ object LocalDate {
       doyEst = epochDays - (365 * yearEst + yearEst / 4 - yearEst / 100 + yearEst / 400)
     }
     yearEst += adjust
-    val marchDoy0: Int = doyEst.asInstanceOf[Int]
+    val marchDoy0: Int = doyEst.toInt
     val marchMonth0: Int = (marchDoy0 * 5 + 2) / 153
     val month: Int = (marchMonth0 + 2) % 12 + 1
     val dom: Int = marchDoy0 - (marchMonth0 * 306 + 5) / 10 + 1
@@ -403,7 +403,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
     var periodMonths: Long = period.totalMonths
     var periodDays: Long = period.getDays
     if (periodMonths == 0) return plusDays(periodDays)
-    val monthCount: Long = (year.asInstanceOf[Long]) * 12 + (month.getValue - 1)
+    val monthCount: Long = (year.toLong) * 12 + (month.getValue - 1)
     val calcMonths: Long = monthCount + periodMonths
     val newYear: Int = ISOChronology.yearRule.checkValue(MathUtils.floorDiv(calcMonths, 12))
     val newMonth: MonthOfYear = MonthOfYear.of(MathUtils.floorMod(calcMonths, 12) + 1)
@@ -1015,7 +1015,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
     val periodMonths: Long = period.totalMonths
     var periodDays: Long = period.getDays
     if (periodMonths == 0) return minusDays(periodDays)
-    val monthCount: Long = (year.asInstanceOf[Long]) * 12 + (month.getValue - 1)
+    val monthCount: Long = (year.toLong) * 12 + (month.getValue - 1)
     val calcMonths: Long = monthCount - periodMonths
     val newYear: Int = ISOChronology.yearRule.checkValue(MathUtils.floorDiv(calcMonths, 12))
     val newMonth: MonthOfYear = MonthOfYear.of(MathUtils.floorMod(calcMonths, 12) + 1)

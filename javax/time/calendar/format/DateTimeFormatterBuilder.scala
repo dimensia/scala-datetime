@@ -31,7 +31,7 @@
  */
 package javax.time.calendar.format
 
-import java.text.SimpleDateFormat
+import scala.util.control.Breaks._
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.List
@@ -40,9 +40,6 @@ import java.util.Map
 import javax.time.calendar.Chronology
 import javax.time.calendar.DateTimeFieldRule
 import javax.time.calendar.ISOChronology
-import javax.time.calendar.TimeZone
-import javax.time.calendar.ZoneOffset
-import javax.time.calendar.format.DateTimeFormatterBuilder.{TextStyle, SignStyle}
 
 /**
  * Builder to create formatters for calendricals.
@@ -579,16 +576,18 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
           pos += 1;
           pos
         })
-        while (pos < pattern.length) {
-          if (pattern.charAt(pos) == '\'') {
-            if (pos + 1 < pattern.length && pattern.charAt(pos + 1) == '\'') {
-              pos += 1;
+        breakable{
+          while (pos < pattern.length) {
+            if (pattern.charAt(pos) == '\'') {
+              if (pos + 1 < pattern.length && pattern.charAt(pos + 1) == '\'') {
+                pos += 1;
+              }
+              else {
+                break
+              }
             }
-            else {
-              //break //todo: break is not supported
-            }
+            pos += 1;
           }
-          pos += 1;
         }
         if (pos >= pattern.length) {
           throw new IllegalArgumentException("Pattern ends with an incomplete string literal: " + pattern)

@@ -181,7 +181,7 @@ final class Year private(val year: Int) extends Calendrical with Ordered[Year] w
    *
    * @return the string form of the year
    */
-  override def toString: String = "Year=" + Integer.toString(year)
+  override def toString: String = "Year=" + year
 
   /**
    * Checks if the year extracted from the calendrical matches this.

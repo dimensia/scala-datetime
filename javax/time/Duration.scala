@@ -407,7 +407,7 @@ object Duration {
    */
   def ofSeconds(seconds: Long, nanoAdjustment: Long): Duration = {
     var secs: Long = MathUtils.safeAdd(seconds, nanoAdjustment / NanosPerSecond)
-    var nos: Int = (nanoAdjustment % NanosPerSecond).asInstanceOf[Int]
+    var nos: Int = (nanoAdjustment % NanosPerSecond).toInt
     if (nos < 0) {
       nos += NanosPerSecond
       secs = MathUtils.safeDecrement(secs)
@@ -497,7 +497,7 @@ final case class Duration private(seconds: Long, nanos: Int) extends Ordered[Dur
   def plusNanos(nanosToAdd: Long): Duration = {
     if (nanosToAdd == 0) return this
     var secondsToAdd: Long = nanosToAdd / NanosPerSecond
-    var nos: Int = (nanosToAdd % NanosPerSecond).asInstanceOf[Int]
+    var nos: Int = (nanosToAdd % NanosPerSecond).toInt
     nos += nanos
     if (nos < 0) {
       nos += NanosPerSecond
@@ -881,7 +881,7 @@ final case class Duration private(seconds: Long, nanos: Int) extends Ordered[Dur
   def minusMillis(millisToSubtract: Long): Duration = {
     if (millisToSubtract == 0) return this
     var secondsToSubtract: Long = millisToSubtract / 1000
-    var nos: Int = ((millisToSubtract % 1000).asInstanceOf[Int]) * 1000000
+    var nos: Int = ((millisToSubtract % 1000).toInt) * 1000000
     nos = nanos - nos
     if (nos < 0) {
       nos += NanosPerSecond
@@ -949,7 +949,7 @@ final case class Duration private(seconds: Long, nanos: Int) extends Ordered[Dur
   def plusMillis(millisToAdd: Long): Duration = {
     if (millisToAdd == 0) return this
     var secondsToAdd: Long = millisToAdd / 1000
-    var nos: Int = ((millisToAdd % 1000).asInstanceOf[Int]) * 1000000
+    var nos: Int = ((millisToAdd % 1000).toInt) * 1000000
     nos += nanos
     if (nos < 0) {
       nos += NanosPerSecond

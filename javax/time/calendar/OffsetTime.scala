@@ -518,7 +518,7 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
    * @return true if this point is before the specified time
    * @throws NullPointerException if {@code other} is null
    */
-  def isBefore(other: OffsetTime): Boolean = this < that
+  def isBefore(other: OffsetTime): Boolean = this < other
 
   /**
    * Returns a copy of this {@code OffsetTime} with the specified period in nanoseconds added.

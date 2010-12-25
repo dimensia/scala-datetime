@@ -88,7 +88,7 @@ final class ReducedPrinterParser private[format](rule: DateTimeFieldRule[_], wid
     if (value < baseValue) {
       value += range
     }
-    context.setParsed(rule, value.asInstanceOf[Int])
+    context.setParsed(rule, value.toInt)
   }
 
   /**

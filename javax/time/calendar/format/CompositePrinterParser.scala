@@ -31,6 +31,7 @@
  */
 package javax.time.calendar.format
 
+import scala.util.control.Breaks._
 import java.util.Arrays
 import java.util.List
 import javax.time.calendar.Calendrical
@@ -97,10 +98,12 @@ final class CompositePrinterParser private[format](_printers: List[DateTimePrint
       return pos
     }
     else {
-      for (parser <- parsers) {
-        position = parser.parse(context, parseText, position)
-        if (position < 0) {
-          //break //todo: break is not supported
+      breakable{
+        for (parser <- parsers) {
+          position = parser.parse(context, parseText, position)
+          if (position < 0) {
+            break
+          }
         }
       }
       return position

@@ -53,7 +53,7 @@ import javax.time.CalendricalException
  * @author Michael Nascimento Santos
  * @author Stephen Colebourne
  *
- * @param < T > the underlying type representing the data, typically a {@code Calendrical},
+ * @param <T> the underlying type representing the data, typically a {@code Calendrical},
  * {@code Number} or {@code Enum}, must be immutable, should be comparable
  */
 

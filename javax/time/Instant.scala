@@ -346,7 +346,7 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
    *
    * @return a suitable hash code
    */
-  //override def hashCode: Int = ((seconds ^ (seconds >>> 32)).asInstanceOf[Int]) + 51 * nanos
+  //override def hashCode: Int = ((seconds ^ (seconds >>> 32)).toInt) + 51 * nanos
 
   /**
    * Converts this instant to the number of seconds from the epoch
@@ -445,7 +445,7 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
       return this
     }
     val secs: Long = MathUtils.safeSubtract(seconds, secsToSubtract)
-    val nanoAdjustment: Long = (nanos.asInstanceOf[Long]) - nanosToSubtract
+    val nanoAdjustment: Long = (nanos.toLong) - nanosToSubtract
     return ofEpochSeconds(secs, nanoAdjustment)
   }
 
