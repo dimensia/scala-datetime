@@ -37,14 +37,15 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.StreamCorruptedException
 import java.net.URL
-import java.util.ArrayList
 import java.util.Arrays
-import java.util.Collections
 import java.util.Enumeration
-import java.util.HashSet
-import java.util.List
-import java.util.Set
 import java.util.concurrent.atomic.AtomicReferenceArray
+
+
+import collection.mutable.ArrayBuffer
+import collection.immutable.HashSet
+import collection.mutable.{HashSet => MutableHashSet}
+
 import javax.time.CalendricalException
 
 /**
@@ -69,7 +70,7 @@ object ResourceZoneRulesDataProvider {
                                                val ruleIndices: Array[Short])
     extends ZoneRulesVersion {
     def getZoneRules(regionID: String): ZoneRules = {
-      var index: Int = Arrays.binarySearch(regionArray.asInstanceOf[Array[Object]], regionID)
+      val index: Int = Arrays.binarySearch(regionArray.asInstanceOf[Array[Object]], regionID)
       if (index < 0) {
         return null
       }
@@ -85,7 +86,7 @@ object ResourceZoneRulesDataProvider {
 
     def isRegionID(regionID: String): Boolean = Arrays.binarySearch(regionArray.asInstanceOf[Array[AnyRef]], regionID) >= 0
 
-    def getRegionIDs: Set[String] = Collections.unmodifiableSet(new HashSet[String](Arrays.asList[String](regionArray: _*)))
+    def getRegionIDs: Set[String] = HashSet[String](regionArray: _*)
 
     def getVersionID: String = versionID
 
@@ -110,16 +111,16 @@ object ResourceZoneRulesDataProvider {
    * @return the list of loaded rules, never null
    * @throws Exception if an error occurs
    */
-  private def loadResources: List[ResourceZoneRulesDataProvider] = {
-    var providers: List[ResourceZoneRulesDataProvider] = new ArrayList[ResourceZoneRulesDataProvider]
+  private def loadResources: Seq[ResourceZoneRulesDataProvider] = {
+    var providers: ArrayBuffer[ResourceZoneRulesDataProvider] = new ArrayBuffer[ResourceZoneRulesDataProvider]
     var url: URL = null
     try {
-      var en: Enumeration[URL] = Thread.currentThread.getContextClassLoader.getResources("javax/time/calendar/zone/ZoneRules.dat")
-      var loaded: Set[String] = new HashSet[String]
+      val en: Enumeration[URL] = Thread.currentThread.getContextClassLoader.getResources("javax/time/calendar/zone/ZoneRules.dat")
+      var loaded: MutableHashSet[String] = new MutableHashSet[String]
       while (en.hasMoreElements) {
         url = en.nextElement
         if (loaded.add(url.toExternalForm)) {
-          providers.add(new ResourceZoneRulesDataProvider(url))
+          providers += (new ResourceZoneRulesDataProvider(url))
         }
       }
     }
@@ -169,8 +170,8 @@ final class ResourceZoneRulesDataProvider private(url: URL) extends ZoneRulesDat
         i += 1;
       }
     }
-    this.regions = new HashSet[String](Arrays.asList(regionArray: _*))
-    var versionSet: Set[ZoneRulesVersion] = new HashSet[ZoneRulesVersion](versionCount) {
+    this.regions = HashSet[String](regionArray: _*)
+    var versionSet: MutableHashSet[ZoneRulesVersion] = new MutableHashSet[ZoneRulesVersion] /*(versionCount)*/ {
       var i: Int = 0
       while (i < versionCount) {
         var versionRegionCount: Int = dis.readShort
@@ -226,7 +227,7 @@ final class ResourceZoneRulesDataProvider private(url: URL) extends ZoneRulesDat
   private var rules: AtomicReferenceArray[AnyRef] = null
   //FIXME? val
   /**{@inheritDoc}*/
-  def getVersions: Set[ZoneRulesVersion] = versions
+  def getVersions: Set[ZoneRulesVersion] = versions.toSet
 
   /**{@inheritDoc}*/
   def getGroupID: String = groupID
@@ -251,8 +252,8 @@ final class ResourceZoneRulesDataProvider private(url: URL) extends ZoneRulesDat
   private[zone] def loadRule(index: Short): ZoneRules = {
     var obj: AnyRef = rules.get(index)
     if (obj.isInstanceOf[Array[Byte]]) {
-      var bytes: Array[Byte] = obj.asInstanceOf[Array[Byte]]
-      var dis: DataInputStream = new DataInputStream(new ByteArrayInputStream(bytes))
+      val bytes: Array[Byte] = obj.asInstanceOf[Array[Byte]]
+      val dis: DataInputStream = new DataInputStream(new ByteArrayInputStream(bytes))
       obj = Ser.read(dis)
       rules.set(index, obj)
     }
@@ -267,6 +268,6 @@ final class ResourceZoneRulesDataProvider private(url: URL) extends ZoneRulesDat
   /**
    * All the versions in the provider.
    */
-  private var versions: Set[ZoneRulesVersion] = null
+  private var versions: MutableHashSet[ZoneRulesVersion] = null
   //FIXME? val
 }

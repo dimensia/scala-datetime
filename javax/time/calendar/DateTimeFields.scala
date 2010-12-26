@@ -35,7 +35,9 @@ import java.util.Collections
 import java.util.Iterator
 import java.util.Map
 import java.util.SortedMap
-import java.util.TreeMap
+import collection.immutable.TreeMap
+
+//import java.util.TreeMap
 
 /**
  * A set of date-time fields.
@@ -130,9 +132,9 @@ object DateTimeFields {
   def of(fieldRule: DateTimeFieldRule[_], value: Int): DateTimeFields = {
     ISOChronology.checkNotNull(fieldRule, "DateTimeFieldRule must not be null")
     fieldRule.checkValue(value)
-    val map: TreeMap[DateTimeFieldRule[_], Int] = createMap
-    map.put(fieldRule, value)
-    return new DateTimeFields(map)
+    var map: TreeMap[DateTimeFieldRule[_], Int] = createMap
+    map = map(fieldRule) = value
+    new DateTimeFields(map)
   }
 
   /**
@@ -141,7 +143,7 @@ object DateTimeFields {
    * @return ordered representation of internal map
    */
   private def createMap: TreeMap[DateTimeFieldRule[_], Int] = {
-    return new TreeMap[DateTimeFieldRule[_], Int](Collections.reverseOrder)
+    new TreeMap[DateTimeFieldRule[_], Int]()(implicitly[Ordering[DateTimeFieldRule[_]]].reverse)
   }
 
   /**
@@ -170,7 +172,7 @@ final class DateTimeFields private(val fieldValueMap: TreeMap[DateTimeFieldRule[
    * @param fieldRule the field to query, null returns false
    * @return true if the field is supported, false otherwise
    */
-  def contains(fieldRule: DateTimeFieldRule[_]): Boolean = fieldRule != null && fieldValueMap.containsKey(fieldRule)
+  def contains(fieldRule: DateTimeFieldRule[_]): Boolean = fieldRule != null && fieldValueMap.contains(fieldRule)
 
   /**
    * Returns a copy of this DateTimeFields with the specified field value.
@@ -363,7 +365,7 @@ final class DateTimeFields private(val fieldValueMap: TreeMap[DateTimeFieldRule[
    * @param fieldRule the rule to query from the map, null returns null
    * @return the value mapped to the specified field, null if not present
    */
-  def getQuiet(fieldRule: DateTimeFieldRule[_]): Int = if (fieldRule == null) null else fieldValueMap.get(fieldRule)
+  //def getQuiet(fieldRule: DateTimeFieldRule[_]): Int = if (fieldRule == null) null else fieldValueMap.get(fieldRule) //FIXME
 
   /**
    * Is this object equal to the specified object.

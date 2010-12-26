@@ -88,7 +88,7 @@ object ZonedDateTime {
    *
    * @return the rule for the date-time, never null
    */
-  def rule: CalendricalRule[ZoneOffset] = Rule
+  def rule: CalendricalRule[ZonedDateTime] = Rule
 
   /**
    * Obtains the current date-time from the specified clock.
@@ -329,9 +329,9 @@ object ZonedDateTime {
     var dateTime = _dateTime
     ISOChronology.checkNotNull(dateTime, "OffsetDateTime must not be null")
     ISOChronology.checkNotNull(zone, "TimeZone must not be null")
-    var rules: ZoneRules = zone.getRules
+    val rules: ZoneRules = zone.getRules
     if (rules.isValidDateTime(dateTime) == false) {
-      var offsetForInstant: ZoneOffset = rules.getOffset(dateTime)
+      val offsetForInstant: ZoneOffset = rules.getOffset(dateTime)
       dateTime = dateTime.withOffsetSameInstant(offsetForInstant)
     }
     return new ZonedDateTime(dateTime, zone)
@@ -488,11 +488,11 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * @throws CalendricalException if no rules are valid for this date-time
    */
   def withEarlierOffsetAtOverlap: ZonedDateTime = {
-    var info: ZoneOffsetInfo = getApplicableRules.getOffsetInfo(toLocalDateTime)
+    val info: ZoneOffsetInfo = getApplicableRules.getOffsetInfo(toLocalDateTime)
     if (info.isTransition) {
-      var offset: ZoneOffset = info.getTransition.getOffsetBefore
+      val offset: ZoneOffset = info.getTransition.getOffsetBefore
       if (offset.equals(getOffset) == false) {
-        var newDT: OffsetDateTime = dateTime.withOffsetSameLocal(offset)
+        val newDT: OffsetDateTime = dateTime.withOffsetSameLocal(offset)
         return new ZonedDateTime(newDT, zone)
       }
     }
@@ -633,9 +633,9 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * @throws CalendricalException if the result exceeds the supported range
    */
   def minusDuration(periodProvider: PeriodProvider): ZonedDateTime = {
-    var period: PeriodFields = PeriodFields.of(periodProvider)
-    var duration: Duration = period.toDuration
-    return if (duration.isZero) this else ofInstant(toInstant.minus(duration), zone)
+    val period: PeriodFields = PeriodFields.of(periodProvider)
+    val duration: Duration = period.toDuration
+    if (duration.isZero) this else ofInstant(toInstant.minus(duration), zone)
   }
 
   /**
@@ -656,8 +656,8 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * @return a {@code ZonedDateTime} based on this date-time with the requested date-time, never null
    */
   def withDateTime(dateTimeProvider: DateTimeProvider): ZonedDateTime = {
-    var localDateTime: LocalDateTime = LocalDateTime.of(dateTimeProvider)
-    return if (localDateTime.equals(this.dateTime.toLocalDateTime)) this else ZonedDateTime.resolve(localDateTime, this, zone, ZoneResolvers.retainOffset)
+    val localDateTime: LocalDateTime = LocalDateTime.of(dateTimeProvider)
+    if (localDateTime.equals(this.dateTime.toLocalDateTime)) this else ZonedDateTime.resolve(localDateTime, this, zone, ZoneResolvers.retainOffset)
   }
 
   /**
@@ -1059,11 +1059,11 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * @throws CalendricalException if no rules are valid for this date-time
    */
   def withLaterOffsetAtOverlap: ZonedDateTime = {
-    var info: ZoneOffsetInfo = getApplicableRules.getOffsetInfo(toLocalDateTime)
+    val info: ZoneOffsetInfo = getApplicableRules.getOffsetInfo(toLocalDateTime)
     if (info.isTransition) {
-      var offset: ZoneOffset = info.getTransition.getOffsetAfter
+      val offset: ZoneOffset = info.getTransition.getOffsetAfter
       if (offset.equals(getOffset) == false) {
-        var newDT: OffsetDateTime = dateTime.withOffsetSameLocal(offset)
+        val newDT: OffsetDateTime = dateTime.withOffsetSameLocal(offset)
         return new ZonedDateTime(newDT, zone)
       }
     }
@@ -1282,7 +1282,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    */
   def plusDuration(hours: Int, minutes: Int, seconds: Int, nanos: Long): ZonedDateTime = {
     if ((hours | minutes | seconds | nanos) == 0) return this
-    var instant: Instant = toInstant.plusSeconds(hours * 3600L + minutes * 60L + seconds).plusNanos(nanos)
+    val instant: Instant = toInstant.plusSeconds(hours * 3600L + minutes * 60L + seconds).plusNanos(nanos)
     return ofInstant(instant, zone)
   }
 
@@ -1340,7 +1340,7 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    */
   def minusDuration(hours: Int, minutes: Int, seconds: Int, nanos: Long): ZonedDateTime = {
     if ((hours | minutes | seconds | nanos) == 0) return this
-    var instant: Instant = toInstant.minusSeconds(hours * 3600L + minutes * 60L + seconds).minusNanos(nanos)
+    val instant: Instant = toInstant.minusSeconds(hours * 3600L + minutes * 60L + seconds).minusNanos(nanos)
     return ofInstant(instant, zone)
   }
 
@@ -1382,9 +1382,9 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * @throws CalendricalException if the result exceeds the supported range
    */
   def plusDuration(periodProvider: PeriodProvider): ZonedDateTime = {
-    var period: PeriodFields = PeriodFields.of(periodProvider)
-    var duration: Duration = period.toDuration
-    return if (duration.isZero) this else ofInstant(toInstant.plus(duration), zone)
+    val period: PeriodFields = PeriodFields.of(periodProvider)
+    val duration: Duration = period.toDuration
+    if (duration.isZero) this else ofInstant(toInstant.plus(duration), zone)
   }
 
   /**
@@ -1754,7 +1754,8 @@ final class ZonedDateTime private(val dateTime: OffsetDateTime, val zone: TimeZo
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
    */
-  def get[T](rule: CalendricalRule[T]): Option[T] = Some(rule.deriveValueFor(rule, this, this))
+  //  def get[T](rule: CalendricalRule[T]): Option[T] = Some(rule.deriveValueFor(rule, this, this, ISOChronology)) //FIXME
+  def get[T](rule: CalendricalRule[T]): Option[T] = None
 
   /**
    * Returns a copy of this {@code ZonedDateTime} with the hour-of-day value altered.

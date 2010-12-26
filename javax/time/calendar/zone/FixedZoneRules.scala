@@ -33,8 +33,9 @@ package javax.time.calendar.zone
 
 import java.io.DataInput
 import java.io.DataOutput
-import java.util.ArrayList
-import java.util.List
+
+import collection.mutable.ArrayBuffer
+
 import javax.time.InstantProvider
 import javax.time.calendar.LocalDateTime
 import javax.time.calendar.ZoneOffset
@@ -94,13 +95,13 @@ final class FixedZoneRules private[zone](val offset: ZoneOffset) extends ZoneRul
   def previousTransition(instantProvider: InstantProvider): ZoneOffsetTransition = null
 
   /**{@inheritDoc}*/
-  def getTransitionRules: List[ZoneOffsetTransitionRule] = new ArrayList[ZoneOffsetTransitionRule]
+  def getTransitionRules: Seq[ZoneOffsetTransitionRule] = new ArrayBuffer[ZoneOffsetTransitionRule]
 
   /**{@inheritDoc}*/
   def getOffsetInfo(dateTime: LocalDateTime): ZoneOffsetInfo = new ZoneOffsetInfo(dateTime, offset, null)
 
   /**{@inheritDoc}*/
-  def getTransitions: List[ZoneOffsetTransition] = new ArrayList[ZoneOffsetTransition]
+  def getTransitions: Seq[ZoneOffsetTransition] = new ArrayBuffer[ZoneOffsetTransition]
 
   /**
    * Returns a string describing this object.
@@ -125,7 +126,7 @@ final class FixedZoneRules private[zone](val offset: ZoneOffset) extends ZoneRul
    * @return true if equal
    */
   override def equals(otherRules: AnyRef): Boolean = {
-    if (this == otherRules)
+    if (this eq otherRules)
       true
     else if (otherRules.isInstanceOf[FixedZoneRules])
       offset.equals((otherRules.asInstanceOf[FixedZoneRules]).offset)

@@ -31,18 +31,17 @@
  */
 package javax.time.calendar.zone
 
-import java.util.ArrayList
-import java.util.Collections
-import java.util.List
 import java.util.Map
-import java.util.Set
-import java.util.TreeMap
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.atomic.AtomicReference
 import java.util.regex.Pattern
+
 import javax.time.CalendricalException
 import javax.time.calendar.OffsetDateTime
+
+import collection.immutable.TreeMap
+import collection.mutable.{ArrayBuffer, Buffer}
 
 /**
  * A group of time-zone rules wrapping a provider of multiple versions of the data.
@@ -145,9 +144,7 @@ object ZoneRulesGroup {
    *
    * @return an unsorted, independent, modifiable list of available groups, never null
    */
-  def getAvailableGroups: List[ZoneRulesGroup] = {
-    return new ArrayList[ZoneRulesGroup](Groups.values)
-  }
+  def getAvailableGroups: Buffer[ZoneRulesGroup] = ArrayBuffer[ZoneRulesGroup](Groups.values.toArray.asInstanceOf[Array[ZoneRulesGroup]]: _*)
 
   /**
    * Gets a group by ID, such as 'TZDB'.
@@ -198,7 +195,7 @@ object ZoneRulesGroup {
    *
    * @return an unmodifiable set of parsable group:region IDs, never null
    */
-  def getParsableIDs: Set[String] = Collections.unmodifiableSet(IDs.keySet)
+  def getParsableIDs: Set[String] = Set(IDs.keySet.toArray.asInstanceOf[Array[String]]: _*)
 }
 
 /**
@@ -249,15 +246,10 @@ final class ZoneRulesGroup(val groupID: String) {
   def getRules(regionID: String, versionID: String): ZoneRules = {
     ZoneRules.checkNotNull(regionID, "Region ID must not be null")
     ZoneRules.checkNotNull(versionID, "Version ID must not be null")
-    var version: ZoneRulesVersion = versions.get.get(versionID)
-    if (version == null) {
-      throw new CalendricalException("Unknown version for group: " + groupID + ':' + regionID + '#' + versionID)
-    }
+    val version: ZoneRulesVersion = versions.get.getOrElse(versionID, throw new CalendricalException("Unknown version for group: " + groupID + ':' + regionID + '#' + versionID))
     var rules: ZoneRules = version.getZoneRules(regionID)
-    if (rules == null) {
-      throw new CalendricalException("Unknown region for version: " + groupID + ':' + regionID + '#' + versionID)
-    }
-    return rules
+    if (rules == null) throw new CalendricalException("Unknown region for version: " + groupID + ':' + regionID + '#' + versionID)
+    rules
   }
 
   /**
@@ -277,11 +269,10 @@ final class ZoneRulesGroup(val groupID: String) {
    */
   def getRegionIDs(versionID: String): Set[String] = {
     ZoneRules.checkNotNull(versionID, "Version ID must not be null")
-    var version: ZoneRulesVersion = versions.get.get(versionID)
-    if (version == null) {
-      throw new CalendricalException("Unknown time-zone version: " + groupID + '#' + versionID)
+    versions.get.get(versionID) match {
+      case Some(version) => version.getRegionIDs
+      case None => throw new CalendricalException("Unknown time-zone version: " + groupID + '#' + versionID)
     }
-    return version.getRegionIDs
   }
 
   /**
@@ -306,11 +297,11 @@ final class ZoneRulesGroup(val groupID: String) {
     ZoneRules.checkNotNull(regionID, "Region ID must not be null")
     ZoneRules.checkNotNull(versionID, "Version ID must not be null")
     ZoneRules.checkNotNull(dateTime, "Valid date-time must not be null")
-    var rules: ZoneRules = getRules(regionID, versionID)
+    val rules: ZoneRules = getRules(regionID, versionID)
     if (rules.isValidDateTime(dateTime) == false) {
       throw new CalendricalException("Rules in time-zone " + groupID + ':' + regionID + '#' + versionID + " are invalid for date-time " + dateTime)
     }
-    return rules
+    rules
   }
 
   /**
@@ -333,10 +324,7 @@ final class ZoneRulesGroup(val groupID: String) {
    */
   def isValidRegionID(regionID: String): Boolean = {
     ZoneRules.checkNotNull(regionID, "Region ID must not be null")
-    for (version <- versions.get.values) {
-      if (version.isRegionID(regionID)) return true
-    }
-    return false
+    versions.get.valuesIterator.exists(_.isRegionID(regionID))
   }
 
   /**
@@ -345,20 +333,20 @@ final class ZoneRulesGroup(val groupID: String) {
    * @param provider the provider to register, not null
    */
   private def registerProvider0(provider: ZoneRulesDataProvider): Unit = {
-    var newVersions: TreeMap[String, ZoneRulesVersion] = versions.get.clone.asInstanceOf[TreeMap[String, ZoneRulesVersion]]
+    var newVersions: TreeMap[String, ZoneRulesVersion] = versions.get
     for (version <- provider.getVersions) {
-      var versionID: String = version.getVersionID
+      val versionID: String = version.getVersionID
       ZoneRules.checkNotNull(versionID, "Version ID must not be null")
       if (PatternVersion.matcher(versionID).matches == false) {
         throw new CalendricalException("Invalid version ID '" + versionID + "', must match regex [A-Za-z0-9._-]+")
       }
-      if (newVersions.containsKey(versionID)) {
+      if (newVersions.contains(versionID)) {
         throw new CalendricalException("Cannot register provider for group '" + groupID + "' as version '" + versionID + "' is already registered")
       }
-      newVersions.put(versionID, version)
+      newVersions = newVersions.updated(versionID, version)
     }
     versions.set(newVersions)
-    var regionIDs: Set[String] = provider.getRegionIDs
+    val regionIDs: Set[String] = provider.getRegionIDs
     for (regionID <- regionIDs) {
       IDs.put(groupID + ':' + regionID, "")
       if (groupID.equals("TZDB")) {
@@ -370,7 +358,7 @@ final class ZoneRulesGroup(val groupID: String) {
   /**
    * The versions and rules.
    */
-  private var versions: AtomicReference[TreeMap[String, ZoneRulesVersion]] = new AtomicReference[TreeMap[String, ZoneRulesVersion]](new TreeMap[String, ZoneRulesVersion](Collections.reverseOrder))
+  private var versions: AtomicReference[TreeMap[String, ZoneRulesVersion]] = new AtomicReference[TreeMap[String, ZoneRulesVersion]](new TreeMap[String, ZoneRulesVersion]()(implicitly[Ordering[String]].reverse))
   /**
    * Gets the latest available version of the group's data.
    * <p>
@@ -404,7 +392,7 @@ final class ZoneRulesGroup(val groupID: String) {
     if (regionID == null || versionID == null) {
       return false
     }
-    val version: ZoneRulesVersion = versions.get.get(versionID)
+    val version: ZoneRulesVersion = versions.get.getOrElse(versionID, null)
     return version != null && version.isRegionID(regionID)
   }
 
@@ -470,7 +458,9 @@ final class ZoneRulesGroup(val groupID: String) {
    * @return the version IDs sorted from newest to oldest, unmodifiable, never null
    * @throws CalendricalException if the region ID is not found
    */
-  def getAvailableVersionIDs: Set[String] = Collections.unmodifiableSet(versions.get.keySet)
+  def getAvailableVersionIDs: Set[String] = versions.get.keySet.asInstanceOf[Set[String]]
+
+  //FIXME remove cast
 
 
   /**

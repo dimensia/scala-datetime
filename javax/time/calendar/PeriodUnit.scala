@@ -31,9 +31,6 @@
  */
 package javax.time.calendar
 
-import java.util.ArrayList
-import java.util.Collections
-import java.util.List
 import javax.time.Duration
 
 /**
@@ -66,20 +63,15 @@ object PeriodUnit {
    * @param equivalentPeriod the period this is derived from, null if no equivalent
    * @return the list of equivalent periods, never null
    */
-  private def buildEquivalentPeriods(equivalentPeriod: PeriodField): List[PeriodField] = {
+  private[PeriodUnit] def buildEquivalentPeriods(equivalentPeriod: PeriodField): Seq[PeriodField] = {
     if (equivalentPeriod == null) {
-      return Collections.emptyList[PeriodField]
+      List()
+    } else {
+      val multiplier: Long = equivalentPeriod.getAmount
+      val baseEquivalents = equivalentPeriod.getUnit.getEquivalentPeriods
+      val equivalents = baseEquivalents.map(_ * multiplier)
+      equivalentPeriod :: equivalents.toList
     }
-    val equivalents: List[PeriodField] = new ArrayList[PeriodField]
-    equivalents.add(equivalentPeriod)
-    val multiplier: Long = equivalentPeriod.getAmount
-    val baseEquivalents: List[PeriodField] = equivalentPeriod.getUnit.getEquivalentPeriods
-    var i: Int = 0
-    while (i < baseEquivalents.size) {
-      equivalents.add(baseEquivalents.get(i).multipliedBy(multiplier))
-      i += 1;
-    }
-    return Collections.unmodifiableList(equivalents)
   }
 }
 
@@ -90,11 +82,12 @@ object PeriodUnit {
  * @param hashcode the cache of the unit hash code
  */
 @SerialVersionUID(1L)
-abstract class PeriodUnit private[calendar](@transient val name: String, @transient val equivalentPeriods: List[PeriodField], @transient val estimatedDuration: Duration, @transient hashCode: Int)
+abstract class PeriodUnit private[calendar](@transient val name: String, @transient val equivalentPeriods: Seq[PeriodField], @transient val estimatedDuration: Duration, @transient val hashCode: Int)
   extends Ordered[PeriodUnit] with Serializable {
-  ISOChronology.checkNotNull(name, "Name must not be null")
 
   import PeriodUnit._
+
+  ISOChronology.checkNotNull(name, "Name must not be null")
 
   /**
    * Constructor used by ISOChronology.
@@ -168,7 +161,7 @@ abstract class PeriodUnit private[calendar](@transient val name: String, @transi
    *
    * @return the equivalent periods, may be empty, never null
    */
-  def getEquivalentPeriods: List[PeriodField] = equivalentPeriods
+  def getEquivalentPeriods: Seq[PeriodField] = equivalentPeriods
 
   /**
    * Gets an estimate of the duration of the unit in seconds.
@@ -198,12 +191,8 @@ abstract class PeriodUnit private[calendar](@transient val name: String, @transi
    * @return true if this unit is convertible or equal to the specified unit
    */
   def isConvertibleTo(unit: PeriodUnit): Boolean = {
-    for (equivalent <- equivalentPeriods) {
-      if (equivalent.getUnit.equals(unit)) {
-        return true
-      }
-    }
-    return this.equals(unit)
+    if(equivalentPeriods.exists(_.getUnit == unit)) true
+    else this == unit
   }
 
   /**
@@ -224,7 +213,7 @@ abstract class PeriodUnit private[calendar](@transient val name: String, @transi
       if (cmp == 0) {
         cmp = (equivalentPeriods.size - other.equivalentPeriods.size)
         if (cmp == 0 && equivalentPeriods.size > 0) {
-          cmp = (equivalentPeriods.get(0).compareTo(other.equivalentPeriods.get(0)))
+          cmp = (equivalentPeriods(0).compareTo(other.equivalentPeriods(0)))
         }
       }
     }
@@ -245,7 +234,7 @@ abstract class PeriodUnit private[calendar](@transient val name: String, @transi
    */
   def getBaseUnit: PeriodUnit = {
     if (equivalentPeriods.isEmpty) this
-    else equivalentPeriods.get(equivalentPeriods.size - 1).getUnit
+    else equivalentPeriods(equivalentPeriods.size - 1).getUnit
   }
 
   /**
@@ -254,10 +243,10 @@ abstract class PeriodUnit private[calendar](@transient val name: String, @transi
    * @return true if the units are the same
    */
   override def equals(obj: AnyRef): Boolean = {
-    if (obj == this) true
+    if (obj eq this) true
     else if (obj.isInstanceOf[PeriodUnit]) {
       val other: PeriodUnit = obj.asInstanceOf[PeriodUnit]
-      name.equals(other.name) && estimatedDuration.equals(other.estimatedDuration) && equivalentPeriods.size == other.equivalentPeriods.size && (equivalentPeriods.size == 0 || equivalentPeriods.get(0).equals(other.equivalentPeriods.get(0)))
+      name.equals(other.name) && estimatedDuration.equals(other.estimatedDuration) && equivalentPeriods.size == other.equivalentPeriods.size && (equivalentPeriods.size == 0 || equivalentPeriods(0).equals(other.equivalentPeriods(0)))
     } else false
   }
 

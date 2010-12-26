@@ -283,7 +283,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
   def convertValueToInt(value: T): Int = {
     //FIXME
     if (value.isInstanceOf[Enum[_]]) (value.asInstanceOf[Enum[_]]).ordinal + getMinimumValue
-    else value.toInt
+    else value.asInstanceOf[Int]
   }
 
   /**
@@ -603,7 +603,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * @return the int value of the field
    */
   private def convertValueToInteger(value: T): Int = {
-    if (getReifiedType == classOf[Int]) value.toInt
+    if (getReifiedType == classOf[Int]) value.asInstanceOf[Int]
     else convertValueToInt(value)
   }
 

@@ -31,10 +31,10 @@
  */
 package javax.time.calendar
 
-import java.util.TreeMap
 import javax.time.CalendricalException
 import javax.time.Duration
 import javax.time.MathUtils
+import collection.immutable.TreeMap
 
 /**
  * An immutable period consisting of the ISO-8601 year, month, day, hour,
@@ -187,7 +187,7 @@ object Period {
       return periodProvider.asInstanceOf[Period]
     }
     var periodFields: PeriodFields = PeriodFields.of(periodProvider)
-    periodFields = periodFields.toEquivalent(Units)
+    periodFields = periodFields.toEquivalent(Units: _*)
     val years: Int = periodFields.getAmountInt(ISOChronology.periodYears)
     val months: Int = periodFields.getAmountInt(ISOChronology.periodMonths)
     val days: Int = periodFields.getAmountInt(ISOChronology.periodDays)
@@ -1375,25 +1375,25 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
     if (fields == null) {
       val map: TreeMap[PeriodUnit, PeriodField] = new TreeMap[PeriodUnit, PeriodField]
       if (years != 0) {
-        map.put(ISOChronology.periodYears, PeriodField.of(years, ISOChronology.periodYears))
+        map.updated(ISOChronology.periodYears, PeriodField.of(years, ISOChronology.periodYears))
       }
       if (months != 0) {
-        map.put(ISOChronology.periodMonths, PeriodField.of(months, ISOChronology.periodMonths))
+        map.updated(ISOChronology.periodMonths, PeriodField.of(months, ISOChronology.periodMonths))
       }
       if (days != 0) {
-        map.put(ISOChronology.periodDays, PeriodField.of(days, ISOChronology.periodDays))
+        map.updated(ISOChronology.periodDays, PeriodField.of(days, ISOChronology.periodDays))
       }
       if (hours != 0) {
-        map.put(ISOChronology.periodHours, PeriodField.of(hours, ISOChronology.periodHours))
+        map.updated(ISOChronology.periodHours, PeriodField.of(hours, ISOChronology.periodHours))
       }
       if (minutes != 0) {
-        map.put(ISOChronology.periodMinutes, PeriodField.of(minutes, ISOChronology.periodMinutes))
+        map.updated(ISOChronology.periodMinutes, PeriodField.of(minutes, ISOChronology.periodMinutes))
       }
       if (seconds != 0) {
-        map.put(ISOChronology.periodSeconds, PeriodField.of(seconds, ISOChronology.periodSeconds))
+        map.updated(ISOChronology.periodSeconds, PeriodField.of(seconds, ISOChronology.periodSeconds))
       }
       if (nanos != 0) {
-        map.put(ISOChronology.periodNanos, PeriodField.of(nanos, ISOChronology.periodNanos))
+        map.updated(ISOChronology.periodNanos, PeriodField.of(nanos, ISOChronology.periodNanos))
       }
       periodFields = ({
         fields = PeriodFields.create(map);

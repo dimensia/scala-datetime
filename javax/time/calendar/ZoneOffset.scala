@@ -31,10 +31,10 @@
  */
 package javax.time.calendar
 
-import java.util.HashMap
-import java.util.Map
 import java.util.concurrent.locks.ReadWriteLock
 import java.util.concurrent.locks.ReentrantReadWriteLock
+
+import collection.mutable.HashMap
 
 /**
  * A time-zone offset from UTC, such as {@code +02:00}.
@@ -76,10 +76,10 @@ object ZoneOffset {
   val UTC: ZoneOffset = ofHoursMinutesSeconds(0, 0, 0)
 
   /**Cache of time-zone offset by id. */
-  private val IDCache: Map[String, ZoneOffset] = new HashMap[String, ZoneOffset]
+  private val IDCache = new HashMap[String, ZoneOffset]
 
   /**Cache of time-zone offset by offset in seconds. */
-  private val SecondsCache: Map[Int, ZoneOffset] = new HashMap[Int, ZoneOffset]
+  private val SecondsCache = new HashMap[Int, ZoneOffset]
 
   /**Cache of time-zone offset by offset in seconds. */
   private val CacheLock: ReadWriteLock = new ReentrantReadWriteLock
@@ -111,8 +111,8 @@ object ZoneOffset {
     if (precededByColon && offsetID.charAt(pos - 1) != ':') {
       throw new IllegalArgumentException("Zone offset id '" + offsetID + "' is invalid: Colon not found when expected")
     }
-    var ch1: Char = offsetID.charAt(pos)
-    var ch2: Char = offsetID.charAt(pos + 1)
+    val ch1: Char = offsetID.charAt(pos)
+    val ch2: Char = offsetID.charAt(pos + 1)
     if (ch1 < '0' || ch1 > '9' || ch2 < '0' || ch2 > '9') {
       throw new IllegalArgumentException("Zone offset id '" + offsetID + "' is invalid: Non numeric characters found")
     }
@@ -145,7 +145,7 @@ object ZoneOffset {
       val totalSecs: Int = totalSeconds
       CacheLock.readLock.lock
       try {
-        var result: ZoneOffset = SecondsCache.get(totalSecs)
+        val result: ZoneOffset = SecondsCache.getOrElse(totalSecs, null)
         if (result != null) {
           return result
         }
@@ -155,11 +155,11 @@ object ZoneOffset {
       }
       CacheLock.writeLock.lock
       try {
-        var result: ZoneOffset = SecondsCache.get(totalSecs)
+        var result: ZoneOffset = SecondsCache.getOrElse(totalSecs, null)
         if (result == null) {
           result = new ZoneOffset(totalSeconds)
-          SecondsCache.put(totalSecs, result)
-          IDCache.put(result.getID, result)
+          SecondsCache(totalSecs) = result
+          IDCache(result.getID) = result
         }
         return result
       }
@@ -311,7 +311,7 @@ object ZoneOffset {
     }
     CacheLock.readLock.lock
     try {
-      var offset: ZoneOffset = IDCache.get(offsetID)
+      val offset: ZoneOffset = IDCache.getOrElse(offsetID, null)
       if (offset != null) {
         return offset
       }
@@ -322,7 +322,7 @@ object ZoneOffset {
     var hours: Int = 0
     var minutes: Int = 0
     var seconds: Int = 0
-    var len: Int = offsetID.length
+    val len: Int = offsetID.length
     len match {
       case 3 =>
         hours = parseNumber(offsetID, 1, false)
@@ -413,16 +413,16 @@ final class ZoneOffset private(val amountSeconds: Int) extends Calendrical with 
   private lazy val id: String = {
     if (amountSeconds == 0) "Z"
     else {
-      var absTotalSeconds: Int = math.abs(amountSeconds)
-      var buf: StringBuilder = new StringBuilder
-      var absHours: Int = absTotalSeconds / SecondsPerHour
-      var absMinutes: Int = (absTotalSeconds / SecondsPerMinute) % MinutesPerHour
+      val absTotalSeconds: Int = math.abs(amountSeconds)
+      val absHours: Int = absTotalSeconds / SecondsPerHour
+      val absMinutes: Int = (absTotalSeconds / SecondsPerMinute) % MinutesPerHour
+      val buf: StringBuilder = new StringBuilder
       buf.append(if (amountSeconds < 0) "-" else "+")
         .append(if (absHours < 10) "0" else "")
         .append(absHours)
         .append(if (absMinutes < 10) ":0" else ":")
         .append(absMinutes)
-      var absSeconds: Int = absTotalSeconds % SecondsPerMinute
+      val absSeconds: Int = absTotalSeconds % SecondsPerMinute
       if (absSeconds != 0) {
         buf.append(if (absSeconds < 10) ":0" else ":").append(absSeconds)
       }
@@ -440,7 +440,8 @@ final class ZoneOffset private(val amountSeconds: Int) extends Calendrical with 
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
    */
-  def get[T](rule: CalendricalRule[T]): Option[T] = Some(rule.deriveValueFor(rule, this, this, null))
+  //def get[T](rule: CalendricalRule[T]): Option[T] = Some(rule.deriveValueFor(rule, this, this, null)) //FIXME
+  def get[T](rule: CalendricalRule[T]): Option[T] = None
 
   /**
    * Gets the total zone offset in seconds.

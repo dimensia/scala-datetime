@@ -92,6 +92,8 @@ object AmPmOfDay {
       case _ => throw new IllegalCalendarFieldValueException(ISOChronology.amPmOfDayRule, amPmOfDay, 0, 1)
     }
   }
+
+  def apply(amPmOfDay: Int): AmPmOfDay = of(amPmOfDay)
 }
 
 sealed abstract class AmPmOfDay(ordinal: Int) extends Calendrical {

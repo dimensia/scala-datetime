@@ -482,9 +482,9 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
     if (pp.getErrorIndex >= 0) {
       throw new IllegalArgumentException(str)
     }
-    var hour: Int = cal.getParsed(ISOChronology.hourOfDayRule).toInt
-    var min: Int = cal.getParsed(ISOChronology.minuteOfHourRule).toInt
-    var sec: Int = cal.getParsed(ISOChronology.secondOfMinuteRule).toInt
+    var hour: Int = cal.getParsed(ISOChronology.hourOfDayRule).asInstanceOf[Int]
+    var min: Int = cal.getParsed(ISOChronology.minuteOfHourRule).asInstanceOf[Int]
+    var sec: Int = cal.getParsed(ISOChronology.secondOfMinuteRule).asInstanceOf[Int]
     var secs: Int = hour * 60 * 60 + (if (min != null) min else 0) * 60 + (if (sec != null) sec else 0)
     if (pos == 1) {
       secs = -secs
@@ -716,9 +716,9 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
 
   private def parseTimeDefinition(c: Char): ZoneRulesBuilder.TimeDefinition = {
     c match {
-      case 's' | 'S' => return TimeDefinition.STANDARD
+      case 's' | 'S' => return TimeDefinition.Standard
       case 'u' | 'U' | 'g' | 'G' | 'z' | 'Z' => return TimeDefinition.UTC
-      case 'w' | 'W' | _ => return TimeDefinition.WALL
+      case 'w' | 'W' | _ => return TimeDefinition.Wall
     }
   }
 
@@ -747,7 +747,7 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
     }
 
     /**The time of the cutover. */
-    private[zone] var timeDefinition: ZoneRulesBuilder.TimeDefinition = TimeDefinition.WALL
+    private[zone] var timeDefinition: ZoneRulesBuilder.TimeDefinition = TimeDefinition.Wall
     /**The day-of-week of the cutover. */
     private[zone] var dayOfWeek: DayOfWeek = null
   }

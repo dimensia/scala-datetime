@@ -460,7 +460,7 @@ object ISOChronology extends ISOChronology {
       }
     }
 
-    protected override def merge(merger: CalendricalMerger): Unit = {
+    private[calendar] override def merge(merger: CalendricalMerger): Unit = {
       val epochDays: Long = merger.getValue(this).get
       merger.storeMerged(LocalDate.rule, LocalDate.ofEpochDays(epochDays))
       merger.removeProcessed(this)
@@ -478,30 +478,17 @@ object ISOChronology extends ISOChronology {
   private[calendar] sealed class MonthOfYearRule
     extends DateTimeFieldRule[MonthOfYear](classOf[MonthOfYear], ISOChronology, "MonthOfYear", Months, Years, 1, 12, true)
     with Serializable {
-    protected def interpret(merger: CalendricalMerger, value: AnyRef): MonthOfYear = {
+    protected def interpret(merger: CalendricalMerger, value: Any): MonthOfYear = {
       //FIXME
-      //      value match {
-      //        case value: Int =>
-      //          if (value < 1 || value > 12) {
-      //            merger.addToOverflow(Period.ofMonths(value - 1))
-      //            MonthOfYear.of(1)
-      //          }
-      //          else MonthOfYear.of(value)
-      //        case _ => null
-      //      }
-
-
-      if (value.isInstanceOf[Int]) {
-        var value: Int = value.toInt
-
-        if (value < 1 || value > 12) {
-          merger.addToOverflow(Period.ofMonths(value - 1))
-          value = 1
-        }
-        return MonthOfYear.of(value)
+      value match {
+        case value: Int =>
+          if (value < 1 || value > 12) {
+            merger.addToOverflow(Period.ofMonths(value - 1))
+            MonthOfYear.of(1)
+          }
+          else MonthOfYear.of(value)
+        case _ => null
       }
-
-      return null
     }
 
     protected def derive(calendrical: Calendrical): Option[MonthOfYear] = {
@@ -710,16 +697,17 @@ object ISOChronology extends ISOChronology {
 
     private def readResolve: AnyRef = DayOfWeekRule
 
-    protected def interpret(merger: CalendricalMerger, value: AnyRef): DayOfWeek = {
-      if (value.isInstanceOf[Int]) {
-        var intVal: Int = value.toInt
-        if (intVal < 1 || intVal > 7) {
-          merger.addToOverflow(Period.ofDays(intVal - 1))
-          intVal = 1
-        }
-        return DayOfWeek.of(intVal)
+    protected def interpret(merger: CalendricalMerger, value: Any): DayOfWeek = {
+      //FIXME
+      value match {
+        case value: Int =>
+          if (value < 1 || value > 7) {
+            merger.addToOverflow(Period.ofDays(value - 1))
+            DayOfWeek(1)
+          }
+          else DayOfWeek(value)
+        case _ => null
       }
-      return null
     }
 
     def convertValueToInt(value: DayOfWeek): Int = value.getValue
@@ -823,7 +811,7 @@ object ISOChronology extends ISOChronology {
    *
    * @return the rule for the am/pm of day field, never null
    */
-  def amPmOfDayRule: DateTimeFieldRule[AmPmOfDayRule] = AmPmOfDayRule
+  def amPmOfDayRule: DateTimeFieldRule[AmPmOfDay] = AmPmOfDayRule
 
   /**
    * Gets the rule for the milli-of-day field.
@@ -889,7 +877,7 @@ object ISOChronology extends ISOChronology {
    *
    * @return the rule for the quarter-of-year field, never null
    */
-  def quarterOfYearRule: DateTimeFieldRule[QuarterOfYearRule] = QuarterOfYearRule
+  def quarterOfYearRule: DateTimeFieldRule[QuarterOfYear] = QuarterOfYearRule
 
   /**
    * Validates that the input value is not null.
@@ -898,7 +886,7 @@ object ISOChronology extends ISOChronology {
    * @param errorMessage the error to throw
    * @throws NullPointerException if the object is null
    */
-  private[calendar] def checkNotNull(obj: Any, errorMessage: String): Unit = {
+  private[time] def checkNotNull(obj: Any, errorMessage: String): Unit = {
     if (obj == null) throw new NullPointerException(errorMessage)
   }
 
@@ -944,26 +932,24 @@ object ISOChronology extends ISOChronology {
 
     def convertValueToInt(value: AmPmOfDay): Int = value.getValue
 
-    protected def interpret(merger: CalendricalMerger, value: AnyRef): AmPmOfDay = {
-      if (value.isInstanceOf[Int]) {
-        var intVal: Int = value.toInt
-
-        if (intVal < 0 || intVal > 1) {
-          val days: Int = if (intVal > 0) intVal / 2 else ((intVal + 1) / 2) - 1
-          merger.addToOverflow(Period.ofDays(days))
-          intVal = (if (intVal > 0) intVal % 2 else -(intVal % 2))
-        }
-        return AmPmOfDay.of(intVal)
+    protected def interpret(merger: CalendricalMerger, value: Any): AmPmOfDay = {
+      value match {
+        case value: Int =>
+          if (value < 0 || value > 1) {
+            val days: Int = if (value > 0) value / 2 else ((value + 1) / 2) - 1
+            merger.addToOverflow(Period.ofDays(days))
+            AmPmOfDay(if (value > 0) value % 2 else -(value % 2))
+          }
+          else AmPmOfDay(value)
+        case _ => null
       }
-
-      return null
     }
 
     protected def derive(calendrical: Calendrical): AmPmOfDay = {
       val hourVal: Int = calendrical.get(hourOfDayRule).getOrElse(return null)
       var hour: Int = hourVal
       hour = (if (hour < 0) 1073741832 + hour + 1073741832 else hour)
-      return AmPmOfDay.of((hour % 24) / 12)
+      return AmPmOfDay((hour % 24) / 12)
     }
   }
 
@@ -1358,6 +1344,7 @@ object ISOChronology extends ISOChronology {
    * @return the rule for the epoch-days field, never null
    */
   def epochDays: CalendricalRule[Long] = EpochDaysRule
+
   /**
    * Gets the rule for the milli-of-second field.
    * <p>

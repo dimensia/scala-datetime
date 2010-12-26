@@ -31,10 +31,10 @@
  */
 package javax.time.calendar.format
 
-import scala.util.control.Breaks._
-import java.util.HashMap
-import java.util.HashSet
-import java.util.Map
+import util.control.Breaks._
+import collection.mutable.HashMap
+import collection.immutable.HashSet
+
 import javax.time.calendar.Calendrical
 import javax.time.calendar.TimeZone
 import javax.time.calendar.ZoneOffset
@@ -83,7 +83,8 @@ object ZonePrinterParser {
    * Subtrees will have a longer length.)
    */
   private[format] class SubstringTree(val length: Int) {
-    private[format] def get(substring2: String): ZonePrinterParser.SubstringTree = substringMap.get(substring2)
+
+    private[format] def get(substring2: String): ZonePrinterParser.SubstringTree = substringMap.getOrElse(substring2, null)
 
     /**
      * Values must be added from shortest to longest.
@@ -97,7 +98,7 @@ object ZonePrinterParser {
       }
       else if (idLen > length) {
         val substring: String = newSubstring.substring(0, length)
-        var parserTree: ZonePrinterParser.SubstringTree = substringMap.get(substring)
+        var parserTree: ZonePrinterParser.SubstringTree = substringMap.getOrElse(substring, null)
         if (parserTree == null) {
           parserTree = new ZonePrinterParser.SubstringTree(idLen)
           substringMap.put(substring, parserTree)
@@ -109,7 +110,7 @@ object ZonePrinterParser {
     /**
      * Map of a substring to a set of substrings that contain the key.
      */
-    private final val substringMap: Map[String, ZonePrinterParser.SubstringTree] = new HashMap[String, ZonePrinterParser.SubstringTree]
+    private final val substringMap = new HashMap[String, ZonePrinterParser.SubstringTree]
   }
 
   /**
@@ -167,9 +168,7 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
   }
 
   /**{@inheritDoc}*/
-  override def isPrintDataAvailable(calendrical: Calendrical): Boolean = {
-    return (calendrical.get(TimeZone.rule) != null)
-  }
+  override def isPrintDataAvailable(calendrical: Calendrical): Boolean = (calendrical.get(TimeZone.rule) != null)
 
   /**
    * {@inheritDoc }
@@ -195,7 +194,7 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
     var tree: ZonePrinterParser.SubstringTree = null
     classOf[ZonePrinterParser].synchronized{
       if (preparedTree == null || preparedIDs.size < ids.size) {
-        ids = new HashSet[String](ids)
+        ids = HashSet[String]() ++ ids
         preparedTree = prepareParser(ids)
         preparedIDs = ids
       }
@@ -209,7 +208,7 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
         context.setParsed(TimeZone.rule, TimeZone.UTC)
         return startPos
       }
-      var zone: TimeZone = TimeZone.of(newContext.getParsed(ZoneOffset.rule).asInstanceOf[ZoneOffset])
+      val zone: TimeZone = TimeZone.of(newContext.getParsed(ZoneOffset.rule).asInstanceOf[ZoneOffset])
       context.setParsed(TimeZone.rule, zone)
       return endPos
     }

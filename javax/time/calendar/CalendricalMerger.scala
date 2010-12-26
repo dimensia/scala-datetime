@@ -31,12 +31,11 @@
  */
 package javax.time.calendar
 
-import java.util.Iterator
-import java.util.Map
-import java.util.Map.Entry
+//import java.util.Iterator
+
 import java.util.concurrent.ConcurrentHashMap
 import javax.time.CalendricalException
-import javax.time.calendar.ISOChronology.ChronoUnit
+import collection.mutable.{ConcurrentMap, HashMap}
 
 /**
  * Stateful class used to merge calendrical information.
@@ -67,10 +66,10 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
    *
    * @param context the context to use, not null
    */
-  def this(context: CalendricalContext, inputMap: Map[CalendricalRule[_], Any]) {
+  def this(context: CalendricalContext, inputMap: HashMap[CalendricalRule[_], Any]) {
     this (context)
     ISOChronology.checkNotNull(inputMap, null)
-    this.inputMap.putAll(inputMap)
+    this.inputMap ++= inputMap
   }
 
   /**
@@ -78,6 +77,7 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
    */
   private def removeDerivable: Unit = {
     val it: Iterator[CalendricalRule[_]] = processingMap.keySet.iterator
+
     while (it.hasNext) {
       val derivedValue: AnyRef = it.next.derive(this)
       if (derivedValue != null) {
@@ -111,7 +111,7 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
    * The map of potentially invalid data to being merged, never null.
    * This is a concurrent hash map mainly to gain the no-nulls implementation.
    */
-  private val inputMap: Map[CalendricalRule[_], Any] = new ConcurrentHashMap[CalendricalRule[_], Any]
+  private val inputMap = collection.JavaConversions.JConcurrentMapWrapper(new ConcurrentHashMap[CalendricalRule[_], Any])
 
   /**
    * The overflow period to be added to the resultant date/time.
@@ -158,11 +158,16 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
    * @throws CalendricalException if the value for any rule is invalid
    */
   private def interpret: Unit = {
-    for (entry <- inputMap.entrySet) {
-      val rule: CalendricalRule[_] = entry.getKey
-      val value: AnyRef = rule.interpretValue(this, entry.getValue)
-      processingMap.put(rule, value)
-    }
+    inputMap.foreach({
+      case (k, v) => processingMap.put(k, k.interpretValue(this, v))
+    })
+
+
+    //    for (entry <- inputMap.entrySet) {
+    //      val rule: CalendricalRule[_] = entry.getKey
+    //      val value: AnyRef = rule.interpretValue(this, entry.getValue)
+    //      processingMap.put(rule, value)
+    //    }
   }
 
   /**{@inheritDoc}*/
@@ -217,7 +222,7 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
    *
    * @return the rule-value map being merged, doesn't accept nulls, never null
    */
-  def getInputMap: Map[CalendricalRule[_], Any] = inputMap
+  def getInputMap: ConcurrentMap[CalendricalRule[_], Any] = inputMap
 
   /**
    * Gets the overflow that results from the merge.
@@ -248,7 +253,7 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
    * The map of in range data to be merged, never null.
    * This is a concurrent hash map mainly to gain the no-nulls implementation.
    */
-  private val processingMap: Map[CalendricalRule[_], Any] = new ConcurrentHashMap[CalendricalRule[_], Any]
+  private val processingMap = collection.JavaConversions.JConcurrentMapWrapper(new ConcurrentHashMap[CalendricalRule[_], Any])
 
   /**
    * Gets the value of the specified calendrical rule from the merged result.

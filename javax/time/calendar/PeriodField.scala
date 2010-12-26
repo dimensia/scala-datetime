@@ -320,7 +320,7 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
     for (requiredUnit <- requiredUnits) {
       val equivalent: PeriodField = unit.getEquivalentPeriod(requiredUnit)
       if (equivalent != null) {
-        return equivalent.multipliedBy(amount)
+        return equivalent * amount
       }
     }
     throw new CalendricalException(//FIXME
@@ -414,7 +414,7 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
    * @return the estimated duration of this period, positive or negative
    * @throws ArithmeticException if the calculation overflows
    */
-  def toEstimatedDuration: Duration = unit.getEstimatedDuration.multipliedBy(amount)
+  def toEstimatedDuration: Duration = unit.getEstimatedDuration * amount
 
   /**
    * Returns the hash code for this period.

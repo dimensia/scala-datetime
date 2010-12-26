@@ -58,7 +58,7 @@ sealed abstract class StrictLenientPrinterParser extends DateTimePrinter with Da
 
   /**{@inheritDoc}*/
   def parse(context: DateTimeParseContext, parseText: String, position: Int): Int = {
-    context.strict = (this == Strict)
+    context.setStrict(this == Strict)
     position
   }
 

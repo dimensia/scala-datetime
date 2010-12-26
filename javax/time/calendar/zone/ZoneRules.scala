@@ -31,7 +31,6 @@
  */
 package javax.time.calendar.zone
 
-import java.util.List
 import javax.time.Instant
 import javax.time.InstantProvider
 import javax.time.calendar.LocalDateTime
@@ -124,7 +123,7 @@ abstract class ZoneRules protected {
    * @throws UnsupportedOperationException if the implementation cannot return this information -
    *  the default 'TZDB' can return this information
    */
-  def getTransitionRules: List[ZoneOffsetTransitionRule]
+  def getTransitionRules: Seq[ZoneOffsetTransitionRule]
 
   /**
    * Gets the offset information for the specified instant in this zone.
@@ -146,9 +145,9 @@ abstract class ZoneRules protected {
    * @return the offset information, never null
    */
   def getOffsetInfo(instant: Instant): ZoneOffsetInfo = {
-    var offset: ZoneOffset = getOffset(instant)
-    var odt: OffsetDateTime = OffsetDateTime.ofInstant(instant, offset)
-    return getOffsetInfo(odt.toLocalDateTime)
+    val offset: ZoneOffset = getOffset(instant)
+    val odt: OffsetDateTime = OffsetDateTime.ofInstant(instant, offset)
+    getOffsetInfo(odt.toLocalDateTime)
   }
 
   /**
@@ -203,8 +202,8 @@ abstract class ZoneRules protected {
    * @return true if the offset date-time is valid for these rules
    */
   def isValidDateTime(dateTime: OffsetDateTime): Boolean = {
-    var info: ZoneOffsetInfo = getOffsetInfo(dateTime.toLocalDateTime)
-    return info.isValidOffset(dateTime.getOffset)
+    val info: ZoneOffsetInfo = getOffsetInfo(dateTime.toLocalDateTime)
+    info.isValidOffset(dateTime.getOffset)
   }
 
   /**
@@ -223,7 +222,7 @@ abstract class ZoneRules protected {
    * @throws UnsupportedOperationException if the implementation cannot return this information -
    *  the default 'TZDB' can return this information
    */
-  def getTransitions: List[ZoneOffsetTransition]
+  def getTransitions: Seq[ZoneOffsetTransition]
 
   /**
    * Gets the standard offset for the specified instant in this zone.
@@ -251,10 +250,10 @@ abstract class ZoneRules protected {
    * @return the difference between the standard and actual offset, never null
    */
   def getDaylightSavings(instantProvider: InstantProvider): Period = {
-    var instant: Instant = Instant.of(instantProvider)
-    var standardOffset: ZoneOffset = getStandardOffset(instant)
-    var actualOffset: ZoneOffset = getOffset(instant)
-    return actualOffset.toPeriod.minus(standardOffset.toPeriod).normalized
+    val instant: Instant = Instant.of(instantProvider)
+    val standardOffset: ZoneOffset = getStandardOffset(instant)
+    val actualOffset: ZoneOffset = getOffset(instant)
+    actualOffset.toPeriod.minus(standardOffset.toPeriod).normalized
   }
 
   /**

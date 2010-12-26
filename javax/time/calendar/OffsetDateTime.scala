@@ -849,7 +849,8 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
    */
-  def get[T](rule: CalendricalRule[T]): Option[T] = Some(rule.deriveValueFor(rule, this, this))
+//  def get[T](rule: CalendricalRule[T]): Option[T] = Some(rule.deriveValueFor(rule, this, this, ISOChronology))  //FIXME
+  def get[T](rule: CalendricalRule[T]): Option[T] = None
 
   /**
    * Returns a copy of this OffsetDateTime with the day-of-year altered.

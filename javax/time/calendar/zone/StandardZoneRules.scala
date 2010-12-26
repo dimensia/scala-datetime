@@ -33,8 +33,7 @@ package javax.time.calendar.zone
 
 import java.io.DataInput
 import java.io.DataOutput
-import java.util.ArrayList
-import java.util.Arrays
+import java.util.Arrays //OK
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 import javax.time.Instant
@@ -43,7 +42,7 @@ import javax.time.calendar.LocalDateTime
 import javax.time.calendar.OffsetDateTime
 import javax.time.calendar.Year
 import javax.time.calendar.ZoneOffset
-import collection.mutable.Buffer
+import collection.mutable.{ArrayBuffer, Buffer}
 
 /**
  * The rules describing how the zone offset varies through the year and historically.
@@ -119,8 +118,8 @@ object StandardZoneRules {
             savingsInstantTransitions: Array[Long],
             wallOffsets: Array[ZoneOffset],
             lastRules: Array[ZoneOffsetTransitionRule]) = {
-    val localTransitionList: List[LocalDateTime] = new ArrayList[LocalDateTime]
-    var savingsLocalTransitions: Buffer[LocalDateTime] = Buffer()
+    val localTransitionList = new ArrayBuffer[LocalDateTime]
+    var savingsLocalTransitions = new ArrayBuffer[LocalDateTime]
 
     for (i <- 0 until savingsInstantTransitions.length) {
       val before: ZoneOffset = wallOffsets(i)
@@ -151,7 +150,7 @@ object StandardZoneRules {
  * @param lastRules the recurring last rules, size 15 or less, not null
  */
 @SerialVersionUID(1L)
-final class StandardZoneRules private(private val standardTransitions: Array[Long],
+final class StandardZoneRules private[zone](private val standardTransitions: Array[Long],
                                       private val standardOffsets: Array[ZoneOffset],
                                       private val savingsInstantTransitions: Array[Long],
                                       private val wallOffsets: Array[ZoneOffset],

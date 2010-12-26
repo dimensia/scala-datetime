@@ -32,11 +32,8 @@
 package javax.time.calendar.format
 
 import scala.util.control.Breaks._
-import java.util.ArrayList
-import java.util.HashMap
-import java.util.List
+import collection.mutable.{HashMap, ArrayBuffer}
 import java.util.Locale
-import java.util.Map
 import javax.time.calendar.Chronology
 import javax.time.calendar.DateTimeFieldRule
 import javax.time.calendar.ISOChronology
@@ -193,7 +190,7 @@ object DateTimeFormatterBuilder {
   }
 
   /**Map of letters to rules. */
-  private val RuleMap: Map[Char, DateTimeFieldRule[_]] = new HashMap[Char, DateTimeFieldRule[_]]
+  private val RuleMap = new HashMap[Char, DateTimeFieldRule[_]]
 
 }
 
@@ -545,7 +542,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
             throw new IllegalArgumentException("Fraction letter 'f' must be followed by valid fraction pattern: " + pattern)
           }
         }
-        var rule: DateTimeFieldRule[_] = RuleMap.get(cur)
+        var rule: DateTimeFieldRule[_] = RuleMap.getOrElse(cur, null)
         if (rule == null) {
           if (cur == 'z') {
             if (count < 4) {
@@ -572,9 +569,8 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
         pos -= 1;
       }
       else if (cur == '\'') {
-        var start: Int = ({
-          pos += 1;
-          pos
+        val start: Int = ({
+          pos += 1; pos
         })
         breakable{
           while (pos < pattern.length) {
@@ -1090,7 +1086,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
   /**
    * The list of printers that will be used.
    */
-  private val printers: List[DateTimePrinter] = new ArrayList[DateTimePrinter]
+  private val printers = new ArrayBuffer[DateTimePrinter]
 
   /**
    * The currently active builder, used by the outermost builder.
@@ -1113,8 +1109,8 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
       active.padNextWidth = 0
       active.padNextChar = 0
     }
-    active.printers.add(printer)
-    active.parsers.add(parser)
+    active.printers += printer
+    active.parsers += parser
     active.valueParserIndex = -1
     return active.printers.size - 1
   }
@@ -1147,7 +1143,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
   /**
    * The list of parsers that will be used.
    */
-  private val parsers: List[DateTimeParser] = new ArrayList[DateTimeParser]
+  private val parsers = new ArrayBuffer[DateTimeParser]
 
   /**
    * Appends a fixed width printer-parser.
@@ -1157,11 +1153,11 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    */
   private def appendFixedWidth(width: Int, pp: NumberPrinterParser): DateTimeFormatterBuilder = {
     if (active.valueParserIndex >= 0) {
-      var basePP: NumberPrinterParser = active.printers.get(active.valueParserIndex).asInstanceOf[NumberPrinterParser]
+      var basePP: NumberPrinterParser = active.printers(active.valueParserIndex).asInstanceOf[NumberPrinterParser]
       basePP = basePP.withSubsequentWidth(width)
       val activeValueParser: Int = active.valueParserIndex
-      active.printers.set(active.valueParserIndex, basePP)
-      active.parsers.set(active.valueParserIndex, basePP)
+      active.printers(active.valueParserIndex) = basePP
+      active.parsers(active.valueParserIndex) = basePP
       appendInternal(pp, pp)
       active.valueParserIndex = activeValueParser
     }

@@ -340,7 +340,8 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
     ISOChronology.checkNotNull(rule, "CalendricalRule must not be null")
     if (rule.equals(ISOChronology.monthOfYearRule)) return rule.reify(month)
     if (rule.equals(ISOChronology.dayOfMonthRule)) return rule.reify(day)
-    return Some(rule.deriveValueFor(rule, this, this, ISOChronology))
+//    return Some(rule.deriveValueFor(rule, this, this, ISOChronology))    //FIXME
+    None
   }
 
   /**

@@ -33,15 +33,13 @@ package javax.time.calendar
 
 import java.io.ObjectInputStream
 import java.io.StreamCorruptedException
-import java.util.Collections
-import java.util.HashMap
-import java.util.Map
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import javax.time.CalendricalException
 import javax.time.Instant
 import javax.time.calendar.zone.ZoneRules
 import javax.time.calendar.zone.ZoneRulesGroup
+import collection.immutable.HashMap
 
 /**
  * A time-zone representing the set of rules by which the zone offset
@@ -139,8 +137,8 @@ object TimeZone {
   def of(timeZoneIdentifier: String, aliasMap: Map[String, String]): TimeZone = {
     ISOChronology.checkNotNull(timeZoneIdentifier, "Time Zone ID must not be null")
     ISOChronology.checkNotNull(aliasMap, "Alias map must not be null")
-    var zoneId: String = aliasMap.get(timeZoneIdentifier)
-    zoneId = (if (zoneId != null) zoneId else timeZoneIdentifier)
+    val zoneId: String = aliasMap.getOrElse(timeZoneIdentifier, timeZoneIdentifier)
+    //zoneId = (if (zoneId != null) zoneId else timeZoneIdentifier)
     of(zoneId)
   }
 
@@ -165,7 +163,7 @@ object TimeZone {
   /**
    * The group:region#version ID pattern.
    */
-  private val Pattern: Pattern = Pattern.compile("(([A-Za-z0-9._-]+)[:])?([A-Za-z0-9%@~/+._-]+)([#]([A-Za-z0-9._-]+))?")
+  private val TZPattern: Pattern = Pattern.compile("(([A-Za-z0-9._-]+)[:])?([A-Za-z0-9%@~/+._-]+)([#]([A-Za-z0-9._-]+))?")
 
   /**
    * A map of zone overrides to enable the older US time-zone names to be used.
@@ -203,8 +201,7 @@ object TimeZone {
    * </ul>
    * The map is unmodifiable.
    */
-  var OldIDsPre2005: Map[String, String] = null
-  //FIXME: Should be val
+  var OldIDsPre2005: Map[String, String] = base ++ pre
 
   /**
    * A map of zone overrides to enable the older US time-zone names to be used.
@@ -242,46 +239,45 @@ object TimeZone {
    * </ul>
    * The map is unmodifiable.
    */
-  var OldIDsPost2005: Map[String, String] = null
-  //FIXME: should be val
+  var OldIDsPost2005: Map[String, String] = base ++ post
 
-  //FIXME!
-  var base: Map[String, String] = new HashMap[String, String]
-  base.put("ACT", "Australia/Darwin")
-  base.put("AET", "Australia/Sydney")
-  base.put("AGT", "America/Argentina/Buenos_Aires")
-  base.put("ART", "Africa/Cairo")
-  base.put("AST", "America/Anchorage")
-  base.put("BET", "America/Sao_Paulo")
-  base.put("BST", "Asia/Dhaka")
-  base.put("CAT", "Africa/Harare")
-  base.put("CNT", "America/St_Johns")
-  base.put("CST", "America/Chicago")
-  base.put("CTT", "Asia/Shanghai")
-  base.put("EAT", "Africa/Addis_Ababa")
-  base.put("ECT", "Europe/Paris")
-  base.put("IET", "America/Indiana/Indianapolis")
-  base.put("IST", "Asia/Kolkata")
-  base.put("JST", "Asia/Tokyo")
-  base.put("MIT", "Pacific/Apia")
-  base.put("NET", "Asia/Yerevan")
-  base.put("NST", "Pacific/Auckland")
-  base.put("PLT", "Asia/Karachi")
-  base.put("PNT", "America/Phoenix")
-  base.put("PRT", "America/Puerto_Rico")
-  base.put("PST", "America/Los_Angeles")
-  base.put("SST", "Pacific/Guadalcanal")
-  base.put("VST", "Asia/Ho_Chi_Minh")
-  var pre: Map[String, String] = new HashMap[String, String](base)
-  pre.put("EST", "America/Indianapolis")
-  pre.put("MST", "America/Phoenix")
-  pre.put("HST", "Pacific/Honolulu")
-  OldIDsPre2005 = Collections.unmodifiableMap(pre)
-  var post: Map[String, String] = new HashMap[String, String](base)
-  post.put("EST", "UTC-05:00")
-  post.put("MST", "UTC-07:00")
-  post.put("HST", "UTC-10:00")
-  OldIDsPost2005 = Collections.unmodifiableMap(post)
+  private val base = HashMap(
+    ("ACT", "Australia/Darwin"),
+    ("AET", "Australia/Sydney"),
+    ("AGT", "America/Argentina/Buenos_Aires"),
+    ("ART", "Africa/Cairo"),
+    ("AST", "America/Anchorage"),
+    ("BET", "America/Sao_Paulo"),
+    ("BST", "Asia/Dhaka"),
+    ("CAT", "Africa/Harare"),
+    ("CNT", "America/St_Johns"),
+    ("CST", "America/Chicago"),
+    ("CTT", "Asia/Shanghai"),
+    ("EAT", "Africa/Addis_Ababa"),
+    ("ECT", "Europe/Paris"),
+    ("IET", "America/Indiana/Indianapolis"),
+    ("IST", "Asia/Kolkata"),
+    ("JST", "Asia/Tokyo"),
+    ("MIT", "Pacific/Apia"),
+    ("NET", "Asia/Yerevan"),
+    ("NST", "Pacific/Auckland"),
+    ("PLT", "Asia/Karachi"),
+    ("PNT", "America/Phoenix"),
+    ("PRT", "America/Puerto_Rico"),
+    ("PST", "America/Los_Angeles"),
+    ("SST", "Pacific/Guadalcanal"),
+    ("VST", "Asia/Ho_Chi_Minh"))
+
+  private val pre = HashMap(
+    ("EST", "America/Indianapolis"),
+    ("MST", "America/Phoenix"),
+    ("HST", "Pacific/Honolulu"))
+
+  private val post = HashMap(
+    ("EST", "UTC-05:00"),
+    ("MST", "UTC-07:00"),
+    ("HST", "UTC-10:00")
+  )
 
   /**
    * The time-zone offset for UTC, with an id of 'UTC'.
@@ -527,7 +523,7 @@ object TimeZone {
         }
       }
     }
-    val matcher: Matcher = Pattern.matcher(zoneID)
+    val matcher: Matcher = TZPattern.matcher(zoneID)
     if (matcher.matches == false) {
       throw new CalendricalException("Invalid time-zone ID: " + zoneID)
     }

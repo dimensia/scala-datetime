@@ -31,12 +31,11 @@
  */
 package javax.time.calendar.format
 
-import java.util.ArrayList
-import java.util.HashMap
 import java.util.Locale
-import java.util.Map
-import java.util.Set
-import java.util.TreeMap
+
+import collection.mutable.{HashMap, ArrayBuffer}
+import collection.immutable.TreeMap
+
 import javax.time.calendar.CalendricalContext
 import javax.time.calendar.CalendricalMerger
 import javax.time.calendar.CalendricalRule
@@ -62,15 +61,15 @@ import javax.time.calendar.DateTimeFieldRule
 object DateTimeParseContext {
 
   private[format] class Parsed {
-    override def toString: String = new TreeMap[CalendricalRule[_], Any](values).toString
+    override def toString: String = (new TreeMap[CalendricalRule[_], Any]() ++ values).toString
 
     protected[format] override def clone: DateTimeParseContext.Parsed = {
       val cloned: DateTimeParseContext.Parsed = new DateTimeParseContext.Parsed
-      cloned.values.putAll(this.values)
+      cloned.values ++= this.values
       cloned
     }
 
-    private[format] val values: Map[CalendricalRule[_], Any] = new HashMap[CalendricalRule[_], Any]
+    private[format] val values = new HashMap[CalendricalRule[_], Any]
   }
 
 }
@@ -82,12 +81,12 @@ object DateTimeParseContext {
  */
 final class DateTimeParseContext(val symbols: DateTimeFormatSymbols) {
   DateTimeFormatter.checkNotNull(symbols, "DateTimeFormatSymbols must not be null")
-  calendricals.add(new DateTimeParseContext.Parsed)
+  calendricals += new DateTimeParseContext.Parsed
 
   /**
    * Whether to parse using strict rules.
    */
-  var strict: Boolean = true
+  private var strict: Boolean = true
 
   /**
    * Checks if parsing is strict.
@@ -103,7 +102,7 @@ final class DateTimeParseContext(val symbols: DateTimeFormatSymbols) {
    *
    * @param strict  changes the parsing to be strict or lenient from now on
    */
-  def setStrict: Unit = this.strict = strict;
+  def setStrict(implicit strict: Boolean = true): Unit = this.strict = strict;  //TODO implicit: is this what we want?
 
   /**
    * Gets the set of parsed rules.
@@ -112,7 +111,7 @@ final class DateTimeParseContext(val symbols: DateTimeFormatSymbols) {
    *
    * @return the set of rules previously parsed, never null
    */
-  def getParsedRules: Set[CalendricalRule[_]] = currentCalendrical.values.keySet
+  def getParsedRules = currentCalendrical.values.keySet
 
   /**
    * Whether to parse using case sensitively.
@@ -191,17 +190,17 @@ final class DateTimeParseContext(val symbols: DateTimeFormatSymbols) {
    *
    * @return the current calendrical, never null
    */
-  private def currentCalendrical: DateTimeParseContext.Parsed = calendricals.get(calendricals.size - 1)
+  private def currentCalendrical: DateTimeParseContext.Parsed = calendricals(calendricals.size - 1)
 
   /**
    * The list of parsed data.
    */
-  private val calendricals: ArrayList[DateTimeParseContext.Parsed] = new ArrayList[DateTimeParseContext.Parsed]
+  private val calendricals: ArrayBuffer[DateTimeParseContext.Parsed] = new ArrayBuffer[DateTimeParseContext.Parsed]
 
   /**
    * Starts the parsing of an optional segment of the input.
    */
-  def startOptional: Unit = calendricals.add(currentCalendrical.clone)
+  def startOptional: Unit = calendricals += currentCalendrical.clone
 
   /**
    * Sets the parsed value associated with the specified rule.

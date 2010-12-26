@@ -32,8 +32,6 @@
 package javax.time.calendar.format
 
 import scala.util.control.Breaks._
-import java.util.Arrays
-import java.util.List
 import javax.time.calendar.Calendrical
 
 /**
@@ -52,20 +50,20 @@ import javax.time.calendar.Calendrical
  * @param optional whether the print/parse is optional
  */
 
-final class CompositePrinterParser private[format](_printers: List[DateTimePrinter], _parsers: List[DateTimeParser], val optional: Boolean)
+final class CompositePrinterParser private[format](_printers: Seq[DateTimePrinter], _parsers: Seq[DateTimeParser], val optional: Boolean)
   extends DateTimePrinter with DateTimeParser {
-  this.printers = if (_printers.contains(null)) null else _printers.toArray(new Array[DateTimePrinter](_printers.size))
-  this.parsers = if (_parsers.contains(null)) null else _parsers.toArray(new Array[DateTimeParser](_parsers.size))
+  this.printers = if (_printers.contains(null)) null else _printers
+  this.parsers = if (_parsers.contains(null)) null else _parsers
 
   /**
    * The list of printers that will be used, treated as immutable.
    */
-  private var printers: Array[DateTimePrinter] = null
+  private var printers: Seq[DateTimePrinter] = null
 
   /**
    * The list of parsers that will be used, treated as immutable.
    */
-  private var parsers: Array[DateTimeParser] = null
+  private var parsers: Seq[DateTimeParser] = null
 
   /**
    * Returns a copy of this printer-parser with the optional flag changed.
@@ -75,7 +73,7 @@ final class CompositePrinterParser private[format](_printers: List[DateTimePrint
    */
   def withOptional(optional: Boolean): CompositePrinterParser = {
     if (optional == this.optional) this
-    else new CompositePrinterParser(Arrays.asList(printers: _*), Arrays.asList(parsers: _*), optional)
+    else new CompositePrinterParser(printers, parsers, optional)
   }
 
   /**{@inheritDoc}*/

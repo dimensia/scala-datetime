@@ -220,7 +220,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * @param merger the merger instance controlling the merge process, not null
    * @param value the value to interpret, not null
    */
-  private[calendar] final def interpretValue(merger: CalendricalMerger, value: AnyRef): T = {
+  private[calendar] final def interpretValue(merger: CalendricalMerger, value: Any): T = {
     if (reified.isInstance(value)) return reify(value).get
     val result: T = interpret(merger, value)
     if (result != null) return result
@@ -466,5 +466,5 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * @param value the value to interpret, null if unable to interpret the value
    * @return the interpreted value
    */
-  protected def interpret(merger: CalendricalMerger, value: AnyRef): T
+  protected def interpret(merger: CalendricalMerger, value: Any): T
 }

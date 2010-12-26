@@ -31,8 +31,6 @@
  */
 package javax.time.calendar.zone
 
-import java.util.Set
-
 /**
  * Provides access to a versioned set of time-zone rules from a single group.
  * <p>
