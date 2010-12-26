@@ -63,7 +63,7 @@ object PeriodUnit {
    * @param equivalentPeriod the period this is derived from, null if no equivalent
    * @return the list of equivalent periods, never null
    */
-  private[PeriodUnit] def buildEquivalentPeriods(equivalentPeriod: PeriodField): Seq[PeriodField] = {
+  private[calendar] def buildEquivalentPeriods(equivalentPeriod: PeriodField): Seq[PeriodField] = {
     if (equivalentPeriod == null) {
       List()
     } else {

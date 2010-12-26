@@ -171,7 +171,7 @@ final class ResourceZoneRulesDataProvider private(url: URL) extends ZoneRulesDat
       }
     }
     this.regions = HashSet[String](regionArray: _*)
-    var versionSet: MutableHashSet[ZoneRulesVersion] = new MutableHashSet[ZoneRulesVersion] /*(versionCount)*/ {
+    var versionSet: MutableHashSet[ZoneRulesVersion] = new MutableHashSet[ZoneRulesVersion] {
       var i: Int = 0
       while (i < versionCount) {
         var versionRegionCount: Int = dis.readShort

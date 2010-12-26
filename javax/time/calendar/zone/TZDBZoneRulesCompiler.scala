@@ -38,17 +38,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.FileReader
 import java.text.ParsePosition
-import java.util.ArrayList
 import java.util.Arrays
-import java.util.HashMap
-import java.util.HashSet
-import java.util.List
-import java.util.Map
-import java.util.Set
-import java.util.SortedMap
 import java.util.StringTokenizer
-import java.util.TreeMap
-import java.util.TreeSet
 import java.util.jar.JarOutputStream
 import java.util.zip.ZipEntry
 import javax.time.calendar.DateAdjusters
@@ -64,6 +55,9 @@ import javax.time.calendar.ZoneOffset
 import javax.time.calendar.format.DateTimeFormatter
 import javax.time.calendar.format.DateTimeParseContext
 import javax.time.calendar.zone.ZoneRulesBuilder.TimeDefinition
+import collection.immutable.TreeMap
+import collection.SortedMap
+import collection.mutable.{HashSet, HashMap, ArrayBuffer}
 
 /**
  * A builder that can read the TZDB TimeZone files and build ZoneRules instances.
@@ -100,8 +94,8 @@ object TZDBZoneRulesCompiler {
    * Outputs the file.
    */
   private def outputFile(dstFile: File, version: String, builtZones: SortedMap[String, ZoneRules]): Unit = {
-    val loopAllBuiltZones: Map[String, SortedMap[String, ZoneRules]] = new TreeMap[String, SortedMap[String, ZoneRules]]
-    loopAllBuiltZones.put(version, builtZones)
+    var loopAllBuiltZones: Map[String, SortedMap[String, ZoneRules]] = new TreeMap[String, SortedMap[String, ZoneRules]]
+    loopAllBuiltZones = loopAllBuiltZones.updated(version, builtZones)
     val loopAllRegionIds: Set[String] = new TreeSet[String](builtZones.keySet)
     val loopAllRules: Set[ZoneRules] = new HashSet[ZoneRules](builtZones.values)
     outputFile(dstFile, loopAllBuiltZones, loopAllRegionIds, loopAllRules)
@@ -117,17 +111,17 @@ object TZDBZoneRulesCompiler {
       var out: DataOutputStream = new DataOutputStream(jos)
       out.writeByte(1)
       out.writeUTF("TZDB")
-      var versionArray: Array[String] = allBuiltZones.keySet.toArray(new Array[String](allBuiltZones.size))
+      var versionArray: Array[String] = allBuiltZones.keySet.toArray
       out.writeShort(versionArray.length)
       for (version <- versionArray) {
         out.writeUTF(version)
       }
-      var regionArray: Array[String] = allRegionIds.toArray(new Array[String](allRegionIds.size))
+      var regionArray: Array[String] = allRegionIds.toArray
       out.writeShort(regionArray.length)
       for (regionId <- regionArray) {
         out.writeUTF(regionId)
       }
-      var rulesList: List[ZoneRules] = new ArrayList[ZoneRules](allRules)
+      var rulesList = new ArrayBuffer[ZoneRules](allRules)
       for (version <- allBuiltZones.keySet) {
         out.writeShort(allBuiltZones.get(version).size)
         for (entry <- allBuiltZones.get(version).entrySet) {
@@ -233,26 +227,26 @@ object TZDBZoneRulesCompiler {
       return
     }
     dstDir = (if (dstDir != null) dstDir else baseSrcDir)
-    var srcFileNames: List[String] = Arrays.asList(args.slice(i, args.length): _*)
+    var srcFileNames = ArrayBuffer(args.slice(i, args.length): _*)
     if (srcFileNames.isEmpty) {
       System.out.println("Source filenames not specified, using default set")
       System.out.println("(africa antarctica asia australasia backward etcetera europe northamerica southamerica)")
-      srcFileNames = Arrays.asList("africa", "antarctica", "asia", "australasia", "backward", "etcetera", "europe", "northamerica", "southamerica")
+      srcFileNames = ArrayBuffer("africa", "antarctica", "asia", "australasia", "backward", "etcetera", "europe", "northamerica", "southamerica")
     }
-    var srcDirs: List[File] = new ArrayList[File]
+    var srcDirs = new ArrayBuffer[File]
     if (version != null) {
       var srcDir: File = new File(baseSrcDir, version)
       if (srcDir.isDirectory == false) {
         System.out.println("Version does not represent a valid source directory : " + srcDir)
         return
       }
-      srcDirs.add(srcDir)
+      srcDirs += srcDir
     }
     else {
       var dirs: Array[File] = baseSrcDir.listFiles
       for (dir <- dirs) {
         if (dir.isDirectory && dir.getName.matches("[12][0-9][0-9][0-9][A-Za-z0-9._-]+")) {
-          srcDirs.add(dir)
+          srcDirs += dir
         }
       }
     }
@@ -275,13 +269,13 @@ object TZDBZoneRulesCompiler {
   /**
    * Process to create the jar files.
    */
-  private def process(srcDirs: List[File], srcFileNames: List[String], dstDir: File, verbose: Boolean): Unit = {
+  private def process(srcDirs: Seq[File], srcFileNames: Seq[String], dstDir: File, verbose: Boolean): Unit = {
     var deduplicateMap: Map[Any, Any] = new HashMap[Any, Any]
     var allBuiltZones: Map[String, SortedMap[String, ZoneRules]] = new TreeMap[String, SortedMap[String, ZoneRules]]
-    var allRegionIds: Set[String] = new TreeSet[String]
-    var allRules: Set[ZoneRules] = new HashSet[ZoneRules]
+    var allRegionIds = new TreeSet[String]
+    var allRules = new HashSet[ZoneRules]
     for (srcDir <- srcDirs) {
-      var srcFiles: List[File] = new ArrayList[File]
+      var srcFiles = new ArrayBuffer[File]
       for (srcFileName <- srcFileNames) {
         var file: File = new File(srcDir, srcFileName)
         if (file.exists) {
@@ -303,7 +297,7 @@ object TZDBZoneRulesCompiler {
         outputFile(dstFile, loopVersion, builtZones)
         allBuiltZones.put(loopVersion, builtZones)
         allRegionIds.addAll(builtZones.keySet)
-        allRules.addAll(builtZones.values)
+        allRules ++= builtZones.values
       }
       catch {
         case ex: Exception => {
@@ -436,10 +430,10 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
    * @return the deduplicated object
    */
   private[zone] def deduplicate[T](obj: T): T = {
-    if (deduplicateMap.containsKey(obj) == false) {
-      deduplicateMap.put(obj, obj)
+    if (deduplicateMap.contains(obj) == false) {
+      deduplicateMap(obj) = obj
     }
-    return deduplicateMap.get(obj).asInstanceOf[T]
+    deduplicateMap.get(obj).asInstanceOf[T]
   }
 
   private def parsePeriod(str: String): Period = {
@@ -454,8 +448,8 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
   private def parseRuleLine(st: StringTokenizer): Unit = {
     var rule: TZDBZoneRulesCompiler#TZDBRule = new TZDBRule
     var name: String = st.nextToken
-    if (rules.containsKey(name) == false) {
-      rules.put(name, new ArrayList[TZDBZoneRulesCompiler#TZDBRule])
+    if (rules.contains(name) == false) {
+      rules.put(name, new ArrayBuffer[TZDBZoneRulesCompiler#TZDBRule])
     }
     rules.get(name).add(rule)
     rule.startYear = parseYear(st.nextToken, 0)
@@ -507,7 +501,7 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
     for (zoneId <- zones.keySet) {
       printVerbose("Building zone " + zoneId)
       zoneId = deduplicate(zoneId)
-      var tzdbZones: List[TZDBZoneRulesCompiler#TZDBZone] = zones.get(zoneId)
+      var tzdbZones: ArrayBuffer[TZDBZoneRulesCompiler#TZDBZone] = zones.get(zoneId)
       var bld: ZoneRulesBuilder = new ZoneRulesBuilder
       for (tzdbZone <- tzdbZones) {
         bld = tzdbZone.addToBuilder(bld, rules)
@@ -556,7 +550,7 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
     var in: BufferedReader = null
     try {
       in = new BufferedReader(new FileReader(file))
-      var openZone: List[TZDBZoneRulesCompiler#TZDBZone] = null
+      var openZone: ArrayBuffer[TZDBZoneRulesCompiler#TZDBZone] = null
       while ((({
         line = in.readLine;
         line
@@ -583,7 +577,7 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
                   printVerbose("Invalid Zone line in file: " + file + ", line: " + line)
                   throw new IllegalArgumentException("Invalid Zone line")
                 }
-                openZone = new ArrayList[TZDBZoneRulesCompiler#TZDBZone]
+                openZone = new ArrayBuffer[TZDBZoneRulesCompiler#TZDBZone]
                 zones.put(st.nextToken, openZone)
                 if (parseZoneLine(st, openZone)) {
                   openZone = null
@@ -614,10 +608,7 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
             }
           }
         }
-        ({
-          lineNumber += 1;
-          lineNumber
-        })
+        lineNumber += 1;
       }
     }
     catch {
@@ -671,8 +662,8 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
    * @param st the tokenizer, not null
    * @return true if the zone is complete
    */
-  private def parseZoneLine(st: StringTokenizer, zoneList: List[TZDBZoneRulesCompiler#TZDBZone]): Boolean = {
-    var zone: TZDBZoneRulesCompiler#TZDBZone = new TZDBZone
+  private def parseZoneLine(st: StringTokenizer, zoneList: ArrayBuffer[TZDBZoneRulesCompiler#TZDBZone]): Boolean = {
+    val zone: TZDBZoneRulesCompiler#TZDBZone = new TZDBZone
     zoneList.add(zone)
     zone.standardOffset = parseOffset(st.nextToken)
     var savingsRule: String = parseOptional(st.nextToken)
@@ -706,8 +697,8 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
   }
 
   private def parseOffset(str: String): ZoneOffset = {
-    var secs: Int = parseSecs(str)
-    return ZoneOffset.ofTotalSeconds(secs)
+    val secs: Int = parseSecs(str)
+    ZoneOffset.ofTotalSeconds(secs)
   }
 
   private def matches(str: String, search: String): Boolean = {
@@ -739,7 +730,7 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
 
     private[zone] def adjustToFowards(year: Int): Unit = {
       if (adjustForwards == false && dayOfMonth > 0) {
-        var adjustedDate: LocalDate = LocalDate.of(year, month, dayOfMonth).minusDays(6)
+        val adjustedDate: LocalDate = LocalDate.of(year, month, dayOfMonth).minusDays(6)
         dayOfMonth = adjustedDate.getDayOfMonth
         month = adjustedDate.getMonthOfYear
         adjustForwards = true
@@ -753,7 +744,7 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
   }
 
   /**The TZDB zones. */
-  private val zones: Map[String, List[TZDBZoneRulesCompiler#TZDBZone]] = new HashMap[String, List[TZDBZoneRulesCompiler#TZDBZone]]
+  private val zones = new HashMap[String, ArrayBuffer[TZDBZoneRulesCompiler#TZDBZone]]
 
   /**
    * Class representing a linked set of zone lines in the TZDB file.
@@ -791,7 +782,7 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
     /**The text name of the zone. */
     private[zone] var text: String = null
 
-    private[zone] def addToBuilder(bld: ZoneRulesBuilder, rules: Map[String, List[TZDBZoneRulesCompiler#TZDBRule]]): ZoneRulesBuilder = {
+    private[zone] def addToBuilder(bld: ZoneRulesBuilder, rules: HashMap[String, ArrayBuffer[TZDBZoneRulesCompiler#TZDBRule]]): ZoneRulesBuilder = {
       if (year != null) {
         bld.addWindow(standardOffset, toDateTime(year.getValue), timeDefinition)
       }
@@ -802,10 +793,7 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
         bld.setFixedSavingsToWindow(fixedSavings)
       }
       else {
-        var tzdbRules: List[TZDBZoneRulesCompiler#TZDBRule] = rules.get(savingsRule)
-        if (tzdbRules == null) {
-          throw new IllegalArgumentException("Rule not found: " + savingsRule)
-        }
+        val tzdbRules: ArrayBuffer[TZDBZoneRulesCompiler#TZDBRule] = rules.getOrElse(savingsRule, throw new IllegalArgumentException("Rule not found: " + savingsRule))
         for (tzdbRule <- tzdbRules) {
           tzdbRule.addToBuilder(bld)
         }
@@ -826,5 +814,5 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
   private val builtZones: SortedMap[String, ZoneRules] = new TreeMap[String, ZoneRules]
 
   /**The TZDB rules. */
-  private val rules: Map[String, List[TZDBZoneRulesCompiler#TZDBRule]] = new HashMap[String, List[TZDBZoneRulesCompiler#TZDBRule]]
+  private val rules = new HashMap[String, ArrayBuffer[TZDBZoneRulesCompiler#TZDBRule]]
 }

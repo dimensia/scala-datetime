@@ -1,4 +1,4 @@
-My Scala Date&Time Experiment
+Scala Date&Time
 
 Goals: 
  - Perfect Scala integration (Pattern matching, case classes, implicits, builders & factories, 
@@ -11,8 +11,8 @@ Status:
    (mostly automatic, with quite some help from IntelliJ's "Convert Java to Scala" functionality).
  - All code is syntactically valid Scala code.
  - Overloaded methods were replaced by methods with default arguments.
- - java.io.Serializable was replaced by scala.Serializable
- - java.lang.Comparable was replaced by scala.math.Ordered
+ - java.io.Serializable was replaced by scala.Serializable.
+ - java.lang.Comparable was replaced by scala.math.Ordered.
  - Enums have been replaced by objects extending sealed/abstract classes. 
    Bug #4023 blocks further progress. 
  - Class hierarchy and naming has not yet been changed.
@@ -21,13 +21,13 @@ Status:
  - Usages of BigInteger/BigDecimal are replaced by BigInt/BigDecimal.
  - Some algorithms could need further cleanup.
  - Most instances of Java's "constructor arguments + field + getter" pattern are already replaced 
-   by class Foo(val bar: ...) or similiar
- - The code still uses Java collections instead of Scala collections
+   by class Foo(val bar: ...) or similiar.
+ - The code has a few places where Java collections instead of Scala collections are used.
  - A few places with "break" and "continue" need investigation to be replaced.
  - The Scala packages still have the "javax.time" namespace.
  - The code uses no implicits. These will be added in the future (think of "5.seconds" or "7.days"), 
    when things are a bit further down the road.
- - Methods returning something like "Integer (or null)" have been replaced by "Some[Int]".
+ - Methods returning something like "Integer (or null)" have been replaced by "Option[Int]".
  - There are some classes which do some "reification" magic. 
    These might be replaced by a simple Manifest.
  - ResourceZoneRulesDataProvider, StandardZoneRules, PeriodUnit and 
