@@ -243,7 +243,7 @@ object TZDBZoneRulesCompiler {
       srcDirs += srcDir
     }
     else {
-      var dirs: Array[File] = baseSrcDir.listFiles
+      val dirs: Array[File] = baseSrcDir.listFiles
       for (dir <- dirs) {
         if (dir.isDirectory && dir.getName.matches("[12][0-9][0-9][0-9][A-Za-z0-9._-]+")) {
           srcDirs += dir
@@ -279,7 +279,7 @@ object TZDBZoneRulesCompiler {
       for (srcFileName <- srcFileNames) {
         var file: File = new File(srcDir, srcFileName)
         if (file.exists) {
-          srcFiles.add(file)
+          srcFiles += file
         }
       }
       if (srcFiles.isEmpty) {
@@ -402,7 +402,7 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
           mdt.endOfDay = true
           secsOfDay = 0
         }
-        var time: LocalTime = deduplicate(LocalTime.ofSecondOfDay(secsOfDay))
+        val time: LocalTime = deduplicate(LocalTime.ofSecondOfDay(secsOfDay))
         mdt.time = time
         mdt.timeDefinition = parseTimeDefinition(timeStr.charAt(timeStr.length - 1))
       }
@@ -451,7 +451,7 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
     if (rules.contains(name) == false) {
       rules.put(name, new ArrayBuffer[TZDBZoneRulesCompiler#TZDBRule])
     }
-    rules.get(name).add(rule)
+    rules(name) += rule
     rule.startYear = parseYear(st.nextToken, 0)
     rule.endYear = parseYear(st.nextToken, rule.startYear)
     if (rule.startYear > rule.endYear) {
@@ -599,7 +599,7 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
                   }
                   var realId: String = st.nextToken
                   var aliasId: String = st.nextToken
-                  links.put(aliasId, realId)
+                  links(aliasId) = realId
                 }
                 else {
                   throw new IllegalArgumentException("Unknown line")
@@ -664,7 +664,7 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
    */
   private def parseZoneLine(st: StringTokenizer, zoneList: ArrayBuffer[TZDBZoneRulesCompiler#TZDBZone]): Boolean = {
     val zone: TZDBZoneRulesCompiler#TZDBZone = new TZDBZone
-    zoneList.add(zone)
+    zoneList += zone
     zone.standardOffset = parseOffset(st.nextToken)
     var savingsRule: String = parseOptional(st.nextToken)
     if (savingsRule == null) {

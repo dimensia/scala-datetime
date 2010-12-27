@@ -33,12 +33,10 @@ package javax.time.calendar
 
 import java.text.DateFormatSymbols
 import java.util.Calendar
-import java.util.EnumMap
-import java.util.HashMap
 import java.util.Locale
-import java.util.Map
 import javax.time.calendar.format.DateTimeFormatterBuilder.TextStyle
 import javax.time.{MathUtils, Duration}
+import collection.mutable.HashMap
 
 /**
  * The ISO-8601 calendar system, which follows the rules of the current
@@ -506,22 +504,22 @@ object ISOChronology extends ISOChronology {
 
     private def readResolve: AnyRef = MonthOfYearRule
 
-    protected def createTextStores(textStores: Map[TextStyle, DateTimeFieldRule.TextStore], locale: Locale): Unit = {
+    protected def createTextStores(textStores: HashMap[TextStyle, DateTimeFieldRule.TextStore], locale: Locale): Unit = {
       val oldSymbols: DateFormatSymbols = new DateFormatSymbols(locale)
       var array: Array[String] = oldSymbols.getMonths
-      val map: Map[Int, String] = new HashMap[Int, String]
-      map.put(1, array(Calendar.JANUARY))
-      map.put(2, array(Calendar.FEBRUARY))
-      map.put(3, array(Calendar.MARCH))
-      map.put(4, array(Calendar.APRIL))
-      map.put(5, array(Calendar.MAY))
-      map.put(6, array(Calendar.JUNE))
-      map.put(7, array(Calendar.JULY))
-      map.put(8, array(Calendar.AUGUST))
-      map.put(9, array(Calendar.SEPTEMBER))
-      map.put(10, array(Calendar.OCTOBER))
-      map.put(11, array(Calendar.NOVEMBER))
-      map.put(12, array(Calendar.DECEMBER))
+      val map = HashMap[Int, String](
+        (1, array(Calendar.JANUARY)),
+        (2, array(Calendar.FEBRUARY)),
+        (3, array(Calendar.MARCH)),
+        (4, array(Calendar.APRIL)),
+        (5, array(Calendar.MAY)),
+        (6, array(Calendar.JUNE)),
+        (7, array(Calendar.JULY)),
+        (8, array(Calendar.AUGUST)),
+        (9, array(Calendar.SEPTEMBER)),
+        (10, array(Calendar.OCTOBER)),
+        (11, array(Calendar.NOVEMBER)),
+        (12, array(Calendar.DECEMBER)))
       textStores.put(TextStyle.Full, new DateTimeFieldRule.TextStore(locale, map))
       array = oldSymbols.getShortMonths
       map.clear
@@ -539,6 +537,7 @@ object ISOChronology extends ISOChronology {
       map.put(12, array(Calendar.DECEMBER))
       textStores.put(TextStyle.Short, new DateTimeFieldRule.TextStore(locale, map))
     }
+
   }
 
   private val WeekOfMonthOrdinal: Int = 12 * 16
@@ -649,11 +648,6 @@ object ISOChronology extends ISOChronology {
   }
 
   /**
-   * The number of seconds in one day.
-   */
-  private[calendar] val SecondsPerDay: Int = 60 * 60 * 24
-
-  /**
    * Rule implementation.
    */
   private[calendar] object DayOfWeekRule extends DayOfWeekRule
@@ -664,27 +658,27 @@ object ISOChronology extends ISOChronology {
     with Serializable {
     override def convertIntToValue(value: Int): DayOfWeek = DayOfWeek.of(value)
 
-    protected def createTextStores(textStores: EnumMap[TextStyle, DateTimeFieldRule.TextStore], locale: Locale): Unit = {
+    protected def createTextStores(textStores: HashMap[TextStyle, DateTimeFieldRule.TextStore], locale: Locale): Unit = {
       val oldSymbols: DateFormatSymbols = new DateFormatSymbols(locale)
       var array: Array[String] = oldSymbols.getWeekdays
-      val map: Map[Int, String] = new HashMap[Int, String]
-      map.put(1, array(Calendar.MONDAY))
-      map.put(2, array(Calendar.TUESDAY))
-      map.put(3, array(Calendar.WEDNESDAY))
-      map.put(4, array(Calendar.THURSDAY))
-      map.put(5, array(Calendar.FRIDAY))
-      map.put(6, array(Calendar.SATURDAY))
-      map.put(7, array(Calendar.SUNDAY))
+      var map = new HashMap[Int, String](
+        (1, array(Calendar.MONDAY)),
+        (2, array(Calendar.TUESDAY)),
+        (3, array(Calendar.WEDNESDAY)),
+        (4, array(Calendar.THURSDAY)),
+        (5, array(Calendar.FRIDAY)),
+        (6, array(Calendar.SATURDAY)),
+        (7, array(Calendar.SUNDAY)))
       textStores.put(TextStyle.Full, new DateTimeFieldRule.TextStore(locale, map))
       array = oldSymbols.getShortWeekdays
-      map.clear
-      map.put(1, array(Calendar.MONDAY))
-      map.put(2, array(Calendar.TUESDAY))
-      map.put(3, array(Calendar.WEDNESDAY))
-      map.put(4, array(Calendar.THURSDAY))
-      map.put(5, array(Calendar.FRIDAY))
-      map.put(6, array(Calendar.SATURDAY))
-      map.put(7, array(Calendar.SUNDAY))
+      map = new HashMap[Int, String](
+        (1, array(Calendar.MONDAY)),
+        (2, array(Calendar.TUESDAY)),
+        (3, array(Calendar.WEDNESDAY)),
+        (4, array(Calendar.THURSDAY)),
+        (5, array(Calendar.FRIDAY)),
+        (6, array(Calendar.SATURDAY)),
+        (7, array(Calendar.SUNDAY)))
       textStores.put(TextStyle.Short, new DateTimeFieldRule.TextStore(locale, map))
     }
 
@@ -919,12 +913,12 @@ object ISOChronology extends ISOChronology {
 
     override def convertIntToValue(value: Int): AmPmOfDay = AmPmOfDay.of(value)
 
-    protected def createTextStores(textStores: Map[TextStyle, DateTimeFieldRule.TextStore], locale: Locale): Unit = {
+    protected def createTextStores(textStores: HashMap[TextStyle, DateTimeFieldRule.TextStore], locale: Locale): Unit = {
       val oldSymbols: DateFormatSymbols = new DateFormatSymbols(locale)
       val array: Array[String] = oldSymbols.getAmPmStrings
-      val map: Map[Int, String] = new HashMap[Int, String]
-      map.put(0, array(Calendar.AM))
-      map.put(1, array(Calendar.PM))
+      val map = HashMap[Int, String](
+        (0, array(Calendar.AM)),
+        (1, array(Calendar.PM)))
       val textStore: DateTimeFieldRule.TextStore = new DateTimeFieldRule.TextStore(locale, map)
       textStores.put(TextStyle.Full, textStore)
       textStores.put(TextStyle.Short, textStore)
@@ -1320,6 +1314,7 @@ object ISOChronology extends ISOChronology {
    * The start of months in a leap year.
    */
   private val LeapMonthStart: Array[Int] = Array[Int](0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335)
+
   /**
    * Gets the rule for the nano-of-day field.
    * <p>
@@ -1336,6 +1331,7 @@ object ISOChronology extends ISOChronology {
   private[calendar] val DaysPerCycle: Int = 146097
   private val MinuteOfHourRule: Rule = new Rule(MinuteOfHourOrdinal, "MinuteOfHour", Minutes, Hours, 0, 59, 59)
   private val HourOfAmPmRule: Rule = new Rule(HourOfAmPmOrdinal, "HourOfAmPm", Hours, _12Hours, 0, 11, 11)
+
   /**
    * Gets the rule for the epoch-days field.
    * <p>

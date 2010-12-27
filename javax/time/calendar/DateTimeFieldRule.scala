@@ -37,16 +37,11 @@ import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode
 import java.util.Arrays
-import java.util.Collections
-import java.util.EnumMap
-import java.util.HashMap
-import java.util.HashSet
-import java.util.Iterator
 import java.util.Locale
-import java.util.Map
-import java.util.Set
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.ConcurrentMap
+
+import collection.JavaConversions.JConcurrentMapWrapper
+import collection.mutable.{HashSet, HashMap}
 
 /**
  * The rule defining how a measurable field of time operates.
@@ -85,16 +80,16 @@ object DateTimeFieldRule {
   final class TextStore(locale: Locale, valueTextMap: Map[Int, String]) {
     ISOChronology.checkNotNull(locale, "Locale must not be null")
     ISOChronology.checkNotNull(valueTextMap, "Map must not be null")
-    if (valueTextMap.containsKey(null) || valueTextMap.containsValue(null) || valueTextMap.containsValue("")) {
+    if (valueTextMap.contains(null) || valueTextMap.valuesIterator.contains(null) || valueTextMap.valuesIterator.contains("")) {
       throw new IllegalArgumentException("The map must not contain null or empty text")
     }
-    val copy: Map[Int, String] = new HashMap[Int, String](valueTextMap)
-    var reverse: Map[String, Int] = new HashMap[String, Int]
-    var insensitive: Map[String, Int] = new HashMap[String, Int]
-    val lengthSet: Set[Int] = new HashSet[Int]
-    for (entry <- copy.entrySet) {
-      val text: String = entry.getValue
-      val value: Int = entry.getKey
+    val copy = new HashMap[Int, String](valueTextMap)
+    var reverse = new HashMap[String, Int]
+    var insensitive = new HashMap[String, Int]
+    val lengthSet = new HashSet[Int]
+    for (entry <- copy) {
+      val text: String = entry._2
+      val value: Int = entry._1
       reverse.put(text, value)
       lengthSet.add(text.length)
       val lower: String = text.toLowerCase(locale)
@@ -105,13 +100,13 @@ object DateTimeFieldRule {
       lengthSet.add(upper.length)
     }
     if (reverse.size < copy.size) {
-      this.textValueMap = Collections.emptyMap[String, Int]
-      this.insensitiveTextValueMap = Collections.emptyMap[String, Int]
+      this.textValueMap = Map[String, Int]()
+      this.insensitiveTextValueMap = Map[String, Int]()
       this.lengths = null
     }
     else {
-      textValueMap = Collections.unmodifiableMap(reverse)
-      insensitiveTextValueMap = Collections.unmodifiableMap(insensitive)
+      textValueMap = reverse.toMap
+      insensitiveTextValueMap = insensitive.toMap
       this.lengths = new Array[Int](lengthSet.size)
       var i: Int = 0
       val it: Iterator[Int] = lengthSet.iterator
@@ -123,7 +118,7 @@ object DateTimeFieldRule {
 
       Arrays.sort(lengths)
     }
-    this.valueTextMap = Collections.unmodifiableMap(copy)
+    this.valueTextMap = copy.toMap
 
     /**
      * Gets the locale that the text relates to.
@@ -167,9 +162,9 @@ object DateTimeFieldRule {
         {
           var i: Int = lengthsStart
           while (i >= 0) {
-            val value: Int = insensitiveTextValueMap.get(parseText.substring(0, lengths(i)))
-            if (value != null) {
-              return ((lengths(i).toLong) << 32) + value
+            insensitiveTextValueMap.get(parseText.substring(0, lengths(i))) match {
+              case Some(value) => return ((lengths(i).toLong) << 32) + value
+              case None =>
             }
             i -= 1;
           }
@@ -179,9 +174,9 @@ object DateTimeFieldRule {
         {
           var i: Int = lengthsStart
           while (i >= 0) {
-            val value: Int = insensitiveTextValueMap.get(parseText.substring(0, lengths(i)))
-            if (value != null) {
-              return ((lengths(i).toLong) << 32) + value
+            insensitiveTextValueMap.get(parseText.substring(0, lengths(i))) match {
+              case Some(value) => return ((lengths(i).toLong) << 32) + value
+              case None =>
             }
             i -= 1;
           }
@@ -191,9 +186,9 @@ object DateTimeFieldRule {
         {
           var i: Int = lengthsStart
           while (i >= 0) {
-            val value: Int = textValueMap.get(parseText.substring(0, lengths(i)))
-            if (value != null) {
-              return ((lengths(i).toLong) << 32) + value
+            textValueMap.get(parseText.substring(0, lengths(i))) match {
+              case Some(value) => return ((lengths(i).toLong) << 32) + value
+              case None =>
             }
             i -= 1;
           }
@@ -464,17 +459,17 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
     if (textStores == null) {
       return null
     }
-    val ref: SoftReference[EnumMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore]] = textStores.get(locale)
+    val ref: SoftReference[HashMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore]] = textStores.get(locale)
     if (ref != null) {
-      val textMapByStyle: EnumMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore] = ref.get
+      val textMapByStyle: HashMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore] = ref.get
       if (textMapByStyle != null) {
         return textMapByStyle.get(textStyle)
       }
     }
-    var textStoreByStyle: EnumMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore] = new EnumMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore](classOf[DateTimeFormatterBuilder.TextStyle])
+    var textStoreByStyle = new HashMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore](classOf[DateTimeFormatterBuilder.TextStyle])
     createTextStores(textStoreByStyle, locale)
-    textStoreByStyle = new EnumMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore](textStoreByStyle)
-    textStores.put(locale, new SoftReference[Map[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore]](textStoreByStyle))
+    textStoreByStyle = new HashMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore](textStoreByStyle)
+    textStores.put(locale, new SoftReference[HashMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore]](textStoreByStyle))
     return textStoreByStyle.get(textStyle)
   }
 
@@ -559,12 +554,11 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * @param textStores the map to populate with TextStore instances, not null
    * @param locale the locale to use, not null
    */
-  protected def createTextStores(textStores: EnumMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore], locale: Locale): Unit = {}
+  protected def createTextStores(textStores: HashMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore], locale: Locale): Unit = {}
 
   /**The cached text for this rule. */
   @transient
-  private lazy val textStores: ConcurrentMap[Locale, SoftReference[Map[Any, Any]]] =
-    (if (hasText) new ConcurrentHashMap[Locale, SoftReference[Map[Any, Any]]] else null)
+  private lazy val textStores = (if (hasText) JConcurrentMapWrapper(new ConcurrentHashMap[Locale, SoftReference[collection.mutable.Map[Any, Any]]]) else null)
 
   /**
    * Converts the {@code int} to a typed value of the rule.
