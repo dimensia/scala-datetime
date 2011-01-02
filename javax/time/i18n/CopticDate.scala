@@ -420,10 +420,7 @@ final class CopticDate private(val epochDays: Int, @transient year: Int, @transi
     newMonth0 = newMonth0 % 13
     if (newMonth0 < 0) {
       newMonth0 += 13
-      ({
-        years -= 1;
-        years
-      })
+      years -= 1;
     }
     val newYear: Int = getYear + years
     val newDay: Int = getDayOfMonth

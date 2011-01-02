@@ -96,7 +96,7 @@ object AmPmOfDay {
   def apply(amPmOfDay: Int): AmPmOfDay = of(amPmOfDay)
 }
 
-sealed abstract class AmPmOfDay(ordinal: Int) extends Calendrical {
+sealed abstract case class AmPmOfDay(ordinal: Int) extends Calendrical {
   /**
    * Gets the value of the specified calendrical rule.
    * <p>

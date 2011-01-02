@@ -76,14 +76,16 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
    * Removes any field from the processing map that can be derived from another field.
    */
   private def removeDerivable: Unit = {
-    val it: Iterator[CalendricalRule[_]] = processingMap.keySet.iterator
-
-    while (it.hasNext) {
-      val derivedValue: AnyRef = it.next.derive(this)
-      if (derivedValue != null) {
-        it.remove
-      }
-    }
+    val derivableValues = processingMap.filter({case (k,v) => k.derive(this) != None})
+    processingMap = processingMap -- derivableValues
+//    val it: Iterator[CalendricalRule[_]] = processingMap.keySet.iterator
+//
+//    while (it.hasNext) {
+//      val derivedValue: AnyRef = it.next.derive(this)
+//      if (derivedValue != null) {
+//        it.remove
+//      }
+//    }
   }
 
   /**
@@ -253,7 +255,7 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
    * The map of in range data to be merged, never null.
    * This is a concurrent hash map mainly to gain the no-nulls implementation.
    */
-  private val processingMap = collection.JavaConversions.JConcurrentMapWrapper(new ConcurrentHashMap[CalendricalRule[_], Any])
+  private var processingMap = collection.JavaConversions.JConcurrentMapWrapper(new ConcurrentHashMap[CalendricalRule[_], Any])
 
   /**
    * Gets the value of the specified calendrical rule from the merged result.

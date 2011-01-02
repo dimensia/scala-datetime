@@ -52,14 +52,14 @@ import javax.time.TimeSource
  * Instead, they should pass a {@code Clock} into any method that requires it.
  * A dependency injection framework is one way to achieve this:
  * <pre>
- * public class MyBean    {
+ * public class MyBean {
  *   private Clock clock;  // dependency inject
  *   ...
- *   public void process(LocalDate eventDate)    {
- *     if (eventDate.isBefore(clock.today())    {
+ *   public void process(LocalDate eventDate) {
+ *     if (eventDate.isBefore(clock.today()) {
  *       ...
- * }
- * }
+ *     }
+ *   }
  * }
  * </pre>
  * This approach allows alternate time-source implementations, such as

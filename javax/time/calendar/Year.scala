@@ -149,7 +149,7 @@ object Year {
  * @param year the year to represent
  */
 @SerialVersionUID(1L)
-final class Year private(val year: Int) extends Calendrical with Ordered[Year] with Serializable with DateAdjuster with CalendricalMatcher {
+case class Year private(year: Int) extends Calendrical with Ordered[Year] with Serializable with DateAdjuster with CalendricalMatcher {
 
   import Year._
 
@@ -240,18 +240,6 @@ final class Year private(val year: Int) extends Calendrical with Ordered[Year] w
    * @return the length of this year in days, 365 or 366
    */
   def lengthInDays: Int = if (isLeap) 366 else 365
-
-  /**
-   * Is this year equal to the specified year.
-   *
-   * @param other the other year to compare to, null returns false
-   * @return true if this point is equal to the specified year
-   */
-  override def equals(other: AnyRef): Boolean = {
-    if (this eq other) true
-    else if (other.isInstanceOf[Year]) year == (other.asInstanceOf[Year]).year
-    else false
-  }
 
   /**
    * Returns the previous leap year before the current year.

@@ -116,6 +116,8 @@ object UTCInstant {
    */
   def of(taiInstant: TAIInstant): UTCInstant = of(taiInstant, UTCRules.system)
 
+  def apply(taiInstant: TAIInstant) = of(taiInstant)
+
   /**
    * Obtains an instance of {@code UTCInstant} from a TAI instant
    * using the specified leap second rules.
@@ -129,6 +131,41 @@ object UTCInstant {
    * @return the UTC instant, never null
    */
   def of(taiInstant: TAIInstant, rules: UTCRules): UTCInstant = rules.convertToUTC(taiInstant)
+
+  def apply(taiInstant: TAIInstant, rules: UTCRules) = of(taiInstant, rules)
+
+  /**
+   * Obtains an instance of {@code UTCInstant} from a provider of instants
+   * using the system default leap second rules.
+   * <p>
+   * This method converts from the UTC-SLS to the UTC time-scale using the
+   * system default leap-second rules. This conversion will lose information
+   * around a leap second in accordance with UTC-SLS.
+   * Converting back to an {@code Instant} may result in a slightly different instant.
+   *
+   * @param instant the instant to convert, not null
+   * @return the UTC instant, never null
+   */
+  def of(instant: Instant): UTCInstant = of(instant, UTCRules.system)
+
+  def apply(instant: Instant) = of(instant)
+
+  /**
+   * Obtains an instance of {@code UTCInstant} from a provider of instants
+   * using the specified leap second rules.
+   * <p>
+   * This method converts from the UTC-SLS to the UTC time-scale using the
+   * specified leap-second rules. This conversion will lose information
+   * around a leap second in accordance with UTC-SLS.
+   * Converting back to an {@code Instant} may result in a slightly different instant.
+   *
+   * @param instant the instant to convert, not null
+   * @param rules the leap second rules, not null
+   * @return the UTC instant, never null
+   */
+  def of(instant: Instant, rules: UTCRules): UTCInstant = rules.convertToUTC(instant)
+
+  def apply(instant: Instant, rules: UTCRules) = of(instant, rules)
 
   /**
    * Obtains an instance of {@code UTCInstant} from a Modified Julian Day with
@@ -159,35 +196,6 @@ object UTCInstant {
   }
 
   /**
-   * Obtains an instance of {@code UTCInstant} from a provider of instants
-   * using the system default leap second rules.
-   * <p>
-   * This method converts from the UTC-SLS to the UTC time-scale using the
-   * system default leap-second rules. This conversion will lose information
-   * around a leap second in accordance with UTC-SLS.
-   * Converting back to an {@code Instant} may result in a slightly different instant.
-   *
-   * @param instant the instant to convert, not null
-   * @return the UTC instant, never null
-   */
-  def of(instant: Instant): UTCInstant = of(instant, UTCRules.system)
-
-  /**
-   * Obtains an instance of {@code UTCInstant} from a provider of instants
-   * using the specified leap second rules.
-   * <p>
-   * This method converts from the UTC-SLS to the UTC time-scale using the
-   * specified leap-second rules. This conversion will lose information
-   * around a leap second in accordance with UTC-SLS.
-   * Converting back to an {@code Instant} may result in a slightly different instant.
-   *
-   * @param instant the instant to convert, not null
-   * @param rules the leap second rules, not null
-   * @return the UTC instant, never null
-   */
-  def of(instant: Instant, rules: UTCRules): UTCInstant = rules.convertToUTC(instant)
-
-  /**
    * Obtains an instance of {@code UTCInstant} from a Modified Julian Day with
    * a nanosecond fraction of second using the system default leap second rules.
    * <p>
@@ -205,8 +213,7 @@ object UTCInstant {
    * @return the UTC instant, never null
    * @throws IllegalArgumentException if nanoOfDay is out of range
    */
-  def ofModifiedJulianDays(mjDay: Long, nanoOfDay: Long): UTCInstant =
-    ofModifiedJulianDays(mjDay, nanoOfDay, UTCRules.system)
+  def ofModifiedJulianDays(mjDay: Long, nanoOfDay: Long): UTCInstant = ofModifiedJulianDays(mjDay, nanoOfDay, UTCRules.system)
 }
 
 
@@ -219,7 +226,7 @@ object UTCInstant {
  */
 
 @SerialVersionUID(1L)
-final case class UTCInstant(mjDay: Long, nanos: Long, rules: UTCRules) extends Ordered[UTCInstant] {
+final case class UTCInstant private(mjDay: Long, nanos: Long, rules: UTCRules) extends Ordered[UTCInstant] {
 
   /**
    * Compares this instant to another based on the time-line, then the name

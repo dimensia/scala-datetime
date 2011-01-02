@@ -31,10 +31,9 @@
  */
 package javax.time.calendar
 
-import javax.time.Instant
-import javax.time.MathUtils
 import javax.time.calendar.format.DateTimeFormatter
 import javax.time.calendar.format.DateTimeFormatters
+import javax.time.{Duration, Instant, MathUtils}
 
 /**
  * A date-time without a time-zone in the ISO-8601 calendar system,
@@ -328,10 +327,7 @@ object LocalDateTime {
     }
 
     protected override def derive(calendrical: Calendrical): Option[LocalDateTime] =
-      calendrical.get(OffsetDateTime.rule) match {
-        case Some(odt) => Some(odt.toLocalDateTime)
-        case None => None
-      }
+      calendrical.get(OffsetDateTime.rule).map(_.toLocalDateTime)
   }
 
   /**
@@ -457,7 +453,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @return a {@code LocalDateTime} based on this date-time with the months subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def minusMonths(months: Int, dateResolver: DateResolver): LocalDateTime = {
+  def minusMonths(months: Long, dateResolver: DateResolver): LocalDateTime = {
     val newDate: LocalDate = date.minusMonths(months, dateResolver)
     `with`(newDate, time)
   }
@@ -500,16 +496,16 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * invalid date 2009-02-29 (standard year). Instead of returning an invalid
    * result, the last valid day of the month, 2009-02-28, is selected instead.
    * <p>
-   * This method does the same as {@code plusYears ( years, DateResolvers.previousValid ( ) )}.
+   * This method does the same as {@code plusYears(years, DateResolvers.previousValid())}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param years the years to add, may be negative
    * @return a {@code LocalDateTime} based on this date-time with the period added, never null
    * @throws CalendricalException if the result exceeds the supported date range
-   * @see# p l u s Y e a r s ( int, javax.time.calendar.DateResolver )
+   * @see# p l u s Y e a r s ( l o n g, j a v a x.t i m e.c a l e n d a r.D a t e R e s o l v e r )
    */
-  def plusYears(years: Int): LocalDateTime = {
+  def plusYears(years: Long): LocalDateTime = {
     val newDate: LocalDate = date.plusYears(years)
     `with`(newDate, time)
   }
@@ -624,7 +620,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @return a {@code LocalDateTime} based on this date-time with the weeks added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def plusWeeks(weeks: Int): LocalDateTime = {
+  def plusWeeks(weeks: Long): LocalDateTime = {
     val newDate: LocalDate = date.plusWeeks(weeks)
     `with`(newDate, time)
   }
@@ -839,7 +835,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @return a {@code LocalDateTime} based on this date-time with the minutes added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def plusMinutes(minutes: Int): LocalDateTime = {
+  def plusMinutes(minutes: Long): LocalDateTime = {
     val overflow: LocalTime.Overflow = time.plusWithOverflow(0, minutes, 0, 0)
     val newDate: LocalDate = date.plusDays(overflow.getOverflowDays)
     `with`(newDate, overflow.getResultTime)
@@ -878,7 +874,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @return a {@code LocalDateTime} based on this date-time with the hours added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def plusHours(hours: Int): LocalDateTime = {
+  def plusHours(hours: Long): LocalDateTime = {
     val overflow: LocalTime.Overflow = time.plusWithOverflow(hours, 0, 0, 0)
     val newDate: LocalDate = date.plusDays(overflow.getOverflowDays)
     `with`(newDate, overflow.getResultTime)
@@ -907,6 +903,25 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   }
 
   /**
+   * Returns a copy of this {@code LocalDateTime} with the specified duration subtracted.
+   * <p>
+   * This subtracts the specified duration from this date-time, returning a new date-time.
+   * <p>
+   * The calculation is equivalent to using {@link #minusSeconds(long)} and
+   * {@link #minusNanos(long)} on the two parts of the duration.
+   * <p>
+   * This instance is immutable and unaffected by this method call.
+   *
+   * @param duration  the duration to subtract, not null
+   * @return a {@code LocalDateTime} based on this date-time with the duration subtracted, never null
+   * @throws CalendricalException if the result exceeds the supported date range
+   */
+  def minus(duration: Duration): LocalDateTime = minusSeconds(duration.getSeconds).minusNanos(duration.getNanoOfSecond)
+
+  def -(duration: Duration): LocalDateTime = minus(duration)
+
+
+  /**
    * Returns a copy of this {@code LocalDateTime} with the specified period in years added.
    * <p>
    * This method add the specified amount to the years field in three steps:
@@ -923,7 +938,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @return a {@code LocalDateTime} based on this date-time with the years added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def plusYears(years: Int, dateResolver: DateResolver): LocalDateTime = {
+  def plusYears(years: Long, dateResolver: DateResolver): LocalDateTime = {
     val newDate: LocalDate = date.plusYears(years, dateResolver)
     `with`(newDate, time)
   }
@@ -1049,6 +1064,24 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   def +(periodProvider: PeriodProvider): LocalDateTime = plus(periodProvider)
 
   /**
+   * Returns a copy of this {@code LocalDateTime} with the specified duration added.
+   * <p>
+   * This adds the specified duration to this date-time, returning a new date-time.
+   * <p>
+   * The calculation is equivalent to using {@link #plusSeconds(long)} and
+   * {@link #plusNanos(long)} on the two parts of the duration.
+   * <p>
+   * This instance is immutable and unaffected by this method call.
+   *
+   * @param duration  the duration to add, not null
+   * @return a {@code LocalDateTime} based on this date-time with the duration added, never null
+   * @throws CalendricalException if the result exceeds the supported date range
+   */
+  def plus(duration: Duration): LocalDateTime = plusSeconds(duration.getSeconds).plusNanos(duration.getNanoOfSecond)
+
+  def +(duration: Duration) = plus(duration)
+
+  /**
    * Returns a copy of this {@code LocalDateTime} with the second-of-minute value altered.
    * <p>
    * This instance is immutable and unaffected by this method call.
@@ -1071,7 +1104,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @return a {@code LocalDateTime} based on this date-time with the seconds added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def plusSeconds(seconds: Int): LocalDateTime = {
+  def plusSeconds(seconds: Long): LocalDateTime = {
     val overflow: LocalTime.Overflow = time.plusWithOverflow(0, 0, seconds, 0)
     val newDate: LocalDate = date.plusDays(overflow.getOverflowDays)
     `with`(newDate, overflow.getResultTime)
@@ -1150,7 +1183,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @return a {@code LocalDateTime} based on this date-time with the seconds subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def minusSeconds(seconds: Int): LocalDateTime = {
+  def minusSeconds(seconds: Long): LocalDateTime = {
     val overflow: LocalTime.Overflow = time.minusWithOverflow(0, 0, seconds, 0)
     val newDate: LocalDate = date.plusDays(overflow.getOverflowDays)
     `with`(newDate, overflow.getResultTime)
@@ -1384,7 +1417,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @return a {@code LocalDateTime} based on this date-time with the minutes subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def minusMinutes(minutes: Int): LocalDateTime = {
+  def minusMinutes(minutes: Long): LocalDateTime = {
     val overflow: LocalTime.Overflow = time.minusWithOverflow(0, minutes, 0, 0)
     val newDate: LocalDate = date.plusDays(overflow.getOverflowDays)
     `with`(newDate, overflow.getResultTime)
@@ -1569,9 +1602,9 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @param months the months to subtract, may be negative
    * @return a {@code LocalDateTime} based on this date-time with the months subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
-   * @see# m i n u s M o n t h s ( int, javax.time.calendar.DateResolver )
+   * @see# m i n u s M o n t h s ( l o n g, javax.time.calendar.DateResolver)
    */
-  def minusMonths(months: Int): LocalDateTime = {
+  def minusMonths(months: Long): LocalDateTime = {
     val newDate: LocalDate = date.minusMonths(months)
     `with`(newDate, time)
   }

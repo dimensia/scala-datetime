@@ -86,18 +86,18 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
   /**
    * Derives the value of this rule from a calendrical.
    * <p>
-   * This method is provided for implementations of {@link Calendrical#get }
+   * This method is provided for implementations of {@link Calendrical#get}
    * and is rarely called directly by application code. It is used when the
    * calendrical has its own values but does not have its own rule.
    * <pre>
-   *   public <T> T get(CalendricalRule<T> rule)   {
+   *   public <T> T get(CalendricalRule<T> rule) {
    *     // return data, for example
-   *     if (rule.equals(...))   {
+   *     if (rule.equals(...)) {
    *       return valueForRule;
-   * }
+   *     }
    *     // call this method
    *     return rule.deriveValueFrom(this);
-   * }
+   *   }
    * </pre>
    *
    * @param calendrical the calendrical to get the value from, not null

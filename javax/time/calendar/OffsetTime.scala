@@ -121,12 +121,7 @@ object OffsetTime {
     extends CalendricalRule[OffsetTime](classOf[OffsetTime], ISOChronology, "OffsetTime", ISOChronology.periodNanos, ISOChronology.periodDays)
     with Serializable {
 
-    protected override def derive(calendrical: Calendrical): Option[OffsetTime] = {
-      calendrical.get(OffsetDateTime.rule) match {
-        case Some(odt) => Some(odt.toOffsetTime)
-        case None => None
-      }
-    }
+    protected override def derive(calendrical: Calendrical): Option[OffsetTime] =       calendrical.get(OffsetDateTime.rule).map(_.toOffsetTime)
 
     private def readResolve: AnyRef = Rule
   }

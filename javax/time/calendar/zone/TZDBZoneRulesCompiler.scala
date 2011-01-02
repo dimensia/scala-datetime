@@ -410,7 +410,7 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
   }
 
   /**A map to deduplicate object instances. */
-  private var deduplicateMap: Map[Any, Any] = new HashMap[Any, Any]
+  private var deduplicateMap = new HashMap[Any, Any]
   /**
    * Parses the source files.
    * @throws Exception if an error occurs
@@ -489,7 +489,7 @@ final class TZDBZoneRulesCompiler(version: String, sourceFiles: List[File], verb
   /**
    * Sets the deduplication map.
    */
-  private[zone] def setDeduplicateMap(deduplicateMap: Map[Any, Any]): Unit = {
+  private[zone] def setDeduplicateMap(deduplicateMap: HashMap[Any, Any]): Unit = {
     this.deduplicateMap = deduplicateMap
   }
 

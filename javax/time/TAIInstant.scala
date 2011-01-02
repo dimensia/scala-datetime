@@ -52,7 +52,7 @@ import util.matching.Regex
  * <p>
  * The duration between two points on the TAI time-scale is calculated solely using this class.
  * Do not use the {@code between} method on {@code Duration} as that will lose information.
- * Instead use {@link #durationUntil ( TAIInstant )} on this class.
+ * Instead use {@link #durationUntil (TAIInstant)} on this class.
  * <p>
  * It is intended that most applications will use the {@code Instant} class
  * which uses the UTC-SLS mapping from UTC to guarantee 86400 seconds per day.

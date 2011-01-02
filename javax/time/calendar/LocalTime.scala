@@ -31,11 +31,9 @@
  */
 package javax.time.calendar
 
-import javax.time.CalendricalException
-import javax.time.Instant
-import javax.time.MathUtils
 import javax.time.calendar.format.DateTimeFormatter
 import javax.time.calendar.format.DateTimeFormatters
+import javax.time.{Duration, CalendricalException, Instant, MathUtils}
 
 /**
  * A time without time-zone in the ISO-8601 calendar system,
@@ -156,9 +154,9 @@ object LocalTime {
    */
   def of(hourOfDay: Int, minuteOfHour: Int = 0, secondOfMinute: Int = 0, nanoOfSecond: Int = 0): LocalTime = {
     ISOChronology.hourOfDayRule.checkValue(hourOfDay)
-    if(minuteOfHour != 0) ISOChronology.minuteOfHourRule.checkValue(minuteOfHour)
-    if(secondOfMinute != 0) ISOChronology.secondOfMinuteRule.checkValue(secondOfMinute)
-    if(nanoOfSecond != 0) ISOChronology.nanoOfSecondRule.checkValue(nanoOfSecond)
+    if (minuteOfHour != 0) ISOChronology.minuteOfHourRule.checkValue(minuteOfHour)
+    if (secondOfMinute != 0) ISOChronology.secondOfMinuteRule.checkValue(secondOfMinute)
+    if (nanoOfSecond != 0) ISOChronology.nanoOfSecondRule.checkValue(nanoOfSecond)
     return create(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
   }
 
@@ -348,7 +346,7 @@ object LocalTime {
    * @param time the {@code LocalTime} after the addition, not null
    * @param days the overflow in days
    */
-  final class Overflow private[LocalTime](val time: LocalTime, val days: Int) {
+  final class Overflow private[LocalTime](val time: LocalTime, val days: Long) {
     /**
      * Returns a string description of this instance.
      *
@@ -376,14 +374,14 @@ object LocalTime {
      *
      * @return the hash code
      */
-    override def hashCode: Int = time.hashCode + days
+    override def hashCode: Int = time.hashCode + (days ^ (days >>> 32)).toInt
 
     /**
      * Gets the days overflowing from the calculation.
      *
      * @return the overflow days
      */
-    def getOverflowDays: Int = days
+    def getOverflowDays: Long = days
 
     /**
      * Gets the time that was the result of the calculation.
@@ -709,9 +707,10 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    * Returns a copy of this {@code LocalTime} with the specified period added.
    * <p>
    * This adds the specified period to this time, returning a new time.
-   * Before addition, the period is converted to a time-based {@code Period} using
-   * {@link Period#ofTimeFields ( PeriodProvider )}.
-   * That factory ignores any date-based ISO fields, thus adding a date-based
+   * The calculation wraps around midnight and ignores any date-based ISO fields.
+   * <p>
+   * The period is interpreted using rules equivalent to {@link Period#ofTimeFields(PeriodProvider)}.
+   * Those rules ignore any date-based ISO fields, thus adding a date-based
    * period to this time will have no effect.
    * <p>
    * This instance is immutable and unaffected by this method call.
@@ -785,6 +784,25 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
       create(newHour, minute, second, nano)
     }
   }
+
+  /**
+   * Returns a copy of this {@code LocalTime} with the specified duration added.
+   * <p>
+   * This adds the specified duration to this time, returning a new time.
+   * The calculation wraps around midnight.
+   * <p>
+   * The calculation is equivalent to using {@link #plusSeconds(long)} and
+   * {@link #plusNanos(long)} on the two parts of the duration.
+   * <p>
+   * This instance is immutable and unaffected by this method call.
+   *
+   * @param duration  the duration to add, not null
+   * @return a {@code LocalTime} based on this time with the duration added, never null
+   */
+  def plus(duration: Duration): LocalTime = plusSeconds(duration.getSeconds).plusNanos(duration.getNanoOfSecond)
+
+  def +(duration: Duration) = plus(duration)
+
 
   /**
    * Returns a copy of this {@code LocalTime} with the second-of-minute value altered.

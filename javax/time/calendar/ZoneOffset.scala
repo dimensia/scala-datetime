@@ -241,17 +241,17 @@ object ZoneOffset {
     protected override def derive(calendrical: Calendrical): Option[ZoneOffset] = {
       calendrical.get(OffsetDateTime.rule) match {
         case Some(odt) => return Some(odt.getOffset)
-        case None => None
+        case None =>
       }
 
       calendrical.get(OffsetDate.rule) match {
         case Some(od) => return Some(od.getOffset)
-        case None => None
+        case None =>
       }
 
       calendrical.get(OffsetTime.rule) match {
         case Some(ot) => return Some(ot.getOffset)
-        case None => None
+        case None =>
       }
 
       return None

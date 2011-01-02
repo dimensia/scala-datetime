@@ -216,7 +216,7 @@ object Period {
       return Zero
     }
     val hours: Int = MathUtils.safeToInt(duration.getSeconds / 3600)
-    val amount: Int = (duration.getSeconds.toInt % 3600)
+    val amount: Int = (duration.getSeconds % 3600L).toInt
     return new Period(0, 0, 0, hours, amount / 60, amount % 60, duration.getNanoOfSecond)
   }
 

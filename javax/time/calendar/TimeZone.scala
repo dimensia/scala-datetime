@@ -33,8 +33,11 @@ package javax.time.calendar
 
 import java.io.ObjectInputStream
 import java.io.StreamCorruptedException
-import java.util.regex.Matcher
-import java.util.regex.Pattern
+import util.matching.Regex
+
+//import java.util.regex.Matcher
+//import java.util.regex.Pattern
+
 import javax.time.CalendricalException
 import javax.time.Instant
 import javax.time.calendar.zone.ZoneRules
@@ -163,7 +166,7 @@ object TimeZone {
   /**
    * The group:region#version ID pattern.
    */
-  private val TZPattern: Pattern = Pattern.compile("(([A-Za-z0-9._-]+)[:])?([A-Za-z0-9%@~/+._-]+)([#]([A-Za-z0-9._-]+))?")
+  private val TZPattern: Regex = "(([A-Za-z0-9._-]+)[:])?([A-Za-z0-9%@~/+._-]+)([#]([A-Za-z0-9._-]+))?" r
 
   /**
    * A map of zone overrides to enable the older US time-zone names to be used.
@@ -491,12 +494,7 @@ object TimeZone {
     extends CalendricalRule[TimeZone](classOf[TimeZone], ISOChronology, "TimeZone", null, null)
     with Serializable {
 
-    protected override def derive(calendrical: Calendrical): Option[TimeZone] = {
-      calendrical.get(ZonedDateTime.rule) match {
-        case Some(zdt) => Some(zdt.getZone)
-        case None => None
-      }
-    }
+    protected override def derive(calendrical: Calendrical): Option[TimeZone] = calendrical.get(ZonedDateTime.rule).map(_.getZone)
 
     private def readResolve: AnyRef = Rule
   }
@@ -523,13 +521,16 @@ object TimeZone {
         }
       }
     }
-    val matcher: Matcher = TZPattern.matcher(zoneID)
-    if (matcher.matches == false) {
-      throw new CalendricalException("Invalid time-zone ID: " + zoneID)
-    }
-    var groupID: String = matcher.group(2)
-    val regionID: String = matcher.group(3)
-    var versionID: String = matcher.group(5)
+    //    val matcher: Matcher = TZPattern.matcher(zoneID)
+    //    if (matcher.matches == false) {
+    //      throw new CalendricalException("Invalid time-zone ID: " + zoneID)
+    //    }
+
+    //    var groupID: String = matcher.group(2)
+    //    val regionID: String = matcher.group(3)
+    //    var versionID: String = matcher.group(5)
+    val TZPattern(groupID, regionID, versionID) = zoneID
+
     groupID = (if (groupID != null) groupID else "TZDB")
     versionID = (if (versionID != null) versionID else "")
     if (checkAvailable) {
@@ -554,12 +555,12 @@ object TimeZone {
    * <p>
    * Six forms of identifier are recognized:
    * <ul>
-   * <li> {@code    { groupID} :    { regionID}#   { versionID} } - full
-   * <li> {@code    { groupID} :    { regionID} } - implies the floating version
-   * <li> {@code    { regionID}#   { versionID} } - implies 'TZDB' group and specific version
-   * <li> {@code    { regionID} } - implies 'TZDB' group and the floating version
-   * <li> {@code UTC    { offset} } - fixed time-zone
-   * <li> {@code GMT    { offset} } - fixed time-zone
+   * <li> {@code {groupID}:{regionID}#{versionID}} - full
+   * <li> {@code {groupID}:{regionID}} - implies the floating version
+   * <li> {@code {regionID}#{versionID}} - implies 'TZDB' group and specific version
+   * <li> {@code {regionID}} - implies 'TZDB' group and the floating version
+   * <li> {@code UTC {offset}} - fixed time-zone
+   * <li> {@code GMT {offset}} - fixed time-zone
    * </ul>
    * Group IDs must match regular expression {@code[ A -Za-z0-9._-]+}.<br />
    * Region IDs must match regular expression {@code[ A -Za-z0-9%@~/+._-]+}.<br />
@@ -568,8 +569,8 @@ object TimeZone {
    * Most of the formats are based around the group, version and region IDs.
    * The version and region ID formats are specific to the group.
    * <p>
-   * The default group is 'TZDB' which has versions of the form     { year} { letter}, such as '2009b'.
-   * The region ID for the 'TZDB' group is generally of the form '    { area} /    { city} ', such as 'Europe/Paris'.
+   * The default group is 'TZDB' which has versions of the form {year}{letter}, such as '2009b'.
+   * The region ID for the 'TZDB' group is generally of the form '{area}/{city}', such as 'Europe/Paris'.
    * This is compatible with most IDs from {@link java.util.TimeZone}.
    * <p>
    * For example, if a provider is loaded with the ID 'MyProvider' containing a zone ID of
@@ -581,8 +582,8 @@ object TimeZone {
    * <p>
    * The alternate format is for fixed time-zones, where the offset never changes over time.
    * A fixed time-zone is returned if the first three characters are 'UTC' or 'GMT' and
-   * the remainder of the ID is a valid format for {@link ZoneOffset#of ( String )}.
-   * The result will have a normalized time-zone ID of 'UTC    { offset} ', or just 'UTC' if the offset is zero.
+   * the remainder of the ID is a valid format for {@link ZoneOffset#of(String)}.
+   * The result will have a normalized time-zone ID of 'UTC{offset}', or just 'UTC' if the offset is zero.
    * <p>
    * Note that it is intended that fixed offset time-zones are rarely used. Applications should use
    * {@link ZoneOffset} and {@link OffsetDateTime} in preference.

@@ -624,10 +624,5 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * @param calendrical the calendrical to get the field value from, not null
    * @return the value of the field, null if unable to extract the field
    */
-  final def getInteger(calendrical: Calendrical): Option[Int] = {
-    getValue(calendrical) match {
-      case None => None
-      case Some(value) => Some(convertValueToInteger(value))
-    }
-  }
+  final def getInteger(calendrical: Calendrical): Option[Int] = getValue(calendrical).map(convertValueToInteger(_))
 }

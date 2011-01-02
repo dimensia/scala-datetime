@@ -210,7 +210,7 @@ object YearMonth {
  * @param monthOfYear the month-of-year to represent, not null
  */
 @SerialVersionUID(1L)
-final class YearMonth private(val year: Int, val month: MonthOfYear) extends Calendrical with CalendricalMatcher with DateAdjuster with Ordered[YearMonth] with Serializable {
+final case class YearMonth private(year: Int, month: MonthOfYear) extends Calendrical with CalendricalMatcher with DateAdjuster with Ordered[YearMonth] with Serializable {
   /**
    * Adjusts a date to have the value of this year-month, using a resolver to
    * handle the case when the day-of-month becomes invalid.
@@ -517,23 +517,6 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
   def withYear(year: Int): YearMonth = {
     ISOChronology.yearRule.checkValue(year)
     `with`(year, month)
-  }
-
-  /**
-   * Is this year-month equal to the specified year-month.
-   *
-   * @param other the other year-month to compare to, null returns false
-   * @return true if this point is equal to the specified year-month
-   */
-  override def equals(other: AnyRef): Boolean = {
-    if (this eq other) {
-      return true
-    }
-    if (other.isInstanceOf[YearMonth]) {
-      val otherYM: YearMonth = other.asInstanceOf[YearMonth]
-      return year == otherYM.year && month == otherYM.month
-    }
-    return false
   }
 
   /**

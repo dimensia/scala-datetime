@@ -319,7 +319,7 @@ final class DateTimeFields private(val fieldValueMap: TreeMap[DateTimeFieldRule[
     if (rule.isInstanceOf[DateTimeFieldRule[_]]) {
       fieldValueMap.get(rule) match {
         case Some(value) => {
-          val r: DateTimeFieldRule[T] = rule.asInstanceOf[DateTimeFieldRule[T]
+          val r: DateTimeFieldRule[T] = rule.asInstanceOf[DateTimeFieldRule[T]]
           return Some(r.convertIntToValue(value))
         }
         case None =>
