@@ -529,8 +529,9 @@ object TimeZone {
     //    var groupID: String = matcher.group(2)
     //    val regionID: String = matcher.group(3)
     //    var versionID: String = matcher.group(5)
-    val TZPattern(groupID, regionID, versionID) = zoneID
-
+    val TZPattern(_, _, _groupID, regionID, _,  _versionID) = zoneID
+    var groupID = _groupID
+    var versionID = _versionID
     groupID = (if (groupID != null) groupID else "TZDB")
     versionID = (if (versionID != null) versionID else "")
     if (checkAvailable) {

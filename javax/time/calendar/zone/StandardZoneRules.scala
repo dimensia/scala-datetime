@@ -33,16 +33,16 @@ package javax.time.calendar.zone
 
 import java.io.DataInput
 import java.io.DataOutput
-import java.util.Arrays //OK
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.ConcurrentMap
+import java.util.Arrays
+import collection.mutable.{ArrayBuffer, Buffer}
 import javax.time.Instant
 import javax.time.InstantProvider
 import javax.time.calendar.LocalDateTime
 import javax.time.calendar.OffsetDateTime
 import javax.time.calendar.Year
 import javax.time.calendar.ZoneOffset
-import collection.mutable.{ArrayBuffer, Buffer}
+import collection.JavaConversions.JConcurrentMapWrapper
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * The rules describing how the zone offset varies through the year and historically.
@@ -103,14 +103,14 @@ object StandardZoneRules {
 
     require(lastRules.length < 16, "Too many transition rules")
 
-    val standardTransitions = standardOffsetTransitionList.map(_.toEpochSeconds)
-    val standardOffsets = baseStandardOffset +: standardOffsetTransitionList.map(_.getOffset)
+    val standardTransitions = standardOffsetTransitionList.map(_.toEpochSeconds).toArray
+    val standardOffsets = baseStandardOffset +: standardOffsetTransitionList.map(_.getOffset).toArray
 
     val savingsLocalTransitions: Array[LocalDateTime] = transitionList.flatMap(buildTransitions).toArray
     val wallOffsets: Array[ZoneOffset] = baseWallOffset +: transitionList.map(_.getOffsetAfter).toArray
     val savingsInstantTransitions: Array[Long] = transitionList.map(_.getInstant.getEpochSeconds).toArray
 
-    new StandardZoneRules(standardTransitions, standardOffsets, savingsInstantTransitions, wallOffsets, lastRules.toArray)
+    new StandardZoneRules(standardTransitions, standardOffsets, savingsInstantTransitions, wallOffsets, lastRules.toArray, savingsLocalTransitions)
   }
 
   def apply(standardTransitions: Array[Long],
@@ -126,7 +126,7 @@ object StandardZoneRules {
       val after: ZoneOffset = wallOffsets(i + 1)
       val odt: OffsetDateTime = OffsetDateTime.ofEpochSeconds(savingsInstantTransitions(i), before)
       val transitions: ZoneOffsetTransition = new ZoneOffsetTransition(odt, after)
-      savingsLocalTransitions ++= buildTransitions(transitions).flatten
+      savingsLocalTransitions ++= (buildTransitions(transitions).flatten)
     }
 
     new StandardZoneRules(standardTransitions, standardOffsets, savingsInstantTransitions, wallOffsets, lastRules, savingsLocalTransitions.toArray)
@@ -151,17 +151,17 @@ object StandardZoneRules {
  */
 @SerialVersionUID(1L)
 final class StandardZoneRules private[zone](private val standardTransitions: Array[Long],
-                                      private val standardOffsets: Array[ZoneOffset],
-                                      private val savingsInstantTransitions: Array[Long],
-                                      private val wallOffsets: Array[ZoneOffset],
-                                      private val lastRules: Array[ZoneOffsetTransitionRule],
-                                      @transient savingsLocalTransitions: Array[LocalDateTime])
+                                            private val standardOffsets: Array[ZoneOffset],
+                                            private val savingsInstantTransitions: Array[Long],
+                                            private val wallOffsets: Array[ZoneOffset],
+                                            private val lastRules: Array[ZoneOffsetTransitionRule],
+                                            @transient savingsLocalTransitions: Array[LocalDateTime])
   extends ZoneRules with Serializable {
 
   /**
    * The map of recent transitions.
    */
-  private val lastRulesCache: ConcurrentMap[Year, Array[ZoneOffsetTransition]] = new ConcurrentHashMap[Year, Array[ZoneOffsetTransition]]
+  private val lastRulesCache = new JConcurrentMapWrapper(new ConcurrentHashMap[Year, Array[ZoneOffsetTransition]])
 
   /**
    * Returns a suitable hash code.
@@ -169,7 +169,11 @@ final class StandardZoneRules private[zone](private val standardTransitions: Arr
    * @return the hash code
    */
   override def hashCode: Int = {
-    Arrays.hashCode(standardTransitions) ^ Arrays.hashCode(standardOffsets.asInstanceOf[Array[AnyRef]]) ^ Arrays.hashCode(savingsInstantTransitions) ^ Arrays.hashCode(wallOffsets.asInstanceOf[Array[AnyRef]]) ^ Arrays.hashCode(lastRules.asInstanceOf[Array[AnyRef]])
+    Arrays.hashCode(standardTransitions) ^
+      Arrays.hashCode(standardOffsets.asInstanceOf[Array[AnyRef]]) ^
+      Arrays.hashCode(savingsInstantTransitions) ^
+      Arrays.hashCode(wallOffsets.asInstanceOf[Array[AnyRef]]) ^
+      Arrays.hashCode(lastRules.asInstanceOf[Array[AnyRef]])
   }
 
   /**
@@ -377,7 +381,7 @@ final class StandardZoneRules private[zone](private val standardTransitions: Arr
    */
   private def findTransitionArray(year: Int): Array[ZoneOffsetTransition] = {
     val yearObj: Year = Year.of(year)
-    var transArray: Array[ZoneOffsetTransition] = lastRulesCache.get(yearObj)
+    var transArray: Array[ZoneOffsetTransition] = lastRulesCache.getOrElse(yearObj, null)
     if (transArray != null) {
       return transArray
     }

@@ -125,7 +125,7 @@ object ISOChronology extends ISOChronology {
     dayOfYearRule.checkValue(dayOfYear)
     var leap: Boolean = ISOChronology.isLeapYear(year)
     if (dayOfYear == 366 && leap == false) {
-      throw new Nothing("DayOfYear 366 is invalid for year " + year, dayOfYearRule)
+      throw new InvalidCalendarFieldException("DayOfYear 366 is invalid for year " + year, dayOfYearRule)
     }
     var moy: MonthOfYear = MonthOfYear.of((dayOfYear - 1) / 31 + 1)
     val monthEnd: Int = moy.getMonthEndDayOfYear(leap)
@@ -971,7 +971,7 @@ object ISOChronology extends ISOChronology {
     protected def createTextStores(textStores: HashMap[TextStyle, TextStore], locale: Locale): Unit = {
       val oldSymbols: DateFormatSymbols = new DateFormatSymbols(locale)
       var array: Array[String] = oldSymbols.getWeekdays
-      val mapFull = new HashMap[Int, String](
+      val mapFull = HashMap[Int, String](
         (1, array(Calendar.MONDAY)),
         (2, array(Calendar.TUESDAY)),
         (3, array(Calendar.WEDNESDAY)),
@@ -982,7 +982,7 @@ object ISOChronology extends ISOChronology {
       textStores.put(TextStyle.Full, new TextStore(locale, mapFull))
 
       array = oldSymbols.getShortWeekdays
-      val mapShort = new HashMap[Int, String](
+      val mapShort = HashMap[Int, String](
         (1, array(Calendar.MONDAY)),
         (2, array(Calendar.TUESDAY)),
         (3, array(Calendar.WEDNESDAY)),
@@ -1000,7 +1000,7 @@ object ISOChronology extends ISOChronology {
   private[calendar] object QuarterOfYearRule extends QuarterOfYearRule
 
   @SerialVersionUID(1L)
-  private[calendar] final class QuarterOfYearRule
+  private[calendar] sealed class QuarterOfYearRule
     extends DateTimeFieldRule[QuarterOfYear](classOf[QuarterOfYear], ISOChronology, "QuarterOfYear", Quarters, Years, 1, 4) with Serializable {
 
     private def readResolve: AnyRef = QuarterOfYearRule
@@ -1020,7 +1020,7 @@ object ISOChronology extends ISOChronology {
    */
   private[calendar] object AmPmOfDayRule extends AmPmOfDayRule
 
-  private[calendar] final class AmPmOfDayRule
+  private[calendar] sealed class AmPmOfDayRule
     extends DateTimeFieldRule[AmPmOfDay](classOf[AmPmOfDay], ISOChronology, "AmPmOfDay", _12Hours, Days, 0, 1, true) with Serializable {
 
     private def readResolve: AnyRef = AmPmOfDayRule
@@ -1215,7 +1215,7 @@ object ISOChronology extends ISOChronology {
 }
 
 @SerialVersionUID(1L)
-final class ISOChronology private
+sealed class ISOChronology private
   extends Chronology with Serializable {
 
   /**

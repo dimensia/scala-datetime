@@ -57,19 +57,6 @@ import javax.time.calendar.format.DateTimeFormatters
  */
 
 object OffsetDate {
-  /**
-   * Obtains the current date from the system clock in the default time-zone.
-   * <p>
-   * This will query the {@link Clock#systemDefaultZone() system clock} in the default
-   * time-zone to obtain the current date.
-   * The offset will be calculated from the time-zone in the clock.
-   * <p>
-   * Using this method will prevent the ability to use an alternate clock for testing
-   * because the clock is hard-coded.
-   *
-   * @return the current date using the system clock, never null
-   */
-  def now: OffsetDate = now(Clock.systemDefaultZone)
 
   /**
    * Obtains the current date from the specified clock.
@@ -80,10 +67,10 @@ object OffsetDate {
    * Using this method allows the use of an alternate clock for testing.
    * The alternate clock may be introduced using {@link Clock dependency injection}.
    *
-   * @param clock  the clock to use, not null
+   * @param clock  the clock to use, by default {@code Clock.systemDefaultZone}, not null
    * @return the current date, never null
    */
-  def now(clock: Clock): OffsetDate = {
+  def now(implicit clock: Clock = Clock.systemDefaultZone): OffsetDate = {
     ISOChronology.checkNotNull(clock, "Clock must not be null")
     val now: Instant = clock.instant
     ofInstant(now, clock.getZone.getRules.getOffset(now))

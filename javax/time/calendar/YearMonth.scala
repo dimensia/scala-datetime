@@ -112,10 +112,10 @@ object YearMonth {
    * Using this method allows the use of an alternate clock for testing.
    * The alternate clock may be introduced using  {@link Clock dependency injection}.
    *
-   * @param clock the clock to use, not null
+   * @param clock the clock to use, by default {@code Clock.systemDefaultZone}, not null
    * @return the current year-month, never null
    */
-  def now(clock: Clock): YearMonth = {
+  def now(implicit clock: Clock = Clock.systemDefaultZone): YearMonth = {
     val date: LocalDate = LocalDate.now(clock)
     YearMonth.of(date.getYear, date.getMonthOfYear)
   }
@@ -156,17 +156,6 @@ object YearMonth {
   def rule: CalendricalRule[YearMonth] = Rule
 
   /**
-   * Obtains the current year-month from the system clock in the default time-zone.
-   * <p>
-   * This will query the system clock in the default time-zone to obtain the current year-month.
-   * Using this method will prevent the ability to use an alternate clock for testing
-   * because the clock is hard-coded.
-   *
-   * @return the current year-month using the system clock, never null
-   */
-  def now: YearMonth = now(Clock.systemDefaultZone)
-
-  /**
    * Obtains an instance of  {@code YearMonth} from a text string.
    * <p>
    * The following formats are accepted in ASCII:
@@ -183,7 +172,7 @@ object YearMonth {
    * @return the parsed year-month, never null
    * @throws CalendricalException if the text cannot be parsed
    */
-  def parse(text: String): YearMonth = Parser.parse(text, rule)
+//  def parse(text: String): YearMonth = Parser.parse(text, rule)
 
   /**
    * Obtains an instance of  {@code YearMonth} from a text string using a specific formatter.
@@ -196,7 +185,7 @@ object YearMonth {
    * @throws UnsupportedOperationException if the formatter cannot parse
    * @throws CalendricalException if the text cannot be parsed
    */
-  def parse(text: String, formatter: DateTimeFormatter): YearMonth = {
+  def parse(text: String, formatter: DateTimeFormatter = Parser): YearMonth = {
     ISOChronology.checkNotNull(formatter, "DateTimeFormatter must not be null")
     formatter.parse(text, rule)
   }
@@ -210,7 +199,7 @@ object YearMonth {
  * @param monthOfYear the month-of-year to represent, not null
  */
 @SerialVersionUID(1L)
-final case class YearMonth private(year: Int, month: MonthOfYear) extends Calendrical with CalendricalMatcher with DateAdjuster with Ordered[YearMonth] with Serializable {
+final class YearMonth private(val year: Int, val month: MonthOfYear) extends Calendrical with CalendricalMatcher with DateAdjuster with Ordered[YearMonth] with Serializable {
   /**
    * Adjusts a date to have the value of this year-month, using a resolver to
    * handle the case when the day-of-month becomes invalid.

@@ -31,11 +31,7 @@
  */
 package javax.time.calendar
 
-import java.util.Iterator
-
 import collection.immutable.TreeMap
-
-//import java.util.TreeMap
 
 /**
  * A set of date-time fields.
@@ -140,9 +136,8 @@ object DateTimeFields {
    *
    * @return ordered representation of internal map
    */
-  private def createMap: TreeMap[DateTimeFieldRule[_], Int] = {
+  private def createMap: TreeMap[DateTimeFieldRule[_], Int] =
     new TreeMap[DateTimeFieldRule[_], Int]()(implicitly[Ordering[DateTimeFieldRule[_]]].reverse)
-  }
 
   /**
    * A singleton empty {@code DateTimeFields}, placing no restrictions on the date-time.
@@ -322,7 +317,7 @@ final class DateTimeFields private(val fieldValueMap: TreeMap[DateTimeFieldRule[
           val r: DateTimeFieldRule[T] = rule.asInstanceOf[DateTimeFieldRule[T]]
           return Some(r.convertIntToValue(value))
         }
-        case None =>
+        case None => None
 
       }
       //      val value: Int = fieldValueMap.get(rule)

@@ -73,13 +73,13 @@ object ZonedDateTime {
    * This will query the specified clock to obtain the current time.
    * The zone and offset will be set based on the time-zone in the clock.
    * <p>
-   * This will query the {@link Clock#systemDefaultZone() system clock} in the default
+   * This will query the {@link Clock.systemDefaultZone() system clock} in the default
    * time-zone to obtain the current date-time if no clock is set.
    * <p>
    * Using this method allows the use of an alternate clock for testing.
    * The alternate clock may be introduced using {@link Clock dependency injection}.
    *
-   * @param clock  the clock to use, not null
+   * @param clock  the clock to use, by default {@code Clock.systemDefaultZone}, not null
    * @return the current date-time, never null
    */
   def now(implicit clock: Clock = Clock.systemDefaultZone): ZonedDateTime = {

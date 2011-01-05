@@ -31,10 +31,8 @@
  */
 package javax.time.calendar.format
 
-import java.io.IOException
 import javax.time.calendar.Calendrical
 import javax.time.calendar.DateTimeFieldRule
-import javax.time.calendar.DateTimeFieldRule.TextStore
 import javax.time.calendar.format.DateTimeFormatterBuilder.SignStyle
 import javax.time.calendar.format.DateTimeFormatterBuilder.TextStyle
 
@@ -62,12 +60,12 @@ final class TextPrinterParser private[format](rule: DateTimeFieldRule[_], textSt
   /**{@inheritDoc}*/
   def parse(context: DateTimeParseContext, parseText: String, _position: Int): Int = {
     var position = _position
-    var length: Int = parseText.length
+    val length: Int = parseText.length
     if (position > length) {
       throw new IndexOutOfBoundsException
     }
     if (context.isStrict) {
-      var textStore: DateTimeFieldRule.TextStore = rule.getTextStore(context.getLocale, textStyle)
+      val textStore: DateTimeFieldRule.TextStore = rule.getTextStore(context.getLocale, textStyle)
       if (textStore != null) {
         var matched: Long = textStore.matchText(!context.isCaseSensitive, parseText.substring(position))
 
@@ -85,9 +83,9 @@ final class TextPrinterParser private[format](rule: DateTimeFieldRule[_], textSt
     }
     else {
       for (textStyle <- TextStyle.values) {
-        var textStore: DateTimeFieldRule.TextStore = rule.getTextStore(context.getLocale, textStyle)
+        val textStore: DateTimeFieldRule.TextStore = rule.getTextStore(context.getLocale, textStyle)
         if (textStore != null) {
-          var matched: Long = textStore.matchText(!context.isCaseSensitive, parseText.substring(position))
+          val matched: Long = textStore.matchText(!context.isCaseSensitive, parseText.substring(position))
           if (matched > 0) {
             position += (matched >>> 32).toInt
             context.setParsed(rule, matched.toInt)
@@ -109,9 +107,9 @@ final class TextPrinterParser private[format](rule: DateTimeFieldRule[_], textSt
 
   /**{@inheritDoc}*/
   override def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = {
-    var value: Int = rule.getInt(calendrical)
-    var textStore: DateTimeFieldRule.TextStore = rule.getTextStore(symbols.getLocale, textStyle)
-    var text: String = (if (textStore != null) textStore.getValueText(value) else null)
+    val value: Int = rule.getInt(calendrical)
+    val textStore: DateTimeFieldRule.TextStore = rule.getTextStore(symbols.getLocale, textStyle)
+    val text: String = (if (textStore != null) textStore.getValueText(value).getOrElse(null) else null)
     if (text != null) {
       appendable.append(text)
     }

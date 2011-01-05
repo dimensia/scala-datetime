@@ -80,10 +80,10 @@ object Year {
    * Using this method allows the use of an alternate clock for testing.
    * The alternate clock may be introduced using {@link Clock dependency injection}.
    *
-   * @param clock the clock to use, not null
+   * @param clock the clock to use, by default {@code Clock.systemDefaultZone}, not null
    * @return the current year, never null
    */
-  def now(clock: Clock): Year = Year.of(LocalDate.now(clock))
+  def now(implicit clock: Clock = Clock.systemDefaultZone): Year = Year.of(LocalDate.now(clock))
 
   /**
    * Gets the rule that defines how the year field operates.
@@ -129,17 +129,6 @@ object Year {
   def of(calendrical: Calendrical): Year = Year.of(rule.getInt(calendrical))
 
   def apply(calendrical: Calendrical): Year = of(calendrical)
-
-  /**
-   * Obtains the current year from the system clock in the default time-zone.
-   * <p>
-   * This will query the system clock in the default time-zone to obtain the current year.
-   * Using this method will prevent the ability to use an alternate clock for testing
-   * because the clock is hard-coded.
-   *
-   * @return the current year using the system clock, never null
-   */
-  def now: Year = now(Clock.systemDefaultZone)
 }
 
 
@@ -149,7 +138,7 @@ object Year {
  * @param year the year to represent
  */
 @SerialVersionUID(1L)
-case class Year private(year: Int) extends Calendrical with Ordered[Year] with Serializable with DateAdjuster with CalendricalMatcher {
+class Year private(val year: Int) extends Calendrical with DateAdjuster with CalendricalMatcher with Ordered[Year] with Serializable {
 
   import Year._
 

@@ -99,27 +99,6 @@ object OffsetDateTime {
   }
 
   /**
-   * Obtains an instance of {@code OffsetDateTime} from year, month,
-   * day, hour and minute, setting the second and nanosecond to zero.
-   * <p>
-   * The second and nanosecond fields will be set to zero by this factory method.
-   *
-   * @param year the year to represent, from MIN_YEAR to MAX_YEAR
-   * @param monthOfYear the month-of-year to represent, not null
-   * @param dayOfMonth the day-of-month to represent, from 1 to 31
-   * @param hourOfDay the hour-of-day to represent, from 0 to 23
-   * @param minuteOfHour the minute-of-hour to represent, from 0 to 59
-   * @param offset the zone offset, not null
-   * @return the offset date-time, never null
-   * @throws IllegalCalendarFieldValueException if the value of any field is out of range
-   * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
-   */
-  def of(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, offset: ZoneOffset): OffsetDateTime = {
-    val dt: LocalDateTime = LocalDateTime.of(year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour)
-    new OffsetDateTime(dt, offset)
-  }
-
-  /**
    * Rule implementation.
    */
   private[calendar] object Rule extends Rule
@@ -132,28 +111,6 @@ object OffsetDateTime {
     protected override def derive(calendrical: Calendrical): Option[OffsetDateTime] = calendrical.get(ZonedDateTime.rule).map(_.toOffsetDateTime)
 
     private def readResolve: AnyRef = Rule
-  }
-
-  /**
-   * Obtains an instance of {@code OffsetDateTime} from year, month,
-   * day, hour, minute and second, setting the nanosecond to zero.
-   * <p>
-   * The nanosecond field will be set to zero by this factory method.
-   *
-   * @param year the year to represent, from MIN_YEAR to MAX_YEAR
-   * @param monthOfYear the month-of-year to represent, not null
-   * @param dayOfMonth the day-of-month to represent, from 1 to 31
-   * @param hourOfDay the hour-of-day to represent, from 0 to 23
-   * @param minuteOfHour the minute-of-hour to represent, from 0 to 59
-   * @param secondOfMinute the second-of-minute to represent, from 0 to 59
-   * @param offset the zone offset, not null
-   * @return the offset date-time, never null
-   * @throws IllegalCalendarFieldValueException if the value of any field is out of range
-   * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
-   */
-  def of(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, offset: ZoneOffset): OffsetDateTime = {
-    val dt: LocalDateTime = LocalDateTime.of(year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour, secondOfMinute)
-    new OffsetDateTime(dt, offset)
   }
 
   /**
@@ -197,49 +154,6 @@ object OffsetDateTime {
   }
 
   /**
-   * Obtains an instance of {@code OffsetDateTime} from year, month,
-   * day, hour, minute and second, setting the nanosecond to zero.
-   * <p>
-   * The nanosecond field will be set to zero by this factory method.
-   *
-   * @param year the year to represent, from MIN_YEAR to MAX_YEAR
-   * @param monthOfYear the month-of-year to represent, from 1 (January) to 12 (December)
-   * @param dayOfMonth the day-of-month to represent, from 1 to 31
-   * @param hourOfDay the hour-of-day to represent, from 0 to 23
-   * @param minuteOfHour the minute-of-hour to represent, from 0 to 59
-   * @param secondOfMinute the second-of-minute to represent, from 0 to 59
-   * @param offset the zone offset, not null
-   * @return the offset date-time, never null
-   * @throws IllegalCalendarFieldValueException if the value of any field is out of range
-   * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
-   */
-  def of(year: Int, monthOfYear: Int, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, offset: ZoneOffset): OffsetDateTime = {
-    val dt: LocalDateTime = LocalDateTime.of(year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour, secondOfMinute)
-    new OffsetDateTime(dt, offset)
-  }
-
-  /**
-   * Obtains an instance of {@code OffsetDateTime} from year, month,
-   * day, hour and minute, setting the second and nanosecond to zero.
-   * <p>
-   * The second and nanosecond fields will be set to zero by this factory method.
-   *
-   * @param year the year to represent, from MIN_YEAR to MAX_YEAR
-   * @param monthOfYear the month-of-year to represent, from 1 (January) to 12 (December)
-   * @param dayOfMonth the day-of-month to represent, from 1 to 31
-   * @param hourOfDay the hour-of-day to represent, from 0 to 23
-   * @param minuteOfHour the minute-of-hour to represent, from 0 to 59
-   * @param offset the zone offset, not null
-   * @return the offset date-time, never null
-   * @throws IllegalCalendarFieldValueException if the value of any field is out of range
-   * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
-   */
-  def of(year: Int, monthOfYear: Int, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, offset: ZoneOffset): OffsetDateTime = {
-    val dt: LocalDateTime = LocalDateTime.of(year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour)
-    new OffsetDateTime(dt, offset)
-  }
-
-  /**
    * Obtains the current date-time from the specified clock.
    * <p>
    * This will query the specified clock to obtain the current time.
@@ -248,10 +162,10 @@ object OffsetDateTime {
    * Using this method allows the use of an alternate clock for testing.
    * The alternate clock may be introduced using {@link Clock dependency injection}.
    *
-   * @param clock the clock to use, not null
+   * @param clock the clock to use, by default {@code Clock.systemDefaultZone}, not null
    * @return the current date-time, never null
    */
-  def now(clock: Clock = Clock.systemDefaultZone): OffsetDateTime = {
+  def now(implicit clock: Clock = Clock.systemDefaultZone): OffsetDateTime = {
     ISOChronology.checkNotNull(clock, "Clock must not be null")
     val now: Instant = clock.instant
     ofInstant(now, clock.getZone.getRules.getOffset(clock.instant))
@@ -266,14 +180,14 @@ object OffsetDateTime {
    * @param dayOfMonth the day-of-month to represent, from 1 to 31
    * @param hourOfDay the hour-of-day to represent, from 0 to 23
    * @param minuteOfHour the minute-of-hour to represent, from 0 to 59
-   * @param secondOfMinute the second-of-minute to represent, from 0 to 59
-   * @param nanoOfSecond the nano-of-second to represent, from 0 to 999,999,999
+   * @param secondOfMinute the second-of-minute to represent, from 0 to 59, by default 0
+   * @param nanoOfSecond the nano-of-second to represent, from 0 to 999,999,999, by default 0
    * @param offset the zone offset, not null
    * @return the offset date-time, never null
    * @throws IllegalCalendarFieldValueException if the value of any field is out of range
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
-  def of(year: Int, monthOfYear: Int, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int, offset: ZoneOffset): OffsetDateTime = {
+  def of(year: Int, monthOfYear: Int, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int = 0, nanoOfSecond: Int = 0, offset: ZoneOffset): OffsetDateTime = {
     val dt: LocalDateTime = LocalDateTime.of(year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
     new OffsetDateTime(dt, offset)
   }
@@ -323,14 +237,14 @@ object OffsetDateTime {
    * @param dayOfMonth the day-of-month to represent, from 1 to 31
    * @param hourOfDay the hour-of-day to represent, from 0 to 23
    * @param minuteOfHour the minute-of-hour to represent, from 0 to 59
-   * @param secondOfMinute the second-of-minute to represent, from 0 to 59
-   * @param nanoOfSecond the nano-of-second to represent, from 0 to 999,999,999
+   * @param secondOfMinute the second-of-minute to represent, from 0 to 59, by default 0
+   * @param nanoOfSecond the nano-of-second to represent, from 0 to 999,999,999, by default 0
    * @param offset the zone offset, not null
    * @return the offset date-time, never null
    * @throws IllegalCalendarFieldValueException if the value of any field is out of range
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
-  def of(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int, offset: ZoneOffset): OffsetDateTime = {
+  def of(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int = 0, nanoOfSecond: Int = 0, offset: ZoneOffset): OffsetDateTime = {
     val dt: LocalDateTime = LocalDateTime.of(year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
     new OffsetDateTime(dt, offset)
   }
@@ -465,6 +379,26 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
   }
 
   /**
+   * Checks if the year is a leap year, according to the ISO proleptic
+   * calendar system rules.
+   * <p>
+   * This method applies the current rules for leap years across the whole time-line.
+   * In general, a year is a leap year if it is divisible by four without
+   * remainder. However, years divisible by 100, are not leap years, with
+   * the exception of years divisible by 400 which are.
+   * <p>
+   * For example, 1904 is a leap year it is divisible by 4.
+   * 1900 was not a leap year as it is divisible by 100, however 2000 was a
+   * leap year as it is divisible by 400.
+   * <p>
+   * The calculation is proleptic - applying the same rules into the far future and far past.
+   * This is historically inaccurate, but is correct for the ISO8601 standard.
+   *
+   * @return true if the year is leap, false otherwise
+   */
+  def isLeapYear: Boolean = dateTime.isLeapYear
+
+  /**
    * Returns a copy of this OffsetDateTime with the specified period in nanoseconds subtracted.
    * <p>
    * This instance is immutable and unaffected by this method call.
@@ -473,7 +407,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @return an {@code OffsetDateTime} based on this date-time with the nanoseconds subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def minusNanos(nanos: Int): OffsetDateTime = {
+  def minusNanos(nanos: Long): OffsetDateTime = {
     val newDT: LocalDateTime = dateTime.minusNanos(nanos)
     (if (newDT == dateTime) this else new OffsetDateTime(newDT, offset))
   }
@@ -601,7 +535,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @return an {@code OffsetDateTime} based on this date-time with the seconds added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def plusSeconds(seconds: Int): OffsetDateTime = {
+  def plusSeconds(seconds: Long): OffsetDateTime = {
     val newDT: LocalDateTime = dateTime.plusSeconds(seconds)
     (if (newDT == dateTime) this else new OffsetDateTime(newDT, offset))
   }
@@ -735,7 +669,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @return an {@code OffsetDateTime} based on this date-time with the months subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def minusMonths(months: Int, dateResolver: DateResolver): OffsetDateTime = {
+  def minusMonths(months: Long, dateResolver: DateResolver): OffsetDateTime = {
     val newDT: LocalDateTime = dateTime.minusMonths(months)
     (if (newDT == dateTime) this else new OffsetDateTime(newDT, offset))
   }
@@ -880,7 +814,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @return an {@code OffsetDateTime} based on this date-time with the years subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def minusYears(years: Int): OffsetDateTime = {
+  def minusYears(years: Long): OffsetDateTime = {
     val newDT: LocalDateTime = dateTime.minusYears(years)
     (if (newDT == dateTime) this else new OffsetDateTime(newDT, offset))
   }
@@ -921,7 +855,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @return an {@code OffsetDateTime} based on this date-time with the years added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def plusYears(years: Int, dateResolver: DateResolver): OffsetDateTime = {
+  def plusYears(years: Long, dateResolver: DateResolver): OffsetDateTime = {
     val newDT: LocalDateTime = dateTime.plusYears(years, dateResolver)
     (if (newDT == dateTime) this else new OffsetDateTime(newDT, offset))
   }
@@ -982,7 +916,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @return an {@code OffsetDateTime} based on this date-time with the months subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def minusMonths(months: Int): OffsetDateTime = {
+  def minusMonths(months: Long): OffsetDateTime = {
     val newDT: LocalDateTime = dateTime.minusMonths(months)
     (if (newDT == dateTime) this else new OffsetDateTime(newDT, offset))
   }
@@ -1025,7 +959,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @return an {@code OffsetDateTime} based on this date-time with the years added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def plusYears(years: Int): OffsetDateTime = {
+  def plusYears(years: Long): OffsetDateTime = {
     val newDT: LocalDateTime = dateTime.plusYears(years)
     (if (newDT == dateTime) this else new OffsetDateTime(newDT, offset))
   }
@@ -1049,7 +983,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @return an {@code OffsetDateTime} based on this date-time with the hours added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def plusHours(hours: Int): OffsetDateTime = {
+  def plusHours(hours: Long): OffsetDateTime = {
     val newDT: LocalDateTime = dateTime.plusHours(hours)
     (if (newDT == dateTime) this else new OffsetDateTime(newDT, offset))
   }
@@ -1100,7 +1034,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @return an {@code OffsetDateTime} based on this date-time with the years subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def minusYears(years: Int, dateResolver: DateResolver): OffsetDateTime = {
+  def minusYears(years: Long, dateResolver: DateResolver): OffsetDateTime = {
     val newDT: LocalDateTime = dateTime.minusYears(years, dateResolver)
     (if (newDT == dateTime) this else new OffsetDateTime(newDT, offset))
   }
@@ -1210,7 +1144,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @return an {@code OffsetDateTime} based on this date-time with the weeks added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def plusWeeks(weeks: Int): OffsetDateTime = {
+  def plusWeeks(weeks: Long): OffsetDateTime = {
     val newDT: LocalDateTime = dateTime.plusWeeks(weeks)
     (if (newDT == dateTime) this else new OffsetDateTime(newDT, offset))
   }
@@ -1235,7 +1169,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @return an {@code OffsetDateTime} based on this date-time with the months added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def plusMonths(months: Int): OffsetDateTime = {
+  def plusMonths(months: Long): OffsetDateTime = {
     val newDT: LocalDateTime = dateTime.plusMonths(months)
     (if (newDT == dateTime) this else new OffsetDateTime(newDT, offset))
   }
@@ -1249,7 +1183,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @return an {@code OffsetDateTime} based on this date-time with the minutes added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def plusMinutes(minutes: Int): OffsetDateTime = {
+  def plusMinutes(minutes: Long): OffsetDateTime = {
     val newDT: LocalDateTime = dateTime.plusMinutes(minutes)
     (if (newDT == dateTime) this else new OffsetDateTime(newDT, offset))
   }
@@ -1276,7 +1210,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @return an {@code OffsetDateTime} based on this date-time with the days subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def minusDays(days: Int): OffsetDateTime = {
+  def minusDays(days: Long): OffsetDateTime = {
     val newDT: LocalDateTime = dateTime.minusDays(days)
     (if (newDT == dateTime) this else new OffsetDateTime(newDT, offset))
   }
@@ -1338,7 +1272,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @return an {@code OffsetDateTime} based on this date-time with the minutes subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def minusMinutes(minutes: Int): OffsetDateTime = {
+  def minusMinutes(minutes: Long): OffsetDateTime = {
     val newDT: LocalDateTime = dateTime.minusMinutes(minutes)
     (if (newDT == dateTime) this else new OffsetDateTime(newDT, offset))
   }
@@ -1354,9 +1288,8 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @return true if this is after the specified date-time
    * @throws NullPointerException if {@code other} is null
    */
-  def equalInstant(other: OffsetDateTime): Boolean = {
+  def equalInstant(other: OffsetDateTime): Boolean =
     toEpochSeconds == other.toEpochSeconds && getNanoOfSecond == other.getNanoOfSecond
-  }
 
   /**
    * Returns a copy of this OffsetDateTime with the specified period in days added.
@@ -1373,7 +1306,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @return an {@code OffsetDateTime} based on this date-time with the days added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def plusDays(days: Int): OffsetDateTime = {
+  def plusDays(days: Long): OffsetDateTime = {
     val newDT: LocalDateTime = dateTime.plusDays(days)
     (if (newDT == dateTime) this else new OffsetDateTime(newDT, offset))
   }
@@ -1446,7 +1379,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @return an {@code OffsetDateTime} based on this date-time with the weeks subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def minusWeeks(weeks: Int): OffsetDateTime = {
+  def minusWeeks(weeks: Long): OffsetDateTime = {
     val newDT: LocalDateTime = dateTime.minusWeeks(weeks)
     (if (newDT == dateTime) this else new OffsetDateTime(newDT, offset))
   }
@@ -1478,7 +1411,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @return an {@code OffsetDateTime} based on this date-time with the hours subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def minusHours(hours: Int): OffsetDateTime = {
+  def minusHours(hours: Long): OffsetDateTime = {
     val newDT: LocalDateTime = dateTime.minusHours(hours)
     (if (newDT == dateTime) this else new OffsetDateTime(newDT, offset))
   }
@@ -1495,9 +1428,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @return an {@code OffsetDateTime} based on this date-time with the requested year, never null
    * @throws IllegalCalendarFieldValueException if the year value is invalid
    */
-  def withYear(year: Int, dateResolver: DateResolver): OffsetDateTime = {
-    `with`(dateTime.withYear(year, dateResolver), offset)
-  }
+  def withYear(year: Int, dateResolver: DateResolver): OffsetDateTime = `with`(dateTime.withYear(year, dateResolver), offset)
 
   /**
    * Returns a copy of this OffsetDateTime with a different zone offset
@@ -1548,7 +1479,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @return an {@code OffsetDateTime} based on this date-time with the months added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def plusMonths(months: Int, dateResolver: DateResolver): OffsetDateTime = {
+  def plusMonths(months: Long, dateResolver: DateResolver): OffsetDateTime = {
     val newDT: LocalDateTime = dateTime.plusMonths(months)
     (if (newDT == dateTime) this else new OffsetDateTime(newDT, offset))
   }
@@ -1612,7 +1543,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @return an {@code OffsetDateTime} based on this date-time with the nanoseconds added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def plusNanos(nanos: Int): OffsetDateTime = {
+  def plusNanos(nanos: Long): OffsetDateTime = {
     val newDT: LocalDateTime = dateTime.plusNanos(nanos)
     (if (newDT == dateTime) this else new OffsetDateTime(newDT, offset))
   }
@@ -1659,7 +1590,7 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @return an {@code OffsetDateTime} based on this date-time with the seconds subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def minusSeconds(seconds: Int): OffsetDateTime = {
+  def minusSeconds(seconds: Long): OffsetDateTime = {
     val newDT: LocalDateTime = dateTime.minusSeconds(seconds)
     (if (newDT == dateTime) this else new OffsetDateTime(newDT, offset))
   }

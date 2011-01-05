@@ -37,6 +37,7 @@ import java.io._
 import java.util.ConcurrentModificationException
 import java.util.Arrays
 import java.util.concurrent.atomic.AtomicReference
+import collection.immutable.TreeMap
 
 /**
  * System default UTC rules.
@@ -156,7 +157,7 @@ object SystemUTCRules extends SystemUTCRules {
     }
     try {
       val reader: BufferedReader = new BufferedReader(new InputStreamReader(in, "UTF-8"))
-      val leaps: java.util.Map[Long, Int] = new java.util.TreeMap[Long, Int]
+      var leaps = TreeMap[Long, Int]()
       while (true) {
         var line: String = reader.readLine
         if (line != null) {
@@ -168,7 +169,7 @@ object SystemUTCRules extends SystemUTCRules {
             }
             val date: LocalDate = LocalDate.parse(split(0))
             val offset: Int = split(1).toInt
-            leaps.put(date.toModifiedJulianDays, offset)
+            leaps = leaps.updated(date.toModifiedJulianDays, offset)
           }
         }
       }
@@ -176,9 +177,9 @@ object SystemUTCRules extends SystemUTCRules {
       val offsets: Array[Int] = new Array[Int](leaps.size)
       val taiSeconds: Array[Long] = new Array[Long](leaps.size)
       var i: Int = 0
-      for (entry <- leaps.entrySet) {
-        var changeMjd: Long = entry.getKey - 1
-        var offset: Int = entry.getValue
+      for (entry <- leaps) {
+        val changeMjd: Long = entry._1 - 1
+        val offset: Int = entry._2
         if (i > 0) {
           val adjust: Int = offset - offsets(i - 1)
           if (adjust < -1 || adjust > 1) {

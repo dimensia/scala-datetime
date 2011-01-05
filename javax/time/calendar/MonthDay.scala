@@ -145,10 +145,10 @@ object MonthDay {
    * Using this method allows the use of an alternate clock for testing.
    * The alternate clock may be introduced using {@link Clock dependency injection}.
    *
-   * @param clock the clock to use, not null
+   * @param clock the clock to use, by default {@code Clock.systemDefaultZone}, not null
    * @return the current month-day, never null
    */
-  def now(clock: Clock = Clock.systemDefaultZone): MonthDay = {
+  def now(implicit clock: Clock = Clock.systemDefaultZone): MonthDay = {
     val now: LocalDate = LocalDate.now(clock)
     MonthDay.of(now.getMonthOfYear, now.getDayOfMonth)
   }

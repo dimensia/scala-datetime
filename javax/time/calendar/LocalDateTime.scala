@@ -61,29 +61,6 @@ object LocalDateTime {
   def rule: CalendricalRule[LocalDateTime] = Rule
 
   /**
-   * Obtains an instance of {@code LocalDateTime} from year, month,
-   * day, hour and minute, setting the second and nanosecond to zero.
-   * <p>
-   * The day must be valid for the year and month or an exception will be thrown.
-   * <p>
-   * The second and nanosecond fields will be set to zero by this factory method.
-   *
-   * @param year the year to represent, from MIN_YEAR to MAX_YEAR
-   * @param monthOfYear the month-of-year to represent, from 1 (January) to 12 (December)
-   * @param dayOfMonth the day-of-month to represent, from 1 to 31
-   * @param hourOfDay the hour-of-day to represent, from 0 to 23
-   * @param minuteOfHour the minute-of-hour to represent, from 0 to 59
-   * @return the local date-time, never null
-   * @throws IllegalCalendarFieldValueException if the value of any field is out of range
-   * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
-   */
-  def of(year: Int, monthOfYear: Int, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int): LocalDateTime = {
-    val date: LocalDate = LocalDate.of(year, monthOfYear, dayOfMonth)
-    val time: LocalTime = LocalTime.of(hourOfDay, minuteOfHour)
-    new LocalDateTime(date, time)
-  }
-
-  /**
    * Obtains an instance of {@code LocalDateTime} using seconds from the
    * local epoch of 1970-01-01T00:00:00.
    * <p>
@@ -101,17 +78,6 @@ object LocalDateTime {
     val time: LocalTime = LocalTime.ofSecondOfDay(secsOfDay, nanoOfSecond)
     LocalDateTime.of(date, time)
   }
-
-  /**
-   * Obtains the current date from the system clock in the default time-zone.
-   * <p>
-   * This will query the system clock in the default time-zone to obtain the current date-time.
-   * Using this method will prevent the ability to use an alternate clock for testing
-   * because the clock is hard-coded.
-   *
-   * @return the current date-time using the system clock, never null
-   */
-  def now: LocalDateTime = now(Clock.systemDefaultZone)
 
   /**
    * Obtains an instance of {@code LocalTime} from a date-time provider.
@@ -142,13 +108,13 @@ object LocalDateTime {
    * @param dayOfMonth the day-of-month to represent, from 1 to 31
    * @param hourOfDay the hour-of-day to represent, from 0 to 23
    * @param minuteOfHour the minute-of-hour to represent, from 0 to 59
-   * @param secondOfMinute the second-of-minute to represent, from 0 to 59
-   * @param nanoOfSecond the nano-of-second to represent, from 0 to 999,999,999
+   * @param secondOfMinute the second-of-minute to represent, from 0 to 59, by default 0
+   * @param nanoOfSecond the nano-of-second to represent, from 0 to 999,999,999, by default 0
    * @return the local date-time, never null
    * @throws IllegalCalendarFieldValueException if the value of any field is out of range
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
-  def of(year: Int, monthOfYear: Int, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int): LocalDateTime = {
+  def of(year: Int, monthOfYear: Int, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int = 0, nanoOfSecond: Int = 0): LocalDateTime = {
     val date: LocalDate = LocalDate.of(year, monthOfYear, dayOfMonth)
     val time: LocalTime = LocalTime.of(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
     new LocalDateTime(date, time)
@@ -175,29 +141,6 @@ object LocalDateTime {
   }
 
   /**
-   * Obtains an instance of {@code LocalDateTime} from year, month,
-   * day, hour and minute, setting the second and nanosecond to zero.
-   * <p>
-   * The day must be valid for the year and month or an exception will be thrown.
-   * <p>
-   * The second and nanosecond fields will be set to zero by this factory method.
-   *
-   * @param year the year to represent, from MIN_YEAR to MAX_YEAR
-   * @param monthOfYear the month-of-year to represent, not null
-   * @param dayOfMonth the day-of-month to represent, from 1 to 31
-   * @param hourOfDay the hour-of-day to represent, from 0 to 23
-   * @param minuteOfHour the minute-of-hour to represent, from 0 to 59
-   * @return the local date-time, never null
-   * @throws IllegalCalendarFieldValueException if the value of any field is out of range
-   * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
-   */
-  def of(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int): LocalDateTime = {
-    val date: LocalDate = LocalDate.of(year, monthOfYear, dayOfMonth)
-    val time: LocalTime = LocalTime.of(hourOfDay, minuteOfHour)
-    new LocalDateTime(date, time)
-  }
-
-  /**
    * Obtains an instance of {@code LocalDateTime} from a date with the
    * time set to midnight at the start of day.
    * <p>
@@ -211,30 +154,6 @@ object LocalDateTime {
   def ofMidnight(dateProvider: DateProvider): LocalDateTime = {
     val date: LocalDate = LocalDate.of(dateProvider)
     new LocalDateTime(date, LocalTime.Midnight)
-  }
-
-  /**
-   * Obtains an instance of {@code LocalDateTime} from year, month,
-   * day, hour, minute and second, setting the nanosecond to zero.
-   * <p>
-   * The day must be valid for the year and month or an exception will be thrown.
-   * <p>
-   * The nanosecond field will be set to zero by this factory method.
-   *
-   * @param year the year to represent, from MIN_YEAR to MAX_YEAR
-   * @param monthOfYear the month-of-year to represent, from 1 (January) to 12 (December)
-   * @param dayOfMonth the day-of-month to represent, from 1 to 31
-   * @param hourOfDay the hour-of-day to represent, from 0 to 23
-   * @param minuteOfHour the minute-of-hour to represent, from 0 to 59
-   * @param secondOfMinute the second-of-minute to represent, from 0 to 59
-   * @return the local date-time, never null
-   * @throws IllegalCalendarFieldValueException if the value of any field is out of range
-   * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
-   */
-  def of(year: Int, monthOfYear: Int, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int): LocalDateTime = {
-    val date: LocalDate = LocalDate.of(year, monthOfYear, dayOfMonth)
-    val time: LocalTime = LocalTime.of(hourOfDay, minuteOfHour, secondOfMinute)
-    new LocalDateTime(date, time)
   }
 
   /**
@@ -268,39 +187,15 @@ object LocalDateTime {
    * @param dayOfMonth the day-of-month to represent, from 1 to 31
    * @param hourOfDay the hour-of-day to represent, from 0 to 23
    * @param minuteOfHour the minute-of-hour to represent, from 0 to 59
-   * @param secondOfMinute the second-of-minute to represent, from 0 to 59
-   * @param nanoOfSecond the nano-of-second to represent, from 0 to 999,999,999
+   * @param secondOfMinute the second-of-minute to represent, from 0 to 59, by default 0
+   * @param nanoOfSecond the nano-of-second to represent, from 0 to 999,999,999, by default 0
    * @return the local date-time, never null
    * @throws IllegalCalendarFieldValueException if the value of any field is out of range
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
-  def of(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int): LocalDateTime = {
+  def of(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int = 0, nanoOfSecond: Int = 0): LocalDateTime = {
     val date: LocalDate = LocalDate.of(year, monthOfYear, dayOfMonth)
     val time: LocalTime = LocalTime.of(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
-    new LocalDateTime(date, time)
-  }
-
-  /**
-   * Obtains an instance of {@code LocalDateTime} from year, month,
-   * day, hour, minute and second, setting the nanosecond to zero.
-   * <p>
-   * The day must be valid for the year and month or an exception will be thrown.
-   * <p>
-   * The nanosecond field will be set to zero by this factory method.
-   *
-   * @param year the year to represent, from MIN_YEAR to MAX_YEAR
-   * @param monthOfYear the month-of-year to represent, not null
-   * @param dayOfMonth the day-of-month to represent, from 1 to 31
-   * @param hourOfDay the hour-of-day to represent, from 0 to 23
-   * @param minuteOfHour the minute-of-hour to represent, from 0 to 59
-   * @param secondOfMinute the second-of-minute to represent, from 0 to 59
-   * @return the local date-time, never null
-   * @throws IllegalCalendarFieldValueException if the value of any field is out of range
-   * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
-   */
-  def of(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int): LocalDateTime = {
-    val date: LocalDate = LocalDate.of(year, monthOfYear, dayOfMonth)
-    val time: LocalTime = LocalTime.of(hourOfDay, minuteOfHour, secondOfMinute)
     new LocalDateTime(date, time)
   }
 
@@ -366,10 +261,10 @@ object LocalDateTime {
    * Using this method allows the use of an alternate clock for testing.
    * The alternate clock may be introduced using {@link Clock dependency injection}.
    *
-   * @param clock the clock to use, not null
+   * @param clock the clock to use, by default {@code Clock.systemDefaultZone}, not null
    * @return the current date-time, never null
    */
-  def now(clock: Clock): LocalDateTime = {
+  def now(implicit clock: Clock = Clock.systemDefaultZone): LocalDateTime = {
     ISOChronology.checkNotNull(clock, "Clock must not be null")
     val instant: Instant = clock.instant
     val offset: ZoneOffset = clock.getZone.getRules.getOffset(instant)
@@ -413,7 +308,8 @@ object LocalDateTime {
  * @param date the date part of the date-time, not null
  * @param time the time part of the date-time, not null
  */
-final class LocalDateTime private(val date: LocalDate, val time: LocalTime) extends Calendrical with DateTimeProvider with Ordered[LocalDateTime] with CalendricalMatcher with DateAdjuster with TimeAdjuster with Serializable {
+final class LocalDateTime private(val date: LocalDate, val time: LocalTime)
+  extends Calendrical with DateTimeProvider with Ordered[LocalDateTime] with CalendricalMatcher with DateAdjuster with TimeAdjuster with Serializable {
   /**
    * Gets the second-of-minute field.
    *
@@ -529,6 +425,26 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
   override def toString: String = date.toString + 'T' + time.toString
 
   /**
+   * Checks if the year is a leap year, according to the ISO proleptic
+   * calendar system rules.
+   * <p>
+   * This method applies the current rules for leap years across the whole time-line.
+   * In general, a year is a leap year if it is divisible by four without
+   * remainder. However, years divisible by 100, are not leap years, with
+   * the exception of years divisible by 400 which are.
+   * <p>
+   * For example, 1904 is a leap year it is divisible by 4.
+   * 1900 was not a leap year as it is divisible by 100, however 2000 was a
+   * leap year as it is divisible by 400.
+   * <p>
+   * The calculation is proleptic - applying the same rules into the far future and far past.
+   * This is historically inaccurate, but is correct for the ISO8601 standard.
+   *
+   * @return true if the year is leap, false otherwise
+   */
+  def isLeapYear: Boolean = date.isLeapYear
+
+  /**
    * Returns a copy of this date-time with the new date and time, checking
    * to see if a new object is in fact required.
    *
@@ -591,16 +507,16 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * invalid date 2009-02-29 (standard year). Instead of returning an invalid
    * result, the last valid day of the month, 2009-02-28, is selected instead.
    * <p>
-   * This method does the same as {@code minusYears ( years, DateResolvers.previousValid ( ) )}.
+   * This method does the same as {@code minusYears(years, DateResolvers.previousValid())}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param years the years to subtract, may be negative
    * @return a {@code LocalDateTime} based on this date-time with the years subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
-   * @see# m i n u s Y e a r s ( int, javax.time.calendar.DateResolver )
+   * @see #minusYears( int, javax.time.calendar.DateResolver)
    */
-  def minusYears(years: Int): LocalDateTime = {
+  def minusYears(years: Long): LocalDateTime = {
     val newDate: LocalDate = date.minusYears(years)
     `with`(newDate, time)
   }
@@ -634,7 +550,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @return a {@code LocalDateTime} based on this date-time with the hours subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def minusHours(hours: Int): LocalDateTime = {
+  def minusHours(hours: Long): LocalDateTime = {
     val overflow: LocalTime.Overflow = time.minusWithOverflow(hours, 0, 0, 0)
     val newDate: LocalDate = date.plusDays(overflow.getOverflowDays)
     `with`(newDate, overflow.getResultTime)
@@ -897,7 +813,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @return a {@code LocalDateTime} based on this date-time with the years subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def minusYears(years: Int, dateResolver: DateResolver): LocalDateTime = {
+  def minusYears(years: Long, dateResolver: DateResolver): LocalDateTime = {
     val newDate: LocalDate = date.minusYears(years, dateResolver)
     `with`(newDate, time)
   }
@@ -965,7 +881,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @return a {@code LocalDateTime} based on this date-time with the weeks subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def minusWeeks(weeks: Int): LocalDateTime = {
+  def minusWeeks(weeks: Long): LocalDateTime = {
     val newDate: LocalDate = date.minusWeeks(weeks)
     `with`(newDate, time)
   }
@@ -1394,16 +1310,16 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * 2007-04-31. Instead of returning an invalid result, the last valid day
    * of the month, 2007-04-30, is selected instead.
    * <p>
-   * This method does the same as {@code plusMonths ( months, DateResolvers.previousValid ( ) )}.
+   * This method does the same as {@code plusMonths(months, DateResolvers.previousValid())}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param months the months to add, may be negative
    * @return a {@code LocalDateTime} based on this date-time with the months added, never null
    * @throws CalendricalException if the result exceeds the supported date range
-   * @see# p l u s M o n t h s ( int, javax.time.calendar.DateResolver )
+   * @see #plusMonths(int, javax.time.calendar.DateResolver)
    */
-  def plusMonths(months: Int): LocalDateTime = {
+  def plusMonths(months: Long): LocalDateTime = {
     val newDate: LocalDate = date.plusMonths(months)
     `with`(newDate, time)
   }
@@ -1579,7 +1495,8 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime) exte
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
    */
-  def get[T](rule: CalendricalRule[T]): Option[T] = Some(rule.deriveValueFor(rule, this, this, ISOChronology))
+  //def get[T](rule: CalendricalRule[T]): Option[T] = Some(rule.deriveValueFor(rule, this, this, ISOChronology))
+  def get[T](rule: CalendricalRule[T]): Option[T] = None
 
   /**
    * Returns a copy of this {@code LocalDateTime} with the specified period in months subtracted.

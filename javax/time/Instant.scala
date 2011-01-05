@@ -126,10 +126,10 @@ object Instant {
    * Using this method allows the use of an alternate clock for testing.
    * The alternate clock may be introduced using {@link Clock dependency injection}.
    *
-   * @param timeSource the time-source to use, not null
+   * @param timeSource the time-source to use, by default {@code TimeSource.system}, not null
    * @return the current instant, never null
    */
-  def now(timeSource: TimeSource): Instant = {
+  def now(timeSource: TimeSource = TimeSource.system): Instant = {
     checkNotNull(timeSource, "TimeSource must not be null")
     of(timeSource.instant)
   }
@@ -275,18 +275,6 @@ object Instant {
     //ofEpochNanos(epochSeconds.movePointRight(9).toBigIntegerExact)
     ofEpochNanos((epochSeconds * 1000000000).toBigIntExact.get)
   }
-
-  /**
-   * Obtains the current instant from the system clock in the default time-zone.
-   * <p>
-   * This will query the {@link TimeSource#system() system time-source} to obtain the current instant.
-   * <p>
-   * Using this method will prevent the ability to use an alternate clock for testing
-   * because the clock is hard-coded.
-   *
-   * @return the current instant using the system clock, never null
-   */
-  def now: Instant = now(TimeSource.system)
 
   /**
    * Validates that the input value is not null.

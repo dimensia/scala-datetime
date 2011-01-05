@@ -74,7 +74,7 @@ object LocalDate {
    * @param clock the clock to use, not null
    * @return the current date, never null
    */
-  def now(clock: Clock = Clock.systemDefaultZone): LocalDate = {
+  def now(implicit clock: Clock = Clock.systemDefaultZone): LocalDate = {
     ISOChronology.checkNotNull(clock, "Clock must not be null")
     val instant: Instant = clock.instant
     val offset: ZoneOffset = clock.getZone.getRules.getOffset(instant)
@@ -190,7 +190,7 @@ object LocalDate {
    * @return the local date, never null
    * @throws IllegalCalendarFieldValueException if the modified julian days value is outside the supported range
    */
-  def ofModifiedJulianDays(mjDays: Long): LocalDate = ofYearZeroDays(mjDays + ISOChronology.Days0000ToModifiedJulianDaysEpoch)
+  def ofModifiedJulianDays(mjDays: Long): LocalDate = ofYearZeroDays(mjDays + ISOChronology.Days0000ToModifiedJulianDayEpoch)
 
   /**
    * Converts a year zero day count to a date.
@@ -1120,7 +1120,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    *
    * @return the Modified Julian Day equivalent to this date
    */
-  def toModifiedJulianDays: Long = toYearZeroDays - ISOChronology.Days0000ToModifiedJulianDaysEpoch
+  def toModifiedJulianDays: Long = toYearZeroDays - ISOChronology.Days0000ToModifiedJulianDayEpoch
 
   /**
    * Returns a copy of this {@code LocalDate} with the specified number of days subtracted.

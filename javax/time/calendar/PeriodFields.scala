@@ -406,7 +406,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    */
   def multipliedBy(scalar: Long): PeriodFields = {
     if (scalar == 1 || isZero) this
-    else this.map(_ * scalar)
+    else create(this.map(_ * scalar))
 
     //    for (field <- this) {
     //      copy(field.getUnit) = field.multipliedBy(scalar)

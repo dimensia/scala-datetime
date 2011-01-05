@@ -77,13 +77,13 @@ object DateTimeFieldRule {
    * @param locale the locale, not null
    * @param valueTextMap the map of values to text to store, not null
    */
-  final class TextStore(locale: Locale, valueTextMap: Map[Int, String]) {
+  final class TextStore(locale: Locale, var valueTextMap: HashMap[Int, String]) {
     ISOChronology.checkNotNull(locale, "Locale must not be null")
     ISOChronology.checkNotNull(valueTextMap, "Map must not be null")
     if (valueTextMap.contains(null) || valueTextMap.valuesIterator.contains(null) || valueTextMap.valuesIterator.contains("")) {
       throw new IllegalArgumentException("The map must not contain null or empty text")
     }
-    val copy = new HashMap[Int, String](valueTextMap)
+    val copy: HashMap[Int,String] = new HashMap[Int, String]() ++ valueTextMap
     var reverse = new HashMap[String, Int]
     var insensitive = new HashMap[String, Int]
     val lengthSet = new HashSet[Int]
@@ -118,7 +118,7 @@ object DateTimeFieldRule {
 
       Arrays.sort(lengths)
     }
-    this.valueTextMap = copy.toMap
+    this.valueTextMap = copy
 
     /**
      * Gets the locale that the text relates to.
@@ -205,7 +205,7 @@ object DateTimeFieldRule {
      * @param value the value to get text for
      * @return the text for the field value, null if no text found
      */
-    def getValueText(value: Int): String = valueTextMap.get(value)
+    def getValueText(value: Int): Option[String] = valueTextMap.get(value)
 
     /**
      * Map of case insensitive text to value.
@@ -221,7 +221,7 @@ object DateTimeFieldRule {
      *
      * @return the unmodifiable map of value to text, never null
      */
-    def getValueTextMap: Map[Int, String] = valueTextMap
+    def getValueTextMap: HashMap[Int, String] = valueTextMap
 
     /**
      * Gets the derived map expressing the value for each text.
@@ -321,7 +321,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    */
   def getText(value: Int, locale: Locale, textStyle: DateTimeFormatterBuilder.TextStyle): String = {
     val textStore: DateTimeFieldRule.TextStore = getTextStore(locale, textStyle)
-    val text: String = (if (textStore != null) textStore.getValueText(value) else null)
+    val text: String = (if (textStore != null) textStore.getValueText(value).getOrElse(null) else null)
     if (text == null) value.toString else text
   }
 
@@ -459,7 +459,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
     if (textStores == null) {
       return null
     }
-    val ref: SoftReference[HashMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore]] = textStores.get(locale)
+    val ref: SoftReference[HashMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore]] = textStores.getOrElse(locale, null)
     if (ref != null) {
       val textMapByStyle: HashMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore] = ref.get
       if (textMapByStyle != null) {

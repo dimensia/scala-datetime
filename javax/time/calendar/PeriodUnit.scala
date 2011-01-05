@@ -75,6 +75,8 @@ object PeriodUnit {
   }
 }
 
+import PeriodUnit._
+
 /**
  * @param name the name of the unit, never null
  * @param equivalentPeriod the cache of periods equivalent to this unit, not null
@@ -84,8 +86,6 @@ object PeriodUnit {
 @SerialVersionUID(1L)
 abstract class PeriodUnit private[calendar](@transient val name: String, @transient val equivalentPeriods: Seq[PeriodField], @transient val estimatedDuration: Duration, @transient val hashCode: Int)
   extends Ordered[PeriodUnit] with Serializable {
-
-  import PeriodUnit._
 
   ISOChronology.checkNotNull(name, "Name must not be null")
 

@@ -103,7 +103,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * @param calendrical the calendrical to get the value from, not null
    * @return the value, null if unable to derive the value
    */
-  final def deriveValueFrom[T](calendrical: Calendrical): Option[T] = {
+  final def deriveValueFrom(calendrical: Calendrical): Option[T] = {
     ISOChronology.checkNotNull(calendrical, "Calendrical must not be null")
     derive(calendrical)
   }
@@ -225,7 +225,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
     val result: T = interpret(merger, value)
     if (result != null) return result
     throw new CalendricalException(
-      "Unable to complete merge as input contains an unknown type " + " for rule '" + getName + "': " + value.getClass.getName)
+      "Unable to complete merge as input contains an unknown type " + " for rule '" + getName + "': " + value.asInstanceOf[AnyRef].getClass.getName)
   }
 
   /**

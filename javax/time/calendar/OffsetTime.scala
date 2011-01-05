@@ -121,7 +121,7 @@ object OffsetTime {
     extends CalendricalRule[OffsetTime](classOf[OffsetTime], ISOChronology, "OffsetTime", ISOChronology.periodNanos, ISOChronology.periodDays)
     with Serializable {
 
-    protected override def derive(calendrical: Calendrical): Option[OffsetTime] =       calendrical.get(OffsetDateTime.rule).map(_.toOffsetTime)
+    protected override def derive(calendrical: Calendrical): Option[OffsetTime] = calendrical.get(OffsetDateTime.rule).map(_.toOffsetTime)
 
     private def readResolve: AnyRef = Rule
   }
@@ -135,10 +135,10 @@ object OffsetTime {
    * Using this method allows the use of an alternate clock for testing.
    * The alternate clock may be introduced using {@link Clock dependency injection}.
    *
-   * @param clock the clock to use, not null
+   * @param clock the clock to use, by default {@code Clock.systemDefaultZone}, not null
    * @return the current time, never null
    */
-  def now(clock: Clock = Clock.systemDefaultZone): OffsetTime = {
+  def now(implicit clock: Clock = Clock.systemDefaultZone): OffsetTime = {
     ISOChronology.checkNotNull(clock, "Clock must not be null")
     val now: Instant = clock.instant
     ofInstant(now, clock.getZone.getRules.getOffset(clock.instant))
@@ -239,7 +239,8 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
    * @param rule the rule to use, not null
    * @return the value for the rule, null if the value cannot be returned
    */
-  def get[T](rule: CalendricalRule[T]): Option[T] = Some(rule.deriveValueFor(rule, this, this, ISOChronology))
+  //def get[T](rule: CalendricalRule[T]): Option[T] = Some(rule.deriveValueFor(rule, this, this, ISOChronology))  //FIXME
+  def get[T](rule: CalendricalRule[T]): Option[T] = None
 
   /**
    * Returns a copy of this {@code OffsetTime} with the second-of-minute value altered.

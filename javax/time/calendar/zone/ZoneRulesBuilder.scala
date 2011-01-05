@@ -578,7 +578,7 @@ class ZoneRulesBuilder {
       savings = firstWindow.fixedSavingAmount
     }
     val firstWallOffset: ZoneOffset = deduplicate(standardOffset.plus(savings))
-    var windowStart: OffsetDateTime = deduplicate(OffsetDateTime.of(Year.MinYear, 1, 1, 0, 0, firstWallOffset))
+    var windowStart: OffsetDateTime = deduplicate(OffsetDateTime.of(Year.MinYear, 1, 1, 0, 0, offset = firstWallOffset))
     for (window <- windowList) {
       window.tidy(windowStart.getYear)
       var effectiveSavings: Period = window.fixedSavingAmount
