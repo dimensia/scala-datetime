@@ -6,7 +6,7 @@ Goals:
  - Code shall be Scala only to be reasonably platform-independent.
 
 Status:
- - It does not compile yet!If you need something useable NOW, this is not the place to look.
+ - It does compile! But if you need something useable NOW, this is not the place to look.
  - The source code is based on the Date&Time library (JSR-310) and was translated to Scala 
    (mostly automatic, with quite some help from IntelliJ's "Convert Java to Scala" functionality).
  - All code is syntactically valid Scala code.
@@ -20,12 +20,12 @@ Status:
    but a few tricky ones remain (especially exceptions).
  - Usages of BigInteger/BigDecimal are replaced by BigInt/BigDecimal.
  - Some algorithms could need further cleanup.
- - Most instances of Java's "constructor arguments + field + getter" pattern are already replaced 
+ - Instances of Java's "constructor arguments + field + getter" pattern are already replaced 
    by class Foo(val bar: ...) or similiar.
  - The code has a few places where Java collections instead of Scala collections are used.
- - A few places with "break" and "continue" need investigation to be replaced.
+ - A few places with "continue" need investigation to be replaced.
  - The Scala packages still have the "javax.time" namespace.
- - The code uses no implicits. These will be added in the future (think of "5.seconds" or "7.days"), 
+ - The code uses almost no implicits. These will be added in the future (think of "5.seconds" or "7.days"), 
    when things are a bit further down the road.
  - Methods returning something like "Integer (or null)" have been replaced by "Option[Int]".
  - There are some classes which do some "reification" magic. 
