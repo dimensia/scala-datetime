@@ -117,12 +117,12 @@ object ZonedDateTime {
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    * @throws CalendricalException if the resolver cannot resolve an invalid local date-time
    */
-  //  def of(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int)(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int)(zone: TimeZone, resolver: ZoneResolver = ZoneResolvers.strict): ZonedDateTime = {
+  //  def of(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int)(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int)(zone: ZoneId, resolver: ZoneResolver = ZoneResolvers.strict): ZonedDateTime = {
   //    val dt: LocalDateTime = LocalDateTime.of(year, monthOfYear, dayOfMonth)(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
   //    resolve(dt, null, zone, resolver)
   //  }
   //
-  //  def apply(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int)(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int)(zone: TimeZone, resolver: ZoneResolver = ZoneResolvers.strict): ZonedDateTime =
+  //  def apply(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int)(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int)(zone: ZoneId, resolver: ZoneResolver = ZoneResolvers.strict): ZonedDateTime =
   //    of(year, monthOfYear, dayOfMonth)(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)(zone, resolver)
 
   /**
@@ -153,12 +153,12 @@ object ZonedDateTime {
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    * @throws CalendricalException if the resolver cannot resolve an invalid local date-time
    */
-  def of(year: Int, monthOfYear: Int, dayOfMonth: Int)(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int)(zone: TimeZone, resolver: ZoneResolver = ZoneResolvers.strict): ZonedDateTime = {
+  def of(year: Int, monthOfYear: Int, dayOfMonth: Int)(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int)(zone: ZoneId, resolver: ZoneResolver = ZoneResolvers.strict): ZonedDateTime = {
     val dt: LocalDateTime = LocalDateTime.of(year, monthOfYear, dayOfMonth)(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
     resolve(dt, null, zone, resolver)
   }
 
-  def apply(year: Int, monthOfYear: Int, dayOfMonth: Int)(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int)(zone: TimeZone, resolver: ZoneResolver = ZoneResolvers.strict): ZonedDateTime =
+  def apply(year: Int, monthOfYear: Int, dayOfMonth: Int)(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int)(zone: ZoneId, resolver: ZoneResolver = ZoneResolvers.strict): ZonedDateTime =
     of(year, monthOfYear, dayOfMonth)(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)(zone, resolver)
 
   /**
@@ -179,12 +179,12 @@ object ZonedDateTime {
    * @return the zoned date-time, never null
    * @throws CalendricalException if the resolver cannot resolve an invalid local date-time
    */
-  def of(dateProvider: DateProvider, timeProvider: TimeProvider, zone: TimeZone, resolver: ZoneResolver): ZonedDateTime = {
+  def of(dateProvider: DateProvider, timeProvider: TimeProvider, zone: ZoneId, resolver: ZoneResolver): ZonedDateTime = {
     val dt: LocalDateTime = LocalDateTime.of(dateProvider, timeProvider)
     resolve(dt, null, zone, resolver)
   }
 
-  def apply(dateProvider: DateProvider, timeProvider: TimeProvider, zone: TimeZone, resolver: ZoneResolver): ZonedDateTime =
+  def apply(dateProvider: DateProvider, timeProvider: TimeProvider, zone: ZoneId, resolver: ZoneResolver): ZonedDateTime =
     of(dateProvider, timeProvider, zone, resolver)
 
 
@@ -205,12 +205,12 @@ object ZonedDateTime {
    * @return the zoned date-time, never null
    * @throws CalendricalException if the resolver cannot resolve an invalid local date-time
    */
-  def of(dateTimeProvider: DateTimeProvider, zone: TimeZone, resolver: ZoneResolver): ZonedDateTime = {
+  def of(dateTimeProvider: DateTimeProvider, zone: ZoneId, resolver: ZoneResolver): ZonedDateTime = {
     val dt: LocalDateTime = LocalDateTime.of(dateTimeProvider)
     resolve(dt, null, zone, resolver)
   }
 
-  def apply(dateTimeProvider: DateTimeProvider, zone: TimeZone, resolver: ZoneResolver): ZonedDateTime =
+  def apply(dateTimeProvider: DateTimeProvider, zone: ZoneId, resolver: ZoneResolver): ZonedDateTime =
     of(dateTimeProvider, zone, resolver)
 
   /**
@@ -224,7 +224,7 @@ object ZonedDateTime {
    * If the time-zone has a floating version, then this conversion will use the
    * latest time-zone rules that are valid for the input date-time.
    * <p>
-   * An alternative to this method is {@link #ofInstant(OffsetDateTime, TimeZone)}.
+   * An alternative to this method is {@link #ofInstant(OffsetDateTime, ZoneId)}.
    * This method will retain the date and time and throw an exception if
    * the offset is invalid. The {@code fromInstant} method will change the
    * date and time if necessary to retain the same instant.
@@ -236,9 +236,9 @@ object ZonedDateTime {
    * @throws CalendricalException if the date-time is invalid due to a gap in the local time-line
    * @throws CalendricalException if the offset is invalid for the time-zone at the date-time
    */
-  def of(dateTime: OffsetDateTime, zone: TimeZone): ZonedDateTime = {
+  def of(dateTime: OffsetDateTime, zone: ZoneId): ZonedDateTime = {
     ISOChronology.checkNotNull(dateTime, "OffsetDateTime must not be null")
-    ISOChronology.checkNotNull(zone, "TimeZone must not be null")
+    ISOChronology.checkNotNull(zone, "ZoneId must not be null")
     val inputOffset: ZoneOffset = dateTime.getOffset
     val rules: ZoneRules = zone.getRules
     val info: ZoneOffsetInfo = rules.getOffsetInfo(dateTime.toLocalDateTime)
@@ -251,7 +251,7 @@ object ZonedDateTime {
     return new ZonedDateTime(dateTime, zone)
   }
 
-  def apply(dateTime: OffsetDateTime, zone: TimeZone): ZonedDateTime = of(dateTime, zone)
+  def apply(dateTime: OffsetDateTime, zone: ZoneId): ZonedDateTime = of(dateTime, zone)
 
   /**
    * Obtains an instance of {@code ZonedDateTime} from an {@code Instant}.
@@ -267,9 +267,9 @@ object ZonedDateTime {
    * @return the zoned date-time, never null
    * @throws CalendricalException if the result exceeds the supported range
    */
-  def ofInstant(instantProvider: InstantProvider, zone: TimeZone): ZonedDateTime = {
+  def ofInstant(instantProvider: InstantProvider, zone: ZoneId): ZonedDateTime = {
     val instant: Instant = Instant.of(instantProvider)
-    ISOChronology.checkNotNull(zone, "TimeZone must not be null")
+    ISOChronology.checkNotNull(zone, "ZoneId must not be null")
     val rules: ZoneRules = zone.getRules
     val offsetDT: OffsetDateTime = OffsetDateTime.ofInstant(instant, rules.getOffset(instant))
     new ZonedDateTime(offsetDT, zone)
@@ -288,7 +288,7 @@ object ZonedDateTime {
    * <p>
    * If the time-zone has a floating version, then this conversion will use the latest time-zone rules.
    * <p>
-   * An alternative to this method is {@link #of(OffsetDateTime, TimeZone)}.
+   * An alternative to this method is {@link #of(OffsetDateTime, ZoneId)}.
    * The {@code fromInstant} method will change the date and time if necessary to
    * retain the same instant. The {@code dateTime} method will retain the date and
    * time and throw an exception if the offset is invalid.
@@ -298,10 +298,10 @@ object ZonedDateTime {
    * @return the zoned date-time, never null
    * @throws CalendricalException if the result exceeds the supported range
    */
-  def ofInstant(dateTime: OffsetDateTime, zone: TimeZone): ZonedDateTime = {
+  def ofInstant(dateTime: OffsetDateTime, zone: ZoneId): ZonedDateTime = {
     var _dateTime = dateTime
     ISOChronology.checkNotNull(_dateTime, "OffsetDateTime must not be null")
-    ISOChronology.checkNotNull(zone, "TimeZone must not be null")
+    ISOChronology.checkNotNull(zone, "ZoneId must not be null")
     val rules: ZoneRules = zone.getRules
     if (!rules.isValidDateTime(_dateTime)) {
       val offsetForInstant: ZoneOffset = rules.getOffset(_dateTime)
@@ -321,8 +321,8 @@ object ZonedDateTime {
    * @return the zoned date-time, never null
    * @throws CalendricalException if the result exceeds the supported range
    */
-  def ofEpochSeconds(epochSeconds: Long, zone: TimeZone): ZonedDateTime = {
-    ISOChronology.checkNotNull(zone, "TimeZone must not be null")
+  def ofEpochSeconds(epochSeconds: Long, zone: ZoneId): ZonedDateTime = {
+    ISOChronology.checkNotNull(zone, "ZoneId must not be null")
     ZonedDateTime.ofInstant(Instant.ofEpochSeconds(epochSeconds, 0), zone)
   }
 
@@ -357,7 +357,7 @@ object ZonedDateTime {
    * <p>
    * The offset ID is the normalized form as defined in {@link ZoneOffset}.
    * <p>
-   * The zone ID is the normalized form as defined in {@link TimeZone#getID()}.
+   * The zone ID is the normalized form as defined in {@link ZoneId#getID()}.
    *
    * @param text  the text to parse, not null
    * @param formatter  the formatter to use, by default {@code DateTimeFormatters#isoZonedDateTime}, not null
@@ -380,9 +380,9 @@ object ZonedDateTime {
    * @return the zoned date-time, never null
    * @throws CalendricalException if the date-time cannot be resolved
    */
-  private def resolve(dateTime: LocalDateTime, oldDateTime: ZonedDateTime, zone: TimeZone, resolver: ZoneResolver): ZonedDateTime = {
+  private def resolve(dateTime: LocalDateTime, oldDateTime: ZonedDateTime, zone: ZoneId, resolver: ZoneResolver): ZonedDateTime = {
     ISOChronology.checkNotNull(dateTime, "LocalDateTime must not be null")
-    ISOChronology.checkNotNull(zone, "TimeZone must not be null")
+    ISOChronology.checkNotNull(zone, "ZoneId must not be null")
     ISOChronology.checkNotNull(resolver, "ZoneResolver must not be null")
     val offsetDT: OffsetDateTime = resolver.resolve(zone, dateTime, oldDateTime)
     new ZonedDateTime(offsetDT, zone)
@@ -416,7 +416,7 @@ object ZonedDateTime {
  * @param zone  the time-zone, validated as not null
  */
 @SerialVersionUID(-456761901L)
-final class ZonedDateTime(private val dateTime: OffsetDateTime, private val zone: TimeZone)
+final class ZonedDateTime(private val dateTime: OffsetDateTime, private val zone: ZoneId)
   extends InstantProvider with DateTimeProvider with Calendrical with CalendricalMatcher with Ordered[ZonedDateTime] with Serializable {
 
   import ZonedDateTime._
@@ -526,10 +526,21 @@ final class ZonedDateTime(private val dateTime: OffsetDateTime, private val zone
 
   /**
    * Gets the time-zone, such as 'Europe/Paris'.
+   * <p>
+   * The time-zone stored by this {@code ZonedDateTime} can have either a
+   * fixed or a floating version. This method returns the time-zone with
+   * a version, calculating the best matching version if necessary.
+   *
+   * This returns the stored time-zone id used to determine the time-zone rules.
+   * <p>
+   * A time-zone can have either a fixed or a floating version, where floating
+   * represents the latest version of the underlying rules.
+   * The {@link #getApplicableZone()} method will resolve the zone to a specific version.
+   * The {@link #getApplicableRules()} method will resolve the actual zone-rules.
    *
    * @return the time-zone, never null
    */
-  def getZone: TimeZone = zone
+  def getZone: ZoneId = zone
 
   /**
    * Returns a copy of this ZonedDateTime with a different time-zone,
@@ -540,7 +551,7 @@ final class ZonedDateTime(private val dateTime: OffsetDateTime, private val zone
    * In that case, the specified resolver is used, by default {@code ZoneResolvers#retainOffset}.
    * <p>
    * To change the zone and adjust the local date-time,
-   * use {@link #withZoneSameInstant(TimeZone)}.
+   * use {@link #withZoneSameInstant(ZoneId)}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -548,8 +559,8 @@ final class ZonedDateTime(private val dateTime: OffsetDateTime, private val zone
    * @param resolver  the resolver to use, by default {@code ZoneResolvers#retainOffset}, not null
    * @return a {@code ZonedDateTime} based on this date-time with the requested zone, never null
    */
-  def withZoneSameLocal(zone: TimeZone, resolver: ZoneResolver = ZoneResolvers.retainOffset): ZonedDateTime = {
-    ISOChronology.checkNotNull(zone, "TimeZone must not be null")
+  def withZoneSameLocal(zone: ZoneId, resolver: ZoneResolver = ZoneResolvers.retainOffset): ZonedDateTime = {
+    ISOChronology.checkNotNull(zone, "ZoneId must not be null")
     ISOChronology.checkNotNull(resolver, "ZoneResolver must not be null")
     if (zone == this.zone) this else resolve(dateTime.toLocalDateTime, this, zone, resolver)
   }
@@ -565,13 +576,13 @@ final class ZonedDateTime(private val dateTime: OffsetDateTime, private val zone
    * in the local time-line have no effect on the result.
    * <p>
    * To change the offset while keeping the local time,
-   * use {@link #withZoneSameLocal(TimeZone)}.
+   * use {@link #withZoneSameLocal(ZoneId)}.
    *
    * @param zone  the time-zone to change to, not null
    * @return a {@code ZonedDateTime} based on this date-time with the requested zone, never null
    * @throws CalendarConversionException if the result exceeds the supported date range
    */
-  def withZoneSameInstant(zone: TimeZone): ZonedDateTime = if (zone == this.zone) this else ofInstant(dateTime, zone)
+  def withZoneSameInstant(zone: ZoneId): ZonedDateTime = if (zone == this.zone) this else ofInstant(dateTime, zone)
 
   /**
    * Calculates the applicable versioned time-zone, such as 'Europe/Paris#2009b'.
@@ -582,27 +593,33 @@ final class ZonedDateTime(private val dateTime: OffsetDateTime, private val zone
    * <p>
    * For a floating time-zone, the applicable version is the latest version
    * for which the offset date-time contained in this object would be valid.
+   * If a new version of the time-zone rules is registered then the result
+   * of this method may change.
    * <p>
-   * This method can throw an exception if the time-zone is invalid for this JVM.
+   * If this instance is created on one JVM and passed by serialization to another JVM
+   * it is possible for the time-zone id to be invalid.
+   * If this happens, this method will throw an exception.
    *
    * @return the time-zone complete with version, never null
    * @throws CalendricalException if no rules can be found for the zone
    * @throws CalendricalException if no rules are valid for this date-time
    */
-  def getApplicableZone: TimeZone = {
-    if (zone.isFloatingVersion) zone.withLatestVersionValidFor(dateTime)
-    else zone
-  }
+  def getApplicableZone: ZoneId =
+    if (zone.isFloatingVersion) zone.withLatestVersionValidFor(dateTime) else zone
 
   /**
    * Calculates the zone rules applicable for this date-time.
    * <p>
    * The rules provide the information on how the zone offset changes over time.
    * This usually includes historical and future information.
-   * The rules are determined using {@link TimeZone#getRulesValidFor(OffsetDateTime)}
+   * The rules are determined using {@link ZoneId#getRulesValidFor(OffsetDateTime)}
    * which finds the best matching set of rules for this date-time.
+   * If a new version of the time-zone rules is registered then the result
+   * of this method may change.
    * <p>
-   * This method can throw an exception if the time-zone is invalid for this JVM.
+   * If this instance is created on one JVM and passed by serialization to another JVM
+   * it is possible for the time-zone id to be invalid.
+   * If this happens, this method will throw an exception.
    *
    * @return the time-zone rules, never null
    * @throws CalendricalException if no rules can be found for the zone
@@ -1208,9 +1225,28 @@ final class ZonedDateTime(private val dateTime: OffsetDateTime, private val zone
    */
   def plusDuration(periodProvider: PeriodProvider): ZonedDateTime = {
     val period: PeriodFields = PeriodFields.of(periodProvider)
-    val duration: Duration = period.toDuration
-    if (duration.isZero) this else ofInstant(toInstant.plus(duration), zone)
+    plusDuration(period.toDuration)
   }
+
+  /**
+   * Returns a copy of this {@code ZonedDateTime} with the specified duration added.
+   * <p>
+   * This adds the specified duration to this date-time, returning a new date-time.
+   * The calculation is equivalent to addition on the {@link #toInstant() instant} equivalent of this instance.
+   * <p>
+   * Adding a duration differs from adding a period as gaps and overlaps in
+   * the local time-line are taken into account. For example, if there is a
+   * gap in the local time-line of one hour from 01:00 to 02:00, then adding a
+   * duration of one hour to 00:30 will yield 02:30.
+   * <p>
+   * This instance is immutable and unaffected by this method call.
+   *
+   * @param duration  the duration to add, not null
+   * @return a {@code ZonedDateTime} based on this date-time with the duration added, never null
+   * @throws CalendricalException if the result exceeds the supported range
+   */
+  def plusDuration(duration: Duration): ZonedDateTime =
+    if (duration.isZero) this else ofInstant(toInstant.plus(duration), zone)
 
   /**
    * Returns a copy of this {@code ZonedDateTime} with the specified duration added.
@@ -1498,9 +1534,28 @@ final class ZonedDateTime(private val dateTime: OffsetDateTime, private val zone
    */
   def minusDuration(periodProvider: PeriodProvider): ZonedDateTime = {
     val period: PeriodFields = PeriodFields.of(periodProvider)
-    val duration: Duration = period.toDuration
-    if (duration.isZero) this else ofInstant(toInstant.minus(duration), zone)
+    minusDuration(period.toDuration)
   }
+
+  /**
+   * Returns a copy of this {@code ZonedDateTime} with the specified duration subtracted.
+   * <p>
+   * This subtracts the specified duration from this date-time, returning a new date-time.
+   * The calculation is equivalent to subtraction on the {@link #toInstant() instant} equivalent of this instance.
+   * <p>
+   * Subtracting a duration differs from subtracting a period as gaps and overlaps in
+   * the local time-line are taken into account. For example, if there is a
+   * gap in the local time-line of one hour from 01:00 to 02:00, then subtracting a
+   * duration of one hour from 02:30 will yield 00:30.
+   * <p>
+   * This instance is immutable and unaffected by this method call.
+   *
+   * @param duration  the duration to subtract, not null
+   * @return a {@code ZonedDateTime} based on this date-time with the duration subtracted, never null
+   * @throws CalendricalException if the result exceeds the supported range
+   */
+  def minusDuration(duration: Duration): ZonedDateTime =
+    if (duration.isZero) this else ofInstant(toInstant.minus(duration), zone)
 
   /**
    * Returns a copy of this {@code ZonedDateTime} with the specified duration subtracted.

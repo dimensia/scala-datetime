@@ -51,9 +51,9 @@ import javax.time.calendar.format.DateTimeFormatterBuilder.TextStyle
  * <p>
  * This enum represents a common concept that is found in many calendar systems.
  * As such, this enum may be used by any calendar system that has the month-of-year
- * concept with a twelve month year where the names are equivalent to those defined.
- * Note that the implementation of {@link DateTimeFieldRule} for month-of-year may
- * vary by calendar system.
+ * concept with a twelve month year where the names and month lengths are equivalent to
+ * those defined. Note that the implementation of {@link DateTimeFieldRule} for month-of-year
+ * may vary by calendar system.
  * <p>
  * MonthOfYear is an immutable and thread-safe enum.
  *
@@ -63,73 +63,73 @@ import javax.time.calendar.format.DateTimeFormatterBuilder.TextStyle
 object MonthOfYear {
 
   /**
-   * The singleton instance for the month of January.
+   * The singleton instance for the month of January with 31 days.
    * This has the numeric value of {@code 1}.
    */
   object January extends MonthOfYear(1)
 
   /**
-   * The singleton instance for the month of February.
+   * The singleton instance for the month of February with 28 days, or 29 in a leap year.
    * This has the numeric value of {@code 2}.
    */
   object February extends MonthOfYear(2)
 
   /**
-   * The singleton instance for the month of March.
+   * The singleton instance for the month of March with 31 days.
    * This has the numeric value of {@code 3}.
    */
   object March extends MonthOfYear(3)
 
   /**
-   * The singleton instance for the month of April.
+   * The singleton instance for the month of April with 30 days.
    * This has the numeric value of {@code 4}.
    */
   object April extends MonthOfYear(4)
 
   /**
-   * The singleton instance for the month of May.
+   * The singleton instance for the month of May with 31 days.
    * This has the numeric value of {@code 5}.
    */
   object May extends MonthOfYear(5)
 
   /**
-   * The singleton instance for the month of June.
+   * The singleton instance for the month of June with 30 days.
    * This has the numeric value of {@code 6}.
    */
   object June extends MonthOfYear(6)
 
   /**
-   * The singleton instance for the month of July.
+   * The singleton instance for the month of July with 31 days.
    * This has the numeric value of {@code 7}.
    */
   object July extends MonthOfYear(7)
 
   /**
-   * The singleton instance for the month of August.
+   * The singleton instance for the month of August with 31 days.
    * This has the numeric value of {@code 8}.
    */
   object August extends MonthOfYear(8)
 
   /**
-   * The singleton instance for the month of September.
+   * The singleton instance for the month of September with 30 days.
    * This has the numeric value of {@code 9}.
    */
   object September extends MonthOfYear(9)
 
   /**
-   * The singleton instance for the month of October.
+   * The singleton instance for the month of October with 31 days.
    * This has the numeric value of {@code 10}.
    */
   object October extends MonthOfYear(10)
 
   /**
-   * The singleton instance for the month of November.
+   * The singleton instance for the month of November with 30 days.
    * This has the numeric value of {@code 11}.
    */
   object November extends MonthOfYear(11)
 
   /**
-   * The singleton instance for the month of December.
+   * The singleton instance for the month of December with 31 days.
    * This has the numeric value of {@code 12}.
    */
   object December extends MonthOfYear(12)

@@ -569,14 +569,14 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime)
    * Finer control over gaps and overlaps is available in two ways.
    * If you simply want to use the earlier offset at overlaps then call
    * {@link ZonedDateTime#withEarlierOffsetAtOverlap()} immediately after this method.
-   * Alternately, pass a specific resolver to {@link #atZone ( TimeZone, ZoneResolver )}.
+   * Alternately, pass a specific resolver to {@link #atZone ( ZoneId, ZoneResolver )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param zone the time-zone to use, not null
    * @return the zoned date-time formed from this date-time, never null
    */
-  def atZone(zone: TimeZone): ZonedDateTime = ZonedDateTime.of(this, zone, ZoneResolvers.postTransition)
+  def atZone(zone: ZoneId): ZonedDateTime = ZonedDateTime.of(this, zone, ZoneResolvers.postTransition)
 
   /**
    * Checks if this {@code LocalDateTime} is before the specified date-time.
@@ -1285,7 +1285,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime)
    * @return the zoned date-time formed from this date-time, never null
    * @throws CalendricalException if the date-time cannot be resolved
    */
-  def atZone(zone: TimeZone, resolver: ZoneResolver): ZonedDateTime = ZonedDateTime.of(this, zone, resolver)
+  def atZone(zone: ZoneId, resolver: ZoneResolver): ZonedDateTime = ZonedDateTime.of(this, zone, resolver)
 
   /**
    * Converts this date-time to a {@code LocalDateTime},

@@ -246,16 +246,6 @@ final class HistoricDate private[i18n](val chrono: HistoricChronology, @transien
   }
 
   /**
-   * Checks if the date represented is the leap day in a leap year.
-   * <p>
-   * The leap day is when the year is a leap year, the month is February and
-   * the day is 29.
-   *
-   * @return true if this date is the leap day in a leap year
-   */
-  def isLeapDay: Boolean = getMonthOfYear.isFebruary && getDayOfMonth == 29
-
-  /**
    * Returns a copy of this date with the day-of-month value altered.
    * <p>
    * The specified day-of-month must be valid for the month and year.

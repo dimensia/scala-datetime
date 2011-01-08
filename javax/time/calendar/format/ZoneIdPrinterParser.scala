@@ -36,7 +36,7 @@ import collection.mutable.HashMap
 import collection.immutable.HashSet
 
 import javax.time.calendar.Calendrical
-import javax.time.calendar.TimeZone
+import javax.time.calendar.ZoneId
 import javax.time.calendar.ZoneOffset
 import javax.time.calendar.format.DateTimeFormatterBuilder.TextStyle
 import javax.time.calendar.zone.ZoneRulesGroup
@@ -44,11 +44,11 @@ import javax.time.calendar.zone.ZoneRulesGroup
 /**
  * Prints or parses a zone offset.
  * <p>
- * ZonePrinterParser is immutable and thread-safe.
+ * ZoneIdPrinterParser is immutable and thread-safe.
  *
  * @author Stephen Colebourne
  */
-object ZonePrinterParser {
+object ZoneIdPrinterParser {
   /**
    * The cached IDs.
    */
@@ -84,7 +84,7 @@ object ZonePrinterParser {
    */
   private[format] class SubstringTree(val length: Int) {
 
-    private[format] def get(substring2: String): ZonePrinterParser.SubstringTree = substringMap.getOrElse(substring2, null)
+    private[format] def get(substring2: String): ZoneIdPrinterParser.SubstringTree = substringMap.getOrElse(substring2, null)
 
     /**
      * Values must be added from shortest to longest.
@@ -98,9 +98,9 @@ object ZonePrinterParser {
       }
       else if (idLen > length) {
         val substring: String = newSubstring.substring(0, length)
-        var parserTree: ZonePrinterParser.SubstringTree = substringMap.getOrElse(substring, null)
+        var parserTree: ZoneIdPrinterParser.SubstringTree = substringMap.getOrElse(substring, null)
         if (parserTree == null) {
-          parserTree = new ZonePrinterParser.SubstringTree(idLen)
+          parserTree = new ZoneIdPrinterParser.SubstringTree(idLen)
           substringMap.put(substring, parserTree)
         }
         parserTree.add(newSubstring)
@@ -110,7 +110,7 @@ object ZonePrinterParser {
     /**
      * Map of a substring to a set of substrings that contain the key.
      */
-    private final val substringMap = new HashMap[String, ZonePrinterParser.SubstringTree]
+    private final val substringMap = new HashMap[String, ZoneIdPrinterParser.SubstringTree]
   }
 
   /**
@@ -119,20 +119,20 @@ object ZonePrinterParser {
    * @param availableIDs the available IDs, not null, not empty
    * @return the tree, never null
    */
-  private def prepareParser(availableIDs: Set[String]): ZonePrinterParser.SubstringTree = {
+  private def prepareParser(availableIDs: Set[String]): ZoneIdPrinterParser.SubstringTree = {
     val ids: List[String] = availableIDs.toList
 
     //    def comparator(str1: String, str2: String): Int = if (str1.length == str2.length) str1.compareTo(str2) else str1.length - str2.length
     //    ids.sortWith(comparator)
 
-    val tree: ZonePrinterParser.SubstringTree = new ZonePrinterParser.SubstringTree(ids.head.length)
+    val tree: ZoneIdPrinterParser.SubstringTree = new ZoneIdPrinterParser.SubstringTree(ids.head.length)
     tree
   }
 
   /**
    * The cached tree to speed up parsing.
    */
-  private var preparedTree: ZonePrinterParser.SubstringTree = null
+  private var preparedTree: ZoneIdPrinterParser.SubstringTree = null
 }
 
 /**
@@ -140,10 +140,10 @@ object ZonePrinterParser {
  *
  * @param textStyle the test style to output, not null
  */
-final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilder.TextStyle)
+final class ZoneIdPrinterParser private[format](textStyle: DateTimeFormatterBuilder.TextStyle)
   extends DateTimePrinter with DateTimeParser {
 
-  import ZonePrinterParser._
+  import ZoneIdPrinterParser._
 
   /**
    * Constructor.
@@ -154,7 +154,7 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
 
   /**{@inheritDoc}*/
   override def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = {
-    val zone: TimeZone = calendrical.get(TimeZone.rule).getOrElse(throw new CalendricalPrintException("Unable to print TimeZone"))
+    val zone: ZoneId = calendrical.get(ZoneId.rule).getOrElse(throw new CalendricalPrintException("Unable to print ZoneId"))
 
     if (textStyle == null) {
       appendable.append(zone.getID)
@@ -168,7 +168,7 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
   }
 
   /**{@inheritDoc}*/
-  override def isPrintDataAvailable(calendrical: Calendrical): Boolean = (calendrical.get(TimeZone.rule) != null)
+  override def isPrintDataAvailable(calendrical: Calendrical): Boolean = (calendrical.get(ZoneId.rule) != null)
 
   /**
    * {@inheritDoc }
@@ -191,8 +191,8 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
 //    if (ids.size == 0) {
 //      return ~position
 //    }
-//    var tree: ZonePrinterParser.SubstringTree = null
-//    classOf[ZonePrinterParser].synchronized{
+//    var tree: ZoneIdPrinterParser.SubstringTree = null
+//    classOf[ZoneIdPrinterParser].synchronized{
 //      if (preparedTree == null || preparedIDs.size < ids.size) {
 //        ids = HashSet[String]() ++ ids
 //        preparedTree = prepareParser(ids)
@@ -205,11 +205,11 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
 //      val startPos: Int = position + 3
 //      val endPos: Int = new ZoneOffsetPrinterParser("", true, true).parse(newContext, parseText, startPos)
 //      if (endPos < 0) {
-//        context.setParsed(TimeZone.rule, TimeZone.UTC)
+//        context.setParsed(ZoneId.rule, ZoneId.UTC)
 //        return startPos
 //      }
-//      val zone: TimeZone = TimeZone.of(newContext.getParsed(ZoneOffset.rule).asInstanceOf[ZoneOffset])
-//      context.setParsed(TimeZone.rule, zone)
+//      val zone: ZoneId = ZoneId.of(newContext.getParsed(ZoneOffset.rule).asInstanceOf[ZoneOffset])
+//      context.setParsed(ZoneId.rule, zone)
 //      return endPos
 //    }
 //    var parsedZoneId: String = null
@@ -226,7 +226,7 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
 //      }
 //    }
 //    if (parsedZoneId != null && preparedIDs.contains(parsedZoneId)) {
-//      var zone: TimeZone = TimeZone.of(parsedZoneId)
+//      var zone: ZoneId = ZoneId.of(parsedZoneId)
 //      var pos: Int = position + parsedZoneId.length
 //      if (pos + 1 < length && parseText.charAt(pos) == '#') {
 //        val versions: Set[String] = zone.getGroup.getAvailableVersionIDs
@@ -240,7 +240,7 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
 //          }
 //        }
 //      }
-//      context.setParsed(TimeZone.rule, zone)
+//      context.setParsed(ZoneId.rule, zone)
 //      return pos
 //    }
 //    else return ~position

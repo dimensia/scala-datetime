@@ -46,11 +46,13 @@ import javax.time.calendar.ZoneOffset
  * The discontinuity is normally a gap in spring and an overlap in autumn.
  * {@code ZoneOffsetTransition} models the transition between the two offsets.
  * <p>
- * There are two types of transition - a gap and an overlap.
  * Gaps occur where there are local date-times that simply do not not exist.
  * An example would be when the offset changes from {@code +01:00} to {@code +02:00}.
+ * This might be described as 'the clocks will move forward one hour tonight at 1am'.
+ * <p>
  * Overlaps occur where there are local date-times that exist twice.
  * An example would be when the offset changes from {@code +02:00} to {@code +01:00}.
+ * This might be described as 'the clocks will move back one hour tonight at 2am'.
  * <p>
  * ZoneOffsetTransition is immutable and thread-safe.
  *
@@ -110,16 +112,18 @@ final class ZoneOffsetTransition private[zone](val transition: OffsetDateTime, o
    * @return a string for debugging, never null
    */
   override def toString: String = {
-    var buf: StringBuilder = new StringBuilder
+    val buf: StringBuilder = new StringBuilder
     buf.append("Transition[").append(if (isGap) "Gap" else "Overlap").append(" at ").append(transition).append(" to ").append(transitionAfter.getOffset).append(']')
-    return buf.toString
+    buf.toString
   }
 
   /**
    * Compares this transition to another based on the transition instant.
+   * <p>
+   * This compares the instants of each transition.
    * The offsets are ignored, making this order inconsistent with equals.
    *
-   * @param transition the transition to compare to, not null
+   * @param transition  the transition to compare to, not null
    * @return the comparator value, negative if less, positive if greater
    */
   def compare(transition: ZoneOffsetTransition): Int = this.getInstant.compareTo(transition.getInstant)
@@ -143,24 +147,21 @@ final class ZoneOffsetTransition private[zone](val transition: OffsetDateTime, o
    * @param other the other object to compare to, null returns false
    * @return true if equal
    */
-  override def equals(other: Any): Boolean = {
-    if (other == this) {
-      return true
+  override def equals(other: Any): Boolean =
+    other match {
+      case zot: ZoneOffsetTransition => (this eq zot) ||
+        (transition == zot.transition && transitionAfter.getOffset == zot.transitionAfter.getOffset)
+      case _ => false
     }
-    if (other.isInstanceOf[ZoneOffsetTransition]) {
-      var d: ZoneOffsetTransition = other.asInstanceOf[ZoneOffsetTransition]
-      return transition.equals(d.transition) && transitionAfter.getOffset.equals(d.transitionAfter.getOffset)
-    }
-    return false
-  }
 
   /**
    * Gets the transition instant.
    * <p>
    * This is the instant of the discontinuity, which is defined as the first
-   * instant that the 'after' offset applies. This instant can be also obtained
-   * using the {@link #getDateTime ( ) 'before' offset} or the
-   * {@link #getDateTimeAfter ( ) 'after' offset}.
+   * instant that the 'after' offset applies.
+   *  <p>
+   * The methods {@link #getInstant()}, {@link #getDateTimeBefore()} and {@link #getDateTimeAfter()}
+   * all represent the same instant.
    *
    * @return the transition instant, not null
    */
@@ -177,7 +178,9 @@ final class ZoneOffsetTransition private[zone](val transition: OffsetDateTime, o
    * Gets the transition date-time expressed with the 'after' offset.
    * <p>
    * This is the first date-time after the discontinuity, when the new offset applies.
-   * This is the same instant as {@link #getDateTime()} but with the 'after' offset.
+   * <p>
+   * The methods {@link #getInstant()}, {@link #getDateTimeBefore()} and {@link #getDateTimeAfter()}
+   * all represent the same instant.
    *
    * @return the transition date-time expressed with the after offset, not null
    */
@@ -185,8 +188,12 @@ final class ZoneOffsetTransition private[zone](val transition: OffsetDateTime, o
 
   /**
    * Does this transition represent a gap in the local time-line.
+   * <p>
+   * Overlaps occur where there are local date-times that exist twice.
+   * An example would be when the offset changes from {@code +02:00} to {@code +01:00}.
+   * This might be described as 'the clocks will move back one hour tonight at 2am'.
    *
-   * @return true if this transition is an overlap
+   * @return true if this transition is an overlap, false if it is a gap
    */
   def isOverlap: Boolean = getOffsetAfter.getAmountSeconds < getOffsetBefore.getAmountSeconds
 
@@ -194,46 +201,59 @@ final class ZoneOffsetTransition private[zone](val transition: OffsetDateTime, o
    * Gets the local date-time at the transition which is expressed relative to
    * the 'before' offset.
    * <p>
-   * This is the date-time where the discontinuity begins, and as such it never
-   * actually occurs. This method is simply {@code getDateTime ( ).toLocalDateTime()}
+   * This is the date-time where the discontinuity begins.
+   * For a gap, this local date-time never occurs, whereas for an overlap it occurs
+   * just once after the entire transition is complete.
+   * This method is simply {@code getDateTimeBefore().toLocalDateTime()}
    * <p>
    * This value expresses the date-time normally used in verbal communications.
-   * For example 'the clocks will move forward one hour tonight at 1am'.
+   * For example 'the clocks will move forward one hour tonight at 1am' (a gap) or
+   * 'the clocks will move back one hour tonight at 2am' (an overlap).
    *
-   * @return the transition date-time expressed with the before offset, not null
+   * @return the local date-time of the transition, expressed relative to the before offset, not null
    */
   def getLocal: LocalDateTime = transition.toLocalDateTime
 
   /**
-   * Gets the offset before the gap.
+   * Gets the offset before the transition.
+   * <p>
+   * This is the offset in use before the instant of the transition.
    *
-   * @return the offset before the gap, not null
+   * @return the offset before the transition, not null
    */
   def getOffsetBefore: ZoneOffset = transition.getOffset
 
   /**
-   * Gets the offset after the gap.
+   * Gets the offset after the transition.
+   * <p>
+   * This is the offset in use on and after the instant of the transition.
    *
-   * @return the offset after the gap, not null
+   * @return the offset after the transition, not null
    */
+
   def getOffsetAfter: ZoneOffset = transitionAfter.getOffset
 
   /**
-   * Gets the size of the transition.
+   * Gets the length of the transition as a {@code Period}.
+   * <p>
+   * This will typically be one hour, but might not be.
+   * It will be positive for a gap and negative for an overlap.
    *
-   * @return the size of the transition, positive for gaps, negative for overlaps
+   * @return the length of the transition, positive for gaps, negative for overlaps
    */
   def getTransitionSize: Period = {
-    var secs: Int = getOffsetAfter.getAmountSeconds - getOffsetBefore.getAmountSeconds
-    return Period.ofSeconds(secs).normalized
+    val secs: Int = getOffsetAfter.getAmountSeconds - getOffsetBefore.getAmountSeconds
+    Period.ofSeconds(secs).normalized
   }
 
   /**
    * Checks if the specified offset is valid during this transition.
+   * <p>
+   * This checks to see if the given offset will be valid at some point in the transition.
    * A gap will always return false.
    * An overlap will return true if the offset is either the before or after offset.
    *
-   * @param offset the offset to check, null returns false
+   * @param offset  the offset to check, null returns false
    * @return true if the offset is valid during the transition
    */
   def isValidOffset(offset: ZoneOffset): Boolean =
@@ -249,12 +269,16 @@ final class ZoneOffsetTransition private[zone](val transition: OffsetDateTime, o
    *
    * @return the transition date-time expressed with the before offset, not null
    */
-  def getDateTime: OffsetDateTime = transition
+  def getDateTimeBefore: OffsetDateTime = transition
 
   /**
    * Does this transition represent a gap in the local time-line.
+   * <p>
+   * Gaps occur where there are local date-times that simply do not not exist.
+   * An example would be when the offset changes from {@code +01:00} to {@code +02:00}.
+   * This might be described as 'the clocks will move forward one hour tonight at 1am'.
    *
-   * @return true if this transition is a gap
+   * @return true if this transition is a gap, false if it is an overlap
    */
   def isGap: Boolean = getOffsetAfter.getAmountSeconds > getOffsetBefore.getAmountSeconds
 

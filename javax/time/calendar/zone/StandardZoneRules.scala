@@ -133,8 +133,8 @@ object StandardZoneRules {
   }
 
   private def buildTransitions(transition: ZoneOffsetTransition) = {
-    if (transition.isGap) ArrayBuffer(transition.getDateTime.toLocalDateTime, transition.getDateTimeAfter.toLocalDateTime)
-    else ArrayBuffer(transition.getDateTimeAfter.toLocalDateTime, transition.getDateTime.toLocalDateTime)
+    if (transition.isGap) ArrayBuffer(transition.getDateTimeBefore.toLocalDateTime, transition.getDateTimeAfter.toLocalDateTime)
+    else ArrayBuffer(transition.getDateTimeAfter.toLocalDateTime, transition.getDateTimeBefore.toLocalDateTime)
   }
 
 }

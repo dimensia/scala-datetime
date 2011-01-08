@@ -1379,7 +1379,7 @@ sealed class ISOChronology private
   //    var date: LocalDate = merger.getValue(LocalDate.rule).get
   //    val time: LocalTime = merger.getValue(LocalTime.rule).get
   //    val offset: ZoneOffset = merger.getValue(ZoneOffset.rule).get
-  //    val zone: TimeZone = merger.getValue(TimeZone.rule).get
+  //    val zone: ZoneId = merger.getValue(ZoneId.rule).get
   //    if (date != null && time != null) {
   //      merger.storeMerged(LocalDateTime.rule, LocalDateTime.of(date, time))
   //      merger.removeProcessed(LocalDate.rule)
@@ -1423,7 +1423,7 @@ sealed class ISOChronology private
   //      if (merger.getContext.isStrict) merger.storeMerged(ZonedDateTime.rule, ZonedDateTime.of(odt, zone))
   //      else merger.storeMerged(ZonedDateTime.rule, ZonedDateTime.ofInstant(odt, zone))
   //      merger.removeProcessed(OffsetDateTime.rule)
-  //      merger.removeProcessed(TimeZone.rule)
+  //      merger.removeProcessed(ZoneId.rule)
   //    }
   //  }
 }

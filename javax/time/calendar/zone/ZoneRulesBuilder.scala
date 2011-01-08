@@ -47,9 +47,9 @@ import javax.time.calendar._
  * <li>Rules - A set of one or more rules describe how daylight savings changes during the window.</li>
  * </ul>
  * <p>
- * TransitionRulesBuilder is a mutable class used to create instances of TimeZone.
+ * TransitionRulesBuilder is a mutable class used to create instances of ZoneId.
  * It must only be used from a single thread.
- * The created TimeZone instances are immutable and thread-safe.
+ * The created ZoneId instances are immutable and thread-safe.
  *
  * @author Michael Nascimento Santos
  * @author Stephen Colebourne
@@ -588,7 +588,7 @@ class ZoneRulesBuilder {
         breakable {
           for (rule <- window.ruleList) {
             val trans: ZoneOffsetTransition = rule.toTransition(standardOffset, savings)
-            if (trans.getDateTime.isAfter(windowStart)) {
+            if (trans.getDateTimeBefore.isAfter(windowStart)) {
               break
             }
             effectiveSavings = rule.savingAmount
@@ -607,7 +607,7 @@ class ZoneRulesBuilder {
       savings = effectiveSavings
       for (rule <- window.ruleList) {
         val trans: ZoneOffsetTransition = deduplicate(rule.toTransition(standardOffset, savings))
-        if (trans.getDateTime.isBefore(windowStart) == false && trans.getDateTime.isBefore(window.createDateTime(savings)) && trans.getOffsetBefore.equals(trans.getOffsetAfter) == false) {
+        if (trans.getDateTimeBefore.isBefore(windowStart) == false && trans.getDateTimeBefore.isBefore(window.createDateTime(savings)) && trans.getOffsetBefore.equals(trans.getOffsetAfter) == false) {
           transitionList += trans
           savings = rule.savingAmount
         }

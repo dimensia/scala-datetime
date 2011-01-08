@@ -44,10 +44,10 @@ import collection.mutable.HashMap
  * <p>
  * Different parts of the world have different time-zone offsets.
  * The rules for how offsets vary by place and time of year are captured in the
- * {@link TimeZone} class.
+ * {@link ZoneId} class.
  * <p>
  * For example, Paris is one hours ahead of UTC in winter and two hours ahead in
- * summer. The {@code TimeZone} instance for Paris will reference two
+ * summer. The {@code ZoneId} instance for Paris will reference two
  * {@code ZoneOffset} instances - a {@code +01:00} instance for winter,
  * and a {@code +02:00} instance for summer.
  * <p>
@@ -461,7 +461,7 @@ final class ZoneOffset private(val amountSeconds: Int) extends Calendrical with 
    *
    * @return the time-zone, never null
    */
-  def toTimeZone: TimeZone = TimeZone.of(this)
+  def toTimeZone: ZoneId = ZoneId.of(this)
 
   /**
    * Gets the hours field of the zone offset.

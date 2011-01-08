@@ -42,7 +42,7 @@ import javax.time.calendar.ZoneOffset
  * The rules defining how the zone offset varies for a single time-zone.
  * <p>
  * The rules model all the historic and future transitions for a time-zone.
- * The rules are loaded via {@link TimeZone} and {@link ZoneRulesGroup} and
+ * The rules are loaded via {@link ZoneId} and {@link ZoneRulesGroup} and
  * are specific to a group, region and version. The same rules may be shared
  * between multiple versions, regions or even groups.
  * <p>

@@ -44,14 +44,11 @@ import javax.time.calendar.LocalDate
 /**
  * A date in the Coptic calendar system.
  * <p>
- * CopticDate is an immutable class that represents a date in the Coptic calendar system.
+ * {@code CopticDate} is an immutable class that represents a date in the Coptic calendar system.
  * The rules of the calendar system are described in {@link CopticChronology}.
- * The date has a precision of one day and a range from Coptic year 1 to year 9999 (inclusive).
  * <p>
- * Instances of this class may be created from any other object that implements
- * {@link DateProvider} including {@link LocalDate}. Similarly, instances of
- * this class may be passed into the factory method of any other implementation
- * of {@code DateProvider}.
+ * Instances of this class may be created from other date objects that implement {@code Calendrical}.
+ * Notably this includes {@link LocalDate} and all other date classes from other calendar systems.
  * <p>
  * CopticDate is immutable and thread-safe.
  *
@@ -80,8 +77,6 @@ object CopticDate {
 
   /**
    * The minimum valid year.
-   * This is currently set to 1 but may be changed to increase the valid range
-   * in a future version of the specification.
    */
   val MinYear: Int = 1
 
@@ -91,9 +86,9 @@ object CopticDate {
   private val ModifiedJulianDaysToCoptic: Int = 574971
 
   /**
-   * Gets the field rule for {@code CopticDate}.
+   * Gets the rule for {@code CopticDate}.
    *
-   * @return the field rule for the date, never null
+   * @return the rule for the date, never null
    */
   def rule: CalendricalRule[CopticDate] = Rule
 
@@ -101,10 +96,12 @@ object CopticDate {
    * Obtains an instance of {@code CopticDate} from the Coptic year,
    * month-of-year and day-of-month.
    *
-   * @param copticYear the year to represent, from MIN_YEAR to MAX_YEAR
+   * @param copticYear the year to represent, from 1 to 9999
    * @param copticMonthOfYear the month-of-year to represent, from 1 to 13
    * @param copticDayOfMonth the day-of-month to represent, from 1 to 30
    * @return the Coptic date, never null
+   * @throws IllegalCalendarFieldValueException if the value of any field is out of range
+   * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
   def of(copticYear: Int, copticMonthOfYear: Int, copticDayOfMonth: Int): CopticDate = {
     CopticChronology.yearRule.checkValue(copticYear)
@@ -127,7 +124,7 @@ object CopticDate {
    *
    * @param calendrical the calendrical to extract from, not null
    * @return the Coptic date, never null
-   * @throws UnsupportedRuleException if the day-of-week cannot be obtained
+   * @throws CalendricalException if the date cannot be obtained
    */
   def of(calendrical: Calendrical): CopticDate = rule.getValueChecked(calendrical)
 
@@ -180,8 +177,8 @@ object CopticDate {
     extends CalendricalRule[CopticDate](classOf[CopticDate], CopticChronology, "CopticDate", CopticChronology.periodDays, null)
     with Serializable {
     override def merge(merger: CalendricalMerger): Unit = {
-      val cd: CopticDate = merger.getValue(this).get
-      merger.storeMerged(LocalDate.rule, cd.toLocalDate)
+      val date: CopticDate = merger.getValue(this).get
+      merger.storeMerged(LocalDate.rule, date.toLocalDate)
       merger.removeProcessed(this)
     }
 
@@ -211,27 +208,29 @@ final class CopticDate private(val epochDays: Int, @transient year: Int, @transi
   import CopticDate._
 
   /**
-   * Is this instance before the specified one.
+   * Checks if this date is before the specified date.
+   * <p>
+   * The comparison is based on the time-line position of the dates.
    *
-   * @param otherDate the other date instance to compare to, not null
-   * @return true if this day is before the specified day
-   * @throws NullPointerException if otherDay is null
+   * @param other  the other date to compare to, not null
+   * @return true if this is before the specified date
    */
   def isBefore(otherDate: CopticDate): Boolean = epochDays < otherDate.epochDays
 
   /**
-   * A hash code for this object.
+   * A hash code for this date.
    *
    * @return a suitable hash code
    */
   override def hashCode: Int = epochDays
 
   /**
-   * Is this instance after the specified one.
+   * Checks if this date is after the specified date.
+   * <p>
+   * The comparison is based on the time-line position of the dates.
    *
-   * @param otherDate the other date instance to compare to, not null
-   * @return true if this day is after the specified day
-   * @throws NullPointerException if otherDay is null
+   * @param other  the other date to compare to, not null
+   * @return true if this is after the specified date
    */
   def isAfter(otherDate: CopticDate): Boolean = epochDays > otherDate.epochDays
 
@@ -243,13 +242,16 @@ final class CopticDate private(val epochDays: Int, @transient year: Int, @transi
   def getChronology: CopticChronology = CopticChronology
 
   /**
-   * Returns a copy of this CopticDate with the day-of-year value altered.
+   * Returns a copy of this date with the day-of-year altered.
+   * <p>
+   * This method changes the day-of-year of the date.
+   * If the resulting date is invalid, an exception is thrown.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
-   * @param dayOfYear the day-of-year to represent, from 1 to 366
-   * @return a new updated CopticDate instance, never null
-   * @throws IllegalCalendarFieldValueException if the day-of-year is out of range
+   * @param dayOfYear  the day-of-year to set in the returned date, from 1 to 365-366
+   * @return a {@code CopticDate} based on this date with the requested day, never null
+   * @throws IllegalCalendarFieldValueException if the day-of-year value is invalid
    * @throws InvalidCalendarFieldException if the day-of-year is invalid for the year
    */
   def withDayOfYear(_dayOfYear: Int): CopticDate = {
@@ -258,17 +260,19 @@ final class CopticDate private(val epochDays: Int, @transient year: Int, @transi
   }
 
   /**
-   * Checks if the date represented is a leap year.
+   * Checks if the year is a leap year, according to the Coptic calendar system rules.
    *
    * @return true if this date is in a leap year
    */
   def isLeapYear: Boolean = CopticChronology.isLeapYear(getYear)
 
   /**
-   * Is this instance equal to that specified.
+   * Checks if this date is equal to the specified date.
+   * <p>
+   * The comparison is based on the time-line position of the dates.
    *
-   * @param otherDate the other date instance to compare to, null returns false
-   * @return true if this day is equal to the specified day
+   * @param other  the other date to compare to, null returns false
+   * @return true if this is equal to the specified date
    */
   override def equals(other: Any): Boolean =
     other match {
@@ -277,36 +281,37 @@ final class CopticDate private(val epochDays: Int, @transient year: Int, @transi
     }
 
   /**
-   * Gets the Coptic day-of-month value.
+   * Gets the Coptic day-of-month field.
    *
    * @return the day-of-month, from 1 to 30
    */
   def getDayOfMonth: Int = day
 
   /**
-   * Returns a copy of this CopticDate with the year value altered.
+   * Returns a copy of this date with the year altered.
    * <p>
+   * This method changes the year of the date.
    * If this date is the leap day (month 13, day 6) and the new year is not
    * a leap year, the resulting date will be invalid.
    * To avoid this, the result day-of-month is changed from 6 to 5.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
-   * @param year the year to represent, from MIN_YEAR to MAX_YEAR
-   * @return a new updated CopticDate instance, never null
-   * @throws IllegalCalendarFieldValueException if the year is out of range
+   * @param year  the year to set in the returned date, from 1 to 9999
+   * @return a {@code CopticDate} based on this date with the requested year, never null
+   * @throws IllegalCalendarFieldValueException if the year value is invalid
    */
   def withYear(year: Int): CopticDate = copticDatePreviousValid(year, getMonthOfYear, getDayOfMonth)
 
   /**
-   * Gets the value of the specified calendar field.
+   * Gets the value of the specified calendrical rule.
    * <p>
-   * This method queries the value of the specified calendar field.
-   * If the calendar field is not supported then an exception is thrown.
+   * This method queries the value of the specified calendrical rule.
+   * If the value cannot be returned for the rule from this date then
+   * {@code null} will be returned.
    *
-   * @param rule the field to query, not null
-   * @return the value for the field
-   * @throws UnsupportedRuleException if no value for the field is found
+   * @param rule  the rule to use, not null
+   * @return the value for the rule, null if the value cannot be returned
    */
   def get[T](rule: CalendricalRule[T]): Option[T] = {
     if (rule.equals(LocalDate.rule)) rule.reify(toLocalDate)
@@ -315,21 +320,11 @@ final class CopticDate private(val epochDays: Int, @transient year: Int, @transi
   }
 
   /**
-   * Checks if the date represented is the leap day in a leap year.
+   * Outputs this date as a {@code String}, such as {@code 1723-13-01 (Coptic)}.
    * <p>
-   * The leap day is when the year is a leap year, the month is 13 and
-   * the day is 6.
+   * The output will be in the format {@code yyyy-MM-dd (Coptic)}.
    *
-   * @return true if this date is the leap day in a leap year
-   */
-  def isLeapDay: Boolean = getMonthOfYear == 13 && getDayOfMonth == 6
-
-  /**
-   * Outputs the date as a {@code String}, such as '1723-13-01 (Coptic)'.
-   * <p>
-   * The output will be in the format 'yyyy-MM-dd (Coptic)'.
-   *
-   * @return the formatted date string, never null
+   * @return the formatted date, never null
    */
   override def toString: String = {
     val yearValue: Int = getYear
@@ -343,24 +338,24 @@ final class CopticDate private(val epochDays: Int, @transient year: Int, @transi
   }
 
   /**
-   * Gets the Coptic month-of-year value.
+   * Gets the Coptic month-of-year field.
    *
    * @return the month-of-year, from 1 to 13
    */
   def getMonthOfYear: Int = month
 
   /**
-   * Returns a copy of this CopticDate with the specified number of years added.
+   * Returns a copy of this date with the specified number of years added.
    * <p>
-   * If this date is the leap day (month 13, day 6) and the calculated year is not
-   * a leap year, the resulting date will be invalid.
-   * To avoid this, the result day-of-month is changed from 6 to 5.
+   * This method adds the specified amount in years to the date.
+   * If the month-day is invalid for the year, then the previous valid day
+   * will be selected instead.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
-   * @param years the years to add, positive or negative
-   * @return a new updated CopticDate instance, never null
-   * @throws IllegalCalendarFieldValueException if the year range is exceeded
+   * @param years  the years to add, may be negative
+   * @return a {@code CopticDate} based on this date with the years added, never null
+   * @throws CalendricalException if the result exceeds the supported date range
    */
   def plusYears(years: Int): CopticDate = {
     val newYear: Int = getYear + years
@@ -368,14 +363,15 @@ final class CopticDate private(val epochDays: Int, @transient year: Int, @transi
   }
 
   /**
-   * Converts this date to an ISO-8601 calendar system {@code LocalDate}.
+   * Converts this date to a {@code LocalDate}, which is the default representation
+   * of a date, and provides values in the ISO-8601 calendar system.
    *
    * @return the equivalent date in the ISO-8601 calendar system, never null
    */
   override def toLocalDate: LocalDate = LocalDate.ofModifiedJulianDays(epochDays - ModifiedJulianDaysToCoptic)
 
   /**
-   * Gets the Coptic day-of-year value.
+   * Gets the Coptic day-of-year field.
    *
    * @return the day-of-year, from 1 to 366
    */
@@ -385,13 +381,15 @@ final class CopticDate private(val epochDays: Int, @transient year: Int, @transi
   }
 
   /**
-   * Returns a copy of this CopticDate with the specified number of days added.
+   * Returns a copy of this date with the specified number of days added.
+   * <p>
+   * This method adds the specified amount in days to the date.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
-   * @param days the days to add, positive or negative
-   * @return a new updated CopticDate instance, never null
-   * @throws IllegalCalendarFieldValueException if the year range is exceeded
+   * @param days  the days to add, may be negative
+   * @return a {@code CopticDate} based on this date with the days added, never null
+   * @throws CalendricalException if the result exceeds the supported date range
    */
   def plusDays(days: Int): CopticDate = {
     val newEpochDays: Int = epochDays + days
@@ -399,17 +397,17 @@ final class CopticDate private(val epochDays: Int, @transient year: Int, @transi
   }
 
   /**
-   * Returns a copy of this CopticDate with the specified number of months added.
+   * Returns a copy of this date with the specified number of months added.
    * <p>
-   * If this month is from 1 to 12 and the calculated month is 13 then the
-   * resulting date might be invalid. In this case, the last valid
-   * day-of-the month will be returned.
+   * This method adds the specified amount in months to the date.
+   * If the month-day is invalid for the year, then the previous valid day
+   * will be selected instead.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
-   * @param months the months to add, positive or negative
-   * @return a new updated CopticDate instance, never null
-   * @throws IllegalCalendarFieldValueException if the year range is exceeded
+   * @param months  the months to add, may be negative
+   * @return a {@code CopticDate} based on this date with the months added, never null
+   * @throws CalendricalException if the result exceeds the supported date range
    */
   def plusMonths(months: Int): CopticDate = {
     var newMonth0: Int = getMonthOfYear + months - 1
@@ -425,43 +423,55 @@ final class CopticDate private(val epochDays: Int, @transient year: Int, @transi
   }
 
   /**
-   * Returns a copy of this CopticDate with the month-of-year value altered.
+   * Returns a copy of this date with the month-of-year altered.
    * <p>
+   * This method changes the month-of-year of the date.
    * If this month is from 1 to 12 and the new month is 13 then the
    * resulting date might be invalid. In this case, the last valid
    * day-of-the month will be returned.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
-   * @param monthOfYear the month-of-year to represent, from 1 to 13
-   * @return a new updated CopticDate instance, never null
-   * @throws IllegalCalendarFieldValueException if the month is out of range
+   * @param monthOfYear  the month-of-year to set in the returned date, from 1 to 13
+   * @return a {@code CopticDate} based on this date with the requested month, never null
+   * @throws IllegalCalendarFieldValueException if the month value is invalid
    */
   def withMonthOfYear(monthOfYear: Int): CopticDate = copticDatePreviousValid(getYear, monthOfYear, getDayOfMonth)
 
   /**
-   * Gets the Coptic day-of-week.
+   * Gets the day-of-week field, which is an enum {@code DayOfWeek}.
+   * <p>
+   * This method returns the enum {@link DayOfWeek} for the day-of-week.
+   * This avoids confusion as to what {@code int} values mean.
+   * If you need access to the primitive {@code int} value then the enum
+   * provides the {@link DayOfWeek#getValue() int value}.
+   * <p>
+   * Additional information can be obtained from the {@code DayOfWeek}.
+   * This includes textual names of the values.
    *
    * @return the day-of-week, never null
    */
   def getDayOfWeek: DayOfWeek = DayOfWeek.of((epochDays + 4) % 7 + 1)
 
   /**
-   * Gets the Coptic year value.
+   * Gets the Coptic year field.
    *
    * @return the year, from MIN_YEAR to MAX_YEAR
    */
   def getYear: Int = year
 
   /**
-   * Returns a copy of this CopticDate with the day-of-month value altered.
+   * Returns a copy of this date with the day-of-month altered.
+   * <p>
+   * This method changes the day-of-month of the date.
+   * If the resulting date is invalid, an exception is thrown.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
-   * @param dayOfMonth the day-of-month to represent, from 1 to 30
-   * @return a new updated CopticDate instance, never null
-   * @throws IllegalCalendarFieldValueException if the day is out of range
-   * @throws InvalidCalendarFieldException if the day-of-month is invalid for the year and month
+   * @param dayOfMonth  the day-of-month to set in the returned date, from 1 to 30
+   * @return a {@code CopticDate} based on this date with the requested day, never null
+   * @throws IllegalCalendarFieldValueException if the day-of-month value is invalid
+   * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
   def withDayOfMonth(dayOfMonth: Int): CopticDate = of(getYear, getMonthOfYear, dayOfMonth)
 
@@ -473,11 +483,12 @@ final class CopticDate private(val epochDays: Int, @transient year: Int, @transi
   private def readResolve: AnyRef = copticDateFromEpochDays(epochDays)
 
   /**
-   * Compares this instance to another.
+   * Compares this date to another date.
+   * <p>
+   * The comparison is based on the time-line position of the dates.
    *
-   * @param otherDate the other date instance to compare to, not null
+   * @param other  the other date to compare to, not null
    * @return the comparator value, negative if less, positive if greater
-   * @throws NullPointerException if otherDay is null
    */
   def compare(otherDate: CopticDate): Int = MathUtils.safeCompare(epochDays, otherDate.epochDays)
 }
