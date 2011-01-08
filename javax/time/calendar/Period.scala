@@ -938,23 +938,23 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
     if (this == Zero) {
       return Zero
     }
-    var years: Int = this.years
-    var months: Int = this.months
-    if (months >= 12) {
-      years = MathUtils.safeAdd(years, months / 12)
-      months = months % 12
+    var _years: Int = years
+    var _months: Int = months
+    if (_months >= 12) {
+      _years = MathUtils.safeAdd(_years, _months / 12)
+      _months = _months % 12
     }
     var total: Long = (days * 24L * 60L * 60L) + (hours * 60L * 60L) + (minutes * 60L) + seconds
     total = MathUtils.safeAdd(total, MathUtils.floorDiv(this.nanos, 1000000000))
-    val nanos: Int = MathUtils.floorMod(this.nanos, 1000000000)
-    val seconds: Int = (total % 60).toInt
+    val _nanos: Int = MathUtils.floorMod(this.nanos, 1000000000)
+    val _seconds: Int = (total % 60).toInt
     total /= 60
-    val minutes: Int = (total % 60).toInt
+    val _minutes: Int = (total % 60).toInt
     total /= 60
-    val hours: Int = (total % 24).toInt
+    val _hours: Int = (total % 24).toInt
     total /= 24
-    val days: Int = MathUtils.safeToInt(total)
-    return of(years, months, days, hours, minutes, seconds, nanos)
+    val _days: Int = MathUtils.safeToInt(total)
+    return of(years, months, _days, _hours, _minutes, _seconds, _nanos)
   }
 
   /**
@@ -1241,14 +1241,13 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * @param obj the other period to compare to, null returns false
    * @return true if this instance is equal to the specified period
    */
-  override def equals(obj: AnyRef): Boolean = {
-    if (this eq obj) true
-    else if (obj.isInstanceOf[Period]) {
-      val other: Period = obj.asInstanceOf[Period]
-      years == other.years && months == other.months && days == other.days & hours == other.hours && minutes == other.minutes && seconds == other.seconds && nanos == other.nanos
+  override def equals(obj: Any): Boolean =
+    obj match {
+      case period: Period => (this eq period) ||
+        (years == period.years && months == period.months && days == period.days &&
+          hours == period.hours && minutes == period.minutes && seconds == period.seconds && nanos == period.nanos)
+      case _ => false
     }
-    else return false
-  }
 
   /**
    * Gets the amount of months of this period, if any.
@@ -1327,23 +1326,23 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    */
   def normalized: Period = {
     if (this == Zero) return Zero
-    var years: Int = this.years
-    var months: Int = this.months
-    if (months >= 12) {
-      years = MathUtils.safeAdd(years, months / 12)
-      months = months % 12
+    var _years: Int = years
+    var _months: Int = months
+    if (_months >= 12) {
+      _years = MathUtils.safeAdd(_years, _months / 12)
+      _months = _months % 12
     }
     var total: Long = (hours * 60L * 60L) + (minutes * 60L) + seconds
     total = MathUtils.safeMultiply(total, 1000000000)
     total = MathUtils.safeAdd(total, nanos)
-    val nanos: Long = total % 1000000000L
+    val _nanos: Long = total % 1000000000L
     total /= 1000000000L
-    val seconds: Int = (total % 60).toInt
+    val _seconds: Int = (total % 60).toInt
     total /= 60
-    val minutes: Int = (total % 60).toInt
+    val _minutes: Int = (total % 60).toInt
     total /= 60
-    val hours: Int = MathUtils.safeToInt(total)
-    return of(years, months, days, hours, minutes, seconds, nanos)
+    val _hours: Int = MathUtils.safeToInt(total)
+    return of(_years, _months, days, _hours, _minutes, _seconds, _nanos)
   }
 
   /**

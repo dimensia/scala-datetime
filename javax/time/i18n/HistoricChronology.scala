@@ -118,28 +118,26 @@ object HistoricChronology {
   private[time] final class YearRule(chrono: HistoricChronology)
     extends DateTimeFieldRule[Int](classOf[Int], chrono, "Year", Years, null, -(HistoricDate.MaxYear - 1), HistoricDate.MaxYear) with Serializable {
 
-    protected def merge(merger: CalendricalMerger): Unit = {
+    override def merge(merger: CalendricalMerger): Unit = {
       (merger.getValue(chrono.monthOfYearRule), merger.getValue(chrono.dayOfMonthRule)) match {
         case (Some(moy), Some(domVal)) =>
-          if (moy != null && domVal != null) {
-            val year: Int = merger.getValue(this).get
-            var date: HistoricDate = null
-            if (merger.getContext.isStrict) {
-              date = HistoricDate.of(year, moy, domVal)
-            }
-            else {
-              date = HistoricDate.of(year, MonthOfYear.January, 1).plusMonths(moy.getValue - 1).plusMonths(-1).plusDays(domVal).plusDays(-1)
-            }
-            merger.storeMerged(LocalDate.rule, date.toLocalDate)
-            merger.removeProcessed(this)
-            merger.removeProcessed(chrono.monthOfYearRule)
-            merger.removeProcessed(chrono.dayOfMonthRule)
+          val year: Int = merger.getValue(this).get
+          var date: HistoricDate = null
+          if (merger.getContext.isStrict) {
+            date = HistoricDate.of(year, moy, domVal)
           }
+          else {
+            date = HistoricDate.of(year, MonthOfYear.January, 1).plusMonths(moy.getValue - 1).plusMonths(-1).plusDays(domVal).plusDays(-1)
+          }
+          merger.storeMerged(LocalDate.rule, date.toLocalDate)
+          merger.removeProcessed(this)
+          merger.removeProcessed(chrono.monthOfYearRule)
+          merger.removeProcessed(chrono.dayOfMonthRule)
         case _ =>
       }
     }
 
-    protected def derive(calendrical: Calendrical): Option[Int] = calendrical.get(HistoricDate.rule).map(_.getYear)
+    override def derive(calendrical: Calendrical): Option[Int] = calendrical.get(HistoricDate.rule).map(_.getYear)
   }
 
   /**Constructor.
@@ -149,7 +147,7 @@ object HistoricChronology {
   private[time] final class MonthOfYearRule(chrono: HistoricChronology)
     extends DateTimeFieldRule[MonthOfYear](classOf[MonthOfYear], chrono, "MonthOfYear", Months, Years, 1, 13) with Serializable {
 
-    protected def derive(calendrical: Calendrical): Option[MonthOfYear] = calendrical.get(HistoricDate.rule).map(_.getMonthOfYear)
+    override def derive(calendrical: Calendrical): Option[MonthOfYear] = calendrical.get(HistoricDate.rule).map(_.getMonthOfYear)
   }
 
   /**Constructor.
@@ -158,7 +156,7 @@ object HistoricChronology {
   @SerialVersionUID(1L)
   private[time] final class DayOfMonthRule(chrono: HistoricChronology)
     extends DateTimeFieldRule[Int](classOf[Int], chrono, "DayOfMonth", periodDays, Months, 1, 30) with Serializable {
-    protected def derive(calendrical: Calendrical): Option[Int] = {
+    override def derive(calendrical: Calendrical): Option[Int] = {
       val cd: HistoricDate = calendrical.get(HistoricDate.rule).getOrElse(return None)
       return Some(cd.getDayOfMonth)
     }
@@ -202,7 +200,7 @@ object HistoricChronology {
   private[time] final class EraRule(chrono: HistoricChronology)
     extends DateTimeFieldRule[HistoricEra](classOf[HistoricEra], chrono, "Era", periodEras, null, 0, 1)
     with Serializable {
-    protected def derive(calendrical: Calendrical): Option[HistoricEra] = {
+    override def derive(calendrical: Calendrical): Option[HistoricEra] = {
       calendrical.get(HistoricDate.rule).map(_.getEra)
     }
   }
@@ -233,9 +231,9 @@ object HistoricChronology {
 
     override def getSmallestMaximumValue: Int = 365
 
-    protected def derive(calendrical: Calendrical): Option[Int] = calendrical.get(HistoricDate.rule).map(_.getDayOfYear)
+    override def derive(calendrical: Calendrical): Option[Int] = calendrical.get(HistoricDate.rule).map(_.getDayOfYear)
 
-    protected def merge(merger: CalendricalMerger): Unit = {
+    override def merge(merger: CalendricalMerger): Unit = {
       val yearVal: Int = merger.getValue(chrono.yearRule).get
       if (yearVal != null) {
         val doy: Int = merger.getValue(this).get
@@ -277,7 +275,7 @@ object HistoricChronology {
     extends DateTimeFieldRule[DayOfWeek](classOf[DayOfWeek], chrono, "DayOfWeek", periodDays, periodWeeks, 1, 7)
     with Serializable {
 
-    protected def derive(calendrical: Calendrical): Option[DayOfWeek] = calendrical.get(HistoricDate.rule).map(_.getDayOfWeek)
+    override def derive(calendrical: Calendrical): Option[DayOfWeek] = calendrical.get(HistoricDate.rule).map(_.getDayOfWeek)
   }
 
   /**

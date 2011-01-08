@@ -121,7 +121,7 @@ object OffsetTime {
     extends CalendricalRule[OffsetTime](classOf[OffsetTime], ISOChronology, "OffsetTime", ISOChronology.periodNanos, ISOChronology.periodDays)
     with Serializable {
 
-    protected override def derive(calendrical: Calendrical): Option[OffsetTime] = calendrical.get(OffsetDateTime.rule).map(_.toOffsetTime)
+    override def derive(calendrical: Calendrical): Option[OffsetTime] = calendrical.get(OffsetDateTime.rule).map(_.toOffsetTime)
 
     private def readResolve: AnyRef = Rule
   }
@@ -427,13 +427,11 @@ final class OffsetTime private(val time: LocalTime, val offset: ZoneOffset)
    * @param other the other time to compare to, null returns false
    * @return true if this point is equal to the specified time
    */
-  override def equals(other: AnyRef): Boolean = {
-    if (this eq other) true
-    else if (other.isInstanceOf[OffsetTime]) {
-      val zonedTime: OffsetTime = other.asInstanceOf[OffsetTime]
-      time.equals(zonedTime.time) && offset.equals(zonedTime.offset)
+  override def equals(other: Any): Boolean = {
+    other match {
+      case offsetTime: OffsetTime => (this eq offsetTime) || (time.equals(offsetTime.time) && offset.equals(offsetTime.offset))
+      case _ => false
     }
-    else false
   }
 
   /**

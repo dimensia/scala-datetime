@@ -143,7 +143,7 @@ final class ZoneOffsetTransition private[zone](val transition: OffsetDateTime, o
    * @param other the other object to compare to, null returns false
    * @return true if equal
    */
-  override def equals(other: AnyRef): Boolean = {
+  override def equals(other: Any): Boolean = {
     if (other == this) {
       return true
     }

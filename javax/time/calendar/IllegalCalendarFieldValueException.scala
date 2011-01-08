@@ -48,8 +48,8 @@ package javax.time.calendar
  * @param fieldRule the field rule, not null
  */
 @SerialVersionUID(1L)
-class IllegalCalendarFieldValueException(message: String, fieldRule: DateTimeFieldRule[_])
-  extends CalendricalRuleException[_](message, fieldRule) {
+class IllegalCalendarFieldValueException[R](message: String, fieldRule: DateTimeFieldRule[R])
+  extends CalendricalRuleException[R](message, fieldRule) {
   /**
    * Constructs a new illegal field value exception with a standard message.
    *
@@ -58,7 +58,7 @@ class IllegalCalendarFieldValueException(message: String, fieldRule: DateTimeFie
    * @param minValue the minimum value allowed
    * @param maxValue the maximum value allowed
    */
-  def this(fieldRule: DateTimeFieldRule[_], actual: Long, minValue: Int, maxValue: Int) {
+  def this(fieldRule: DateTimeFieldRule[R], actual: Long, minValue: Int, maxValue: Int) {
     this ("Illegal value for " + fieldRule.getID + " field, value " + actual + " is not in the range " + minValue + " to " + maxValue, fieldRule)
   }
 }

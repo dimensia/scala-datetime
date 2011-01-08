@@ -52,7 +52,7 @@ import javax.time.calendar.DateTimeFieldRule
  * @param minWidth the minimum width to output, from 0 to 9
  * @param maxWidth the maximum width to output, from 0 to 9
  */
-final class FractionPrinterParser private[format](val rule: DateTimeFieldRule[_], val minWidth: Int, val maxWidth: Int)
+final class FractionPrinterParser private[format](val rule: DateTimeFieldRule[Any], val minWidth: Int, val maxWidth: Int)
   extends DateTimePrinter with DateTimeParser {
 
   /**{@inheritDoc}*/

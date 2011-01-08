@@ -406,7 +406,8 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    */
   def multipliedBy(scalar: Long): PeriodFields = {
     if (scalar == 1 || isZero) this
-    else create(this.map(_ * scalar))
+    //    else create(this.map(_ * scalar))
+    else throw new Exception("Not implemented!")
 
     //    for (field <- this) {
     //      copy(field.getUnit) = field.multipliedBy(scalar)
@@ -492,13 +493,13 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
       throw new Exception("Not implemented!")
     }
 
-//    val copy: TreeMap[PeriodUnit, PeriodField] = unitFieldMap
-//    for (period <- periods.unitFieldMap.values) {
-//      val old: PeriodField = copy(period.getUnit)
-//      val newPeriod = (if (old != null) old + period else period)
-//      copy(newPeriod.getUnit) = newPeriod
-//    }
-//    return create(copy)
+    //    val copy: TreeMap[PeriodUnit, PeriodField] = unitFieldMap
+    //    for (period <- periods.unitFieldMap.values) {
+    //      val old: PeriodField = copy(period.getUnit)
+    //      val newPeriod = (if (old != null) old + period else period)
+    //      copy(newPeriod.getUnit) = newPeriod
+    //    }
+    //    return create(copy)
   }
 
   def +(periodProvider: PeriodProvider): PeriodFields = plus(periodProvider)
@@ -563,7 +564,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    *
    * @return number of unit-amount pairs
    */
-  def size: Int = unitFieldMap.size
+  override def size: Int = unitFieldMap.size
 
   /**
    * Returns a copy of this period with the specified unit removed.
@@ -591,13 +592,11 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
    * @param obj the other period to compare to, null returns false
    * @return true if this instance is equal to the specified period
    */
-  override def equals(obj: AnyRef): Boolean = {
-    if (this eq obj) true
-    else if (obj.isInstanceOf[PeriodFields]) {
-      val other: PeriodFields = obj.asInstanceOf[PeriodFields]
-      unitFieldMap.equals(other.unitFieldMap)
+  override def equals(obj: Any): Boolean = {
+    obj match {
+      case other: PeriodFields => (this eq other) || unitFieldMap == other.unitFieldMap
+      case _ => false
     }
-    else false
   }
 
   /**
@@ -679,22 +678,22 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
   def retainConvertible(units: Seq[PeriodUnit]): PeriodFields = {
     checkNotNull(units, "PeriodUnit array must not be null")
     throw new Exception("Not implemented!")
-//    val copy: TreeMap[PeriodUnit, PeriodField] = clonedMap
-//
-//    {
-//      val it: Iterator[PeriodUnit] = copy.keySet.iterator
-//      while (it.hasNext) {
-//        val loopUnit: PeriodUnit = it.next
-//        for (unit <- units) {
-//          checkNotNull(unit, "PeriodUnit array must not contain null")
-//          if (loopUnit.isConvertibleTo(unit)) {
-//            //continue //todo: continue is not supported
-//          }
-//        }
-//        it.remove
-//      }
-//    } //todo: labels is not supported
-//    return create(copy)
+    //    val copy: TreeMap[PeriodUnit, PeriodField] = clonedMap
+    //
+    //    {
+    //      val it: Iterator[PeriodUnit] = copy.keySet.iterator
+    //      while (it.hasNext) {
+    //        val loopUnit: PeriodUnit = it.next
+    //        for (unit <- units) {
+    //          checkNotNull(unit, "PeriodUnit array must not contain null")
+    //          if (loopUnit.isConvertibleTo(unit)) {
+    //            //continue //todo: continue is not supported
+    //          }
+    //        }
+    //        it.remove
+    //      }
+    //    } //todo: labels is not supported
+    //    return create(copy)
   }
 
   /**
@@ -761,10 +760,10 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
     val map: TreeMap[PeriodUnit, PeriodField] = createMap
     for (period <- unitFieldMap.values) {
       throw new Exception("Not implemented!")
-//      period = period.toEquivalent(units)
-//      val old: PeriodField = map(period.getUnit)
-//      period = (if (old != null) old.plus(period) else period)
-//      map(period.getUnit, period)
+      //      period = period.toEquivalent(units)
+      //      val old: PeriodField = map(period.getUnit)
+      //      period = (if (old != null) old.plus(period) else period)
+      //      map(period.getUnit, period)
     }
     return (if (map.equals(unitFieldMap)) this else create(map))
   }
@@ -824,7 +823,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
     var targetUnits: TreeSet[PeriodUnit] = new TreeSet[PeriodUnit]()(implicitly[Ordering[PeriodUnit]].reverse)
     targetUnits ++= (units)
     for (loopUnit <- unitFieldMap.keySet) {
-      breakable{
+      breakable {
         for (targetUnit <- targetUnits) {
           if (targetUnits.contains(loopUnit) == false) {
             val conversion: PeriodField = loopUnit.getEquivalentPeriod(targetUnit)
@@ -934,13 +933,13 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
     val periods: PeriodFields = of(periodProvider)
     if (this == Zero) periods
     else throw new Exception("Not implemented!")
-//    val copy: TreeMap[PeriodUnit, PeriodField] = clonedMap
-//    for (period <- periods.unitFieldMap.values) {
-//      val old: PeriodField = copy.get(period.getUnit).orNull
-//      val newPeriod = (if (old != null) old - period else -period)
-//      copy.updated(newPeriod.getUnit, newPeriod)
-//    }
-//    return create(copy)
+    //    val copy: TreeMap[PeriodUnit, PeriodField] = clonedMap
+    //    for (period <- periods.unitFieldMap.values) {
+    //      val old: PeriodField = copy.get(period.getUnit).orNull
+    //      val newPeriod = (if (old != null) old - period else -period)
+    //      copy.updated(newPeriod.getUnit, newPeriod)
+    //    }
+    //    return create(copy)
   }
 
   def -(periodProvider: PeriodProvider): PeriodFields = minus(periodProvider)
@@ -964,7 +963,8 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
     //    for (field <- this) {
     //      copy.put(field.getUnit, field / divisor)
     //    }
-    return create(this.map(e => (e.getUnit, e / divisor)))
+    else throw new Exception("Not implemented!")
+//    return create(this.map(e => (e.getUnit, e / divisor)))
   }
 
   def /(divisor: Long): PeriodFields = dividedBy(divisor)

@@ -275,14 +275,12 @@ final class PeriodField private(val amount: Long, val unit: PeriodUnit) extends 
    * @param obj the object to check, null returns false
    * @return true if this period is the same as that specified
    */
-  override def equals(obj: AnyRef): Boolean = {
-    if (this eq obj) true
-    else if (obj.isInstanceOf[PeriodField]) {
-      val other: PeriodField = obj.asInstanceOf[PeriodField]
-      this.amount == other.amount && this.unit.equals(other.unit)
+  override def equals(obj: Any): Boolean =
+    obj match {
+      case periodField: PeriodField => (this eq periodField) ||
+        (amount == periodField.amount && unit == periodField.unit)
+      case _ => false
     }
-    else false
-  }
 
   /**
    * Returns a copy of this period with the amount divided by the specified divisor.

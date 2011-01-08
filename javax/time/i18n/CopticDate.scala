@@ -179,13 +179,13 @@ object CopticDate {
   private[i18n] sealed class Rule
     extends CalendricalRule[CopticDate](classOf[CopticDate], CopticChronology, "CopticDate", CopticChronology.periodDays, null)
     with Serializable {
-    protected override def merge(merger: CalendricalMerger): Unit = {
+    override def merge(merger: CalendricalMerger): Unit = {
       val cd: CopticDate = merger.getValue(this).get
       merger.storeMerged(LocalDate.rule, cd.toLocalDate)
       merger.removeProcessed(this)
     }
 
-    protected override def derive(calendrical: Calendrical): Option[CopticDate] = {
+    override def derive(calendrical: Calendrical): Option[CopticDate] = {
       val ld: LocalDate = calendrical.get(LocalDate.rule).getOrElse(return None)
       val epochDays: Long = ld.toModifiedJulianDays + ModifiedJulianDaysToCoptic
       return Some(copticDateFromEpochDays(epochDays.toInt))
@@ -270,14 +270,11 @@ final class CopticDate private(val epochDays: Int, @transient year: Int, @transi
    * @param otherDate the other date instance to compare to, null returns false
    * @return true if this day is equal to the specified day
    */
-  override def equals(otherDate: AnyRef): Boolean = {
-    if (this == otherDate) true
-    else if (otherDate.isInstanceOf[CopticDate]) {
-      val other: CopticDate = otherDate.asInstanceOf[CopticDate]
-      epochDays == other.epochDays
+  override def equals(other: Any): Boolean =
+    other match {
+      case copticDate: CopticDate => (this eq copticDate) || (epochDays == copticDate.epochDays)
+      case _ => false
     }
-    else false
-  }
 
   /**
    * Gets the Coptic day-of-month value.

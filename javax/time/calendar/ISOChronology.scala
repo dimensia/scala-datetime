@@ -884,13 +884,13 @@ object ISOChronology extends ISOChronology {
 
     private def readResolve: AnyRef = MonthOfYearRule
 
-    protected def derive(calendrical: Calendrical): Option[Calendrical] = calendrical.get(LocalDate.rule).map(_.getMonthOfYear)
+    override def derive(calendrical: Calendrical): Option[MonthOfYear] = calendrical.get(LocalDate.rule).map(_.getMonthOfYear)
 
-    def convertValueToInt(value: MonthOfYear): Int = value.getValue
+    override def convertValueToInt(value: MonthOfYear): Int = value.getValue
 
-    def convertIntToValue(value: Int): MonthOfYear = MonthOfYear.of(value)
+    override def convertIntToValue(value: Int): MonthOfYear = MonthOfYear.of(value)
 
-    protected def interpret(merger: CalendricalMerger, value: Any): MonthOfYear = {
+    override protected def interpret(merger: CalendricalMerger, value: Any): MonthOfYear = {
       if (value.isInstanceOf[Int]) {
         var `val` : Int = value.asInstanceOf[Int]
         if (`val` < 1 || `val` > 12) {
@@ -902,7 +902,7 @@ object ISOChronology extends ISOChronology {
       return null
     }
 
-    protected def createTextStores(textStores: HashMap[TextStyle, TextStore], locale: Locale): Unit = {
+    override protected def createTextStores(textStores: HashMap[TextStyle, TextStore], locale: Locale): Unit = {
       val oldSymbols: DateFormatSymbols = new DateFormatSymbols(locale)
       var array: Array[String] = oldSymbols.getMonths
       val mapFull = HashMap[Int, String](
@@ -950,13 +950,13 @@ object ISOChronology extends ISOChronology {
 
     private def readResolve: AnyRef = DayOfWeekRule
 
-    protected def derive(calendrical: Calendrical): Option[DayOfWeek] = calendrical.get(LocalDate.rule).map(getDayOfWeekFromDate(_))
+    override def derive(calendrical: Calendrical): Option[DayOfWeek] = calendrical.get(LocalDate.rule).map(getDayOfWeekFromDate(_))
 
-    def convertValueToInt(value: DayOfWeek): Int = value.getValue
+    override def convertValueToInt(value: DayOfWeek): Int = value.getValue
 
-    def convertIntToValue(value: Int): DayOfWeek = DayOfWeek.of(value)
+    override def convertIntToValue(value: Int): DayOfWeek = DayOfWeek.of(value)
 
-    protected def interpret(merger: CalendricalMerger, value: Any): DayOfWeek = {
+    override protected def interpret(merger: CalendricalMerger, value: Any): DayOfWeek = {
       if (value.isInstanceOf[Int]) {
         var `val` : Int = value.asInstanceOf[Int]
         if (`val` < 1 || `val` > 7) {
@@ -968,7 +968,7 @@ object ISOChronology extends ISOChronology {
       return null
     }
 
-    protected def createTextStores(textStores: HashMap[TextStyle, TextStore], locale: Locale): Unit = {
+    override protected def createTextStores(textStores: HashMap[TextStyle, TextStore], locale: Locale): Unit = {
       val oldSymbols: DateFormatSymbols = new DateFormatSymbols(locale)
       var array: Array[String] = oldSymbols.getWeekdays
       val mapFull = HashMap[Int, String](
@@ -1005,14 +1005,12 @@ object ISOChronology extends ISOChronology {
 
     private def readResolve: AnyRef = QuarterOfYearRule
 
-    protected def derive(calendrical: Calendrical): Option[QuarterOfYear] =
+    override def derive(calendrical: Calendrical): Option[QuarterOfYear] =
       calendrical.get(monthOfYearRule).map(moy => QuarterOfYear.of(moy.ordinal / 3 + 1))
 
-    def convertValueToInt(value: QuarterOfYear): Int = value.getValue
+    override def convertValueToInt(value: QuarterOfYear): Int = value.getValue
 
-    def convertIntToValue(value: Int): QuarterOfYear = {
-      return QuarterOfYear.of(value)
-    }
+    override def convertIntToValue(value: Int): QuarterOfYear = QuarterOfYear.of(value)
   }
 
   /**
@@ -1025,17 +1023,17 @@ object ISOChronology extends ISOChronology {
 
     private def readResolve: AnyRef = AmPmOfDayRule
 
-    protected def derive(calendrical: Calendrical): Option[AmPmOfDay] = {
+    override def derive(calendrical: Calendrical): Option[AmPmOfDay] = {
       var hour: Int = calendrical.get(hourOfDayRule).getOrElse(return None)
       hour = (if (hour < 0) 1073741832 + hour + 1073741832 else hour)
       return Some(AmPmOfDay.of((hour % 24) / 12))
     }
 
-    def convertValueToInt(value: AmPmOfDay): Int = value.getValue
+    override def convertValueToInt(value: AmPmOfDay): Int = value.getValue
 
-    def convertIntToValue(value: Int): AmPmOfDay = AmPmOfDay.of(value)
+    override def convertIntToValue(value: Int): AmPmOfDay = AmPmOfDay.of(value)
 
-    protected def interpret(merger: CalendricalMerger, value: Any): AmPmOfDay = {
+    override protected def interpret(merger: CalendricalMerger, value: Any): AmPmOfDay = {
       if (value.isInstanceOf[Int]) {
         var `val` : Int = value.asInstanceOf[Int]
         if (`val` < 0 || `val` > 1) {
@@ -1048,7 +1046,7 @@ object ISOChronology extends ISOChronology {
       return null
     }
 
-    protected def createTextStores(textStores: HashMap[TextStyle, TextStore], locale: Locale): Unit = {
+    override protected def createTextStores(textStores: HashMap[TextStyle, TextStore], locale: Locale): Unit = {
       val oldSymbols: DateFormatSymbols = new DateFormatSymbols(locale)
       val array: Array[String] = oldSymbols.getAmPmStrings
       val map = HashMap[Int, String](
@@ -1071,9 +1069,9 @@ object ISOChronology extends ISOChronology {
 
     private def readResolve: AnyRef = EpochDaysRule
 
-    protected def derive(calendrical: Calendrical): Option[Long] = calendrical.get(LocalDate.rule).map(_.toEpochDays)
+    override def derive(calendrical: Calendrical): Option[Long] = calendrical.get(LocalDate.rule).map(_.toEpochDays)
 
-    protected def merge(merger: CalendricalMerger): Unit = {
+    override def merge(merger: CalendricalMerger): Unit = {
       val epochDays: Long = merger.getValue(this).get
       merger.storeMerged(LocalDate.rule, LocalDate.ofEpochDays(epochDays))
       merger.removeProcessed(this)
@@ -1091,9 +1089,9 @@ object ISOChronology extends ISOChronology {
 
     private def readResolve: AnyRef = NanoOfDayRule
 
-    protected def derive(calendrical: Calendrical): Option[Long] = calendrical.get(LocalTime.rule).map(_.toNanoOfDay)
+    override def derive(calendrical: Calendrical): Option[Long] = calendrical.get(LocalTime.rule).map(_.toNanoOfDay)
 
-    protected def merge(merger: CalendricalMerger): Unit = {
+    override def merge(merger: CalendricalMerger): Unit = {
       val nod: Long = merger.getValue(this).get
       merger.storeMerged(LocalTime.rule, LocalTime.ofNanoOfDay(nod))
       merger.removeProcessed(this)
@@ -1109,21 +1107,21 @@ object ISOChronology extends ISOChronology {
 
     private def readResolve: AnyRef = UnitCache(ordinal / 16)
 
-    def compareTo(other: PeriodUnit): Int = {
+    override def compare(other: PeriodUnit): Int = {
       if (other.isInstanceOf[ChronoUnit]) {
         return ordinal - (other.asInstanceOf[ChronoUnit]).ordinal
       }
-      return super.compareTo(other)
+      return super.compare(other)
     }
 
-    def equals(obj: AnyRef): Boolean = {
+    override def equals(obj: Any): Boolean = {
       if (obj.isInstanceOf[ChronoUnit]) {
         return ordinal == (obj.asInstanceOf[ChronoUnit]).ordinal
       }
       return super.equals(obj)
     }
 
-    def hashCode: Int = ordinal
+    override val hashCode: Int = ordinal
   }
 
   /**
@@ -1136,7 +1134,7 @@ object ISOChronology extends ISOChronology {
 
     private def readResolve: AnyRef = RuleCache(ordinal / 16)
 
-    protected def derive(calendrical: Calendrical): Option[Int] = {
+    override def derive(calendrical: Calendrical): Option[Int] = {
       ordinal match {
         case NanoOfSecondOrdinal => calendrical.get(LocalTime.rule).map(_.getNanoOfSecond)
         case MilliOfSecondOrdinal => calendrical.get(LocalTime.rule).map(_.getNanoOfSecond / 1000000)
@@ -1160,9 +1158,9 @@ object ISOChronology extends ISOChronology {
       }
     }
 
-    def getSmallestMaximumValue: Int = smallestMaximum
+    override def getSmallestMaximumValue: Int = smallestMaximum
 
-    def getMaximumValue(calendrical: Calendrical): Int = {
+    override def getMaximumValue(calendrical: Calendrical): Int = {
       ordinal match {
         case DayOfMonthOrdinal => {
           val moy = calendrical.get(monthOfYearRule).getOrElse(return 31)
@@ -1193,14 +1191,14 @@ object ISOChronology extends ISOChronology {
       return super.getMaximumValue
     }
 
-    def compareTo(other: CalendricalRule[Int]): Int = {
+    override def compare(other: CalendricalRule[Int]): Int = {
       if (other.isInstanceOf[Rule]) {
         return ordinal - (other.asInstanceOf[Rule]).ordinal
       }
-      return super.compareTo(other)
+      return super.compare(other)
     }
 
-    override def equals(obj: AnyRef): Boolean = {
+    override def equals(obj: Any): Boolean = {
       if (obj.isInstanceOf[ISOChronology.Rule]) {
         return ordinal == (obj.asInstanceOf[Rule]).ordinal
       }
@@ -1240,7 +1238,7 @@ sealed class ISOChronology private
   private[calendar] def merge(merger: CalendricalMerger): Unit = {}
 
   //FIXME
-  //  private[calendar] def merge(merger: CalendricalMerger): Unit = {
+  //  private[calendar] override def merge(merger: CalendricalMerger): Unit = {
   //    val modVal: Int = merger.getValue(ISOChronology.milliOfDayRule)
   //    if (modVal != null) {
   //      merger.storeMerged(LocalTime.rule, LocalTime.ofNanoOfDay(modVal * 1000000L))

@@ -119,7 +119,7 @@ object ZoneRulesBuilder {
   /**
    * The maximum date-time.
    */
-  private val MaxDateTime: LocalDateTime = LocalDateTime.of(Year.MaxYear, 12, 31, 23, 59, 59, 999999999)
+  private val MaxDateTime: LocalDateTime = LocalDateTime.of(Year.MaxYear, 12, 31)(23, 59, 59, 999999999)
 
   /**
    * Validates that the input value is not null.
@@ -535,10 +535,11 @@ class ZoneRulesBuilder {
    * @param object the object to deduplicate
    * @return the deduplicated object
    */
-  private[zone] def deduplicate[T](obj: T): T = {
-    if (deduplicateMap.contains(obj) == false) deduplicateMap.put(obj, obj).getOrElse(null)
-    else deduplicateMap.get(obj).asInstanceOf[T]
-  }
+  //  private[zone] def deduplicate[T <: AnyRef](obj: T): T = {
+  //    if (deduplicateMap.contains(obj) == false) deduplicateMap.put(obj, obj).getOrElse(null)
+  //    else deduplicateMap.get(obj).asInstanceOf[T]
+  //  }
+  private[zone] def deduplicate[T <: AnyRef](obj: T): T = throw new Exception("Not implemented!")
 
   /**
    * A map for deduplicating the output.
@@ -578,13 +579,13 @@ class ZoneRulesBuilder {
       savings = firstWindow.fixedSavingAmount
     }
     val firstWallOffset: ZoneOffset = deduplicate(standardOffset.plus(savings))
-    var windowStart: OffsetDateTime = deduplicate(OffsetDateTime.of(Year.MinYear, 1, 1, 0, 0, offset = firstWallOffset))
+    var windowStart: OffsetDateTime = deduplicate(OffsetDateTime.of(Year.MinYear, 1, 1)(0, 0)(firstWallOffset))
     for (window <- windowList) {
       window.tidy(windowStart.getYear)
       var effectiveSavings: Period = window.fixedSavingAmount
       if (effectiveSavings == null) {
         effectiveSavings = Period.Zero
-        breakable{
+        breakable {
           for (rule <- window.ruleList) {
             val trans: ZoneOffsetTransition = rule.toTransition(standardOffset, savings)
             if (trans.getDateTime.isAfter(windowStart)) {
@@ -618,7 +619,7 @@ class ZoneRulesBuilder {
       }
       windowStart = deduplicate(window.createDateTime(savings))
     }
-    return new StandardZoneRules(firstWindow.standardOffset, firstWallOffset, standardOffsetList, transitionList, lastTransitionRuleList)
+    return StandardZoneRules(firstWindow.standardOffset, firstWallOffset, standardOffsetList, transitionList, lastTransitionRuleList)
   }
 
   /**

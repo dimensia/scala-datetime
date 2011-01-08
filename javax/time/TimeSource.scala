@@ -159,9 +159,9 @@ object TimeSource {
    * This is typically used for testing.
    * Restricted constructor. */
   @SerialVersionUID(1L)
-  private[time] final class FixedTimeSource(instant: Instant) extends TimeSource with Serializable {
+  private[time] final class FixedTimeSource(val instant: Instant) extends TimeSource with Serializable {
     /**{@inheritDoc}*/
-    override def equals(obj: AnyRef): Boolean = {
+    override def equals(obj: Any): Boolean = {
       if (obj.isInstanceOf[TimeSource.FixedTimeSource]) instant.equals((obj.asInstanceOf[TimeSource.FixedTimeSource]).instant)
       else false
     }
@@ -212,7 +212,7 @@ object TimeSource {
     override def toString: String = "OffsetSystemTimeSource[" + offset + ']'
 
     /**{@inheritDoc}*/
-    override def equals(obj: AnyRef): Boolean = {
+    override def equals(obj: Any): Boolean = {
       if (obj.isInstanceOf[TimeSource.OffsetSystemTimeSource]) offset.equals((obj.asInstanceOf[TimeSource.OffsetSystemTimeSource]).offset)
       else false
     }

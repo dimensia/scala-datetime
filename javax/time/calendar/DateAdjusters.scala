@@ -85,15 +85,14 @@ object DateAdjusters {
     }
 
     /**{@inheritDoc}*/
-    override def equals(obj: AnyRef): Boolean = {
-      if (obj eq null) return false
-      if (this eq obj) return true
-      if (!(obj.isInstanceOf[DateAdjusters.RelativeDayOfWeek])) return false
-      val other: DateAdjusters.RelativeDayOfWeek = obj.asInstanceOf[DateAdjusters.RelativeDayOfWeek]
-      if (this.relative != other.relative) return false
-      if (this.dow != other.dow) return false
-      return true
-    }
+    override def equals(obj: Any): Boolean =
+      if (obj == null) return false
+      else
+        obj match {
+          case other: DateAdjusters.RelativeDayOfWeek => (this eq other) ||
+            (relative == other.relative && dow == other.dow)
+          case _ => false
+        }
   }
 
   /**
@@ -242,7 +241,7 @@ object DateAdjusters {
     }
 
     /**{@inheritDoc}*/
-    override def equals(obj: AnyRef): Boolean = {
+    override def equals(obj: Any): Boolean = {
       if (obj.isInstanceOf[DateAdjusters.DayOfWeekInMonth]) {
         val other: DateAdjusters.DayOfWeekInMonth = obj.asInstanceOf[DateAdjusters.DayOfWeekInMonth]
         return ordinal == other.ordinal && dayOfWeek == other.dayOfWeek

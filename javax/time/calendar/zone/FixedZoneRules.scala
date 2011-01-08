@@ -125,13 +125,12 @@ final class FixedZoneRules private[zone](val offset: ZoneOffset) extends ZoneRul
    * @param other the other object to compare to, null returns false
    * @return true if equal
    */
-  override def equals(otherRules: AnyRef): Boolean = {
-    if (this eq otherRules)
-      true
-    else if (otherRules.isInstanceOf[FixedZoneRules])
-      offset.equals((otherRules.asInstanceOf[FixedZoneRules]).offset)
-    else false
-  }
+  override def equals(other: Any): Boolean =
+    other match {
+      case rules: FixedZoneRules => (this eq rules) ||
+        (offset == rules.offset)
+      case _ => false
+    }
 
   /**{@inheritDoc}*/
   def nextTransition(instantProvider: InstantProvider): ZoneOffsetTransition = null

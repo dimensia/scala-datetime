@@ -61,7 +61,7 @@ import javax.time.calendar.DateTimeFieldRule
 object DateTimeParseContext {
 
   private[format] class Parsed {
-    override def toString: String = (new TreeMap[CalendricalRule[_], Any]() ++ values).toString
+    override def toString: String = (new TreeMap[CalendricalRule[Any], Any]() ++ values).toString
 
     protected[format] override def clone: DateTimeParseContext.Parsed = {
       val cloned: DateTimeParseContext.Parsed = new DateTimeParseContext.Parsed
@@ -69,7 +69,7 @@ object DateTimeParseContext {
       cloned
     }
 
-    private[format] val values = new HashMap[CalendricalRule[_], Any]
+    private[format] val values = new HashMap[CalendricalRule[Any], Any]
   }
 
 }
@@ -179,7 +179,7 @@ final class DateTimeParseContext(val symbols: DateTimeFormatSymbols) {
    * @param rule the rule to set in the rule-value map, not null
    * @param value the value to set in the rule-value map, not null
    */
-  def setParsed(rule: CalendricalRule[_], value: AnyRef): Unit = {
+  def setParsed(rule: CalendricalRule[Any], value: AnyRef): Unit = {
     DateTimeFormatter.checkNotNull(rule, "CalendricalRule must not be null")
     DateTimeFormatter.checkNotNull(value, "Value must not be null")
     currentCalendrical.values.put(rule, value)
@@ -210,7 +210,7 @@ final class DateTimeParseContext(val symbols: DateTimeFormatSymbols) {
    * @param rule the rule to set in the rule-value map, not null
    * @param value the value to set in the rule-value map
    */
-  def setParsed(rule: DateTimeFieldRule[_], value: Int): Unit = {
+  def setParsed(rule: DateTimeFieldRule[Any], value: Int): Unit = {
     DateTimeFormatter.checkNotNull(rule, "DateTimeFieldRule must not be null")
     currentCalendrical.values.put(rule, value)
   }
@@ -232,7 +232,7 @@ final class DateTimeParseContext(val symbols: DateTimeFormatSymbols) {
    * @param rule the rule to query from the map, not null
    * @return the value mapped to the specified rule, null if rule not in the map
    */
-  def getParsed(rule: CalendricalRule[_]): Any = {
+  def getParsed(rule: CalendricalRule[Any]): Any = {
     DateTimeFormatter.checkNotNull(rule, "CalendricalRule must not be null")
     currentCalendrical.values.get(rule)
   }

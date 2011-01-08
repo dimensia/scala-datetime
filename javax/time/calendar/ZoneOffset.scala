@@ -238,7 +238,7 @@ object ZoneOffset {
     with Serializable {
     private def readResolve: AnyRef = Rule
 
-    protected override def derive(calendrical: Calendrical): Option[ZoneOffset] = {
+    override def derive(calendrical: Calendrical): Option[ZoneOffset] = {
       calendrical.get(OffsetDateTime.rule) match {
         case Some(odt) => return Some(odt.getOffset)
         case None =>
@@ -583,11 +583,11 @@ final class ZoneOffset private(val amountSeconds: Int) extends Calendrical with 
    * @param other the other zone offset, null returns false
    * @return true if this offset is the same as that specified
    */
-  override def equals(other: AnyRef): Boolean = {
-    if (this eq other) true
-    else if (other.isInstanceOf[ZoneOffset]) amountSeconds == (other.asInstanceOf[ZoneOffset]).amountSeconds
-    else false
-  }
+  override def equals(other: Any): Boolean =
+    other match {
+      case zoneOffset: ZoneOffset => (this eq zoneOffset) || amountSeconds == zoneOffset.amountSeconds
+      case _ => false
+    }
 
   /**
    * Returns a copy of this offset with the specified period added.

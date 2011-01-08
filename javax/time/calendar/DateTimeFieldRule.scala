@@ -455,23 +455,27 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
    * @param textStyle the text style, not null
    * @return the text cache, null if no text available
    */
-  def getTextStore(locale: Locale, textStyle: DateTimeFormatterBuilder.TextStyle): DateTimeFieldRule.TextStore = {
-    if (textStores == null) {
-      return null
-    }
-    val ref: SoftReference[HashMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore]] = textStores.getOrElse(locale, null)
-    if (ref != null) {
-      val textMapByStyle: HashMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore] = ref.get
-      if (textMapByStyle != null) {
-        return textMapByStyle.get(textStyle)
-      }
-    }
-    var textStoreByStyle = new HashMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore](classOf[DateTimeFormatterBuilder.TextStyle])
-    createTextStores(textStoreByStyle, locale)
-    textStoreByStyle = new HashMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore](textStoreByStyle)
-    textStores.put(locale, new SoftReference[HashMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore]](textStoreByStyle))
-    return textStoreByStyle.get(textStyle)
-  }
+//  def getTextStore(locale: Locale, textStyle: DateTimeFormatterBuilder.TextStyle): DateTimeFieldRule.TextStore = {
+//    if (textStores == null) {
+//      return null
+//    }
+//    val ref: SoftReference[HashMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore]] = textStores.getOrElse(locale, null)
+//    if (ref != null) {
+//      val textMapByStyle: HashMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore] = ref.get
+//      if (textMapByStyle != null) {
+//        return textMapByStyle.getOrElse(textStyle, null)
+//      }
+//    }
+//    var textStoreByStyle = throw new Exception("Not implemented!") //FIXME
+////      HashMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore](classOf[DateTimeFormatterBuilder.TextStyle])
+//    createTextStores(textStoreByStyle, locale)
+//    textStoreByStyle = throw new Exception("Not implemented!") //FIXME
+////      HashMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore](textStoreByStyle)
+////    textStores.put(locale, new SoftReference[HashMap[DateTimeFormatterBuilder.TextStyle, DateTimeFieldRule.TextStore]](textStoreByStyle))  //FIXME
+////    return textStoreByStyle.getOrElse(textStyle, null)
+//
+//  }
+  def getTextStore(locale: Locale, textStyle: DateTimeFormatterBuilder.TextStyle): DateTimeFieldRule.TextStore = throw new Exception("Not implemented!") //FIXME
 
   /**
    * Checks if the value is valid or invalid for this field.
@@ -558,7 +562,7 @@ abstract class DateTimeFieldRule[T] protected(reifiedClass: Class[T],
 
   /**The cached text for this rule. */
   @transient
-  private lazy val textStores = (if (hasText) JConcurrentMapWrapper(new ConcurrentHashMap[Locale, SoftReference[collection.mutable.Map[Any, Any]]]) else null)
+  private lazy val textStores = (if (hasText) JConcurrentMapWrapper(new ConcurrentHashMap[Locale, SoftReference[HashMap[Any, Any]]]) else null)
 
   /**
    * Converts the {@code int} to a typed value of the rule.

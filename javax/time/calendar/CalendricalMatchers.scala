@@ -222,7 +222,7 @@ object CalendricalMatchers {
     override def hashCode: Int = ordinal + 8 * dayOfWeek.ordinal
 
     /**{@inheritDoc}*/
-    override def equals(obj: AnyRef): Boolean = {
+    override def equals(obj: Any): Boolean = {
       if (obj.isInstanceOf[CalendricalMatchers.DayOfWeekInMonth]) {
         val other: CalendricalMatchers.DayOfWeekInMonth = obj.asInstanceOf[CalendricalMatchers.DayOfWeekInMonth]
         return ordinal == other.ordinal && dayOfWeek == other.dayOfWeek

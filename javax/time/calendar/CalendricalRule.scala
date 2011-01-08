@@ -94,10 +94,10 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    *     // return data, for example
    *     if (rule.equals(...)) {
    *       return valueForRule;
-   *     }
+   * }
    *     // call this method
    *     return rule.deriveValueFrom(this);
-   *   }
+   * }
    * </pre>
    *
    * @param calendrical the calendrical to get the value from, not null
@@ -184,7 +184,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * @param calendrical the calendrical to derive from, not null
    * @return the derived value, null if unable to derive
    */
-  protected def derive(calendrical: Calendrical): Option[T] = None
+  def derive(calendrical: Calendrical): Option[T] = None
 
   /**
    * Gets the value of this rule from the specified calendrical returning
@@ -281,11 +281,15 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    *
    * @return true if the rules are the same
    */
-  override def equals(obj: AnyRef): Boolean = {
-    if (obj eq this) true
-    if (obj == null || getClass != obj.getClass) false
-    else id.equals((obj.asInstanceOf[CalendricalRule[_]]).id)
-  }
+  override def equals(obj: Any): Boolean =
+    obj match {
+      case rule: CalendricalRule[_] => (this eq rule) || id == rule.id
+      case _ => false
+    }
+
+  //    if (obj eq this) true
+  //    if (obj == null || getClass != obj.getClass) false
+  //    else id.equals((obj.asInstanceOf[CalendricalRule[_]]).id)
 
   /**
    * Returns the input value cast to the correct generic type.
@@ -304,7 +308,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
   final def reify(value: Any): Option[T] = {
     if (value == null) None
     else if (reified.isInstance(value)) Some(value.asInstanceOf[T])
-    else throw new ClassCastException("Value of type " + value.getClass.getName + " cannot be cast to type " + reified.getName)
+    else throw new ClassCastException("Value of type " + value.asInstanceOf[AnyRef].getClass.getName + " cannot be cast to type " + reified.getName)
   }
 
   /**
@@ -395,14 +399,15 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * @throws ClassCastException if this rule has a type that is not comparable
    * @throws IllegalArgumentException if this rule cannot be extracted from either input parameter
    */
-  def compare(cal1: Calendrical, cal2: Calendrical): Int = {
-    var value1: Ordered[_] = cal1.get(this).asInstanceOf[Ordered[_]]
-    var value2: Ordered[_] = cal2.get(this).asInstanceOf[Ordered[_]]
-    if (value1 == null || value2 == null) {
-      throw new IllegalArgumentException("Unable to compare as Calendrical does not provide rule: " + getName)
-    }
-    return value1.compareTo(value2)
-  }
+  //  def compare(cal1: Calendrical, cal2: Calendrical): Int = {
+  //    var value1 = cal1.get(this).asInstanceOf[Option[Ordered[T]]]
+  //    var value2 = cal2.get(this).asInstanceOf[Option[Ordered[T]]]
+  //    if (value1 == None || value2 == None) {
+  //      throw new IllegalArgumentException("Unable to compare as Calendrical does not provide rule: " + getName)
+  //    }
+  //    return value1.get compare value2.get
+  //  }
+  def compare(cal1: Calendrical, cal2: Calendrical): Int = throw new Exception("Not implemented!")
 
   /**
    * Merges this field with other fields to form higher level fields.
@@ -435,7 +440,9 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    *
    * @param merger the merger instance controlling the merge process, not null
    */
-  protected def merge(merger: CalendricalMerger): Unit
+  def merge(merger: CalendricalMerger): Unit = {}
+
+  //was protected
 
   /**
    * Gets the value of the rule from the specified calendrical throwing
@@ -466,5 +473,5 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * @param value the value to interpret, null if unable to interpret the value
    * @return the interpreted value
    */
-  protected def interpret(merger: CalendricalMerger, value: Any): T
+  protected def interpret(merger: CalendricalMerger, value: Any): T = throw new Exception("Noit implemented! Was: null")
 }

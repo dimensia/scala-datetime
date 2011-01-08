@@ -171,7 +171,7 @@ final class ResourceZoneRulesDataProvider private(url: URL) extends ZoneRulesDat
       }
     }
     this.regions = HashSet[String](regionArray: _*)
-    var versionSet: MutableHashSet[ZoneRulesVersion] = new MutableHashSet[ZoneRulesVersion] {
+    val versionSet: MutableHashSet[ZoneRulesVersion] = new MutableHashSet[ZoneRulesVersion] {
       var i: Int = 0
       while (i < versionCount) {
         var versionRegionCount: Int = dis.readShort
@@ -186,7 +186,7 @@ final class ResourceZoneRulesDataProvider private(url: URL) extends ZoneRulesDat
             j += 1;
           }
         }
-        versionSet.add(new ResourceZoneRulesDataProvider.ResourceZoneRulesVersion(this, versionArray(i), versionRegionArray, versionRulesArray))
+//        versionSet.add(new ResourceZoneRulesDataProvider.ResourceZoneRulesVersion(this, versionArray(i), versionRegionArray, versionRulesArray))     //FIXME
         i += 1;
       }
     }

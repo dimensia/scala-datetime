@@ -122,16 +122,12 @@ final class ZoneOffsetInfo private[zone](val dateTime: LocalDateTime, val offset
    * @param other the other object to compare to, null returns false
    * @return true if equal
    */
-  override def equals(otherInfo: AnyRef): Boolean = {
-    if (this eq otherInfo) {
-      return true
+  override def equals(other: Any): Boolean =
+    other match {
+      case info: ZoneOffsetInfo => (this eq info) ||
+        (dateTime == info.dateTime && (if (transition != null) transition == info.transition else offset == info.offset))
+      case _ => false
     }
-    if (otherInfo.isInstanceOf[ZoneOffsetInfo]) {
-      val info: ZoneOffsetInfo = otherInfo.asInstanceOf[ZoneOffsetInfo]
-      return dateTime.equals(info.dateTime) && (if (transition != null) transition.equals(info.transition) else offset.equals(info.offset))
-    }
-    return false
-  }
 
   /**
    * Gets the local date-time that this info is applicable to.

@@ -105,21 +105,20 @@ object ZoneOffsetTransitionRule {
    * @throws IOException if an error occurs
    */
   private[zone] def readExternal(in: DataInput): ZoneOffsetTransitionRule = {
-    var data: Int = in.readInt
-    var month: MonthOfYear = MonthOfYear.of(data >>> 28)
-    var dom: Int = ((data & (63 << 22)) >>> 22) - 32
-    var dowByte: Int = (data & (7 << 19)) >>> 19
-    var dow: DayOfWeek = if (dowByte == 0) null else DayOfWeek.of(dowByte)
-    var timeByte: Int = (data & (31 << 14)) >>> 14
-    //TimeDefinition defn = TimeDefinition.values()[(data & (3 << 12)) >>> 12];
-    var defn: ZoneRulesBuilder.TimeDefinition = TimeDefinition.of((data & (3 << 12)) >>> 12)
+    val data: Int = in.readInt
+    val month: MonthOfYear = MonthOfYear.of(data >>> 28)
+    val dom: Int = ((data & (63 << 22)) >>> 22) - 32
+    val dowByte: Int = (data & (7 << 19)) >>> 19
+    val dow: DayOfWeek = if (dowByte == 0) null else DayOfWeek.of(dowByte)
+    val timeByte: Int = (data & (31 << 14)) >>> 14
+    val defn: ZoneRulesBuilder.TimeDefinition = TimeDefinition.of((data & (3 << 12)) >>> 12)
     var stdByte: Int = (data & (255 << 4)) >>> 4
     var beforeByte: Int = (data & (3 << 2)) >>> 2
     var afterByte: Int = (data & 3)
-    var time: LocalTime = (if (timeByte == 31) LocalTime.ofSecondOfDay(in.readInt) else LocalTime.of(timeByte % 24, 0))
-    var std: ZoneOffset = (if (stdByte == 255) ZoneOffset.ofTotalSeconds(in.readInt) else ZoneOffset.ofTotalSeconds((stdByte - 128) * 900))
-    var before: ZoneOffset = (if (beforeByte == 3) ZoneOffset.ofTotalSeconds(in.readInt) else ZoneOffset.ofTotalSeconds(std.getAmountSeconds + beforeByte * 1800))
-    var after: ZoneOffset = (if (afterByte == 3) ZoneOffset.ofTotalSeconds(in.readInt) else ZoneOffset.ofTotalSeconds(std.getAmountSeconds + afterByte * 1800))
+    val time: LocalTime = (if (timeByte == 31) LocalTime.ofSecondOfDay(in.readInt) else LocalTime.of(timeByte % 24, 0))
+    val std: ZoneOffset = (if (stdByte == 255) ZoneOffset.ofTotalSeconds(in.readInt) else ZoneOffset.ofTotalSeconds((stdByte - 128) * 900))
+    val before: ZoneOffset = (if (beforeByte == 3) ZoneOffset.ofTotalSeconds(in.readInt) else ZoneOffset.ofTotalSeconds(std.getAmountSeconds + beforeByte * 1800))
+    val after: ZoneOffset = (if (afterByte == 3) ZoneOffset.ofTotalSeconds(in.readInt) else ZoneOffset.ofTotalSeconds(std.getAmountSeconds + afterByte * 1800))
     return ZoneOffsetTransitionRule.of(month, dom, dow, time, timeByte == 24, defn, std, before, after)
   }
 }
@@ -193,16 +192,14 @@ final class ZoneOffsetTransitionRule(val month: MonthOfYear,
    * @param other the other object to compare to, null returns false
    * @return true if equal
    */
-  override def equals(otherRule: AnyRef): Boolean = {
-    if (otherRule == this) {
-      return true
+  override def equals(other: Any): Boolean =
+    other match {
+      case rule: ZoneOffsetTransitionRule => (this eq rule) ||
+        (month == rule.month && dayOfMonthIndicator == rule.dayOfMonthIndicator && dayOfWeek == rule.dayOfWeek &&
+          timeDefinition == rule.timeDefinition && time == rule.time && timeEndOfDay == rule.timeEndOfDay &&
+          standardOffset == rule.standardOffset && offsetBefore == rule.offsetBefore && offsetAfter == rule.offsetAfter)
+      case _ => false
     }
-    if (otherRule.isInstanceOf[ZoneOffsetTransitionRule]) {
-      val other: ZoneOffsetTransitionRule = otherRule.asInstanceOf[ZoneOffsetTransitionRule]
-      return month == other.month && dayOfMonthIndicator == other.dayOfMonthIndicator && dayOfWeek == other.dayOfWeek && timeDefinition == other.timeDefinition && time.equals(other.time) && timeEndOfDay == other.timeEndOfDay && standardOffset.equals(other.standardOffset) && offsetBefore.equals(other.offsetBefore) && offsetAfter.equals(other.offsetAfter)
-    }
-    return false
-  }
 
   /**
    * Returns a suitable hash code.

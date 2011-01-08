@@ -67,13 +67,19 @@ final class CalendricalContext(val isStrict: Boolean, val checkUnusedFields: Boo
    * @param obj the other context to compare to, null returns false
    * @return true if this instance is equal to the specified context
    */
-  override def equals(obj: AnyRef): Boolean = {
-    if (obj eq this) true
-    else if (obj.isInstanceOf[CalendricalContext]) {
-      val other: CalendricalContext = obj.asInstanceOf[CalendricalContext]
-      isStrict == other.isStrict && (dateResolver == other.dateResolver || (dateResolver != null && dateResolver.equals(other.dateResolver))) && checkUnusedFields == other.checkUnusedFields
+  override def equals(obj: Any): Boolean = {
+    obj match {
+      case other: CalendricalContext => { (this eq other) ||
+        (isStrict == other.isStrict && (dateResolver == other.dateResolver || (dateResolver != null && dateResolver.equals(other.dateResolver))) && checkUnusedFields == other.checkUnusedFields)
+             }
+      case _ => false
     }
-    else false
+//    if (obj eq this) true
+//    else if (obj.isInstanceOf[CalendricalContext]) {
+//      val other: CalendricalContext = obj.asInstanceOf[CalendricalContext]
+//      isStrict == other.isStrict && (dateResolver == other.dateResolver || (dateResolver != null && dateResolver.equals(other.dateResolver))) && checkUnusedFields == other.checkUnusedFields
+//    }
+//    else false
   }
 
   /**

@@ -61,12 +61,10 @@ object DateTimeFormatters {
 
   /**Singleton date formatter. */
   private val RFC1123DateTime: DateTimeFormatter = {
-    (new DateTimeFormatterBuilder)
-      .appendText(ISOChronology.dayOfWeekRule, TextStyle.Short)
+    (new DateTimeFormatterBuilder) //      .appendText(ISOChronology.dayOfWeekRule, TextStyle.Short)
       .appendLiteral(", ")
       .appendValue(ISOChronology.dayOfMonthRule, 2)
-      .appendLiteral(' ')
-      .appendText(ISOChronology.monthOfYearRule, TextStyle.Short)
+      .appendLiteral(' ') //      .appendText(ISOChronology.monthOfYearRule, TextStyle.Short)
       .appendLiteral(' ')
       .appendValue(ISOChronology.yearRule, 4, 4, SignStyle.NotNegative)
       .appendLiteral(' ')
@@ -90,8 +88,7 @@ object DateTimeFormatters {
       .optionalStart
       .appendLiteral(':')
       .appendValue(ISOChronology.secondOfMinuteRule, 2)
-      .optionalStart
-      .appendFraction(ISOChronology.nanoOfSecondRule, 0, 9)
+      .optionalStart // .appendFraction(ISOChronology.nanoOfSecondRule, 0, 9)
       .toFormatter
   }
 

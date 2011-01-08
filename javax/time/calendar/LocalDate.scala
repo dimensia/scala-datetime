@@ -130,7 +130,7 @@ object LocalDate {
   private[calendar] sealed class Rule
     extends CalendricalRule[LocalDate](classOf[LocalDate], ISOChronology, "LocalDate", ISOChronology.periodDays, null) with Serializable {
 
-    protected override def derive(calendrical: Calendrical): Option[LocalDate] = {
+    override def derive(calendrical: Calendrical): Option[LocalDate] = {
       val ldt: LocalDateTime = calendrical.get(LocalDateTime.rule).getOrElse(return None)
       return Some(ldt.toLocalDate)
       val od: OffsetDate = calendrical.get(OffsetDate.rule).getOrElse(return None)
@@ -1035,13 +1035,11 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * @param other the other date to compare to, null returns false
    * @return true if this point is equal to the specified date
    */
-  override def equals(other: AnyRef): Boolean = {
-    if (this eq other) true
-    else if (other.isInstanceOf[LocalDate]) {
-      val otherDate: LocalDate = other.asInstanceOf[LocalDate]
-      (year == otherDate.year && month == otherDate.month && day == otherDate.day)
+  override def equals(other: Any): Boolean = {
+    other match {
+      case otherDate: LocalDate => (this eq otherDate) || (year == otherDate.year && month == otherDate.month && day == otherDate.day)
+      case _ => false
     }
-    else false
   }
 
   /**

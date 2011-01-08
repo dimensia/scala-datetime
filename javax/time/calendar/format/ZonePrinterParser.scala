@@ -182,73 +182,71 @@ final class ZonePrinterParser private[format](textStyle: DateTimeFormatterBuilde
    * length of the shortest time-zone as well as the beginning characters of
    * all other time-zones.
    */
-  def parse(context: DateTimeParseContext, parseText: String, position: Int): Int = {
-    val length: Int = parseText.length
-    if (position > length) {
-      throw new IndexOutOfBoundsException
-    }
-    var ids: Set[String] = ZoneRulesGroup.getParsableIDs
-    if (ids.size == 0) {
-      return ~position
-    }
-    var tree: ZonePrinterParser.SubstringTree = null
-    classOf[ZonePrinterParser].synchronized{
-      if (preparedTree == null || preparedIDs.size < ids.size) {
-        ids = HashSet[String]() ++ ids
-        preparedTree = prepareParser(ids)
-        preparedIDs = ids
-      }
-      tree = preparedTree
-    }
-    if (parseText.substring(position).startsWith("UTC")) {
-      val newContext: DateTimeParseContext = new DateTimeParseContext(context.getSymbols)
-      val startPos: Int = position + 3
-      val endPos: Int = new ZoneOffsetPrinterParser("", true, true).parse(newContext, parseText, startPos)
-      if (endPos < 0) {
-        context.setParsed(TimeZone.rule, TimeZone.UTC)
-        return startPos
-      }
-      val zone: TimeZone = TimeZone.of(newContext.getParsed(ZoneOffset.rule).asInstanceOf[ZoneOffset])
-      context.setParsed(TimeZone.rule, zone)
-      return endPos
-    }
-    var parsedZoneId: String = null
-    var count: Int = 0
-    breakable{
-      while (tree != null) {
-        val nodeLength: Int = tree.length
-        if (position + nodeLength > length) {
-          break
-        }
-        parsedZoneId = parseText.substring(position, position + nodeLength)
-        tree = tree.get(parsedZoneId)
-        count += 1;
-      }
-    }
-    if (parsedZoneId != null && preparedIDs.contains(parsedZoneId)) {
-      var zone: TimeZone = TimeZone.of(parsedZoneId)
-      var pos: Int = position + parsedZoneId.length
-      if (pos + 1 < length && parseText.charAt(pos) == '#') {
-        val versions: Set[String] = zone.getGroup.getAvailableVersionIDs
-        breakable{
-          for (version <- versions) {
-            if (parseText.regionMatches(pos + 1, version, 0, version.length)) {
-              zone = zone.withVersion(version)
-              pos += version.length + 1
-              break
-            }
-          }
-        }
-      }
-      context.setParsed(TimeZone.rule, zone)
-      return pos
-    }
-    else return ~position
-  }
+//  def parse(context: DateTimeParseContext, parseText: String, position: Int): Int = {
+//    val length: Int = parseText.length
+//    if (position > length) {
+//      throw new IndexOutOfBoundsException
+//    }
+//    var ids: Set[String] = ZoneRulesGroup.getParsableIDs
+//    if (ids.size == 0) {
+//      return ~position
+//    }
+//    var tree: ZonePrinterParser.SubstringTree = null
+//    classOf[ZonePrinterParser].synchronized{
+//      if (preparedTree == null || preparedIDs.size < ids.size) {
+//        ids = HashSet[String]() ++ ids
+//        preparedTree = prepareParser(ids)
+//        preparedIDs = ids
+//      }
+//      tree = preparedTree
+//    }
+//    if (parseText.substring(position).startsWith("UTC")) {
+//      val newContext: DateTimeParseContext = new DateTimeParseContext(context.getSymbols)
+//      val startPos: Int = position + 3
+//      val endPos: Int = new ZoneOffsetPrinterParser("", true, true).parse(newContext, parseText, startPos)
+//      if (endPos < 0) {
+//        context.setParsed(TimeZone.rule, TimeZone.UTC)
+//        return startPos
+//      }
+//      val zone: TimeZone = TimeZone.of(newContext.getParsed(ZoneOffset.rule).asInstanceOf[ZoneOffset])
+//      context.setParsed(TimeZone.rule, zone)
+//      return endPos
+//    }
+//    var parsedZoneId: String = null
+//    var count: Int = 0
+//    breakable{
+//      while (tree != null) {
+//        val nodeLength: Int = tree.length
+//        if (position + nodeLength > length) {
+//          break
+//        }
+//        parsedZoneId = parseText.substring(position, position + nodeLength)
+//        tree = tree.get(parsedZoneId)
+//        count += 1;
+//      }
+//    }
+//    if (parsedZoneId != null && preparedIDs.contains(parsedZoneId)) {
+//      var zone: TimeZone = TimeZone.of(parsedZoneId)
+//      var pos: Int = position + parsedZoneId.length
+//      if (pos + 1 < length && parseText.charAt(pos) == '#') {
+//        val versions: Set[String] = zone.getGroup.getAvailableVersionIDs
+//        breakable{
+//          for (version <- versions) {
+//            if (parseText.regionMatches(pos + 1, version, 0, version.length)) {
+//              zone = zone.withVersion(version)
+//              pos += version.length + 1
+//              break
+//            }
+//          }
+//        }
+//      }
+//      context.setParsed(TimeZone.rule, zone)
+//      return pos
+//    }
+//    else return ~position
+//  }
+  def parse(context: DateTimeParseContext, parseText: String, position: Int): Int = throw new Exception("Not implemented!") //FIXME
 
   /**{@inheritDoc}*/
-  override def toString: String = {
-    if (textStyle == null) "ZoneId()"
-    else "ZoneText(" + textStyle + ")"
-  }
+  override def toString: String = if (textStyle == null) "ZoneId()" else "ZoneText(" + textStyle + ")"
 }

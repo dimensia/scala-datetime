@@ -402,13 +402,11 @@ final class ZoneRulesGroup(val groupID: String) {
    * @param otherGroup the other group, null returns false
    * @return true if this zone is the same as that specified
    */
-  override def equals(otherGroup: AnyRef): Boolean = {
-    if (this eq otherGroup) return true
-    if (otherGroup.isInstanceOf[ZoneRulesGroup])
-      return groupID.equals((otherGroup.asInstanceOf[ZoneRulesGroup]).groupID)
-
-    return false
-  }
+  override def equals(other: Any): Boolean =
+    other match {
+      case group: ZoneRulesGroup => (this eq group) || (groupID == group.groupID)
+      case _ => false
+    }
 
   /**
    * Finds the latest version ID that is valid for

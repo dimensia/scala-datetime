@@ -52,14 +52,17 @@ import javax.time.calendar.format.DateTimeFormatters
  * @author Stephen Colebourne
  */
 object OffsetDateTime {
+
+  implicit def MonthOfYear2Int(monthOfYear: MonthOfYear) = monthOfYear.ordinal
+
   /**
    * Obtains an instance of {@code OffsetDateTime} from a text string.
    * <p>
    * The following formats are accepted in ASCII:
    * <ul>
-   * <li> {@code   { Year} -   { MonthOfYear} -   { DayOfMonth} T   { Hour} :   { Minute} { OffsetID} }
-   * <li> {@code   { Year} -   { MonthOfYear} -   { DayOfMonth} T   { Hour} :   { Minute} :   { Second} { OffsetID} }
-   * <li> {@code   { Year} -   { MonthOfYear} -   { DayOfMonth} T   { Hour} :   { Minute} :   { Second}.   { NanosecondFraction} { OffsetID} }
+   * <li> {@code {Year}-{MonthOfYear}-{DayOfMonth}T{Hour}:{Minute}{OffsetID}}
+   * <li> {@code {Year}-{MonthOfYear}-{DayOfMonth}T{Hour}:{Minute}:{Second}{OffsetID}}
+   * <li> {@code {Year}-{MonthOfYear}-{DayOfMonth}T{Hour}:{Minute}:{Second}.{NanosecondFraction}{OffsetID}}
    * </ul>
    * <p>
    * The year has between 4 and 10 digits with values from MIN_YEAR to MAX_YEAR.
@@ -108,7 +111,7 @@ object OffsetDateTime {
     extends CalendricalRule[OffsetDateTime](classOf[OffsetDateTime], ISOChronology, "OffsetDateTime", ISOChronology.periodNanos, null)
     with Serializable {
 
-    protected override def derive(calendrical: Calendrical): Option[OffsetDateTime] = calendrical.get(ZonedDateTime.rule).map(_.toOffsetDateTime)
+    override def derive(calendrical: Calendrical): Option[OffsetDateTime] = calendrical.get(ZonedDateTime.rule).map(_.toOffsetDateTime)
 
     private def readResolve: AnyRef = Rule
   }
@@ -134,7 +137,7 @@ object OffsetDateTime {
    * @throws IllegalCalendarFieldValueException if the value of any field is out of range
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
-  def ofMidnight(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int, offset: ZoneOffset): OffsetDateTime = {
+  def ofMidnight(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int)(offset: ZoneOffset): OffsetDateTime = {
     val dt: LocalDateTime = LocalDateTime.ofMidnight(year, monthOfYear, dayOfMonth)
     new OffsetDateTime(dt, offset)
   }
@@ -187,8 +190,8 @@ object OffsetDateTime {
    * @throws IllegalCalendarFieldValueException if the value of any field is out of range
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
-  def of(year: Int, monthOfYear: Int, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int = 0, nanoOfSecond: Int = 0, offset: ZoneOffset): OffsetDateTime = {
-    val dt: LocalDateTime = LocalDateTime.of(year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
+  def of(year: Int, monthOfYear: Int, dayOfMonth: Int)(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int = 0, nanoOfSecond: Int = 0)(offset: ZoneOffset): OffsetDateTime = {
+    val dt: LocalDateTime = LocalDateTime.of(year, monthOfYear, dayOfMonth)(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
     new OffsetDateTime(dt, offset)
   }
 
@@ -206,7 +209,7 @@ object OffsetDateTime {
    * @throws IllegalCalendarFieldValueException if the value of any field is out of range
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
-  def ofMidnight(year: Int, monthOfYear: Int, dayOfMonth: Int, offset: ZoneOffset): OffsetDateTime = {
+  def ofMidnight(year: Int, monthOfYear: Int, dayOfMonth: Int)(offset: ZoneOffset): OffsetDateTime = {
     val dt: LocalDateTime = LocalDateTime.ofMidnight(year, monthOfYear, dayOfMonth)
     new OffsetDateTime(dt, offset)
   }
@@ -244,10 +247,10 @@ object OffsetDateTime {
    * @throws IllegalCalendarFieldValueException if the value of any field is out of range
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
-  def of(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int = 0, nanoOfSecond: Int = 0, offset: ZoneOffset): OffsetDateTime = {
-    val dt: LocalDateTime = LocalDateTime.of(year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
-    new OffsetDateTime(dt, offset)
-  }
+//  def of(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int)(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int = 0, nanoOfSecond: Int = 0)(offset: ZoneOffset): OffsetDateTime = {
+//    val dt: LocalDateTime = LocalDateTime.of(year, monthOfYear, dayOfMonth)(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
+//    new OffsetDateTime(dt, offset)
+//  }
 
   /**
    * Obtains an instance of {@code OffsetDateTime} from a text string using a specific formatter.
@@ -1510,13 +1513,11 @@ final class OffsetDateTime private(val dateTime: LocalDateTime, val offset: Zone
    * @param other the other date-time to compare to, null returns false
    * @return true if this point is equal to the specified date-time
    */
-  override def equals(other: AnyRef): Boolean = {
-    if (this eq other) true
-    else if (other.isInstanceOf[OffsetDateTime]) {
-      val offsetDateTime: OffsetDateTime = other.asInstanceOf[OffsetDateTime]
-      dateTime.equals(offsetDateTime.dateTime) && offset.equals(offsetDateTime.offset)
+  override def equals(other: Any): Boolean = {
+    other match {
+      case offsetDateTime: OffsetDateTime => (this eq offsetDateTime) || (dateTime.equals(offsetDateTime.dateTime) && offset.equals(offsetDateTime.offset))
+      case _ => false
     }
-    else false
   }
 
   /**

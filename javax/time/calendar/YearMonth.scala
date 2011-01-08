@@ -96,7 +96,7 @@ object YearMonth {
   private[calendar] sealed class Rule
     extends CalendricalRule[YearMonth](classOf[YearMonth], ISOChronology, "YearMonth", ISOChronology.periodMonths, null)
     with Serializable {
-    protected override def derive(calendrical: Calendrical): Option[YearMonth] = {
+    override def derive(calendrical: Calendrical): Option[YearMonth] = {
       val year: Int = calendrical.get(ISOChronology.yearRule).getOrElse(return None)
       val moy: MonthOfYear = calendrical.get(ISOChronology.monthOfYearRule).getOrElse(return None)
       return Some(YearMonth.of(year, moy))

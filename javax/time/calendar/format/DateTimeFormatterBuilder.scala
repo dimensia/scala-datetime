@@ -190,7 +190,7 @@ object DateTimeFormatterBuilder {
   }
 
   /**Map of letters to rules. */
-  private val RuleMap = new HashMap[Char, DateTimeFieldRule[_]]
+  private val RuleMap = new HashMap[Char, DateTimeFieldRule[Any]]
 
 }
 
@@ -262,7 +262,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    * @return this, for chaining, never null
    * @throws NullPointerException if the field rule is null
    */
-  def appendText(rule: DateTimeFieldRule[_]): DateTimeFormatterBuilder = appendText(rule, TextStyle.Full)
+  def appendText(rule: DateTimeFieldRule[Any]): DateTimeFormatterBuilder = appendText(rule, TextStyle.Full)
 
   /**
    * Mark the start of an optional section.
@@ -542,7 +542,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
             throw new IllegalArgumentException("Fraction letter 'f' must be followed by valid fraction pattern: " + pattern)
           }
         }
-        var rule: DateTimeFieldRule[_] = RuleMap.getOrElse(cur, null)
+        var rule: DateTimeFieldRule[Any] = RuleMap.getOrElse(cur, null)
         if (rule == null) {
           if (cur == 'z') {
             if (count < 4) {
@@ -570,9 +570,10 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
       }
       else if (cur == '\'') {
         val start: Int = ({
-          pos += 1; pos
+          pos += 1;
+          pos
         })
-        breakable{
+        breakable {
           while (pos < pattern.length) {
             if (pattern.charAt(pos) == '\'') {
               if (pos + 1 < pattern.length && pattern.charAt(pos + 1) == '\'') {
@@ -637,7 +638,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    * @throws IllegalArgumentException if the field has a non-zero minimum
    * @throws IllegalArgumentException if the widths are invalid
    */
-  def appendFraction(rule: DateTimeFieldRule[_], minWidth: Int, maxWidth: Int): DateTimeFormatterBuilder = {
+  def appendFraction(rule: DateTimeFieldRule[Any], minWidth: Int, maxWidth: Int): DateTimeFormatterBuilder = {
     checkNotNull(rule, "DateTimeFieldRule must not be null")
     if (rule.isFixedValueSet == false) {
       throw new IllegalArgumentException("The field does not have a fixed set of values")
@@ -683,7 +684,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
     return this
   }
 
-  private def parseRule(cur: Char, count: Int, rule: DateTimeFieldRule[_], fraction: Int): Unit = {
+  private def parseRule(cur: Char, count: Int, rule: DateTimeFieldRule[Any], fraction: Int): Unit = {
     cur match {
       case 'x' | 'y' =>
         if (count == 2) appendValueReduced(rule, 2, 2000)
@@ -1182,7 +1183,7 @@ final class DateTimeFormatterBuilder private(private val parent: DateTimeFormatt
    * @return this, for chaining, never null
    * @throws NullPointerException if the field rule or text style is null
    */
-  def appendText(rule: DateTimeFieldRule[_], textStyle: DateTimeFormatterBuilder.TextStyle): DateTimeFormatterBuilder = {
+  def appendText(rule: DateTimeFieldRule[Any], textStyle: DateTimeFormatterBuilder.TextStyle): DateTimeFormatterBuilder = {
     checkNotNull(rule, "DateTimeFieldRule must not be null")
     checkNotNull(textStyle, "TextStyle must not be null")
     val pp: TextPrinterParser = new TextPrinterParser(rule, textStyle)

@@ -85,7 +85,7 @@ object StandardZoneRules {
     val ruleSize: Int = in.readByte
     val rules: Array[ZoneOffsetTransitionRule] = (0 until ruleSize).map(_ => ZoneOffsetTransitionRule.readExternal(in)).toArray
 
-    new StandardZoneRules(stdTrans, stdOffsets, savTrans, savOffsets, rules)
+    StandardZoneRules(stdTrans, stdOffsets, savTrans, savOffsets, rules)
   }
 
   /**
@@ -99,7 +99,7 @@ object StandardZoneRules {
             baseWallOffset: ZoneOffset,
             standardOffsetTransitionList: Seq[OffsetDateTime],
             transitionList: Seq[ZoneOffsetTransition],
-            lastRules: Seq[ZoneOffsetTransitionRule]) {
+            lastRules: Seq[ZoneOffsetTransitionRule]) = {
 
     require(lastRules.length < 16, "Too many transition rules")
 
@@ -126,15 +126,15 @@ object StandardZoneRules {
       val after: ZoneOffset = wallOffsets(i + 1)
       val odt: OffsetDateTime = OffsetDateTime.ofEpochSeconds(savingsInstantTransitions(i), before)
       val transitions: ZoneOffsetTransition = new ZoneOffsetTransition(odt, after)
-      savingsLocalTransitions ++= (buildTransitions(transitions).flatten)
+      //      savingsLocalTransitions ++= (buildTransitions(transitions).toSeq.flatten)        //FIXME
     }
 
     new StandardZoneRules(standardTransitions, standardOffsets, savingsInstantTransitions, wallOffsets, lastRules, savingsLocalTransitions.toArray)
   }
 
   private def buildTransitions(transition: ZoneOffsetTransition) = {
-    if (transition.isGap) Buffer(transition.getDateTime.toLocalDateTime, transition.getDateTimeAfter.toLocalDateTime)
-    else Buffer(transition.getDateTimeAfter.toLocalDateTime, transition.getDateTime.toLocalDateTime)
+    if (transition.isGap) ArrayBuffer(transition.getDateTime.toLocalDateTime, transition.getDateTimeAfter.toLocalDateTime)
+    else ArrayBuffer(transition.getDateTimeAfter.toLocalDateTime, transition.getDateTime.toLocalDateTime)
   }
 
 }
@@ -315,14 +315,16 @@ final class StandardZoneRules private[zone](private val standardTransitions: Arr
    * @param other the other object to compare to, null returns false
    * @return true if equal
    */
-  override def equals(otherRules: AnyRef): Boolean = {
-    if (this eq otherRules) true
-    else if (otherRules.isInstanceOf[StandardZoneRules]) {
-      val other: StandardZoneRules = otherRules.asInstanceOf[StandardZoneRules]
-      Arrays.equals(standardTransitions, other.standardTransitions) && Arrays.equals(standardOffsets.asInstanceOf[Array[AnyRef]], other.standardOffsets.asInstanceOf[Array[AnyRef]]) && Arrays.equals(savingsInstantTransitions, other.savingsInstantTransitions) && Arrays.equals(wallOffsets.asInstanceOf[Array[AnyRef]], other.wallOffsets.asInstanceOf[Array[AnyRef]]) && Arrays.equals(lastRules.asInstanceOf[Array[AnyRef]], other.lastRules.asInstanceOf[Array[AnyRef]])
+  override def equals(other: Any): Boolean =
+    other match {
+      case rules: StandardZoneRules => (this eq rules) ||
+        (Arrays.equals(standardTransitions, rules.standardTransitions) &&
+          Arrays.equals(standardOffsets.asInstanceOf[Array[AnyRef]], rules.standardOffsets.asInstanceOf[Array[AnyRef]]) &&
+          Arrays.equals(savingsInstantTransitions, rules.savingsInstantTransitions) &&
+          Arrays.equals(wallOffsets.asInstanceOf[Array[AnyRef]], rules.wallOffsets.asInstanceOf[Array[AnyRef]]) &&
+          Arrays.equals(lastRules.asInstanceOf[Array[AnyRef]], rules.lastRules.asInstanceOf[Array[AnyRef]]))
+      case _ => false
     }
-    else false
-  }
 
   /**
    * Returns a string describing this object.

@@ -111,12 +111,12 @@ object HistoricDate {
   @SerialVersionUID(1L)
   private[i18n] sealed class Rule private
     extends CalendricalRule[HistoricDate](classOf[HistoricDate], HistoricChronology.standardCutover, "HistoricDate", HistoricChronology.periodDays, null) with Serializable {
-    protected override def derive(calendrical: Calendrical): Option[HistoricDate] = {
+    override def derive(calendrical: Calendrical): Option[HistoricDate] = {
       val ld: LocalDate = calendrical.get(LocalDate.rule).getOrElse(return None)
       return None //TODO
     }
 
-    protected override def merge(merger: CalendricalMerger): Unit = {
+    override def merge(merger: CalendricalMerger): Unit = {
       val cd: HistoricDate = merger.getValue(this).get
       merger.storeMerged(LocalDate.rule, cd.toLocalDate)
       merger.removeProcessed(this)
@@ -421,7 +421,7 @@ final class HistoricDate private[i18n](val chrono: HistoricChronology, @transien
    * @param otherDate the other date instance to compare to, null returns false
    * @return true if this day is equal to the specified day
    */
-  override def equals(otherDate: AnyRef): Boolean = {
+  override def equals(otherDate: Any): Boolean = {
     if (this == otherDate) true
     else if (otherDate.isInstanceOf[HistoricDate]) {
       val other: HistoricDate = otherDate.asInstanceOf[HistoricDate]

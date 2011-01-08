@@ -73,7 +73,7 @@ final class ReducedPrinterParser private[format](rule: DateTimeFieldRule[_], wid
   /**{@inheritDoc}*/
   private[format] override def getValue(calendrical: Calendrical): Int = {
     val value: Int = rule.getInt(calendrical)
-    return Math.abs(value % range)
+    return math.abs(value % range)
   }
 
   private[format] override def setValue(context: DateTimeParseContext, _value: Long): Unit = {
@@ -88,7 +88,8 @@ final class ReducedPrinterParser private[format](rule: DateTimeFieldRule[_], wid
     if (value < baseValue) {
       value += range
     }
-    context.setParsed(rule, value.toInt)
+    //    context.setParsed(rule, value.toInt) //FIXME
+    throw new Exception("Not implemented!") //FIXME
   }
 
   /**

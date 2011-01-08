@@ -494,7 +494,7 @@ object TimeZone {
     extends CalendricalRule[TimeZone](classOf[TimeZone], ISOChronology, "TimeZone", null, null)
     with Serializable {
 
-    protected override def derive(calendrical: Calendrical): Option[TimeZone] = calendrical.get(ZonedDateTime.rule).map(_.getZone)
+    override def derive(calendrical: Calendrical): Option[TimeZone] = calendrical.get(ZonedDateTime.rule).map(_.getZone)
 
     private def readResolve: AnyRef = Rule
   }
@@ -620,7 +620,7 @@ abstract class TimeZone private[calendar] extends Calendrical with Serializable 
    * @param otherZone the other zone, null returns false
    * @return true if this zone is the same as that specified
    */
-  override def equals(otherZone: AnyRef): Boolean = {
+  override def equals(otherZone: Any): Boolean = {
     if (this == otherZone) true
     else if (otherZone.isInstanceOf[TimeZone]) {
       val zone: TimeZone = otherZone.asInstanceOf[TimeZone]

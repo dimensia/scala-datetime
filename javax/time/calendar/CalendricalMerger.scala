@@ -66,7 +66,7 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
    *
    * @param context the context to use, not null
    */
-  def this(context: CalendricalContext, inputMap: HashMap[CalendricalRule[_], Any]) {
+  def this(context: CalendricalContext, inputMap: HashMap[CalendricalRule[Any], Any]) {
     this (context)
     ISOChronology.checkNotNull(inputMap, null)
     this.inputMap ++= inputMap
@@ -77,15 +77,7 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
    */
   private def removeDerivable: Unit = {
     val derivableValues = processingMap.filter({case (k,v) => k.derive(this) != None})
-    processingMap = processingMap -- derivableValues
-//    val it: Iterator[CalendricalRule[_]] = processingMap.keySet.iterator
-//
-//    while (it.hasNext) {
-//      val derivedValue: AnyRef = it.next.derive(this)
-//      if (derivedValue != null) {
-//        it.remove
-//      }
-//    }
+  //  processingMap = processingMap -- derivableValues        //FIXME
   }
 
   /**

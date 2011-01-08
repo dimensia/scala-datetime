@@ -197,7 +197,7 @@ object OffsetDate {
 
     private def readResolve: AnyRef = Rule
 
-    protected def derive(calendrical: Calendrical): Option[OffsetDate] = calendrical.get(OffsetDateTime.rule).map(_.toOffsetDate)
+    override def derive(calendrical: Calendrical): Option[OffsetDate] = calendrical.get(OffsetDateTime.rule).map(_.toOffsetDate)
   }
 
 }
@@ -1061,16 +1061,11 @@ final class OffsetDate private(val date: LocalDate, val offset: ZoneOffset) exte
    * @param other  the other date to compare to, null returns false
    * @return true if this date is equal to the specified date
    */
-  override def equals(other: AnyRef): Boolean = {
-    if (this eq other) {
-      return true
+  override def equals(other: Any): Boolean =
+    other match {
+      case offsetDate: OffsetDate => (this eq offsetDate) || ((date == offsetDate.date) && (offset == offsetDate.offset))
+      case _ => false
     }
-    if (other.isInstanceOf[OffsetDate]) {
-      val zonedDate: OffsetDate = other.asInstanceOf[OffsetDate]
-      return date.equals(zonedDate.date) && offset.equals(zonedDate.offset)
-    }
-    return false
-  }
 
   /**
    * A hash code for this {@code OffsetDate}.

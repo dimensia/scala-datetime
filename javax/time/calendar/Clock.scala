@@ -181,7 +181,7 @@ object Clock {
     }
 
     /**{@inheritDoc}*/
-    override def equals(obj: AnyRef): Boolean = {
+    override def equals(obj: Any): Boolean = {
       if (obj == this) {
         return true
       }
@@ -541,7 +541,7 @@ abstract class Clock protected {
    * @throws CalendricalException if the year cannot be created
    */
   def yearMonth: YearMonth = {
-    val today: LocalDate = today
-    return YearMonth.of(today.getYear, today.getMonthOfYear)
+    val _today: LocalDate = today
+    YearMonth.of(_today.getYear, _today.getMonthOfYear)
   }
 }

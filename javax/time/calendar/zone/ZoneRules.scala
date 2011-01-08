@@ -284,7 +284,7 @@ abstract class ZoneRules protected {
    * @param otherRules the other rules, null returns false
    * @return true if this rules is the same as that specified
    */
-  override def equals(otherRules: AnyRef): Boolean
+  override def equals(otherRules: Any): Boolean
 
   /**
    * Returns a suitable hash code.

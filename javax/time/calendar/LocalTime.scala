@@ -324,14 +324,11 @@ object LocalTime {
      * @param obj the object to compare to
      * @return true if equal
      */
-    override def equals(obj: AnyRef): Boolean = {
-      if (this eq obj) true
-      else if (obj.isInstanceOf[LocalTime.Overflow]) {
-        val other: LocalTime.Overflow = obj.asInstanceOf[LocalTime.Overflow]
-        time.equals(other.time) && days == other.days
+    override def equals(obj: Any): Boolean =
+      obj match {
+        case other: LocalTime.Overflow => (this eq other) || time == other.time && days == other.days
+        case _ => false
       }
-      else false
-    }
 
     /**
      * Returns a suitable hash code.
@@ -381,7 +378,7 @@ object LocalTime {
   private[calendar] sealed class Rule
     extends CalendricalRule[LocalTime](classOf[LocalTime], ISOChronology, "LocalTime", ISOChronology.periodNanos, ISOChronology.periodDays)
     with Serializable {
-    protected override def derive(calendrical: Calendrical): Option[LocalTime] = {
+    override def derive(calendrical: Calendrical): Option[LocalTime] = {
       val ldt: LocalDateTime = calendrical.get(LocalDateTime.rule).orNull
       if (ldt != null) return Some(ldt.toLocalTime)
       val ot: OffsetTime = calendrical.get(OffsetTime.rule).orNull
@@ -869,13 +866,12 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    * @param other the other time to compare to, null returns false
    * @return true if this point is equal to the specified time
    */
-  override def equals(other: AnyRef): Boolean = {
-    if (this eq other) true
-    else if (other.isInstanceOf[LocalTime]) {
-      val localTime: LocalTime = other.asInstanceOf[LocalTime]
-      hour == localTime.hour && minute == localTime.minute && second == localTime.second && nano == localTime.nano
+  override def equals(other: Any): Boolean = {
+    other match {
+      case localTime: LocalTime => (this eq localTime) ||
+        (hour == localTime.hour && minute == localTime.minute && second == localTime.second && nano == localTime.nano)
+      case _ => false
     }
-    else false
   }
 
   /**

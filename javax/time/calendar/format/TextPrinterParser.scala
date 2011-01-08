@@ -50,7 +50,7 @@ import javax.time.calendar.format.DateTimeFormatterBuilder.TextStyle
  * @param rule the rule to output, not null
  * @param textStyle the text style, not null
  */
-final class TextPrinterParser private[format](rule: DateTimeFieldRule[_], textStyle: DateTimeFormatterBuilder.TextStyle)
+final class TextPrinterParser private[format](rule: DateTimeFieldRule[Any], textStyle: DateTimeFormatterBuilder.TextStyle)
   extends DateTimePrinter with DateTimeParser {
 
   /**{@inheritDoc}*/
@@ -58,45 +58,46 @@ final class TextPrinterParser private[format](rule: DateTimeFieldRule[_], textSt
   else return "Text(" + rule.getID + "," + textStyle + ")"
 
   /**{@inheritDoc}*/
-  def parse(context: DateTimeParseContext, parseText: String, _position: Int): Int = {
-    var position = _position
-    val length: Int = parseText.length
-    if (position > length) {
-      throw new IndexOutOfBoundsException
-    }
-    if (context.isStrict) {
-      val textStore: DateTimeFieldRule.TextStore = rule.getTextStore(context.getLocale, textStyle)
-      if (textStore != null) {
-        var matched: Long = textStore.matchText(!context.isCaseSensitive, parseText.substring(position))
-
-        if (matched == 0) {
-          return ~position
-        }
-        else if (matched > 0) {
-          position += (matched >>> 32).toInt
-          context.setParsed(rule, matched.toInt)
-          return position
-        }
+    def parse(context: DateTimeParseContext, parseText: String, _position: Int): Int = {
+      var position = _position
+      val length: Int = parseText.length
+      if (position > length) {
+        throw new IndexOutOfBoundsException
       }
-
-      return numberPrinterParser.parse(context, parseText, position)
-    }
-    else {
-      for (textStyle <- TextStyle.values) {
+      if (context.isStrict) {
         val textStore: DateTimeFieldRule.TextStore = rule.getTextStore(context.getLocale, textStyle)
         if (textStore != null) {
-          val matched: Long = textStore.matchText(!context.isCaseSensitive, parseText.substring(position))
-          if (matched > 0) {
+          var matched: Long = textStore.matchText(!context.isCaseSensitive, parseText.substring(position))
+
+          if (matched == 0) {
+            return ~position
+          }
+          else if (matched > 0) {
             position += (matched >>> 32).toInt
             context.setParsed(rule, matched.toInt)
             return position
           }
         }
-      }
 
-      return numberPrinterParser.parse(context, parseText, position)
+        return numberPrinterParser.parse(context, parseText, position)
+      }
+      else {
+        for (textStyle <- TextStyle.values) {
+          val textStore: DateTimeFieldRule.TextStore = rule.getTextStore(context.getLocale, textStyle)
+          if (textStore != null) {
+            val matched: Long = textStore.matchText(!context.isCaseSensitive, parseText.substring(position))
+            if (matched > 0) {
+              position += (matched >>> 32).toInt
+              context.setParsed(rule, matched.toInt)
+              return position
+            }
+          }
+        }
+
+        return numberPrinterParser.parse(context, parseText, position)
+      }
     }
-  }
+//  def parse(context: DateTimeParseContext, parseText: String, _position: Int): Int = throw new Exception("Not implemented!")
 
   /**
    * The cached number printer parser.

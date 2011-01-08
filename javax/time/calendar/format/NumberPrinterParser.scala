@@ -228,7 +228,8 @@ class NumberPrinterParser private[format](rule: DateTimeFieldRule[_], val minWid
    * @param context the context to store into, not null
    * @param value the value
    */
-  private[format] def setValue(context: DateTimeParseContext, value: Long): Unit = context.setParsed(rule, value.toInt)
+  private[format] def setValue(context: DateTimeParseContext, value: Long): Unit = throw new Exception("Not implemented!") //FIXME
+  // context.setParsed(rule, value.toInt)
 
   /**
    * Returns a new instance with an updated subsequent width.
@@ -236,7 +237,6 @@ class NumberPrinterParser private[format](rule: DateTimeFieldRule[_], val minWid
    * @param subsequentWidth the width of subsequent non-negative numbers, 0 or greater
    * @return a new updated printer-parser, never null
    */
-  private[format] def withSubsequentWidth(subsequentWidth: Int): NumberPrinterParser = {
+  private[format] def withSubsequentWidth(subsequentWidth: Int): NumberPrinterParser =
     new NumberPrinterParser(rule, minWidth, maxWidth, signStyle, this.subsequentWidth + subsequentWidth)
-  }
 }

@@ -53,6 +53,8 @@ import javax.time.{Duration, Instant, MathUtils}
  * @author Stephen Colebourne
  */
 object LocalDateTime {
+  implicit def MonthOfYear2Int(monthOfYear: MonthOfYear) = monthOfYear.ordinal
+
   /**
    * Gets the field rule for {@code LocalDateTime}.
    *
@@ -114,7 +116,7 @@ object LocalDateTime {
    * @throws IllegalCalendarFieldValueException if the value of any field is out of range
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
-  def of(year: Int, monthOfYear: Int, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int = 0, nanoOfSecond: Int = 0): LocalDateTime = {
+  def of(year: Int, monthOfYear: Int, dayOfMonth: Int)(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int = 0, nanoOfSecond: Int = 0): LocalDateTime = {
     val date: LocalDate = LocalDate.of(year, monthOfYear, dayOfMonth)
     val time: LocalTime = LocalTime.of(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
     new LocalDateTime(date, time)
@@ -193,11 +195,11 @@ object LocalDateTime {
    * @throws IllegalCalendarFieldValueException if the value of any field is out of range
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
-  def of(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int = 0, nanoOfSecond: Int = 0): LocalDateTime = {
-    val date: LocalDate = LocalDate.of(year, monthOfYear, dayOfMonth)
-    val time: LocalTime = LocalTime.of(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
-    new LocalDateTime(date, time)
-  }
+  //  def of(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int)(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int = 0, nanoOfSecond: Int = 0): LocalDateTime = {
+  //    val date: LocalDate = LocalDate.of(year, monthOfYear, dayOfMonth)
+  //    val time: LocalTime = LocalTime.of(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
+  //    new LocalDateTime(date, time)
+  //  }
 
   /**
    * Rule implementation.
@@ -209,7 +211,7 @@ object LocalDateTime {
     extends CalendricalRule[LocalDateTime](classOf[LocalDateTime], ISOChronology, "LocalDateTime", ISOChronology.periodNanos, null) with Serializable {
     private def readResolve: AnyRef = Rule
 
-    protected override def merge(merger: CalendricalMerger): Unit = {
+    override def merge(merger: CalendricalMerger): Unit = {
       merger.getValue(ZoneOffset.rule) match {
         case Some(offset) => {
           val dateTime: LocalDateTime = merger.getValue(this).get
@@ -221,7 +223,7 @@ object LocalDateTime {
       }
     }
 
-    protected override def derive(calendrical: Calendrical): Option[LocalDateTime] =
+    override def derive(calendrical: Calendrical): Option[LocalDateTime] =
       calendrical.get(OffsetDateTime.rule).map(_.toLocalDateTime)
   }
 
@@ -765,14 +767,11 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime)
    * @param other the other date-time to compare to, null returns false
    * @return true if this point is equal to the specified date-time
    */
-  override def equals(other: AnyRef): Boolean = {
-    if (this eq other) true
-    else if (other.isInstanceOf[LocalDateTime]) {
-      val dt: LocalDateTime = other.asInstanceOf[LocalDateTime]
-      date.equals(dt.date) && time.equals(dt.time)
+  override def equals(other: Any): Boolean =
+    other match {
+      case dt: LocalDateTime => (this eq dt) || (date == dt.date && time == dt.time)
+      case _ => false
     }
-    else false
-  }
 
   /**
    * A hash code for this {@code LocalDateTime}.

@@ -66,6 +66,7 @@ import javax.time.calendar.zone.ZoneRules
  * @author Stephen Colebourne
  */
 object ZonedDateTime {
+  implicit def MonthOfYear2Int(monthOfYear: MonthOfYear) = monthOfYear.ordinal
 
   /**
    * Obtains the current date-time from the specified clock.
@@ -116,10 +117,13 @@ object ZonedDateTime {
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    * @throws CalendricalException if the resolver cannot resolve an invalid local date-time
    */
-  def of(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int, zone: TimeZone, resolver: ZoneResolver = ZoneResolvers.strict): ZonedDateTime = {
-    val dt: LocalDateTime = LocalDateTime.of(year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
-    resolve(dt, null, zone, resolver)
-  }
+  //  def of(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int)(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int)(zone: TimeZone, resolver: ZoneResolver = ZoneResolvers.strict): ZonedDateTime = {
+  //    val dt: LocalDateTime = LocalDateTime.of(year, monthOfYear, dayOfMonth)(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
+  //    resolve(dt, null, zone, resolver)
+  //  }
+  //
+  //  def apply(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int)(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int)(zone: TimeZone, resolver: ZoneResolver = ZoneResolvers.strict): ZonedDateTime =
+  //    of(year, monthOfYear, dayOfMonth)(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)(zone, resolver)
 
   /**
    * Obtains an instance of {@code ZonedDateTime} from year, month,
@@ -149,10 +153,13 @@ object ZonedDateTime {
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    * @throws CalendricalException if the resolver cannot resolve an invalid local date-time
    */
-  def of(year: Int, monthOfYear: Int, dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int, zone: TimeZone, resolver: ZoneResolver = ZoneResolvers.strict): ZonedDateTime = {
-    val dt: LocalDateTime = LocalDateTime.of(year, monthOfYear, dayOfMonth, hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
+  def of(year: Int, monthOfYear: Int, dayOfMonth: Int)(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int)(zone: TimeZone, resolver: ZoneResolver = ZoneResolvers.strict): ZonedDateTime = {
+    val dt: LocalDateTime = LocalDateTime.of(year, monthOfYear, dayOfMonth)(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
     resolve(dt, null, zone, resolver)
   }
+
+  def apply(year: Int, monthOfYear: Int, dayOfMonth: Int)(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int)(zone: TimeZone, resolver: ZoneResolver = ZoneResolvers.strict): ZonedDateTime =
+    of(year, monthOfYear, dayOfMonth)(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)(zone, resolver)
 
   /**
    * Obtains an instance of {@code ZonedDateTime} from a local date and time
@@ -172,10 +179,14 @@ object ZonedDateTime {
    * @return the zoned date-time, never null
    * @throws CalendricalException if the resolver cannot resolve an invalid local date-time
    */
-  def of(dateProvider: DateProvider, timeProvider: TimeProvider, zone: TimeZone, resolver: ZoneResolver = ZoneResolvers.strict): ZonedDateTime = {
+  def of(dateProvider: DateProvider, timeProvider: TimeProvider, zone: TimeZone, resolver: ZoneResolver): ZonedDateTime = {
     val dt: LocalDateTime = LocalDateTime.of(dateProvider, timeProvider)
     resolve(dt, null, zone, resolver)
   }
+
+  def apply(dateProvider: DateProvider, timeProvider: TimeProvider, zone: TimeZone, resolver: ZoneResolver): ZonedDateTime =
+    of(dateProvider, timeProvider, zone, resolver)
+
 
   /**
    * Obtains an instance of {@code ZonedDateTime} from a local date-time
@@ -194,10 +205,13 @@ object ZonedDateTime {
    * @return the zoned date-time, never null
    * @throws CalendricalException if the resolver cannot resolve an invalid local date-time
    */
-  def of(dateTimeProvider: DateTimeProvider, zone: TimeZone, resolver: ZoneResolver = ZoneResolvers.strict): ZonedDateTime = {
+  def of(dateTimeProvider: DateTimeProvider, zone: TimeZone, resolver: ZoneResolver): ZonedDateTime = {
     val dt: LocalDateTime = LocalDateTime.of(dateTimeProvider)
     resolve(dt, null, zone, resolver)
   }
+
+  def apply(dateTimeProvider: DateTimeProvider, zone: TimeZone, resolver: ZoneResolver): ZonedDateTime =
+    of(dateTimeProvider, zone, resolver)
 
   /**
    * Obtains an instance of {@code ZonedDateTime} from an {@code OffsetDateTime}
@@ -236,6 +250,8 @@ object ZonedDateTime {
     }
     return new ZonedDateTime(dateTime, zone)
   }
+
+  def apply(dateTime: OffsetDateTime, zone: TimeZone): ZonedDateTime = of(dateTime, zone)
 
   /**
    * Obtains an instance of {@code ZonedDateTime} from an {@code Instant}.
@@ -720,7 +736,7 @@ final class ZonedDateTime(private val dateTime: OffsetDateTime, private val zone
    * @throws IllegalArgumentException if the adjuster returned null
    * @throws IllegalCalendarFieldValueException if the resolver cannot resolve the date-time
    */
-  def `with`(adjuster: DateAdjuster, resolver: ZoneResolver = ZoneResolvers.retainOffset): ZonedDateTime = {
+  def `with`(adjuster: DateAdjuster, resolver: ZoneResolver): ZonedDateTime = {
     ISOChronology.checkNotNull(adjuster, "DateAdjuster must not be null")
     ISOChronology.checkNotNull(resolver, "ZoneResolver must not be null")
     val newDT: LocalDateTime = dateTime.toLocalDateTime.`with`(adjuster)
@@ -746,7 +762,7 @@ final class ZonedDateTime(private val dateTime: OffsetDateTime, private val zone
    * @throws IllegalArgumentException if the adjuster returned null
    * @throws IllegalCalendarFieldValueException if the resolver cannot resolve the date-time
    */
-  def `with`(adjuster: TimeAdjuster, resolver: ZoneResolver = ZoneResolvers.retainOffset): ZonedDateTime = {
+  def `with`(adjuster: TimeAdjuster, resolver: ZoneResolver): ZonedDateTime = {
     ISOChronology.checkNotNull(adjuster, "TimeAdjuster must not be null")
     ISOChronology.checkNotNull(resolver, "ZoneResolver must not be null")
     val newDT: LocalDateTime = dateTime.toLocalDateTime.`with`(adjuster)
@@ -1662,16 +1678,11 @@ final class ZonedDateTime(private val dateTime: OffsetDateTime, private val zone
    * @param other  the other date-time to compare to, null returns false
    * @return true if this point is equal to the specified date-time
    */
-  override def equals(other: AnyRef): Boolean = {
-    if (this eq other) {
-      return true
+  override def equals(other: Any): Boolean =
+    other match {
+      case zonedDateTime: ZonedDateTime => (this eq zonedDateTime) || (dateTime == zonedDateTime.dateTime && zone == zonedDateTime.zone)
+      case _ => false
     }
-    if (other.isInstanceOf[ZonedDateTime]) {
-      val zonedDateTime: ZonedDateTime = other.asInstanceOf[ZonedDateTime]
-      return dateTime.equals(zonedDateTime.dateTime) && zone.equals(zonedDateTime.zone)
-    }
-    return false
-  }
 
   /**
    * A hash code for this {@code ZonedDateTime}.

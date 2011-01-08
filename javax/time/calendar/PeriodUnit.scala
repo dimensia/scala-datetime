@@ -84,7 +84,7 @@ import PeriodUnit._
  * @param hashcode the cache of the unit hash code
  */
 @SerialVersionUID(1L)
-abstract class PeriodUnit private[calendar](@transient val name: String, @transient val equivalentPeriods: Seq[PeriodField], @transient val estimatedDuration: Duration, @transient val hashCode: Int)
+abstract class PeriodUnit private[calendar](@transient val name: String, @transient val equivalentPeriods: Seq[PeriodField], @transient val estimatedDuration: Duration, @transient override val hashCode: Int)
   extends Ordered[PeriodUnit] with Serializable {
 
   ISOChronology.checkNotNull(name, "Name must not be null")
@@ -118,7 +118,7 @@ abstract class PeriodUnit private[calendar](@transient val name: String, @transi
    * @throws ArithmeticException if the equivalent period calculation overflows
    */
   protected def this(name: String, equivalentPeriod: PeriodField) {
-    this (name, buildEquivalentPeriods(equivalentPeriod), equivalentPeriod.toEstimatedDuration, name.hashCode ^ estimatedDuration.hashCode ^ equivalentPeriod.hashCode)
+    this (name, buildEquivalentPeriods(equivalentPeriod), equivalentPeriod.toEstimatedDuration, name.hashCode /*^ estimatedDuration.hashCode*/ ^ equivalentPeriod.hashCode) //TODO: Check!
     ISOChronology.checkNotNull(equivalentPeriod, "Equivalent period must not be null")
     if (equivalentPeriod.getAmount <= 0) {
       throw new IllegalArgumentException("Equivalent period must not be negative or zero")
@@ -191,7 +191,7 @@ abstract class PeriodUnit private[calendar](@transient val name: String, @transi
    * @return true if this unit is convertible or equal to the specified unit
    */
   def isConvertibleTo(unit: PeriodUnit): Boolean = {
-    if(equivalentPeriods.exists(_.getUnit == unit)) true
+    if (equivalentPeriods.exists(_.getUnit == unit)) true
     else this == unit
   }
 
@@ -242,12 +242,14 @@ abstract class PeriodUnit private[calendar](@transient val name: String, @transi
    *
    * @return true if the units are the same
    */
-  override def equals(obj: AnyRef): Boolean = {
-    if (obj eq this) true
-    else if (obj.isInstanceOf[PeriodUnit]) {
-      val other: PeriodUnit = obj.asInstanceOf[PeriodUnit]
-      name.equals(other.name) && estimatedDuration.equals(other.estimatedDuration) && equivalentPeriods.size == other.equivalentPeriods.size && (equivalentPeriods.size == 0 || equivalentPeriods(0).equals(other.equivalentPeriods(0)))
-    } else false
+  override def equals(obj: Any): Boolean = {
+    obj match {
+      case other: PeriodUnit => (this eq other) ||
+        (name == other.name && estimatedDuration == other.estimatedDuration &&
+          equivalentPeriods.size == other.equivalentPeriods.size &&
+          (equivalentPeriods.size == 0 || equivalentPeriods(0) == other.equivalentPeriods(0)))
+      case _ => false
+    }
   }
 
   /**

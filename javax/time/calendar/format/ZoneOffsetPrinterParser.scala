@@ -31,7 +31,6 @@
  */
 package javax.time.calendar.format
 
-import java.io.IOException
 import javax.time.calendar.Calendrical
 import javax.time.calendar.ZoneOffset
 
@@ -121,9 +120,9 @@ final class ZoneOffsetPrinterParser private[format](utcText: String, includeColo
       appendable.append(offset.getID)
     }
     else {
-      var absHours: Int = Math.abs(offset.getHoursField)
-      var absMinutes: Int = Math.abs(offset.getMinutesField)
-      var absSeconds: Int = Math.abs(offset.getSecondsField)
+      var absHours: Int = math.abs(offset.getHoursField)
+      var absMinutes: Int = math.abs(offset.getMinutesField)
+      var absSeconds: Int = math.abs(offset.getSecondsField)
       appendable.append(if (totalSecs < 0) "-" else "+").append((absHours / 10 + '0').asInstanceOf[Char]).append((absHours % 10 + '0').asInstanceOf[Char]).append(if (includeColon) ":" else "").append((absMinutes / 10 + '0').asInstanceOf[Char]).append((absMinutes % 10 + '0').asInstanceOf[Char])
       if (allowSeconds && absSeconds > 0) {
         appendable.append(if (includeColon) ":" else "").append((absSeconds / 10 + '0').asInstanceOf[Char]).append((absSeconds % 10 + '0').asInstanceOf[Char])
@@ -132,47 +131,50 @@ final class ZoneOffsetPrinterParser private[format](utcText: String, includeColo
   }
 
   /**{@inheritDoc}*/
-  def parse(context: DateTimeParseContext, parseText: String, position: Int): Int = {
-    var offset: ZoneOffset = null
-    var length: Int = parseText.length
-    var utcLen: Int = utcText.length
-    if (utcLen == 0) {
-      if (position == length) {
-        context.setParsed(ZoneOffset.rule, ZoneOffset.UTC)
-        return position
-      }
-    }
-    else {
-      if (position == length) {
-        return ~position
-      }
-      if (parseText.regionMatches(!context.isCaseSensitive, position, utcText, 0, utcLen)) {
-        context.setParsed(ZoneOffset.rule, ZoneOffset.UTC)
-        return position + utcLen
-      }
-    }
-    var sign: Char = parseText.charAt(position)
-    if (sign == '+' || sign == '-') {
-      var negative: Int = (if (sign == '-') -1 else 1)
-      var array: Array[Int] = new Array[Int](4)
-      array(0) = position + 1
-      if (parseNumber(array, 1, parseText, true) || parseNumber(array, 2, parseText, true) || parseNumber(array, 3, parseText, false)) {
-        return ~position
-      }
-      var total: Int = (array(1) * 60 * 60) + (array(2) * 60) + array(3)
-      if (total > 18 * 60 * 60) {
-        return ~position
-      }
-      offset = ZoneOffset.ofHoursMinutesSeconds(negative * array(1), negative * array(2), negative * array(3))
-      context.setParsed(ZoneOffset.rule, offset)
-      return array(0)
-    }
-    else {
-      if (utcLen == 0) {
-        context.setParsed(ZoneOffset.rule, ZoneOffset.UTC)
-        return position + utcLen
-      }
-      return ~position
-    }
-  }
+  //  def parse(context: DateTimeParseContext, parseText: String, position: Int): Int = {
+  //    var offset: ZoneOffset = null
+  //    var length: Int = parseText.length
+  //    var utcLen: Int = utcText.length
+  //    if (utcLen == 0) {
+  //      if (position == length) {
+  //        context.setParsed(ZoneOffset.rule, ZoneOffset.UTC)
+  //        return position
+  //      }
+  //    }
+  //    else {
+  //      if (position == length) {
+  //        return ~position
+  //      }
+  //      if (parseText.regionMatches(!context.isCaseSensitive, position, utcText, 0, utcLen)) {
+  //        context.setParsed(ZoneOffset.rule, ZoneOffset.UTC)
+  //        return position + utcLen
+  //      }
+  //    }
+  //    var sign: Char = parseText.charAt(position)
+  //    if (sign == '+' || sign == '-') {
+  //      var negative: Int = (if (sign == '-') -1 else 1)
+  //      var array: Array[Int] = new Array[Int](4)
+  //      array(0) = position + 1
+  //      if (parseNumber(array, 1, parseText, true) || parseNumber(array, 2, parseText, true) || parseNumber(array, 3, parseText, false)) {
+  //        return ~position
+  //      }
+  //      var total: Int = (array(1) * 60 * 60) + (array(2) * 60) + array(3)
+  //      if (total > 18 * 60 * 60) {
+  //        return ~position
+  //      }
+  //      offset = ZoneOffset.ofHoursMinutesSeconds(negative * array(1), negative * array(2), negative * array(3))
+  //      context.setParsed(ZoneOffset.rule, offset)
+  //      return array(0)
+  //    }
+  //    else {
+  //      if (utcLen == 0) {
+  //        context.setParsed(ZoneOffset.rule, ZoneOffset.UTC)
+  //        return position + utcLen
+  //      }
+  //      return ~position
+  //    }
+  //  }
+  def parse(context: DateTimeParseContext, parseText: String, position: Int): Int = throw new Exception("Not implemented!")
+
+  //FIXME
 }

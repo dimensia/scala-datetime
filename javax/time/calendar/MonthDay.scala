@@ -181,7 +181,7 @@ object MonthDay {
 
     private def readResolve: AnyRef = Rule
 
-    protected override def derive(calendrical: Calendrical): Option[MonthDay] = {
+    override def derive(calendrical: Calendrical): Option[MonthDay] = {
       val moy: MonthOfYear = calendrical.get(ISOChronology.monthOfYearRule).getOrElse(return None)
       val dom: Int = calendrical.get(ISOChronology.dayOfMonthRule).getOrElse(return None)
       return Some(MonthDay.of(moy, dom))
@@ -340,7 +340,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
     ISOChronology.checkNotNull(rule, "CalendricalRule must not be null")
     if (rule.equals(ISOChronology.monthOfYearRule)) return rule.reify(month)
     if (rule.equals(ISOChronology.dayOfMonthRule)) return rule.reify(day)
-//    return Some(rule.deriveValueFor(rule, this, this, ISOChronology))    //FIXME
+    //    return Some(rule.deriveValueFor(rule, this, this, ISOChronology))    //FIXME
     None
   }
 
@@ -438,14 +438,11 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    * @param other the other month-day to compare to, null returns false
    * @return true if this point is equal to the specified month-day
    */
-  override def equals(other: AnyRef): Boolean = {
-    if (this eq other) true
-    else if (other.isInstanceOf[MonthDay]) {
-      val otherMD: MonthDay = other.asInstanceOf[MonthDay]
-      month == otherMD.month && day == otherMD.day
+  override def equals(other: Any): Boolean =
+    other match {
+      case monthDay: MonthDay => (this eq monthDay) || (month == monthDay.month && day == monthDay.day)
+      case _ => false
     }
-    else false
-  }
 
   /**
    * Adjusts a date to have the value of this month-day, returning a new date.

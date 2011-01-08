@@ -122,7 +122,7 @@ sealed class SystemUTCRules private extends UTCRules with Serializable {
     data.dates.clone
   }
 
-  protected def convertToUTC(taiInstant: TAIInstant): UTCInstant = {
+  protected[time] def convertToUTC(taiInstant: TAIInstant): UTCInstant = {
     val data: SystemUTCRules.Data = dataRef.get
     val mjds: Array[Long] = data.dates
     val tais: Array[Long] = data.taiSeconds
