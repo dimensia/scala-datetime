@@ -129,7 +129,7 @@ object Instant {
    * @param timeSource the time-source to use, by default {@code TimeSource.system}, not null
    * @return the current instant, never null
    */
-  def now(timeSource: TimeSource = TimeSource.system): Instant = {
+  def now(implicit timeSource: TimeSource = TimeSource.system): Instant = {
     checkNotNull(timeSource, "TimeSource must not be null")
     of(timeSource.instant)
   }
