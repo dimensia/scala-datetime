@@ -68,11 +68,13 @@ object Year {
    * Constant for the minimum year on the proleptic ISO calendar system.
    */
   val MinYear: Int = Int.MinValue + 2
+
   /**
    * Constant for the maximum year on the proleptic ISO calendar system,
    * which is the same as the maximum for year of era.
    */
   val MaxYear: Int = Int.MaxValue
+
   /**
    * Obtains the current year from the specified clock.
    * <p>
@@ -83,7 +85,7 @@ object Year {
    * @param clock the clock to use, by default {@code Clock.systemDefaultZone}, not null
    * @return the current year, never null
    */
-  def now(implicit clock: Clock = Clock.systemDefaultZone): Year = Year.of(LocalDate.now(clock))
+  def now(implicit clock: Clock = Clock.systemDefaultZone): Year = Year(LocalDate.now(clock))
 
   /**
    * Gets the rule that defines how the year field operates.
@@ -96,27 +98,6 @@ object Year {
   def rule: DateTimeFieldRule[Int] = ISOChronology.yearRule
 
   /**
-   * Obtains an instance of {@code Year}.
-   * <p>
-   * This method accepts a year value from the proleptic ISO calendar system.
-   * <p>
-   * The year 2AD/CE is represented by 2.<br />
-   * The year 1AD/CE is represented by 1.<br />
-   * The year 1BC/BCE is represented by 0.<br />
-   * The year 2BC/BCE is represented by -1.<br />
-   *
-   * @param isoYear the ISO proleptic year to represent, from MIN_YEAR to MAX_YEAR
-   * @return the created Year, never null
-   * @throws IllegalCalendarFieldValueException if the field is invalid
-   */
-  def of(isoYear: Int): Year = {
-    rule.checkValue(isoYear)
-    new Year(isoYear)
-  }
-
-  def apply(isoYear: Int): Year = of(isoYear)
-
-  /**
    * Obtains an instance of {@code Year} from a calendrical.
    * <p>
    * This can be used extract the year value directly from any implementation
@@ -126,19 +107,29 @@ object Year {
    * @return the Year instance, never null
    * @throws UnsupportedRuleException if the year cannot be obtained
    */
-  def of(calendrical: Calendrical): Year = Year.of(rule.getInt(calendrical))
-
-  def apply(calendrical: Calendrical): Year = of(calendrical)
+  def apply(calendrical: Calendrical): Year = Year(rule.getInt(calendrical))
 }
 
 
 /**
  * Constructor.
  *
- * @param year the year to represent
+ * Obtains an instance of {@code Year}.
+ * <p>
+ * This method accepts a year value from the proleptic ISO calendar system.
+ * <p>
+ * The year 2AD/CE is represented by 2.<br />
+ * The year 1AD/CE is represented by 1.<br />
+ * The year 1BC/BCE is represented by 0.<br />
+ * The year 2BC/BCE is represented by -1.<br />
+ *
+ * @param isoYear the ISO proleptic year to represent, from MIN_YEAR to MAX_YEAR
+ * @return the created Year, never null
+ * @throws IllegalCalendarFieldValueException if the field is invalid
  */
 @SerialVersionUID(1L)
-class Year private(val year: Int) extends Calendrical with DateAdjuster with CalendricalMatcher with Ordered[Year] with Serializable {
+final case class Year(year: Int) extends Calendrical with DateAdjuster with CalendricalMatcher with Ordered[Year] {
+  Year.rule.checkValue(year)
 
   import Year._
 
@@ -151,10 +142,9 @@ class Year private(val year: Int) extends Calendrical with DateAdjuster with Cal
    * @return a {@code Year} based on this year with the period added, never null
    * @throws CalendricalException if the result exceeds the supported year range
    */
-  def plusYears(years: Long): Year = {
-    if (years == 0) this
-    else of(rule.checkValue(year + years))
-  }
+  def plusYears(years: Int): Year = if (years == 0) this else Year(year + years)
+
+  //TODO: Was Long
 
   /**
    * Is this year after the specified year.
@@ -317,7 +307,7 @@ class Year private(val year: Int) extends Calendrical with DateAdjuster with Cal
    * @return the local date formed from this year and the specified month-day, never null
    * @throws InvalidCalendarFieldException if the month-day is February 29th and this is not a leap year
    */
-  def atMonthDay(monthDay: MonthDay): LocalDate = LocalDate.of(year, monthDay.getMonthOfYear, monthDay.getDayOfMonth)
+  def atMonthDay(monthDay: MonthDay): LocalDate = LocalDate(year, monthDay.month, monthDay.day)
 
   /**
    * Returns the previous year.
@@ -327,7 +317,7 @@ class Year private(val year: Int) extends Calendrical with DateAdjuster with Cal
    */
   def previous: Year = {
     if (year == MinYear) throw new CalendricalException("Year is already at the minimum value")
-    else of(year - 1)
+    else Year(year - 1)
   }
 
   /**
@@ -372,10 +362,9 @@ class Year private(val year: Int) extends Calendrical with DateAdjuster with Cal
    * @return a {@code Year} based on this year with the period subtracted, never null
    * @throws CalendricalException if the result exceeds the supported year range
    */
-  def minusYears(years: Long): Year = {
-    if (years == 0) this
-    else of(rule.checkValue(year - years))
-  }
+  def minusYears(years: Int): Year = if (years == 0) this else Year(year - years)
+
+  //TODO: Was Long
 
   /**
    * Returns the next year.
@@ -385,7 +374,7 @@ class Year private(val year: Int) extends Calendrical with DateAdjuster with Cal
    */
   def next: Year = {
     if (year == MaxYear) throw new CalendricalException("Year is already at the maximum value")
-    else of(year + 1)
+    else Year(year + 1)
   }
 
   /**
@@ -403,7 +392,7 @@ class Year private(val year: Int) extends Calendrical with DateAdjuster with Cal
    * @param monthOfYear the month-of-year to use, from 1 (January) to 12 (December)
    * @return the year-month formed from this year and the specified month, never null
    */
-  def atMonth(monthOfYear: Int): YearMonth = YearMonth.of(year, monthOfYear)
+  def atMonth(monthOfYear: Int): YearMonth = YearMonth(year, monthOfYear)
 
   /**
    * Returns a copy of this {@code Year} with the specified period subtracted.
@@ -441,13 +430,6 @@ class Year private(val year: Int) extends Calendrical with DateAdjuster with Cal
   def compare(other: Year): Int = MathUtils.safeCompare(year, other.year)
 
   /**
-   * A hash code for this year.
-   *
-   * @return a suitable hash code
-   */
-  override def hashCode: Int = year
-
-  /**
    * Returns a date formed from this year at the specified day-of-year.
    * <p>
    * This merges the two objects - {@code this} and the specified day -
@@ -467,7 +449,7 @@ class Year private(val year: Int) extends Calendrical with DateAdjuster with Cal
     if (dayOfYear == 366 && !isLeap) {
       throw new InvalidCalendarFieldException("Day of year 366 is invalid for year " + year, ISOChronology.dayOfYearRule)
     }
-    return LocalDate.of(year, 1, 1).plusDays(dayOfYear - 1)
+    return LocalDate(year, 1, 1).plusDays(dayOfYear - 1)
   }
 
   /**
@@ -485,5 +467,5 @@ class Year private(val year: Int) extends Calendrical with DateAdjuster with Cal
    * @param monthOfYear the month-of-year to use, not null
    * @return the year-month formed from this year and the specified month, never null
    */
-  def atMonth(monthOfYear: MonthOfYear): YearMonth = YearMonth.of(year, monthOfYear)
+  def atMonth(monthOfYear: MonthOfYear): YearMonth = YearMonth(year, monthOfYear)
 }

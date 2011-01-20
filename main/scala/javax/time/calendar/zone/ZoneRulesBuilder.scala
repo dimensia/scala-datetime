@@ -279,7 +279,7 @@ class ZoneRulesBuilder {
         }
       }
       if (timeEndOfDay && dayOfMonthIndicator > 0 && (dayOfMonthIndicator == 28 && month == MonthOfYear.February) == false) {
-        val date: LocalDate = LocalDate.of(2004, month, dayOfMonthIndicator).plusDays(1)
+        val date: LocalDate = LocalDate(2004, month, dayOfMonthIndicator).plusDays(1)
         month = date.getMonthOfYear
         dayOfMonthIndicator = date.getDayOfMonth
         if (dayOfWeek != null) {
@@ -301,13 +301,13 @@ class ZoneRulesBuilder {
     private[zone] def toTransition(standardOffset: ZoneOffset, savingsBefore: Period): ZoneOffsetTransition = {
       var date: LocalDate = null
       if (dayOfMonthIndicator < 0) {
-        date = LocalDate.of(year, month, month.getLastDayOfMonth(ISOChronology.isLeapYear(year)) + 1 + dayOfMonthIndicator)
+        date = LocalDate(year, month, month.getLastDayOfMonth(ISOChronology.isLeapYear(year)) + 1 + dayOfMonthIndicator)
         if (dayOfWeek != null) {
           date = date.`with`(DateAdjusters.previousOrCurrent(dayOfWeek))
         }
       }
       else {
-        date = LocalDate.of(year, month, dayOfMonthIndicator)
+        date = LocalDate(year, month, dayOfMonthIndicator)
         if (dayOfWeek != null) {
           date = date.`with`(DateAdjusters.nextOrCurrent(dayOfWeek))
         }

@@ -88,7 +88,7 @@ object OffsetDate {
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
   def of(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int, offset: ZoneOffset): OffsetDate = {
-    val date: LocalDate = LocalDate.of(year, monthOfYear, dayOfMonth)
+    val date: LocalDate = LocalDate(year, monthOfYear, dayOfMonth)
     new OffsetDate(date, offset)
   }
 
@@ -104,7 +104,7 @@ object OffsetDate {
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
   def of(year: Int, monthOfYear: Int, dayOfMonth: Int, offset: ZoneOffset): OffsetDate = {
-    val date: LocalDate = LocalDate.of(year, monthOfYear, dayOfMonth)
+    val date: LocalDate = LocalDate(year, monthOfYear, dayOfMonth)
     new OffsetDate(date, offset)
   }
 
@@ -116,7 +116,7 @@ object OffsetDate {
    * @return the offset date, never null
    */
   def of(dateProvider: DateProvider, offset: ZoneOffset): OffsetDate = {
-    val date: LocalDate = LocalDate.of(dateProvider)
+    val date: LocalDate = LocalDate(dateProvider)
     new OffsetDate(date, offset)
   }
 
@@ -378,7 +378,7 @@ final class OffsetDate private(val date: LocalDate, val offset: ZoneOffset) exte
    * @return an {@code OffsetDate} based on this date with the requested date, never null
    */
   def withDate(dateProvider: DateProvider): OffsetDate = {
-    val newDate: LocalDate = LocalDate.of(dateProvider)
+    val newDate: LocalDate = LocalDate(dateProvider)
     if (newDate.equals(date)) this
     else `with`(newDate, offset)
   }
@@ -466,7 +466,7 @@ final class OffsetDate private(val date: LocalDate, val offset: ZoneOffset) exte
    * @param dateResolver the DateResolver to be used if the resulting date would be invalid
    * @return an {@code OffsetDate} based on this date with the requested month, never null
    */
-  def `with`(monthOfYear: Nothing, dateResolver: DateResolver): OffsetDate =
+  def `with`(monthOfYear: MonthOfYear, dateResolver: DateResolver): OffsetDate =
     `with`(date.`with`(monthOfYear, dateResolver), offset)
 
   /**
@@ -481,7 +481,7 @@ final class OffsetDate private(val date: LocalDate, val offset: ZoneOffset) exte
    * @throws IllegalCalendarFieldValueException if the day-of-month value is invalid
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
-  def withDayOfMonth(dayOfMonth: Int): OffsetDate = `with`(date.withDayOfMonth(dayOfMonth), offset)
+  def withDayOfMonth(dayOfMonth: Int): OffsetDate = `with`(date.copy(day = dayOfMonth), offset)
 
   /**
    * Returns a copy of this {@code OffsetDate} with the day-of-month altered.

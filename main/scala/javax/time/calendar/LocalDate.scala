@@ -95,31 +95,7 @@ object LocalDate {
    * @throws IllegalCalendarFieldValueException if the value of any field is out of range
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
-  def of(year: Int, monthOfYear: Int, dayOfMonth: Int): LocalDate = {
-    ISOChronology.yearRule.checkValue(year)
-    ISOChronology.monthOfYearRule.checkValue(monthOfYear)
-    ISOChronology.dayOfMonthRule.checkValue(dayOfMonth)
-    create(year, MonthOfYear.of(monthOfYear), dayOfMonth)
-  }
-
-  /**
-   * Obtains an instance of {@code LocalDate} from a year, month and day.
-   * <p>
-   * The day must be valid for the year and month or an exception will be thrown.
-   *
-   * @param year the year to represent, from MIN_YEAR to MAX_YEAR
-   * @param monthOfYear the month-of-year to represent, not null
-   * @param dayOfMonth the day-of-month to represent, from 1 to 31
-   * @return the local date, never null
-   * @throws IllegalCalendarFieldValueException if the value of any field is out of range
-   * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
-   */
-  def of(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int): LocalDate = {
-    ISOChronology.yearRule.checkValue(year)
-    ISOChronology.checkNotNull(monthOfYear, "MonthOfYear must not be null")
-    ISOChronology.dayOfMonthRule.checkValue(dayOfMonth)
-    create(year, monthOfYear, dayOfMonth)
-  }
+  def apply(year: Int, monthOfYear: Int, dayOfMonth: Int): LocalDate = LocalDate(year, MonthOfYear.of(monthOfYear), dayOfMonth)
 
   /**
    * Rule implementation.
@@ -173,7 +149,7 @@ object LocalDate {
    * @return the local date, never null
    * @throws NullPointerException if the provider is null or returns null
    */
-  def of(dateProvider: DateProvider): LocalDate = {
+  def apply(dateProvider: DateProvider): LocalDate = {
     ISOChronology.checkNotNull(dateProvider, "DateProvider must not be null")
     val result: LocalDate = dateProvider.toLocalDate
     ISOChronology.checkNotNull(result, "DateProvider implementation must not return null")
@@ -224,7 +200,7 @@ object LocalDate {
     val dom: Int = marchDoy0 - (marchMonth0 * 306 + 5) / 10 + 1
     yearEst += marchMonth0 / 10
     val year: Int = ISOChronology.yearRule.checkValue(yearEst)
-    new LocalDate(year, MonthOfYear.of(month), dom)
+    LocalDate(year, MonthOfYear.of(month), dom)
   }
 
   /**
@@ -261,38 +237,37 @@ object LocalDate {
    * @return the field rule for the date, never null
    */
   def rule: CalendricalRule[LocalDate] = Rule
-
-  /**
-   * Creates a local date from the year, month and day fields.
-   *
-   * @param year the year to represent, validated from MIN_YEAR to MAX_YEAR
-   * @param monthOfYear the month-of-year to represent, validated not null
-   * @param dayOfMonth the day-of-month to represent, validated from 1 to 31
-   * @return the local date, never null
-   * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
-   */
-  private def create(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int): LocalDate = {
-    if (dayOfMonth > 28 && dayOfMonth > monthOfYear.lengthInDays(ISOChronology.isLeapYear(year))) {
-      if (dayOfMonth == 29) {
-        throw new InvalidCalendarFieldException("Illegal value for DayOfMonth field, value 29 is not valid as " + year + " is not a leap year", ISOChronology.dayOfMonthRule)
-      }
-      else {
-        throw new InvalidCalendarFieldException("Illegal value for DayOfMonth field, value " + dayOfMonth + " is not valid for month " + monthOfYear.name, ISOChronology.dayOfMonthRule)
-      }
-    }
-    return new LocalDate(year, monthOfYear, dayOfMonth)
-  }
 }
 
 /**
- * Constructor, previously validated.
+ * Constructor.
  *
- * @param year the year to represent, from MinYear to MaxYear
+ * Obtains an instance of {@code LocalDate} from a year, month and day.
+ * <p>
+ * The day must be valid for the year and month or an exception will be thrown.
+ *
+ * @param year the year to represent, from MIN_YEAR to MAX_YEAR
  * @param monthOfYear the month-of-year to represent, not null
- * @param dayOfMonth the day-of-month to represent, valid for year-month, from 1 to 31
+ * @param dayOfMonth the day-of-month to represent, from 1 to 31
+ * @throws IllegalCalendarFieldValueException if the value of any field is out of range
+ * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
  */
-final class LocalDate private(val year: Int, val month: MonthOfYear, val day: Int)
-  extends Calendrical with DateProvider with CalendricalMatcher with DateAdjuster with Ordered[LocalDate] with Serializable {
+final case class LocalDate(year: Int, month: MonthOfYear, day: Int)
+  extends Calendrical with DateProvider with CalendricalMatcher with DateAdjuster with Ordered[LocalDate] {
+  ISOChronology.yearRule.checkValue(year)
+  ISOChronology.checkNotNull(month, "MonthOfYear must not be null")
+  ISOChronology.dayOfMonthRule.checkValue(day)
+
+  if (day > 28 && day > month.lengthInDays(ISOChronology.isLeapYear(year))) {
+    if (day == 29) {
+      throw new InvalidCalendarFieldException("Illegal value for DayOfMonth field, value 29 is not valid as " + year + " is not a leap year", ISOChronology.dayOfMonthRule)
+    }
+    else {
+      throw new InvalidCalendarFieldException("Illegal value for DayOfMonth field, value " + day + " is not valid for month " + month.name, ISOChronology.dayOfMonthRule)
+    }
+  }
+
+
   /**
    * Resolves the date, handling incorrectly implemented resolvers.
    *
@@ -410,7 +385,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
     val newMonthLen: Int = newMonth.lengthInDays(ISOChronology.isLeapYear(newYear))
     val newDay: Int = math.min(day, newMonthLen)
     if (periodDays < 0 && day > newMonthLen) periodDays = math.min(periodDays + (day - newMonthLen), 0)
-    return LocalDate.of(newYear, newMonth, newDay).plusDays(periodDays)
+    return LocalDate(newYear, newMonth, newDay).plusDays(periodDays)
   }
 
   def +(periodProvider: PeriodProvider): LocalDate = plus(periodProvider)
@@ -522,20 +497,23 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
     }
   }
 
-  /**
+    /**
    * Returns a local date-time formed from this date at the specified time.
    * <p>
-   * This merges the three values - {@code this} and the specified time -
+   * This merges the five values - {@code this} and the specified time -
    * to form an instance of {@code LocalDateTime}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param hourOfDay the hour-of-day to use, from 0 to 23
-   * @param minuteOfHour the minute-of-hour to use, from 0 to 59
+   * @param minuteOfHour the minute-of-hour to use, from 0 to 59, by default 0
+   * @param secondOfMinute the second-of-minute to represent, from 0 to 59, by default 0
+   * @param nanoOfSecond the nano-of-second to represent, from 0 to 999,999,999, by default 0
    * @return the local date-time formed from this date and the specified time, never null
    * @throws IllegalCalendarFieldValueException if the value of any field is out of range
    */
-  def atTime(hourOfDay: Int, minuteOfHour: Int): LocalDateTime = atTime(LocalTime.of(hourOfDay, minuteOfHour))
+  def atTime(hourOfDay: Int, minuteOfHour: Int = 0, secondOfMinute: Int = 0, nanoOfSecond: Int = 0): LocalDateTime =
+    atTime(LocalTime.of(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond))
 
   /**
    * Checks whether this {@code LocalDate} matches the specified matcher.
@@ -629,9 +607,8 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * @return a {@code LocalDate} based on this date with the requested month, never null
    * @throws IllegalCalendarFieldValueException if the month-of-year value is invalid
    */
-  def withMonthOfYear(monthOfYear: Int, dateResolver: DateResolver): LocalDate = {
-    return `with`(MonthOfYear.of(monthOfYear), dateResolver)
-  }
+  def withMonthOfYear(monthOfYear: Int, dateResolver: DateResolver): LocalDate =
+    `with`(MonthOfYear.of(monthOfYear), dateResolver)
 
   /**
    * Checks if the year is a leap year, according to the ISO proleptic
@@ -651,7 +628,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    *
    * @return true if the year is leap, false otherwise
    */
-   def isLeapYear: Boolean = ISOChronology.isLeapYear(year)
+  def isLeapYear: Boolean = ISOChronology.isLeapYear(year)
 
   /**
    * Gets the year field.
@@ -718,23 +695,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    */
   def getDayOfMonth: Int = day
 
-  /**
-   * Returns a local date-time formed from this date at the specified time.
-   * <p>
-   * This merges the four values - {@code this} and the specified time -
-   * to form an instance of {@code LocalDateTime}.
-   * <p>
-   * This instance is immutable and unaffected by this method call.
-   *
-   * @param hourOfDay the hour-of-day to use, from 0 to 23
-   * @param minuteOfHour the minute-of-hour to use, from 0 to 59
-   * @param secondOfMinute the second-of-minute to represent, from 0 to 59
-   * @return the local date-time formed from this date and the specified time, never null
-   * @throws IllegalCalendarFieldValueException if the value of any field is out of range
-   */
-  def atTime(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int): LocalDateTime = {
-    atTime(LocalTime.of(hourOfDay, minuteOfHour, secondOfMinute))
-  }
+
 
   /**
    * Checks if the date extracted from the calendrical matches this date.
@@ -759,22 +720,6 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    * @return the offset date formed from this date and the specified offset, never null
    */
   def atOffset(offset: ZoneOffset): OffsetDate = OffsetDate.of(this, offset)
-
-  /**
-   * Returns a copy of this {@code LocalDate} with the day-of-month altered.
-   * If the resulting date is invalid, an exception is thrown.
-   * <p>
-   * This instance is immutable and unaffected by this method call.
-   *
-   * @param dayOfMonth the day-of-month to set in the returned date, from 1 to 28-31
-   * @return a {@code LocalDate} based on this date with the requested day, never null
-   * @throws IllegalCalendarFieldValueException if the day-of-month value is invalid
-   * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
-   */
-  def withDayOfMonth(dayOfMonth: Int): LocalDate = {
-    if (this.day == dayOfMonth) this
-    else LocalDate.of(year, month, dayOfMonth)
-  }
 
   /**
    * Converts this date to a {@code LocalDate}, trivially
@@ -1022,25 +967,10 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
     val newMonthLen: Int = newMonth.lengthInDays(ISOChronology.isLeapYear(newYear))
     val newDay: Int = math.min(day, newMonthLen)
     if (periodDays > 0 && day > newMonthLen) periodDays = math.max(periodDays - (day - newMonthLen), 0)
-    return LocalDate.of(newYear, newMonth, newDay).minusDays(periodDays)
+    return LocalDate(newYear, newMonth, newDay).minusDays(periodDays)
   }
 
   def -(periodProvider: PeriodProvider): LocalDate = minus(periodProvider)
-
-  /**
-   * Checks if this {@code LocalDate} is equal to the specified date.
-   * <p>
-   * The comparison is based on the time-line position of the dates.
-   *
-   * @param other the other date to compare to, null returns false
-   * @return true if this point is equal to the specified date
-   */
-  override def equals(other: Any): Boolean = {
-    other match {
-      case otherDate: LocalDate => (this eq otherDate) || (year == otherDate.year && month == otherDate.month && day == otherDate.day)
-      case _ => false
-    }
-  }
 
   /**
    * Checks if this {@code LocalDate} is before the specified date.
@@ -1178,24 +1108,7 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
     return LocalDate.ofModifiedJulianDays(mjDays)
   }
 
-  /**
-   * Returns a local date-time formed from this date at the specified time.
-   * <p>
-   * This merges the five values - {@code this} and the specified time -
-   * to form an instance of {@code LocalDateTime}.
-   * <p>
-   * This instance is immutable and unaffected by this method call.
-   *
-   * @param hourOfDay the hour-of-day to use, from 0 to 23
-   * @param minuteOfHour the minute-of-hour to use, from 0 to 59
-   * @param secondOfMinute the second-of-minute to represent, from 0 to 59
-   * @param nanoOfSecond the nano-of-second to represent, from 0 to 999,999,999
-   * @return the local date-time formed from this date and the specified time, never null
-   * @throws IllegalCalendarFieldValueException if the value of any field is out of range
-   */
-  def atTime(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int): LocalDateTime = {
-    atTime(LocalTime.of(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond))
-  }
+
 
   /**
    * Gets the year field as a {@code Year}.
@@ -1205,5 +1118,5 @@ final class LocalDate private(val year: Int, val month: MonthOfYear, val day: In
    *
    * @return the year, never null
    */
-  def toYear: Year = Year.of(year)
+  def toYear: Year = Year(year)
 }

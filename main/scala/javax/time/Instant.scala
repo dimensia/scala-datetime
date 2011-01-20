@@ -72,7 +72,7 @@ import javax.time.calendar.ZoneOffset
  * The UTC-SLS conversion only matters to users of this class with high precision requirements.
  * To keep full track of an instant using an accurate time-scale use the {@link UTCInstant} or
  * {@link TAIInstant} class.
- * For most applications, the behavior where each day has exactly 84000 seconds is the desired one.
+ * For most applications, the behavior where each day has exactly 86400 seconds is the desired one.
  * The UTC-SLS time-scale is also used for all human-scale date-time classes,
  * such as {@code OffsetDateTime} and {@code ZonedDateTime}.
  * <p>
@@ -93,14 +93,14 @@ import javax.time.calendar.ZoneOffset
 object Instant {
 
   /**
-   * BigInteger constant for a billion.
-   */
-  private[time] val Billion: BigInt = BigInt(NanosPerSecond)
-
-  /**
    * Constant for nanos per second.
    */
   private val NanosPerSecond: Int = 1000000000
+
+  /**
+   * BigInteger constant for a billion.
+   */
+  private[time] val Billion: BigInt = BigInt(NanosPerSecond)
 
   /**
    * Constant for the 1970-01-01T00:00:00Z epoch instant.
@@ -296,9 +296,30 @@ object Instant {
  * @param nanos the nanoseconds within the second, must be positive
  */
 @SerialVersionUID(1L)
-final case class Instant private(seconds: Long, nanos: Int) extends InstantProvider with Ordered[Instant] {
+final class Instant private(val seconds: Long, val nanos: Int) extends InstantProvider with Ordered[Instant] {
 
   import Instant._
+
+  /**
+   * Checks if this instant is equal to the specified instant.
+   * <p>
+   * The comparison is based on the time-line position of the instants.
+   *
+   * @param otherInstant  the other instant, null returns false
+   * @return true if the other instant is equal to this one
+   */
+  override def equals(otherInstant: Any) =
+    otherInstant match {
+      case instant: Instant => (this eq instant) || (seconds == instant.seconds && nanos == instant.nanos)
+      case _ => false
+    }
+
+  /**
+   * Returns a hash code for this instant.
+   *
+   * @return a suitable hash code
+   */
+  override def hashCode: Int = ((seconds ^ (seconds >>> 32))).toInt + 51 * nanos;
 
   /**
    * Gets the number of seconds from the Java epoch of 1970-01-01T00:00:00Z.
@@ -374,10 +395,7 @@ final case class Instant private(seconds: Long, nanos: Int) extends InstantProvi
    * @return an {@code Instant} based on this instant with the specified seconds added, never null
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
-  def plusSeconds(secondsToAdd: Long): Instant = {
-    if (secondsToAdd == 0) this
-    else plus(secondsToAdd, 0)
-  }
+  def plusSeconds(secondsToAdd: Long): Instant = if (secondsToAdd == 0) this else plus(secondsToAdd, 0)
 
   /**
    * Converts this instant to the number of nanoseconds from the epoch

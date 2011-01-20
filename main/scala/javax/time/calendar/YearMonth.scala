@@ -79,13 +79,11 @@ object YearMonth {
    * @throws UnsupportedRuleException if either field cannot be found
    * @throws InvalidCalendarFieldException if the value for either field is invalid
    */
-  def of(calendrical: Calendrical): YearMonth = {
+  def apply(calendrical: Calendrical): YearMonth = {
     val year: Int = ISOChronology.yearRule.getValueChecked(calendrical)
     val month: MonthOfYear = ISOChronology.monthOfYearRule.getValueChecked(calendrical)
-    of(year, month)
+    YearMonth(year, month)
   }
-
-  def apply(calendrical: Calendrical): YearMonth = of(calendrical)
 
   /**
    * Rule implementation.
@@ -99,7 +97,7 @@ object YearMonth {
     override def derive(calendrical: Calendrical): Option[YearMonth] = {
       val year: Int = calendrical.get(ISOChronology.yearRule).getOrElse(return None)
       val moy: MonthOfYear = calendrical.get(ISOChronology.monthOfYearRule).getOrElse(return None)
-      return Some(YearMonth.of(year, moy))
+      return Some(YearMonth(year, moy))
     }
 
     private def readResolve: AnyRef = Rule
@@ -117,24 +115,8 @@ object YearMonth {
    */
   def now(implicit clock: Clock = Clock.systemDefaultZone): YearMonth = {
     val date: LocalDate = LocalDate.now(clock)
-    YearMonth.of(date.getYear, date.getMonthOfYear)
+    YearMonth(date.getYear, date.getMonthOfYear)
   }
-
-  /**
-   * Obtains an instance of  {@code YearMonth} from a year and month.
-   *
-   * @param year the year to represent, from MIN_YEAR to MAX_YEAR
-   * @param monthOfYear the month-of-year to represent, not null
-   * @return the year-month, never null
-   * @throws IllegalCalendarFieldValueException if the year value is invalid
-   */
-  def of(year: Int, monthOfYear: MonthOfYear): YearMonth = {
-    ISOChronology.yearRule.checkValue(year)
-    ISOChronology.checkNotNull(monthOfYear, "MonthOfYear must not be null")
-    new YearMonth(year, monthOfYear)
-  }
-
-  def apply(year: Int, monthOfYear: MonthOfYear): YearMonth = of(year, monthOfYear)
 
   /**
    * Obtains an instance of  {@code YearMonth} from a year and month.
@@ -144,9 +126,7 @@ object YearMonth {
    * @return the year-month, never null
    * @throws IllegalCalendarFieldValueException if either field value is invalid
    */
-  def of(year: Int, monthOfYear: Int): YearMonth = of(year, MonthOfYear.of(monthOfYear))
-
-  def apply(year: Int, monthOfYear: Int): YearMonth = of(year, monthOfYear)
+  def apply(year: Int, monthOfYear: Int): YearMonth = YearMonth(year, MonthOfYear.of(monthOfYear))
 
   /**
    * Gets the field rule for the year-month.
@@ -160,7 +140,7 @@ object YearMonth {
    * <p>
    * The following formats are accepted in ASCII:
    * <ul>
-   * <li>  { year} -  { monthOfYear }
+   * <li>  {year}-{monthOfYear}
    * </ul>
    * The year has between 4 and 10 digits with values from MIN_YEAR to MAX_YEAR.
    * If there are more than 4 digits then the year must be prefixed with the plus symbol.
@@ -172,7 +152,7 @@ object YearMonth {
    * @return the parsed year-month, never null
    * @throws CalendricalException if the text cannot be parsed
    */
-//  def parse(text: String): YearMonth = Parser.parse(text, rule)
+  def parse(text: String): YearMonth = Parser.parse(text, rule)
 
   /**
    * Obtains an instance of  {@code YearMonth} from a text string using a specific formatter.
@@ -195,11 +175,18 @@ object YearMonth {
 /**
  * Constructor.
  *
- * @param year the year to represent, validated from MIN_YEAR to MAX_YEAR
+ * Obtains an instance of  {@code YearMonth} from a year and month.
+ *
+ * @param year the year to represent, from MIN_YEAR to MAX_YEAR
  * @param monthOfYear the month-of-year to represent, not null
+ * @return the year-month, never null
+ * @throws IllegalCalendarFieldValueException if the year value is invalid
  */
 @SerialVersionUID(1L)
-final class YearMonth private(val year: Int, val month: MonthOfYear) extends Calendrical with CalendricalMatcher with DateAdjuster with Ordered[YearMonth] with Serializable {
+final case class YearMonth(year: Int, month: MonthOfYear) extends Calendrical with CalendricalMatcher with DateAdjuster with Ordered[YearMonth] {
+  ISOChronology.yearRule.checkValue(year)
+  ISOChronology.checkNotNull(month, "MonthOfYear must not be null")
+
   /**
    * Adjusts a date to have the value of this year-month, using a resolver to
    * handle the case when the day-of-month becomes invalid.
@@ -244,48 +231,6 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
   }
 
   /**
-   * Gets the year field.
-   * <p>
-   * This method returns the primitive  {@code int} value for the year.
-   * <p>
-   * Additional information about the year can be obtained via  {@link #toYear}.
-   * This returns a  {@code Year} object which includes information on whether
-   * this is a leap year and its length in days.
-   *
-   * @return the year, from MIN_YEAR to MAX_YEAR
-   */
-  def getYear: Int = year
-
-  /**
-   * Returns a copy of this YearMonth with the year altered.
-   * <p>
-   * This instance is immutable and unaffected by this method call.
-   *
-   * @param year the year to set in the returned year-month, not null
-   * @return a {@code YearMonth} based on this year-month with the requested year, never null
-   */
-  def `with`(year: Year): YearMonth = {
-    ISOChronology.checkNotNull(year, "Year must not be null")
-    withYear(year.getValue)
-  }
-
-  /**
-   * Gets the month-of-year field, which is an enum  {@code MonthOfYear}.
-   * <p>
-   * This method returns the enum  {@link MonthOfYear} for the month.
-   * This avoids confusion as to what  {@code int} values mean.
-   * If you need access to the primitive  {@code int} value then the enum
-   * provides the  {@link MonthOfYear#getValue ( ) int value}.
-   * <p>
-   * Additional information can be obtained from the  {@code MonthOfYear}.
-   * This includes month lengths, textual names and access to the quarter-of-year
-   * and month-of-quarter values.
-   *
-   * @return the month-of-year, never null
-   */
-  def getMonthOfYear: MonthOfYear = month
-
-  /**
    * Returns a copy of this YearMonth with the specified period in years subtracted.
    * <p>
    * This instance is immutable and unaffected by this method call.
@@ -297,7 +242,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
   def minusYears(years: Long): YearMonth = {
     if (years == 0) return this
     val newYear: Int = ISOChronology.yearRule.checkValue(year - years)
-    return `with`(newYear, month)
+    return copy(newYear, month)
   }
 
   /**
@@ -313,7 +258,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    * @param months the months to roll by, positive or negative
    * @return a {@code YearMonth} based on this year-month with the month rolled, never null
    */
-  def rollMonthOfYear(months: Int): YearMonth = `with`(month.roll(months))
+  def rollMonthOfYear(months: Int): YearMonth = copy(month.roll(months).ordinal)
 
   /**
    * Gets the value of the specified calendrical rule.
@@ -341,7 +286,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    *
    * @return the year, never null
    */
-  def toYear: Year = Year.of(year)
+  def toYear: Year = Year(year)
 
   /**
    * Checks if the year-month extracted from the calendrical matches this.
@@ -363,17 +308,6 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
     ISOChronology.checkNotNull(formatter, "DateTimeFormatter must not be null")
     formatter.print(this)
   }
-
-  /**
-   * Returns a copy of this  {@code YearMonth} with the month-of-year altered.
-   * <p>
-   * This instance is immutable and unaffected by this method call.
-   *
-   * @param monthOfYear the month-of-year to set in the returned year-month, from 1 (January) to 12 (December)
-   * @return a {@code YearMonth} based on this year-month with the requested month, never null
-   * @throws IllegalCalendarFieldValueException if the month-of-year value is invalid
-   */
-  def withMonthOfYear(monthOfYear: Int): YearMonth = `with`(MonthOfYear.of(monthOfYear))
 
   /**
    * A hash code for this year-month.
@@ -442,22 +376,9 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    * @param dayOfMonth the day-of-month to use, from 1 to 31
    * @return the date formed from this year-month and the specified day, never null
    * @throws InvalidCalendarFieldException when the day is invalid for the year-month
-   * @see# i s V a l i d D a y ( int )
+   * @see #isValidDay(int)
    */
-  def atDay(dayOfMonth: Int): LocalDate = LocalDate.of(year, month, dayOfMonth)
-
-  /**
-   * Returns a copy of this YearMonth with the month-of-year altered.
-   * <p>
-   * This instance is immutable and unaffected by this method call.
-   *
-   * @param monthOfYear the month-of-year to set in the returned year-month, not null
-   * @return a {@code YearMonth} based on this year-month with the requested month, never null
-   */
-  def `with`(monthOfYear: MonthOfYear): YearMonth = {
-    ISOChronology.checkNotNull(monthOfYear, "MonthOfYear must not be null")
-    `with`(year, monthOfYear)
-  }
+  def atDay(dayOfMonth: Int): LocalDate = LocalDate(year, month, dayOfMonth)
 
   /**
    * Is this year-month after the specified year-month.
@@ -467,19 +388,6 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
    * @throws NullPointerException if  {@code other} is null
    */
   def isAfter(other: YearMonth): Boolean = this > other
-
-  /**
-   * Returns a copy of this year-month with the new year and month, checking
-   * to see if a new object is in fact required.
-   *
-   * @param newYear the year to represent, validated from MIN_YEAR to MAX_YEAR
-   * @param newMonth the month-of-year to represent, validated not null
-   * @return the year-month, never null
-   */
-  private def `with`(newYear: Int, newMonth: MonthOfYear): YearMonth = {
-    if (year == newYear && month == newMonth) this
-    else new YearMonth(newYear, newMonth)
-  }
 
   /**
    * Compares this year-month to another year-month.
@@ -495,20 +403,6 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
   }
 
   /**
-   * Returns a copy of this  {@code YearMonth} with the year altered.
-   * <p>
-   * This instance is immutable and unaffected by this method call.
-   *
-   * @param year the year to set in the returned year-month, from MIN_YEAR to MAX_YEAR
-   * @return a {@code YearMonth} based on this year-month with the requested year, never null
-   * @throws IllegalCalendarFieldValueException if the year value is invalid
-   */
-  def withYear(year: Int): YearMonth = {
-    ISOChronology.yearRule.checkValue(year)
-    `with`(year, month)
-  }
-
-  /**
    * Returns a copy of this YearMonth with the specified period in years added.
    * <p>
    * This instance is immutable and unaffected by this method call.
@@ -520,7 +414,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
   def plusYears(years: Long): YearMonth = {
     if (years == 0) return this
     val newYear: Int = ISOChronology.yearRule.checkValue(year + years)
-    return `with`(newYear, month)
+    return copy(newYear, month)
   }
 
   /**
@@ -540,7 +434,7 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
     val calcMonths: Long = monthCount + months
     val newYear: Int = ISOChronology.yearRule.checkValue(MathUtils.floorDiv(calcMonths, 12))
     val newMonth: MonthOfYear = MonthOfYear.of(MathUtils.floorMod(calcMonths, 12) + 1)
-    return `with`(newYear, newMonth)
+    return copy(newYear, newMonth)
   }
 
   /**
@@ -617,6 +511,6 @@ final class YearMonth private(val year: Int, val month: MonthOfYear) extends Cal
     val calcMonths: Long = monthCount - months
     val newYear: Int = ISOChronology.yearRule.checkValue(MathUtils.floorDiv(calcMonths, 12))
     val newMonth: MonthOfYear = MonthOfYear.of(MathUtils.floorMod(calcMonths, 12) + 1)
-    return `with`(newYear, newMonth)
+    return copy(newYear, newMonth)
   }
 }

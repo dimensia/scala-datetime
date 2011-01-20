@@ -236,7 +236,7 @@ abstract class Clock protected {
    * @return the current year, never null
    * @throws CalendricalException if the year cannot be created
    */
-  def year: Year = Year.of(today)
+  def year: Year = Year(today)
 
   /**
    * Returns a copy of this clock with a different time-zone.
@@ -542,6 +542,6 @@ abstract class Clock protected {
    */
   def yearMonth: YearMonth = {
     val _today: LocalDate = today
-    YearMonth.of(_today.getYear, _today.getMonthOfYear)
+    YearMonth(_today.getYear, _today.getMonthOfYear)
   }
 }

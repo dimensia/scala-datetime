@@ -61,7 +61,8 @@ import javax.time.calendar.DateTimeFieldRule
 object DateTimeParseContext {
 
   private[format] class Parsed {
-    override def toString: String = (new TreeMap[CalendricalRule[Any], Any]() ++ values).toString
+    override def toString: String =  throw new Exception("Not implemented!")
+    /*(new TreeMap[CalendricalRule[Any], Any]() ++ values).toString*/
 
     protected[format] override def clone: DateTimeParseContext.Parsed = {
       val cloned: DateTimeParseContext.Parsed = new DateTimeParseContext.Parsed

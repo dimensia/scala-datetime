@@ -70,19 +70,6 @@ import collection.mutable.HashMap
  * @author Stephen Colebourne
  */
 object ZoneOffset {
-  /**
-   * The time-zone offset for UTC, with an id of 'Z'.
-   */
-  val UTC: ZoneOffset = ofHoursMinutesSeconds(0, 0, 0)
-
-  /**Cache of time-zone offset by id. */
-  private val IDCache = new HashMap[String, ZoneOffset]
-
-  /**Cache of time-zone offset by offset in seconds. */
-  private val SecondsCache = new HashMap[Int, ZoneOffset]
-
-  /**Cache of time-zone offset by offset in seconds. */
-  private val CacheLock: ReadWriteLock = new ReentrantReadWriteLock
 
   /**
    * The number of seconds per minute.
@@ -98,6 +85,20 @@ object ZoneOffset {
    * The number of minutes per hour.
    */
   private val MinutesPerHour: Int = 60
+
+  /**
+   * The time-zone offset for UTC, with an id of 'Z'.
+   */
+  val UTC: ZoneOffset = ofHoursMinutesSeconds(0, 0, 0)
+
+  /**Cache of time-zone offset by id. */
+  private lazy val IDCache = new HashMap[String, ZoneOffset]
+
+  /**Cache of time-zone offset by offset in seconds. */
+  private lazy val SecondsCache = new HashMap[Int, ZoneOffset]
+
+  /**Cache of time-zone offset by offset in seconds. */
+  private lazy val CacheLock: ReadWriteLock = new ReentrantReadWriteLock       //TODO: added lazy
 
   /**
    * Parse a two digit zero-prefixed number.

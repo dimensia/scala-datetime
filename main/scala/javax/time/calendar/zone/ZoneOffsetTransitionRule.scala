@@ -253,13 +253,13 @@ final class ZoneOffsetTransitionRule(val month: MonthOfYear,
   def createTransition(year: Int): ZoneOffsetTransition = {
     var date: LocalDate = null
     if (dayOfMonthIndicator < 0) {
-      date = LocalDate.of(year, month, month.getLastDayOfMonth(ISOChronology.isLeapYear(year)) + 1 + dayOfMonthIndicator)
+      date = LocalDate(year, month, month.getLastDayOfMonth(ISOChronology.isLeapYear(year)) + 1 + dayOfMonthIndicator)
       if (dayOfWeek != null) {
         date = date.`with`(DateAdjusters.previousOrCurrent(dayOfWeek))
       }
     }
     else {
-      date = LocalDate.of(year, month, dayOfMonthIndicator)
+      date = LocalDate(year, month, dayOfMonthIndicator)
       if (dayOfWeek != null) {
         date = date.`with`(DateAdjusters.nextOrCurrent(dayOfWeek))
       }

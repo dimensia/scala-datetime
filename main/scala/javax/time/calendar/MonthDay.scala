@@ -80,31 +80,6 @@ object MonthDay {
   def rule: CalendricalRule[MonthDay] = Rule
 
   /**
-   * Obtains an instance of {@code MonthDay}.
-   * <p>
-   * The day-of-month must be valid for the month within a leap year.
-   * Hence, for February, day 29 is valid.
-   * <p>
-   * For example, passing in April and day 31 will throw an exception, as
-   * there can never be a 31st April in any year. Alternately, passing in
-   * 29th February is valid, as that month-day can be valid.
-   *
-   * @param monthOfYear the month-of-year to represent, not null
-   * @param dayOfMonth the day-of-month to represent, from 1 to 31
-   * @return the month-day, never null
-   * @throws IllegalCalendarFieldValueException if the value of any field is out of range
-   * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month
-   */
-  def of(monthOfYear: MonthOfYear, dayOfMonth: Int): MonthDay = {
-    ISOChronology.checkNotNull(monthOfYear, "MonthOfYear must not be null")
-    ISOChronology.dayOfMonthRule.checkValue(dayOfMonth)
-    if (dayOfMonth > monthOfYear.maxLengthInDays) {
-      throw new InvalidCalendarFieldException("Illegal value for DayOfMonth field, value " + dayOfMonth + " is not valid for month " + monthOfYear.name, ISOChronology.dayOfMonthRule)
-    }
-    new MonthDay(monthOfYear, dayOfMonth)
-  }
-
-  /**
    * Obtains an instance of {@code MonthDay} from a Calendrical.
    * <p>
    * This method will create a MonthDay from the Calendrical by extracting the
@@ -115,10 +90,10 @@ object MonthDay {
    * @throws UnsupportedRuleException if either field cannot be found
    * @throws InvalidCalendarFieldException if the value for either field is invalid
    */
-  def of(calendrical: Calendrical): MonthDay = {
+  def apply(calendrical: Calendrical): MonthDay = {
     val month: MonthOfYear = ISOChronology.monthOfYearRule.getValueChecked(calendrical)
     val dom: Int = ISOChronology.dayOfMonthRule.getValueChecked(calendrical)
-    of(month, dom)
+    MonthDay(month, dom)
   }
 
   /**
@@ -150,7 +125,7 @@ object MonthDay {
    */
   def now(implicit clock: Clock = Clock.systemDefaultZone): MonthDay = {
     val now: LocalDate = LocalDate.now(clock)
-    MonthDay.of(now.getMonthOfYear, now.getDayOfMonth)
+    MonthDay(now.getMonthOfYear, now.getDayOfMonth)
   }
 
   /**
@@ -184,7 +159,7 @@ object MonthDay {
     override def derive(calendrical: Calendrical): Option[MonthDay] = {
       val moy: MonthOfYear = calendrical.get(ISOChronology.monthOfYearRule).getOrElse(return None)
       val dom: Int = calendrical.get(ISOChronology.dayOfMonthRule).getOrElse(return None)
-      return Some(MonthDay.of(moy, dom))
+      return Some(MonthDay(moy, dom))
     }
   }
 
@@ -204,17 +179,33 @@ object MonthDay {
    * @throws IllegalCalendarFieldValueException if the value of any field is out of range
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month
    */
-  def of(monthOfYear: Int, dayOfMonth: Int): MonthDay = of(MonthOfYear.of(monthOfYear), dayOfMonth)
+  def apply(monthOfYear: Int, dayOfMonth: Int): MonthDay = MonthDay(MonthOfYear(monthOfYear), dayOfMonth)
 }
 
 /**
- * Constructor, previously validated.
+ * Constructor.
  *
- * @param monthOfYear the month-of-year to represent, validated not null
- * @param dayOfMonth the day-of-month to represent, validated from 1 to 29-31
+ * <p>
+ * The day-of-month must be valid for the month within a leap year.
+ * Hence, for February, day 29 is valid.
+ * <p>
+ * For example, passing in April and day 31 will throw an exception, as
+ * there can never be a 31st April in any year. Alternately, passing in
+ * 29th February is valid, as that month-day can be valid.
+ *
+ * @param monthOfYear the month-of-year to represent, not null
+ * @param dayOfMonth the day-of-month to represent, from 1 to 31
+ * @return the month-day, never null
+ * @throws IllegalCalendarFieldValueException if the value of any field is out of range
+ * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month
  */
 @SerialVersionUID(-254395108L)
-final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical with CalendricalMatcher with DateAdjuster with Ordered[MonthDay] with Serializable {
+final case class MonthDay(month: MonthOfYear, day: Int) extends Calendrical with CalendricalMatcher with DateAdjuster with Ordered[MonthDay] {
+  ISOChronology.checkNotNull(month, "MonthOfYear must not be null")
+  ISOChronology.dayOfMonthRule.checkValue(day)
+  if (day > month.maxLengthInDays) {
+    throw new InvalidCalendarFieldException("Illegal value for DayOfMonth field, value " + day + " is not valid for month " + month.name, ISOChronology.dayOfMonthRule)
+  }
 
   import MonthDay._
 
@@ -244,7 +235,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    * @param months the months to roll by, positive or negative
    * @return a {@code MonthDay} based on this month-day with the month rolled, never null
    */
-  def rollMonthOfYear(months: Int): MonthDay = `with`(month.roll(months))
+  def rollMonthOfYear(months: Int): MonthDay = copy(month.roll(months))
 
   /**
    * Is this month-day before the specified month-day.
@@ -272,23 +263,10 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
     val monthLength: Int = month.maxLengthInDays
     var newDOM0: Int = (days % monthLength) + (day - 1)
     newDOM0 = (newDOM0 + monthLength) % monthLength
-    return withDayOfMonth(({
+    return copy(day = ({
       newDOM0 += 1;
       newDOM0 - 1
     }))
-  }
-
-  /**
-   * Returns a copy of this month-day with the new month and day, checking
-   * to see if a new object is in fact required.
-   *
-   * @param newMonth the month-of-year to represent, validated not null
-   * @param newDay the day-of-month to represent, validated from 1 to 31
-   * @return the month-day, never null
-   */
-  private def `with`(newMonth: MonthOfYear, newDay: Int): MonthDay = {
-    if (month == newMonth && day == newDay) this
-    else new MonthDay(newMonth, newDay)
   }
 
   /**
@@ -345,15 +323,6 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
   }
 
   /**
-   * Gets the day-of-month field.
-   * <p>
-   * This method returns the primitive {@code int} value for the day-of-month.
-   *
-   * @return the day-of-month, from 1 to 31
-   */
-  def getDayOfMonth: Int = day
-
-  /**
    * Outputs this month-day as a {@code String} using the formatter.
    *
    * @param formatter the formatter to use, not null
@@ -365,22 +334,6 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
     ISOChronology.checkNotNull(formatter, "DateTimeFormatter must not be null")
     formatter.print(this)
   }
-
-  /**
-   * Gets the month-of-year field, which is an enum {@code MonthOfYear}.
-   * <p>
-   * This method returns the enum {@link MonthOfYear} for the month.
-   * This avoids confusion as to what {@code int} values mean.
-   * If you need access to the primitive {@code int} value then the enum
-   * provides the {@link MonthOfYear#getValue() int value}.
-   * <p>
-   * Additional information can be obtained from the {@code MonthOfYear}.
-   * This includes month lengths, textual names and access to the quarter-of-year
-   * and month-of-quarter values.
-   *
-   * @return the month-of-year, never null
-   */
-  def getMonthOfYear: MonthOfYear = month
 
   /**
    * Is this month-day after the specified month-day.
@@ -409,40 +362,6 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    * @see Year#isValidMonthDay ( MonthDay )
    */
   def isValidYear(year: Int): Boolean = (day == 29 && month.isFebruary && ISOChronology.isLeapYear(year) == false) == false
-
-  /**
-   * Returns a copy of this {@code MonthDay} with the day-of-month altered.
-   * <p>
-   * If the day-of-month is invalid for the current month, an exception
-   * will be thrown.
-   * <p>
-   * This instance is immutable and unaffected by this method call.
-   *
-   * @param dayOfMonth the day-of-month to set in the return month-day, from 1 to 31
-   * @return a {@code MonthDay} based on this month-day with the requested day, never null
-   * @throws IllegalCalendarFieldValueException if the day-of-month value is invalid
-   * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month
-   */
-  def withDayOfMonth(dayOfMonth: Int): MonthDay = {
-    ISOChronology.dayOfMonthRule.checkValue(dayOfMonth)
-    val maxDays: Int = month.maxLengthInDays
-    if (dayOfMonth > maxDays) {
-      throw new InvalidCalendarFieldException("Day of month cannot be changed to " + dayOfMonth + " for the month " + month, ISOChronology.dayOfMonthRule)
-    }
-    return `with`(month, dayOfMonth)
-  }
-
-  /**
-   * Is this month-day equal to the specified month-day.
-   *
-   * @param other the other month-day to compare to, null returns false
-   * @return true if this point is equal to the specified month-day
-   */
-  override def equals(other: Any): Boolean =
-    other match {
-      case monthDay: MonthDay => (this eq monthDay) || (month == monthDay.month && day == monthDay.day)
-      case _ => false
-    }
 
   /**
    * Adjusts a date to have the value of this month-day, returning a new date.
@@ -480,7 +399,7 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
    * @return the local date formed from this month-day and the specified year, never null
    * @see Year#atMonthDay(MonthDay)
    */
-  def atYear(year: Int): LocalDate = LocalDate.of(year, month, day)
+  def atYear(year: Int): LocalDate = LocalDate(year, month, day)
 
   /**
    * Outputs this month-day as a {@code String}, such as {@code --12-03}.
@@ -502,41 +421,9 @@ final class MonthDay(val month: MonthOfYear, val day: Int) extends Calendrical w
   }
 
   /**
-   * Returns a copy of this {@code MonthDay} with the month-of-year altered.
-   * <p>
-   * If the day-of-month is invalid for the specified month, the day will
-   * be adjusted to the last valid day-of-month.
-   * <p>
-   * This instance is immutable and unaffected by this method call.
-   *
-   * @param monthOfYear the month-of-year to set in the returned month-day, not null
-   * @return a {@code MonthDay} based on this month-day with the requested month, never null
-   */
-  def `with`(monthOfYear: MonthOfYear): MonthDay = {
-    ISOChronology.checkNotNull(monthOfYear, "MonthOfYear must not be null")
-    val maxDays: Int = monthOfYear.maxLengthInDays
-    if (day > maxDays) `with`(monthOfYear, maxDays)
-    else `with`(monthOfYear, day)
-  }
-
-  /**
    * Gets the chronology that this month-day uses, which is the ISO calendar system.
    *
    * @return the ISO chronology, never null
    */
   def getChronology: ISOChronology = ISOChronology
-
-  /**
-   * Returns a copy of this {@code MonthDay} with the month-of-year altered.
-   * <p>
-   * If the day-of-month is invalid for the specified month, the day will
-   * be adjusted to the last valid day-of-month.
-   * <p>
-   * This instance is immutable and unaffected by this method call.
-   *
-   * @param monthOfYear the month-of-year to set in the returned month-day, from 1 (January) to 12 (December)
-   * @return a {@code MonthDay} based on this month-day with the requested month, never null
-   * @throws IllegalCalendarFieldValueException if the month-of-year value is invalid
-   */
-  def withMonthOfYear(monthOfYear: Int): MonthDay = `with`(MonthOfYear.of(monthOfYear))
 }

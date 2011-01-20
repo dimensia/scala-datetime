@@ -61,7 +61,7 @@ object DateResolvers {
 
     /**{@inheritDoc}*/
     override def resolveDate(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int): LocalDate = {
-      LocalDate.of(year, monthOfYear, dayOfMonth)
+      LocalDate(year, monthOfYear, dayOfMonth)
     }
   }
 
@@ -84,9 +84,9 @@ object DateResolvers {
     override def resolveDate(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int): LocalDate = {
       var lastDay: Int = monthOfYear.getLastDayOfMonth(ISOChronology.isLeapYear(year))
       if (dayOfMonth > lastDay) {
-        return LocalDate.of(year, monthOfYear, lastDay)
+        return LocalDate(year, monthOfYear, lastDay)
       }
-      return LocalDate.of(year, monthOfYear, dayOfMonth)
+      return LocalDate(year, monthOfYear, dayOfMonth)
     }
 
     private def readResolve: AnyRef = PreviousValid
@@ -113,9 +113,9 @@ object DateResolvers {
     override def resolveDate(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int): LocalDate = {
       var len: Int = monthOfYear.lengthInDays(ISOChronology.isLeapYear(year))
       if (dayOfMonth > len) {
-        return LocalDate.of(year, monthOfYear.next, 1)
+        return LocalDate(year, monthOfYear.next, 1)
       }
-      return LocalDate.of(year, monthOfYear, dayOfMonth)
+      return LocalDate(year, monthOfYear, dayOfMonth)
     }
   }
 
@@ -141,9 +141,9 @@ object DateResolvers {
     override def resolveDate(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int): LocalDate = {
       var len: Int = monthOfYear.lengthInDays(ISOChronology.isLeapYear(year))
       if (dayOfMonth > len) {
-        return LocalDate.of(year, monthOfYear.next, dayOfMonth - len)
+        return LocalDate(year, monthOfYear.next, dayOfMonth - len)
       }
-      return LocalDate.of(year, monthOfYear, dayOfMonth)
+      return LocalDate(year, monthOfYear, dayOfMonth)
     }
   }
 

@@ -153,12 +153,12 @@ object ZonedDateTime {
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    * @throws CalendricalException if the resolver cannot resolve an invalid local date-time
    */
-  def of(year: Int, monthOfYear: Int, dayOfMonth: Int)(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int)(zone: ZoneId, resolver: ZoneResolver = ZoneResolvers.strict): ZonedDateTime = {
+  def of(year: Int, monthOfYear: Int, dayOfMonth: Int)(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int = 0, nanoOfSecond: Int = 0)(implicit zone: ZoneId, resolver: ZoneResolver = ZoneResolvers.strict): ZonedDateTime = {
     val dt: LocalDateTime = LocalDateTime.of(year, monthOfYear, dayOfMonth)(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
     resolve(dt, null, zone, resolver)
   }
 
-  def apply(year: Int, monthOfYear: Int, dayOfMonth: Int)(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int, nanoOfSecond: Int)(zone: ZoneId, resolver: ZoneResolver = ZoneResolvers.strict): ZonedDateTime =
+  def apply(year: Int, monthOfYear: Int, dayOfMonth: Int)(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int = 0, nanoOfSecond: Int = 0)(implicit zone: ZoneId, resolver: ZoneResolver = ZoneResolvers.strict): ZonedDateTime =
     of(year, monthOfYear, dayOfMonth)(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)(zone, resolver)
 
   /**

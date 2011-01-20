@@ -271,7 +271,7 @@ final class DateTimeFields private(val fieldValueMap: TreeMap[DateTimeFieldRule[
    *
    * @return a clone of the field-value map, never null
    */
-  private def clonedMap: TreeMap[DateTimeFieldRule[Any], Int] = (createMap ++ fieldValueMap).asInstanceOf[TreeMap[DateTimeFieldRule[Any], Int]]
+  private def clonedMap: TreeMap[DateTimeFieldRule[Any], Int] = (createMap ++ fieldValueMap)
 
   /**
    * Returns a copy of this DateTimeFields with the specified fields added.
@@ -290,7 +290,7 @@ final class DateTimeFields private(val fieldValueMap: TreeMap[DateTimeFieldRule[
       return this
     }
     var _clonedMap: TreeMap[DateTimeFieldRule[Any], Int] = clonedMap
-    _clonedMap = (_clonedMap ++ fields.fieldValueMap).asInstanceOf[TreeMap[DateTimeFieldRule[Any], Int]]
+    _clonedMap = (_clonedMap ++ fields.fieldValueMap)
     return new DateTimeFields(_clonedMap)
   }
 

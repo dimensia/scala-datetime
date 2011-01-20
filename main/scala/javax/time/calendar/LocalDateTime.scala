@@ -117,7 +117,7 @@ object LocalDateTime {
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
   def of(year: Int, monthOfYear: Int, dayOfMonth: Int)(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int = 0, nanoOfSecond: Int = 0): LocalDateTime = {
-    val date: LocalDate = LocalDate.of(year, monthOfYear, dayOfMonth)
+    val date: LocalDate = LocalDate(year, monthOfYear, dayOfMonth)
     val time: LocalTime = LocalTime.of(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
     new LocalDateTime(date, time)
   }
@@ -138,7 +138,7 @@ object LocalDateTime {
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
   def ofMidnight(year: Int, monthOfYear: Int, dayOfMonth: Int): LocalDateTime = {
-    val date: LocalDate = LocalDate.of(year, monthOfYear, dayOfMonth)
+    val date: LocalDate = LocalDate(year, monthOfYear, dayOfMonth)
     new LocalDateTime(date, LocalTime.Midnight)
   }
 
@@ -154,7 +154,7 @@ object LocalDateTime {
    * @return the local date-time, never null
    */
   def ofMidnight(dateProvider: DateProvider): LocalDateTime = {
-    val date: LocalDate = LocalDate.of(dateProvider)
+    val date: LocalDate = LocalDate(dateProvider)
     new LocalDateTime(date, LocalTime.Midnight)
   }
 
@@ -174,7 +174,7 @@ object LocalDateTime {
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
   def ofMidnight(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int): LocalDateTime = {
-    val date: LocalDate = LocalDate.of(year, monthOfYear, dayOfMonth)
+    val date: LocalDate = LocalDate(year, monthOfYear, dayOfMonth)
     new LocalDateTime(date, LocalTime.Midnight)
   }
 
@@ -196,7 +196,7 @@ object LocalDateTime {
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
   //  def of(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int)(hourOfDay: Int, minuteOfHour: Int, secondOfMinute: Int = 0, nanoOfSecond: Int = 0): LocalDateTime = {
-  //    val date: LocalDate = LocalDate.of(year, monthOfYear, dayOfMonth)
+  //    val date: LocalDate = LocalDate(year, monthOfYear, dayOfMonth)
   //    val time: LocalTime = LocalTime.of(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
   //    new LocalDateTime(date, time)
   //  }
@@ -235,7 +235,7 @@ object LocalDateTime {
    * @return the local date-time, never null
    */
   def of(dateProvider: DateProvider, timeProvider: TimeProvider): LocalDateTime = {
-    val date: LocalDate = LocalDate.of(dateProvider)
+    val date: LocalDate = LocalDate(dateProvider)
     val time: LocalTime = LocalTime.of(timeProvider)
     new LocalDateTime(date, time)
   }
@@ -639,7 +639,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime)
    * @throws IllegalCalendarFieldValueException if the day-of-month value is invalid
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
-  def withDayOfMonth(dayOfMonth: Int): LocalDateTime = `with`(date.withDayOfMonth(dayOfMonth), time)
+  def withDayOfMonth(dayOfMonth: Int): LocalDateTime = `with`(date.copy(day = dayOfMonth), time)
 
   /**
    * Gets the minute-of-hour field.
@@ -903,7 +903,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime)
   def withDate(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int): LocalDateTime = {
     if (year == getYear && monthOfYear == getMonthOfYear && dayOfMonth == getDayOfMonth) this
     else {
-      val newDate: LocalDate = LocalDate.of(year, monthOfYear, dayOfMonth)
+      val newDate: LocalDate = LocalDate(year, monthOfYear, dayOfMonth)
       `with`(newDate, time)
     }
   }
@@ -1356,7 +1356,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime)
   def withDate(year: Int, monthOfYear: Int, dayOfMonth: Int): LocalDateTime = {
     if (year == getYear && monthOfYear == getMonthOfYear.getValue && dayOfMonth == getDayOfMonth) this
     else {
-      val newDate: LocalDate = LocalDate.of(year, monthOfYear, dayOfMonth)
+      val newDate: LocalDate = LocalDate(year, monthOfYear, dayOfMonth)
       `with`(newDate, time)
     }
   }

@@ -382,7 +382,7 @@ final class StandardZoneRules private[zone](private val standardTransitions: Arr
    * @return the transition array, never null
    */
   private def findTransitionArray(year: Int): Array[ZoneOffsetTransition] = {
-    val yearObj: Year = Year.of(year)
+    val yearObj: Year = Year(year)
     var transArray: Array[ZoneOffsetTransition] = lastRulesCache.getOrElse(yearObj, null)
     if (transArray != null) {
       return transArray

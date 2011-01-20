@@ -169,7 +169,7 @@ object Duration {
   def of(amount: Long, unit: TimeUnit): Duration = {
     Instant.checkNotNull(unit, "TimeUnit must not be null")
     val nanos: Long = unit.toNanos(amount)
-    if (unit == TimeUnit.NANOSECONDS || (nanos > Long.MaxValue && nanos < Long.MinValue)) {
+    if (unit == NANOSECONDS || (nanos > Long.MaxValue && nanos < Long.MinValue)) {
       return ofNanos(nanos)
     }
     val calc: BigInt = BigInt(amount)
@@ -423,9 +423,30 @@ object Duration {
  * @param nanos the nanoseconds within the second, from 0 to 999,999,999
  */
 @SerialVersionUID(1L)
-final case class Duration private(seconds: Long, nanos: Int) extends Ordered[Duration] {
+final class Duration private(val seconds: Long, val nanos: Int) extends Ordered[Duration] {
 
   import Duration._
+
+  /**
+   * Checks if this duration is equal to the specified {@code Duration}.
+   * <p>
+   * The comparison is based on the total length of the durations.
+   *
+   * @param otherDuration  the other duration, null returns false
+   * @return true if the other duration is equal to this one
+   */
+  override def equals(otherDuration: Any) =
+    otherDuration match {
+      case duration: Duration => (this eq duration) || (seconds == duration.seconds && nanos == duration.nanos)
+      case _ => false
+    }
+
+  /**
+   * A hash code for this duration.
+   *
+   * @return a suitable hash code
+   */
+  override def hashCode: Int = (seconds ^ (seconds >>> 32)).toInt + 51 * nanos;
 
   /**
    * Gets the number of seconds in this duration.
@@ -758,13 +779,6 @@ final case class Duration private(seconds: Long, nanos: Int) extends Ordered[Dur
     }
     return create(MathUtils.safeSubtract(seconds, secondsToSubtract), nos)
   }
-
-  /**
-   * A hash code for this duration.
-   *
-   * @return a suitable hash code
-   */
-  override def hashCode: Int = ((seconds ^ (seconds >>> 32)).toInt) + (51 * nanos)
 
   /**
    * Returns a copy of this duration with a positive length.

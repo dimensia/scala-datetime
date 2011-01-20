@@ -34,6 +34,7 @@ package javax.time.calendar
 import java.io.ObjectInputStream
 import java.io.StreamCorruptedException
 import util.matching.Regex
+import java.util.regex.Matcher
 
 //import java.util.regex.Matcher
 //import java.util.regex.Pattern
@@ -90,7 +91,7 @@ import collection.immutable.HashMap
  * One difference is that serializing this class only stores the reference to the zone,
  * whereas serializing {@code ZoneRules} stores the entire set of rules.
  * <p>
- * After deserialization, or by using the special factory {@link #ofUnchecked ( String ) ofUnchecked},
+ * After deserialization, or by using the special factory {@link #ofUnchecked(String) ofUnchecked},
  * it is possible for the time-zone to represent a group/region/version combination that is unavailable.
  * Since this class can still be loaded even when the rules cannot, the application can
  * continue. For example, a {@link ZonedDateTime} instance could still be queried.
@@ -244,7 +245,7 @@ object ZoneId {
    */
   var OldIDsPost2005: Map[String, String] = base ++ post
 
-  private val base = HashMap(
+  private lazy val base = HashMap(
     ("ACT", "Australia/Darwin"),
     ("AET", "Australia/Sydney"),
     ("AGT", "America/Argentina/Buenos_Aires"),
@@ -271,12 +272,12 @@ object ZoneId {
     ("SST", "Pacific/Guadalcanal"),
     ("VST", "Asia/Ho_Chi_Minh"))
 
-  private val pre = HashMap(
+  private lazy val pre = HashMap(
     ("EST", "America/Indianapolis"),
     ("MST", "America/Phoenix"),
     ("HST", "Pacific/Honolulu"))
 
-  private val post = HashMap(
+  private lazy val post = HashMap(
     ("EST", "UTC-05:00"),
     ("MST", "UTC-07:00"),
     ("HST", "UTC-10:00")
@@ -523,17 +524,15 @@ object ZoneId {
         }
       }
     }
-    //    val matcher: Matcher = TZPattern.matcher(zoneID)
-    //    if (matcher.matches == false) {
-    //      throw new CalendricalException("Invalid time-zone ID: " + zoneID)
-    //    }
+    val matcher: Matcher = TZPattern.pattern.matcher(zoneID)
+    if (matcher.matches == false) {
+      throw new CalendricalException("Invalid time-zone ID: " + zoneID)
+    }
 
-    //    var groupID: String = matcher.group(2)
-    //    val regionID: String = matcher.group(3)
-    //    var versionID: String = matcher.group(5)
-    val TZPattern(_, _, _groupID, regionID, _, _versionID) = zoneID
-    var groupID = _groupID
-    var versionID = _versionID
+    var groupID: String = matcher.group(2)
+    val regionID: String = matcher.group(3)
+    var versionID: String = matcher.group(5)
+
     groupID = (if (groupID != null) groupID else "TZDB")
     versionID = (if (versionID != null) versionID else "")
     if (checkAvailable) {

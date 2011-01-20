@@ -108,8 +108,8 @@ object Period {
    * @throws ArithmeticException if the period exceeds the supported range
    */
   def yearsBetween(startDateProvider: DateProvider, endDateProvider: DateProvider): Period = {
-    val startDate: LocalDate = LocalDate.of(startDateProvider)
-    val endDate: LocalDate = LocalDate.of(endDateProvider)
+    val startDate: LocalDate = LocalDate(startDateProvider)
+    val endDate: LocalDate = LocalDate(endDateProvider)
     val startMonth: Long = startDate.getYear * 12L + startDate.getMonthOfYear.ordinal
     val endMonth: Long = endDate.getYear * 12L + endDate.getMonthOfYear.ordinal
     var years: Long = (endMonth - startMonth) / 12
@@ -317,8 +317,8 @@ object Period {
    * @throws ArithmeticException if the period exceeds the supported range
    */
   def between(startDateProvider: DateProvider, endDateProvider: DateProvider): Period = {
-    val startDate: LocalDate = LocalDate.of(startDateProvider)
-    val endDate: LocalDate = LocalDate.of(endDateProvider)
+    val startDate: LocalDate = LocalDate(startDateProvider)
+    val endDate: LocalDate = LocalDate(endDateProvider)
     val startMonth: Long = startDate.getYear * 12L + startDate.getMonthOfYear.ordinal
     val endMonth: Long = endDate.getYear * 12L + endDate.getMonthOfYear.ordinal
     var totalMonths: Long = endMonth - startMonth
@@ -382,8 +382,8 @@ object Period {
    * @throws ArithmeticException if the period exceeds the supported range
    */
   def daysBetween(startDateProvider: DateProvider, endDateProvider: DateProvider): Period = {
-    val startDate: LocalDate = LocalDate.of(startDateProvider)
-    val endDate: LocalDate = LocalDate.of(endDateProvider)
+    val startDate: LocalDate = LocalDate(startDateProvider)
+    val endDate: LocalDate = LocalDate(endDateProvider)
     val days: Long = MathUtils.safeSubtract(endDate.toModifiedJulianDays, startDate.toModifiedJulianDays)
     ofDays(MathUtils.safeToInt(days))
   }
@@ -403,8 +403,8 @@ object Period {
    * @throws ArithmeticException if the period exceeds the supported range
    */
   def monthsBetween(startDateProvider: DateProvider, endDateProvider: DateProvider): Period = {
-    val startDate: LocalDate = LocalDate.of(startDateProvider)
-    val endDate: LocalDate = LocalDate.of(endDateProvider)
+    val startDate: LocalDate = LocalDate(startDateProvider)
+    val endDate: LocalDate = LocalDate(endDateProvider)
     val startMonth: Long = startDate.getYear * 12L + startDate.getMonthOfYear.ordinal
     val endMonth: Long = endDate.getYear * 12L + endDate.getMonthOfYear.ordinal
     var months: Long = endMonth - startMonth

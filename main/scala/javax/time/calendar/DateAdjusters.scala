@@ -116,13 +116,13 @@ object DateAdjusters {
     /**Last day-of-year adjuster. */
     object LastDayOfYear extends DateAdjuster {
       /**{@inheritDoc}*/
-      override def adjustDate(date: LocalDate): LocalDate = LocalDate.of(date.getYear, MonthOfYear.December, 31)
+      override def adjustDate(date: LocalDate): LocalDate = LocalDate(date.getYear, MonthOfYear.December, 31)
     }
 
     /**First day-of-year adjuster. */
     object FirstDayOfMonth extends DateAdjuster {
       /**{@inheritDoc}*/
-      override def adjustDate(date: LocalDate): LocalDate = date.withDayOfMonth(1)
+      override def adjustDate(date: LocalDate): LocalDate = date.copy(day = 1)
     }
 
     /**Last day-of-month adjuster. */
@@ -130,14 +130,14 @@ object DateAdjusters {
       /**{@inheritDoc}*/
       override def adjustDate(date: LocalDate): LocalDate = {
         val dom: Int = date.getMonthOfYear.getLastDayOfMonth(ISOChronology.isLeapYear(date.getYear))
-        return date.withDayOfMonth(dom)
+        return date.copy(month = MonthOfYear(dom))
       }
     }
 
     /**First day-of-year adjuster. */
     object FirstDayOfYear extends DateAdjuster {
       /**{@inheritDoc}*/
-      override def adjustDate(date: LocalDate): LocalDate = LocalDate.of(date.getYear, MonthOfYear.January, 1)
+      override def adjustDate(date: LocalDate): LocalDate = LocalDate(date.getYear, MonthOfYear.January, 1)
     }
 
     /**Next non weekend day adjuster. */
@@ -232,7 +232,7 @@ object DateAdjusters {
 
     /**{@inheritDoc}*/
     override def adjustDate(date: LocalDate): LocalDate = {
-      val temp: LocalDate = date.withDayOfMonth(1)
+      val temp: LocalDate = date.copy(day = 1)
       val curDow: Int = temp.getDayOfWeek.ordinal
       val newDow: Int = dayOfWeek.ordinal
       var dowDiff: Int = (newDow - curDow + 7) % 7

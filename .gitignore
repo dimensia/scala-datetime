@@ -1,5 +1,5 @@
 /.idea
-Scala-datetime.iml
+**.iml
 **.java
 **._java_
 javax/time/i18n/JapaneseChronology.scala

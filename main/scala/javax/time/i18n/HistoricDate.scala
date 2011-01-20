@@ -68,7 +68,7 @@ object HistoricDate {
   /**
    * The standard cutover date between the Julian and Gregorian calendar system of 1582-10-15.
    */
-  val StandardCutover: LocalDate = LocalDate.of(1582, 10, 15)
+  val StandardCutover: LocalDate = LocalDate(1582, 10, 15)
   /**
    * Obtains an instance of {@code HistoricDate} from a calendrical.
    * <p>
@@ -396,7 +396,7 @@ final class HistoricDate private[i18n](val chrono: HistoricChronology, @transien
    * @return the equivalent date in the ISO-8601 calendar system, never null
    */
   override def toLocalDate: LocalDate = {
-    val possible: LocalDate = LocalDate.of(year, month, day)
+    val possible: LocalDate = LocalDate(year, month, day)
     if (possible.isBefore(chrono.getCutover)) {
       val julYear1Days: Long = (year - 1) * 365 + (year / 4) + chrono.getDayOfYear(this) - 1
       LocalDate.ofModifiedJulianDays(julYear1Days + 0)

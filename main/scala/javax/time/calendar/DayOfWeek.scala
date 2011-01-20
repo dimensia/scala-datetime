@@ -155,6 +155,8 @@ sealed abstract class DayOfWeek(val ordinal: Int) extends Calendrical {
 
   import DayOfWeek._
 
+ override def toString = this.getClass.getSimpleName.split('$')(1)
+
   /**
    * Gets the next day-of-week.
    * <p>

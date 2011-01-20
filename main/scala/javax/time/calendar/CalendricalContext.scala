@@ -103,14 +103,14 @@ final class CalendricalContext(val isStrict: Boolean, val checkUnusedFields: Boo
       return dateResolver.resolveDate(year, MonthOfYear.of(month), dayOfMonth)
     }
     if (isStrict) {
-      return LocalDate.of(year, month, dayOfMonth)
+      return LocalDate(year, month, dayOfMonth)
     }
     if (month >= 1 && month <= 12) {
       if (dayOfMonth >= 1 && dayOfMonth <= 28) {
-        return LocalDate.of(year, month, dayOfMonth)
+        return LocalDate(year, month, dayOfMonth)
       }
-      return LocalDate.of(year, month, 1).plusDays((dayOfMonth.toLong) - 1)
+      return LocalDate(year, month, 1).plusDays((dayOfMonth.toLong) - 1)
     }
-    return LocalDate.of(year, 1, 1).plusMonths(month).plusMonths(-1).plusDays((dayOfMonth.toLong) - 1)
+    return LocalDate(year, 1, 1).plusMonths(month).plusMonths(-1).plusDays((dayOfMonth.toLong) - 1)
   }
 }

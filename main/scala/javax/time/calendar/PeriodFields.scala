@@ -82,7 +82,7 @@ object PeriodFields {
   def of(period: PeriodField): PeriodFields = {
     checkNotNull(period, "PeriodField must not be null")
     val internalMap: TreeMap[PeriodUnit, PeriodField] = createMap
-    internalMap(period.getUnit) = period
+    internalMap.updated(period.getUnit,period)
     return create(internalMap)
   }
 
@@ -98,7 +98,7 @@ object PeriodFields {
   def of(amount: Long, unit: PeriodUnit): PeriodFields = {
     checkNotNull(unit, "PeriodUnit must not be null")
     val internalMap: TreeMap[PeriodUnit, PeriodField] = createMap
-    internalMap(unit) = PeriodField.of(amount, unit)
+    internalMap.updated(unit, PeriodField.of(amount, unit))
     return create(internalMap)
   }
 
@@ -119,7 +119,7 @@ object PeriodFields {
       if (internalMap.contains(period.getUnit)) {
         throw new IllegalArgumentException("PeriodField array contains the same unit twice")
       }
-      else internalMap(period.getUnit) = period
+      else internalMap.updated(period.getUnit, period)
     }
     return create(internalMap)
   }
@@ -196,8 +196,8 @@ object PeriodFields {
   def of(duration: Duration): PeriodFields = {
     checkNotNull(duration, "Duration must not be null")
     val internalMap: TreeMap[PeriodUnit, PeriodField] = createMap
-    internalMap(ISOChronology.periodSeconds) = PeriodField.of(duration.getSeconds, ISOChronology.periodSeconds)
-    internalMap(ISOChronology.periodNanos) = PeriodField.of(duration.getNanoOfSecond, ISOChronology.periodNanos)
+    internalMap.updated(ISOChronology.periodSeconds, PeriodField.of(duration.getSeconds, ISOChronology.periodSeconds))
+    internalMap.updated(ISOChronology.periodNanos, PeriodField.of(duration.getNanoOfSecond, ISOChronology.periodNanos))
     return create(internalMap)
   }
 
@@ -255,7 +255,7 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
     if (this == Zero) periods
     else if (periods == Zero) this
     else {
-      create((unitFieldMap ++ periods.unitFieldMap).asInstanceOf[TreeMap[PeriodUnit, PeriodField]])
+      create(unitFieldMap ++ periods.unitFieldMap)
     }
   }
 
@@ -642,12 +642,12 @@ sealed class PeriodFields private(val unitFieldMap: TreeMap[PeriodUnit, PeriodFi
     val copy: TreeMap[PeriodUnit, PeriodField] = createMap
     for (loopField <- unitFieldMap.values) {
       if (loopField.getUnit.equals(period.getUnit)) {
-        copy(loopField.getUnit) = loopField.remainder(period.getAmount)
+        copy.updated(loopField.getUnit, loopField.remainder(period.getAmount))
       }
       else {
         for (equivalent <- period.getUnit.getEquivalentPeriods) {
           if (loopField.getUnit.equals(equivalent.getUnit)) {
-            copy(loopField.getUnit) = loopField.remainder(equivalent.getAmount)
+            copy.updated(loopField.getUnit, loopField.remainder(equivalent.getAmount))
           }
         }
       }

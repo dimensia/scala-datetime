@@ -86,7 +86,7 @@ object ISOChronology extends ISOChronology {
    * @param errorMessage  the error to throw
    * @throws NullPointerException if the object is null
    */
-  private[calendar] def checkNotNull(obj : Any, errorMessage: String): Unit = {
+  private[calendar] def checkNotNull(obj: Any, errorMessage: String): Unit = {
     if (obj == null) throw new NullPointerException(errorMessage)
   }
 
@@ -133,7 +133,7 @@ object ISOChronology extends ISOChronology {
       moy = moy.next
     }
     val dom: Int = dayOfYear - moy.getMonthStartDayOfYear(leap) + 1
-    return LocalDate.of(year, moy, dom)
+    return LocalDate(year, moy, dom)
   }
 
   /**
@@ -143,7 +143,7 @@ object ISOChronology extends ISOChronology {
    * @return the week-based-year
    */
   private[calendar] def getWeekBasedYearFromDate(date: LocalDate): Int = {
-    var year: Year = Year.of(date)
+    var year: Year = Year(date)
     if (date.getMonthOfYear == MonthOfYear.January) {
       val dom: Int = date.getDayOfMonth
       if (dom < 4) {
@@ -173,7 +173,7 @@ object ISOChronology extends ISOChronology {
    */
   private[calendar] def getWeekOfWeekBasedYearFromDate(date: LocalDate): Int = {
     val wby: Int = getWeekBasedYearFromDate(date)
-    val yearStart: LocalDate = LocalDate.of(wby, MonthOfYear.January, 4)
+    val yearStart: LocalDate = LocalDate(wby, MonthOfYear.January, 4)
     MathUtils.safeToInt((date.toModifiedJulianDays - yearStart.toModifiedJulianDays + yearStart.getDayOfWeek.getValue - 1) / 7 + 1)
   }
 
@@ -1142,9 +1142,9 @@ object ISOChronology extends ISOChronology {
         case SecondOfMinuteOrdinal => calendrical.get(LocalTime.rule).map(_.getSecondOfMinute)
         case SecondOfDayOrdinal => calendrical.get(LocalTime.rule).map(_.toSecondOfDay)
         case MinuteOfHourOrdinal => calendrical.get(LocalTime.rule).map(_.getMinuteOfHour)
-        case ClockHourOfAmPmOrdinal => calendrical.get(hourOfAmPmRule).map(hour => (hour + 12) % 13)
+        case ClockHourOfAmPmOrdinal => calendrical.get(hourOfAmPmRule).map(hour => (hour + 11) % 12)
         case HourOfAmPmOrdinal => calendrical.get(hourOfDayRule).map(_ % 12)
-        case ClockHourOfDayOrdinal => calendrical.get(hourOfDayRule).map(hour => (hour + 24) % 25)
+        case ClockHourOfDayOrdinal => calendrical.get(hourOfDayRule).map(hour => (hour + 23) % 24)
         case HourOfDayOrdinal => calendrical.get(LocalTime.rule).map(_.getHourOfDay)
         case DayOfMonthOrdinal => calendrical.get(LocalDate.rule).map(_.getDayOfMonth)
         case DayOfYearOrdinal => calendrical.get(LocalDate.rule).map(getDayOfYearFromDate(_))
@@ -1181,7 +1181,7 @@ object ISOChronology extends ISOChronology {
         }
         case WeekOfWeekBasedYearOrdinal => {
           var date: LocalDate = calendrical.get(LocalDate.rule).getOrElse(return 53)
-          date = date.withDayOfMonth(1).withMonthOfYear(1)
+          date = date.copy(day = 1).withMonthOfYear(1)
           if (date.getDayOfWeek == DayOfWeek.Thursday || (date.getDayOfWeek == DayOfWeek.Wednesday && isLeapYear(date.getYear))) {
             return 53
           }
@@ -1348,7 +1348,7 @@ sealed class ISOChronology private
   //      val woyVal: Int = merger.getValue(ISOChronology.weekOfYearRule).get
   //      val dow: DayOfWeek = merger.getValue(ISOChronology.dayOfWeekRule).get
   //      if (woyVal != null && dow != null) {
-  //        var date: LocalDate = LocalDate.of(yearVal, 1, 1).plusWeeks(woyVal - 1)
+  //        var date: LocalDate = LocalDate(yearVal, 1, 1).plusWeeks(woyVal - 1)
   //        date = date.`with`(DateAdjusters.nextOrCurrent(dow))
   //        merger.storeMerged(LocalDate.rule, date)
   //        merger.removeProcessed(ISOChronology.yearRule)
@@ -1357,7 +1357,7 @@ sealed class ISOChronology private
   //      }
   //      val womVal: Int = merger.getValue(ISOChronology.weekOfMonthRule).get
   //      if (moy != null && womVal != null && dow != null) {
-  //        var date: LocalDate = LocalDate.of(yearVal, moy, 1).plusWeeks(womVal - 1)
+  //        var date: LocalDate = LocalDate(yearVal, moy, 1).plusWeeks(womVal - 1)
   //        date = date.`with`(DateAdjusters.nextOrCurrent(dow))
   //        merger.storeMerged(LocalDate.rule, date)
   //        merger.removeProcessed(ISOChronology.yearRule)

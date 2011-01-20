@@ -54,15 +54,6 @@ import javax.time.{Duration, CalendricalException, Instant, MathUtils}
 object LocalTime {
 
   /**
-   * Constant for the local time of midnight, 00:00.
-   */
-  val Midnight: LocalTime = Hours(0)
-  /**
-   * Constant for the local time of midday, 12:00.
-   */
-  val Midday: LocalTime = Hours(12)
-
-  /**
    * Constants for the local time of each hour.
    */
   private val Hours: Array[LocalTime] = Array[LocalTime](
@@ -90,6 +81,15 @@ object LocalTime {
     new LocalTime(21, 0, 0, 0),
     new LocalTime(22, 0, 0, 0),
     new LocalTime(23, 0, 0, 0))
+
+  /**
+   * Constant for the local time of midnight, 00:00.
+   */
+  val Midnight: LocalTime = Hours(0)
+  /**
+   * Constant for the local time of midday, 12:00.
+   */
+  val Midday: LocalTime = Hours(12)
 
   /**Hours per day. */
   private val HoursPerDay: Int = 24

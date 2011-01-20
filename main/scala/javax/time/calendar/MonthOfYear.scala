@@ -169,11 +169,15 @@ object MonthOfYear {
     }
   }
 
+  def apply(monthOfYear: Int) = of(monthOfYear)
+
 }
 
 sealed abstract class MonthOfYear(val ordinal: Int) extends Ordered[MonthOfYear] with Calendrical {
 
   import MonthOfYear._
+
+  override def toString = this.getClass.getSimpleName.split('$')(1)
 
   /**
    * Is this instance representing January.
