@@ -134,7 +134,7 @@ object OffsetDate {
   def ofInstant(instantProvider: InstantProvider, offset: ZoneOffset): OffsetDate = {
     val instant: Instant = Instant.of(instantProvider)
     ISOChronology.checkNotNull(offset, "ZoneOffset must not be null")
-    val epochSecs: Long = instant.getEpochSeconds + offset.getAmountSeconds
+    val epochSecs: Long = instant.seconds + offset.getAmountSeconds
     val yearZeroDays: Long = MathUtils.floorDiv(epochSecs, ISOChronology.SecondsPerDay) + ISOChronology.Days0000To1970
     val date: LocalDate = LocalDate.ofYearZeroDays(yearZeroDays)
     new OffsetDate(date, offset)

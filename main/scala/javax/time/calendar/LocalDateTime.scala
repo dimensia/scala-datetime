@@ -240,6 +240,8 @@ object LocalDateTime {
     new LocalDateTime(date, time)
   }
 
+  def apply(dateProvider: DateProvider, timeProvider: TimeProvider) = of(dateProvider, timeProvider)
+
   /**
    * Obtains an instance of {@code LocalDateTime} from a text string using a specific formatter.
    * <p>
@@ -270,8 +272,8 @@ object LocalDateTime {
     ISOChronology.checkNotNull(clock, "Clock must not be null")
     val instant: Instant = clock.instant
     val offset: ZoneOffset = clock.getZone.getRules.getOffset(instant)
-    val localSeconds: Long = instant.getEpochSeconds + offset.getAmountSeconds
-    create(localSeconds, instant.getNanoOfSecond)
+    val localSeconds: Long = instant.seconds + offset.getAmountSeconds
+    create(localSeconds, instant.nanos)
   }
 
   /**
@@ -831,7 +833,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime)
    * @return a {@code LocalDateTime} based on this date-time with the duration subtracted, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def minus(duration: Duration): LocalDateTime = minusSeconds(duration.getSeconds).minusNanos(duration.getNanoOfSecond)
+  def minus(duration: Duration): LocalDateTime = minusSeconds(duration.seconds).minusNanos(duration.nanos)
 
   def -(duration: Duration): LocalDateTime = minus(duration)
 
@@ -971,7 +973,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime)
   def plus(periodProvider: PeriodProvider): LocalDateTime = {
     val period: Period = Period.of(periodProvider)
     val newDate: LocalDate = date.plus(period)
-    val overflow: LocalTime.Overflow = time.plusWithOverflow(period.getHours, period.getMinutes, period.getSeconds, period.getNanos)
+    val overflow: LocalTime.Overflow = time.plusWithOverflow(period.hours, period.minutes, period.seconds, period.nanos)
     val result: LocalDateTime = overflow.toLocalDateTime(newDate)
     (if (result.equals(this)) this else result)
   }
@@ -992,7 +994,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime)
    * @return a {@code LocalDateTime} based on this date-time with the duration added, never null
    * @throws CalendricalException if the result exceeds the supported date range
    */
-  def plus(duration: Duration): LocalDateTime = plusSeconds(duration.getSeconds).plusNanos(duration.getNanoOfSecond)
+  def plus(duration: Duration): LocalDateTime = plusSeconds(duration.seconds).plusNanos(duration.nanos)
 
   def +(duration: Duration) = plus(duration)
 
@@ -1251,7 +1253,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime)
   def minus(periodProvider: PeriodProvider): LocalDateTime = {
     val period: Period = Period.of(periodProvider)
     val newDate: LocalDate = date.minus(period)
-    val overflow: LocalTime.Overflow = time.minusWithOverflow(period.getHours, period.getMinutes, period.getSeconds, period.getNanos)
+    val overflow: LocalTime.Overflow = time.minusWithOverflow(period.hours, period.minutes, period.seconds, period.nanos)
     val result: LocalDateTime = overflow.toLocalDateTime(newDate)
     (if (result.equals(this)) this else result)
   }
@@ -1354,7 +1356,7 @@ final class LocalDateTime private(val date: LocalDate, val time: LocalTime)
    * @throws InvalidCalendarFieldException if the day-of-month is invalid for the month-year
    */
   def withDate(year: Int, monthOfYear: Int, dayOfMonth: Int): LocalDateTime = {
-    if (year == getYear && monthOfYear == getMonthOfYear.getValue && dayOfMonth == getDayOfMonth) this
+    if (year == getYear && monthOfYear == getMonthOfYear.ordinal && dayOfMonth == getDayOfMonth) this
     else {
       val newDate: LocalDate = LocalDate(year, monthOfYear, dayOfMonth)
       `with`(newDate, time)

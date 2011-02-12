@@ -164,6 +164,8 @@ object ZoneId {
     else new ZoneId.Fixed(offset)
   }
 
+  def apply(offset: ZoneOffset) = of(offset)
+
   /**
    * The group:region#version ID pattern.
    */

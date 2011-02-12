@@ -265,7 +265,7 @@ final case class Year(year: Int) extends Calendrical with DateAdjuster with Cale
    */
   def plus(periodProvider: PeriodProvider): Year = {
     val period: Period = Period.of(periodProvider)
-    plusYears(period.getYears)
+    plusYears(period.years)
   }
 
   def +(periodProvider: PeriodProvider): Year = plus(periodProvider)
@@ -415,7 +415,7 @@ final case class Year(year: Int) extends Calendrical with DateAdjuster with Cale
    */
   def minus(periodProvider: PeriodProvider): Year = {
     val period: Period = Period.of(periodProvider)
-    minusYears(period.getYears)
+    minusYears(period.years)
   }
 
   def -(periodProvider: PeriodProvider): Year = minus(periodProvider)

@@ -82,7 +82,7 @@ object DateResolvers {
   private class PreviousValid extends DateResolver with Serializable {
     /**{@inheritDoc}*/
     override def resolveDate(year: Int, monthOfYear: MonthOfYear, dayOfMonth: Int): LocalDate = {
-      var lastDay: Int = monthOfYear.getLastDayOfMonth(ISOChronology.isLeapYear(year))
+      var lastDay: Int = monthOfYear.lastDayOfMonth(ISOChronology.isLeapYear(year))
       if (dayOfMonth > lastDay) {
         return LocalDate(year, monthOfYear, lastDay)
       }

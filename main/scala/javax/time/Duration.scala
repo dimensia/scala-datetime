@@ -191,6 +191,8 @@ object Duration {
     }
   }
 
+  def apply(amount: Long, unit: TimeUnit) = of(amount, unit)
+
   /**
    * Obtains an instance of {@code Duration} from a number of standard length minutes.
    * <p>
@@ -243,8 +245,8 @@ object Duration {
   def between(startInclusive: InstantProvider, endExclusive: InstantProvider): Duration = {
     val start: Instant = Instant.of(startInclusive)
     val end: Instant = Instant.of(endExclusive)
-    var secs: Long = MathUtils.safeSubtract(end.getEpochSeconds, start.getEpochSeconds)
-    var nanos: Int = end.getNanoOfSecond - start.getNanoOfSecond
+    var secs: Long = MathUtils.safeSubtract(end.seconds, start.seconds)
+    var nanos: Int = end.nanos - start.nanos
     if (nanos < 0) {
       nanos += NanosPerSecond
       secs = MathUtils.safeDecrement(secs)
@@ -462,7 +464,7 @@ final class Duration private(val seconds: Long, val nanos: Int) extends Ordered[
    *
    * @return the whole seconds part of the length of the duration, positive or negative
    */
-  def getSeconds: Long = seconds
+//  def getSeconds: Long = seconds
 
   /**
    * Gets the number of nanoseconds within the second in this duration.
@@ -478,7 +480,7 @@ final class Duration private(val seconds: Long, val nanos: Int) extends Ordered[
    *
    * @return the nanoseconds within the second part of the length of the duration, from 0 to 999,999,999
    */
-  def getNanoOfSecond: Int = nanos
+//  def getNanoOfSecond: Int = nanos
 
   /**
    * Returns a copy of this duration with the specified number of seconds subtracted.

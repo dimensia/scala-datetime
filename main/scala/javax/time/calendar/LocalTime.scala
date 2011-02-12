@@ -135,12 +135,12 @@ object LocalTime {
     ISOChronology.checkNotNull(clock, "Clock must not be null")
     val instant: Instant = clock.instant
     val offset: ZoneOffset = clock.getZone.getRules.getOffset(instant)
-    var secsOfDay: Long = instant.getEpochSeconds % ISOChronology.SecondsPerDay
+    var secsOfDay: Long = instant.seconds % ISOChronology.SecondsPerDay
     secsOfDay = (secsOfDay + offset.getAmountSeconds) % ISOChronology.SecondsPerDay
     if (secsOfDay < 0) {
       secsOfDay += ISOChronology.SecondsPerDay
     }
-    return LocalTime.ofSecondOfDay(secsOfDay, instant.getNanoOfSecond)
+    return LocalTime.ofSecondOfDay(secsOfDay, instant.nanos)
   }
 
   /**
@@ -162,6 +162,9 @@ object LocalTime {
     if (nanoOfSecond != 0) ISOChronology.nanoOfSecondRule.checkValue(nanoOfSecond)
     return create(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
   }
+
+  def apply(hourOfDay: Int, minuteOfHour: Int = 0, secondOfMinute: Int = 0, nanoOfSecond: Int = 0) =
+    of(hourOfDay, minuteOfHour, secondOfMinute, nanoOfSecond)
 
   /**
    * Obtains an instance of {@code LocalTime} from a time provider.
@@ -599,10 +602,10 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    */
   def minus(periodProvider: PeriodProvider): LocalTime = {
     val period: Period = Period.ofTimeFields(periodProvider).normalizedWith24HourDays
-    val periodHours: Long = period.getHours
-    val periodMinutes: Long = period.getMinutes
-    val periodSeconds: Long = period.getSeconds
-    val periodNanos: Long = period.getNanos
+    val periodHours: Long = period.hours
+    val periodMinutes: Long = period.minutes
+    val periodSeconds: Long = period.seconds
+    val periodNanos: Long = period.nanos
     val totNanos: Long = periodNanos % NanosPerDay +
       (periodSeconds % SecondsPerDay) * NanosPerSecond +
       (periodMinutes % MinutesPerDay) * NanosPerMinute +
@@ -709,10 +712,10 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    */
   def plus(periodProvider: PeriodProvider): LocalTime = {
     val period: Period = Period.ofTimeFields(periodProvider).normalizedWith24HourDays
-    val periodHours: Long = period.getHours
-    val periodMinutes: Long = period.getMinutes
-    val periodSeconds: Long = period.getSeconds
-    val periodNanos: Long = period.getNanos
+    val periodHours: Long = period.hours
+    val periodMinutes: Long = period.minutes
+    val periodSeconds: Long = period.seconds
+    val periodNanos: Long = period.nanos
     val totNanos: Long = periodNanos % NanosPerDay + (periodSeconds % SecondsPerDay) * NanosPerSecond + (periodMinutes % MinutesPerDay) * NanosPerMinute + (periodHours % HoursPerDay) * NanosPerHour
     plusNanos(totNanos)
   }
@@ -786,7 +789,7 @@ final class LocalTime private(val hour: Byte, val minute: Byte, val second: Byte
    * @param duration  the duration to add, not null
    * @return a {@code LocalTime} based on this time with the duration added, never null
    */
-  def plus(duration: Duration): LocalTime = plusSeconds(duration.getSeconds).plusNanos(duration.getNanoOfSecond)
+  def plus(duration: Duration): LocalTime = plusSeconds(duration.seconds).plusNanos(duration.nanos)
 
   def +(duration: Duration) = plus(duration)
 

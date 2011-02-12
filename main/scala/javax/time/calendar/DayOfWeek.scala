@@ -204,7 +204,7 @@ sealed abstract class DayOfWeek(val ordinal: Int) extends Calendrical {
    * @param locale the locale to use, not null
    * @return the full text value of the day-of-week, never null
    */
-  def getText(locale: Locale): String = ISOChronology.dayOfWeekRule.getText(getValue, locale, TextStyle.Full)
+  def text(locale: Locale): String = ISOChronology.dayOfWeekRule.getText(ordinal, locale, TextStyle.Full)
 
   /**
    * Gets the short textual representation of this day-of-week, such as 'Mon' or 'Fri'.
@@ -220,7 +220,7 @@ sealed abstract class DayOfWeek(val ordinal: Int) extends Calendrical {
    * @param locale the locale to use, not null
    * @return the short text value of the day-of-week, never null
    */
-  def getShortText(locale: Locale): String = ISOChronology.dayOfWeekRule.getText(getValue, locale, TextStyle.Short)
+  def shortText(locale: Locale): String = ISOChronology.dayOfWeekRule.getText(ordinal, locale, TextStyle.Short)
 
   /**
    * Is this instance representing Monday.
@@ -293,7 +293,7 @@ sealed abstract class DayOfWeek(val ordinal: Int) extends Calendrical {
    *
    * @return the day-of-week, from 1 (Monday) to 7 (Sunday)
    */
-  def getValue: Int = ordinal
+//  def getValue: Int = ordinal
 
   def name = this.getClass.getName
 }

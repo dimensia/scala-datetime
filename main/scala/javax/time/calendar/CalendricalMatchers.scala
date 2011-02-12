@@ -129,7 +129,7 @@ object CalendricalMatchers {
         val yearVal: Int = calendrical.get(ISOChronology.yearRule).getOrElse(return false)
         val moy: MonthOfYear = calendrical.get(ISOChronology.monthOfYearRule).getOrElse(return false)
         var domVal: Int = calendrical.get(ISOChronology.dayOfMonthRule).getOrElse(return false)
-        return domVal == moy.getLastDayOfMonth(ISOChronology.isLeapYear(yearVal))
+        return domVal == moy.lastDayOfMonth(ISOChronology.isLeapYear(yearVal))
       }
     }
 

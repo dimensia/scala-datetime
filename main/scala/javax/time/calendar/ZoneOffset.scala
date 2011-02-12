@@ -393,7 +393,7 @@ object ZoneOffset {
    */
   def of(periodProvider: PeriodProvider): ZoneOffset = {
     val period: Period = Period.of(periodProvider)
-    ofHoursMinutesSeconds(period.getHours, period.getMinutes, period.getSeconds)
+    ofHoursMinutesSeconds(period.hours, period.minutes, period.seconds)
   }
 }
 

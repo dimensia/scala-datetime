@@ -167,7 +167,7 @@ final class HistoricDate private[i18n](val chrono: HistoricChronology, @transien
     chrono.yearRule.checkValue(historicYear)
     HistoricChronology.checkNotNull(monthOfYear, "MonthOfYear must not be null")
     chrono.dayOfMonthRule.checkValue(dayOfMonth)
-    val lastDay: Int = monthOfYear.getLastDayOfMonth(chrono.isLeapYear(year))
+    val lastDay: Int = monthOfYear.lastDayOfMonth(chrono.isLeapYear(year))
     if (dayOfMonth > lastDay) dayOfMonth = lastDay
     new HistoricDate(chrono, year, monthOfYear, dayOfMonth)
   }
@@ -269,7 +269,7 @@ final class HistoricDate private[i18n](val chrono: HistoricChronology, @transien
    */
   override def toString: String = {
     val yearValue: Int = getYear
-    val monthValue: Int = getMonthOfYear.getValue
+    val monthValue: Int = getMonthOfYear.ordinal
     val dayValue: Int = getDayOfMonth
     val absYear: Int = math.abs(yearValue)
     val buf: StringBuilder = new StringBuilder(12)
@@ -444,7 +444,7 @@ final class HistoricDate private[i18n](val chrono: HistoricChronology, @transien
    */
   override def hashCode: Int = {
     val yearValue: Int = year
-    val monthValue: Int = month.getValue
+    val monthValue: Int = month.ordinal
     val dayValue: Int = day
     (yearValue & 0xFFFFF800) ^ ((yearValue << 11) + (monthValue << 6) + (dayValue)) + chrono.getCutover.hashCode
   }

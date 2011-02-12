@@ -330,7 +330,7 @@ final class Instant private(val seconds: Long, val nanos: Int) extends InstantPr
    *
    * @return the seconds from the epoch of 1970-01-01T00:00:00Z
    */
-  def getEpochSeconds: Long = seconds
+//  def getEpochSeconds: Long = seconds
 
   /**
    * Gets the number of nanoseconds, later along the time-line, from the start
@@ -341,7 +341,7 @@ final class Instant private(val seconds: Long, val nanos: Int) extends InstantPr
    *
    * @return the nanoseconds within the second, always positive, never exceeds 999,999,999
    */
-  def getNanoOfSecond: Int = nanos
+//  def getNanoOfSecond: Int = nanos
 
   /**
    * Converts this instant to an {@code Instant}, trivially returning {@code this}.
@@ -445,8 +445,8 @@ final class Instant private(val seconds: Long, val nanos: Int) extends InstantPr
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   def minus(duration: Duration): Instant = {
-    val secsToSubtract: Long = duration.getSeconds
-    val nanosToSubtract: Int = duration.getNanoOfSecond
+    val secsToSubtract: Long = duration.seconds
+    val nanosToSubtract: Int = duration.nanos
     if ((secsToSubtract | nanosToSubtract) == 0) {
       return this
     }

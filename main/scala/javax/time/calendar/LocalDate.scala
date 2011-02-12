@@ -78,7 +78,7 @@ object LocalDate {
     ISOChronology.checkNotNull(clock, "Clock must not be null")
     val instant: Instant = clock.instant
     val offset: ZoneOffset = clock.getZone.getRules.getOffset(instant)
-    val epochSecs: Long = instant.getEpochSeconds + offset.getAmountSeconds
+    val epochSecs: Long = instant.seconds + offset.getAmountSeconds
     val yearZeroDays: Long = MathUtils.floorDiv(epochSecs, ISOChronology.SecondsPerDay) + ISOChronology.Days0000To1970
     LocalDate.ofYearZeroDays(yearZeroDays)
   }
@@ -293,7 +293,7 @@ final case class LocalDate(year: Int, month: MonthOfYear, day: Int)
    */
   override def hashCode: Int = {
     val yearValue: Int = year
-    val monthValue: Int = month.getValue
+    val monthValue: Int = month.ordinal
     val dayValue: Int = day
     return (yearValue & 0xFFFFF800) ^ ((yearValue << 11) + (monthValue << 6) + (dayValue))
   }
@@ -376,9 +376,9 @@ final case class LocalDate(year: Int, month: MonthOfYear, day: Int)
   def plus(periodProvider: PeriodProvider): LocalDate = {
     val period: Period = Period.ofDateFields(periodProvider)
     var periodMonths: Long = period.totalMonths
-    var periodDays: Long = period.getDays
+    var periodDays: Long = period.days
     if (periodMonths == 0) return plusDays(periodDays)
-    val monthCount: Long = (year.toLong) * 12 + (month.getValue - 1)
+    val monthCount: Long = (year.toLong) * 12 + (month.ordinal - 1)
     val calcMonths: Long = monthCount + periodMonths
     val newYear: Int = ISOChronology.yearRule.checkValue(MathUtils.floorDiv(calcMonths, 12))
     val newMonth: MonthOfYear = MonthOfYear.of(MathUtils.floorMod(calcMonths, 12) + 1)
@@ -434,7 +434,7 @@ final case class LocalDate(year: Int, month: MonthOfYear, day: Int)
   def plusMonths(months: Long, dateResolver: DateResolver = DateResolvers.previousValid): LocalDate = {
     ISOChronology.checkNotNull(dateResolver, "DateResolver must not be null")
     if (months == 0) return this
-    val monthCount: Long = year * 12L + (month.getValue - 1)
+    val monthCount: Long = year * 12L + (month.ordinal - 1)
     val calcMonths: Long = monthCount + months
     val newYear: Int = ISOChronology.yearRule.checkValue(MathUtils.floorDiv(calcMonths, 12))
     val newMonth: MonthOfYear = MonthOfYear.of(MathUtils.floorMod(calcMonths, 12) + 1)
@@ -450,7 +450,7 @@ final case class LocalDate(year: Int, month: MonthOfYear, day: Int)
    */
   override def toString: String = {
     val yearValue: Int = year
-    val monthValue: Int = month.getValue
+    val monthValue: Int = month.ordinal
     val dayValue: Int = day
     val absYear: Int = math.abs(yearValue)
     val buf: StringBuilder = new StringBuilder(10)
@@ -679,7 +679,7 @@ final case class LocalDate(year: Int, month: MonthOfYear, day: Int)
   def minusMonths(months: Long, dateResolver: DateResolver = DateResolvers.previousValid): LocalDate = {
     ISOChronology.checkNotNull(dateResolver, "DateResolver must not be null")
     if (months == 0) return this
-    val monthCount: Long = year * 12L + (month.getValue - 1)
+    val monthCount: Long = year * 12L + (month.ordinal - 1)
     val calcMonths: Long = monthCount - months
     val newYear: Int = ISOChronology.yearRule.checkValue(MathUtils.floorDiv(calcMonths, 12))
     val newMonth: MonthOfYear = MonthOfYear.of(MathUtils.floorMod(calcMonths, 12) + 1)
@@ -796,7 +796,7 @@ final case class LocalDate(year: Int, month: MonthOfYear, day: Int)
    */
   private[calendar] def toYearZeroDays: Long = {
     val y: Long = year
-    val m: Long = month.getValue
+    val m: Long = month.ordinal
     var total: Long = 0
     total += 365 * y
     if (y >= 0) total += (y + 3) / 4 - (y + 99) / 100 + (y + 399) / 400
@@ -958,9 +958,9 @@ final case class LocalDate(year: Int, month: MonthOfYear, day: Int)
   def minus(periodProvider: PeriodProvider): LocalDate = {
     val period: Period = Period.ofDateFields(periodProvider)
     val periodMonths: Long = period.totalMonths
-    var periodDays: Long = period.getDays
+    var periodDays: Long = period.days
     if (periodMonths == 0) return minusDays(periodDays)
-    val monthCount: Long = (year.toLong) * 12 + (month.getValue - 1)
+    val monthCount: Long = (year.toLong) * 12 + (month.ordinal - 1)
     val calcMonths: Long = monthCount - periodMonths
     val newYear: Int = ISOChronology.yearRule.checkValue(MathUtils.floorDiv(calcMonths, 12))
     val newMonth: MonthOfYear = MonthOfYear.of(MathUtils.floorMod(calcMonths, 12) + 1)

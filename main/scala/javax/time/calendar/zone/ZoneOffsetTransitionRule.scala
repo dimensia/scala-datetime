@@ -225,8 +225,8 @@ final class ZoneOffsetTransitionRule(val month: MonthOfYear,
     val stdOffsetByte: Int = (if (stdOffset % 900 == 0) stdOffset / 900 + 128 else 255)
     val beforeByte: Int = (if (beforeDiff == 0 || beforeDiff == 1800 || beforeDiff == 3600) beforeDiff / 1800 else 3)
     val afterByte: Int = (if (afterDiff == 0 || afterDiff == 1800 || afterDiff == 3600) afterDiff / 1800 else 3)
-    val dowByte: Int = (if (dayOfWeek == null) 0 else dayOfWeek.getValue)
-    var b: Int = (month.getValue << 28) + ((dayOfMonthIndicator + 32) << 22) + (dowByte << 19) + (timeByte << 14) + (timeDefinition.ordinal << 12) + (stdOffsetByte << 4) + (beforeByte << 2) + afterByte
+    val dowByte: Int = (if (dayOfWeek == null) 0 else dayOfWeek.ordinal)
+    var b: Int = (month.ordinal << 28) + ((dayOfMonthIndicator + 32) << 22) + (dowByte << 19) + (timeByte << 14) + (timeDefinition.ordinal << 12) + (stdOffsetByte << 4) + (beforeByte << 2) + afterByte
     out.writeInt(b)
     if (timeByte == 31) {
       out.writeInt(timeSecs)
@@ -253,7 +253,7 @@ final class ZoneOffsetTransitionRule(val month: MonthOfYear,
   def createTransition(year: Int): ZoneOffsetTransition = {
     var date: LocalDate = null
     if (dayOfMonthIndicator < 0) {
-      date = LocalDate(year, month, month.getLastDayOfMonth(ISOChronology.isLeapYear(year)) + 1 + dayOfMonthIndicator)
+      date = LocalDate(year, month, month.lastDayOfMonth(ISOChronology.isLeapYear(year)) + 1 + dayOfMonthIndicator)
       if (dayOfWeek != null) {
         date = date.`with`(DateAdjusters.previousOrCurrent(dayOfWeek))
       }

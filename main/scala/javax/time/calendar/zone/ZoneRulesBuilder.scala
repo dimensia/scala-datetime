@@ -301,7 +301,7 @@ class ZoneRulesBuilder {
     private[zone] def toTransition(standardOffset: ZoneOffset, savingsBefore: Period): ZoneOffsetTransition = {
       var date: LocalDate = null
       if (dayOfMonthIndicator < 0) {
-        date = LocalDate(year, month, month.getLastDayOfMonth(ISOChronology.isLeapYear(year)) + 1 + dayOfMonthIndicator)
+        date = LocalDate(year, month, month.lastDayOfMonth(ISOChronology.isLeapYear(year)) + 1 + dayOfMonthIndicator)
         if (dayOfWeek != null) {
           date = date.`with`(DateAdjusters.previousOrCurrent(dayOfWeek))
         }

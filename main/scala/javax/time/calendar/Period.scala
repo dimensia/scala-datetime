@@ -215,9 +215,9 @@ object Period {
     if (duration.isZero) {
       return Zero
     }
-    val hours: Int = MathUtils.safeToInt(duration.getSeconds / 3600)
-    val amount: Int = (duration.getSeconds % 3600L).toInt
-    return new Period(0, 0, 0, hours, amount / 60, amount % 60, duration.getNanoOfSecond)
+    val hours: Int = MathUtils.safeToInt(duration.seconds / 3600)
+    val amount: Int = (duration.seconds % 3600L).toInt
+    return new Period(0, 0, 0, hours, amount / 60, amount % 60, duration.nanos)
   }
 
   /**
@@ -479,6 +479,9 @@ object Period {
     if ((years | months | days | hours | minutes | seconds | nanos) == 0) Zero
     else new Period(years, months, days, hours, minutes, seconds, nanos)
   }
+
+  def apply(years: Int = 0, months: Int = 0, days: Int = 0, hours: Int = 0, minutes: Int = 0, seconds: Int = 0, nanos: Long = 0) =
+    of(years, months, days, hours, minutes, seconds, nanos)
 }
 
 /**
@@ -517,7 +520,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    *
    * @return the amount of years of this period
    */
-  def getYears: Int = years
+  //  def getYears: Int = years
 
   /**
    * Returns a copy of this period with the specified number of days added.
@@ -587,10 +590,9 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    *
    * @return the total number of hours
    */
-  def totalHoursWith24HourDays: Long = {
+  def totalHoursWith24HourDays: Long =
     if (this == Zero) 0
     else days * 24L + hours + (minutes + (seconds + (nanos / 1000000000L)) / 60L) / 60L
-  }
 
   /**
    * Returns a copy of this period with the specified amount of minutes.
@@ -603,10 +605,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * @param minutes the minutes to represent
    * @return a {@code Period} based on this period with the requested minutes, never null
    */
-  def withMinutes(minutes: Int): Period = {
-    if (minutes == this.minutes) this
-    else of(years, months, days, hours, minutes, seconds, nanos)
-  }
+  def withMinutes(minutes: Int): Period = if (minutes == this.minutes) this else of(years, months, days, hours, minutes, seconds, nanos)
 
   /**
    * Returns the hash code for this period.
@@ -637,7 +636,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * Calculates the accurate duration of this period.
    * <p>
    * The calculation uses the hours, minutes, seconds and nanoseconds fields.
-   * If years, months or days are present an exception is thrown.
+   * If years, months or days are present an excereturn ption is thrown.
    * <p>
    * The duration is calculated using assumptions:
    * <ul>
@@ -651,11 +650,11 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * @throws CalendricalException if the period cannot be converted as it contains years/months/days
    */
   def toDuration: Duration = {
-    if ((years | months | days) > 0) {
+    if ((years | months | days) > 0)
       throw new CalendricalException("Unable to convert period to duration as years/months/days are present: " + this)
-    }
+
     val secs: Long = (hours * 60L + minutes) * 60L + seconds
-    return Duration.ofSeconds(secs, nanos)
+    Duration.ofSeconds(secs, nanos)
   }
 
   /**
@@ -846,7 +845,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    *
    * @return the amount of days of this period
    */
-  def getDays: Int = days
+  //  def getDays: Int = days
 
   /**
    * Returns a copy of this period with the specified amount of nanoseconds.
@@ -878,7 +877,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    * @return the amount of nanoseconds of this period
    * @throws ArithmeticException if the number of nanoseconds exceeds the capacity of an {@code int }
    */
-  def getNanosInt: Int = MathUtils.safeToInt(nanos)
+  def nanosAsInt: Int = MathUtils.safeToInt(nanos)
 
   /**
    * Gets the total number of nanoseconds represented by this period using standard
@@ -908,7 +907,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    *
    * @return the amount of hours of this period
    */
-  def getHours: Int = hours
+  //  def getHours: Int = hours
 
   /**
    * Returns a copy of this period with all amounts normalized to the
@@ -962,7 +961,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    *
    * @return the amount of nanoseconds of this period
    */
-  def getNanos: Long = nanos
+  //  def getNanos: Long = nanos
 
   /**
    * Returns a copy of this period with the specified number of nanoseconds added.
@@ -997,7 +996,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    *
    * @return the amount of minutes of this period
    */
-  def getMinutes: Int = minutes
+  //  def getMinutes: Int = minutes
 
   /**
    * Gets the total number of minutes represented by this period using standard
@@ -1183,7 +1182,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
       throw new CalendricalException("Unable to convert period to duration as years/months are present: " + this)
     }
     val secs: Long = ((days * 24L + hours) * 60L + minutes) * 60L + seconds
-    return Duration.ofSeconds(secs, nanos)
+    Duration.ofSeconds(secs, nanos)
   }
 
   /**
@@ -1214,6 +1213,8 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
     of(MathUtils.safeSubtract(years, other.years), MathUtils.safeSubtract(months, other.months), MathUtils.safeSubtract(days, other.days), MathUtils.safeSubtract(hours, other.hours), MathUtils.safeSubtract(minutes, other.minutes), MathUtils.safeSubtract(seconds, other.seconds), MathUtils.safeSubtract(nanos, other.nanos))
   }
 
+  def -(periodProvider: PeriodProvider) = minus(periodProvider)
+
   /**
    * Gets the total number of days represented by this period using standard
    * assumptions for the meaning of day, hour, minute and second.
@@ -1230,10 +1231,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    *
    * @return the total number of days
    */
-  def totalDaysWith24HourDays: Long = {
-    if (this == Zero) 0
-    else days + (hours + (minutes + (seconds + (nanos / 1000000000L)) / 60L) / 60L) / 24L
-  }
+  def totalDaysWith24HourDays: Long = if (this == Zero) 0 else days + (hours + (minutes + (seconds + (nanos / 1000000000L)) / 60L) / 60L) / 24L
 
   /**
    * Is this period equal to the specified period.
@@ -1254,7 +1252,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    *
    * @return the amount of months of this period
    */
-  def getMonths: Int = months
+  //  def getMonths: Int = months
 
   /**
    * Returns a copy of this period with the specified number of minutes subtracted.
@@ -1457,7 +1455,7 @@ sealed class Period private(val years: Int, val months: Int, val days: Int, val 
    *
    * @return the amount of seconds of this period
    */
-  def getSeconds: Int = seconds
+  //  def getSeconds: Int = seconds
 
   /**
    * Gets the total number of years represented by this period using standard

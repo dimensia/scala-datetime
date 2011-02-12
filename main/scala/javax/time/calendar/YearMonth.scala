@@ -314,7 +314,7 @@ final case class YearMonth(year: Int, month: MonthOfYear) extends Calendrical wi
    *
    * @return a suitable hash code
    */
-  override def hashCode: Int = year ^ (month.getValue << 27)
+  override def hashCode: Int = year ^ (month.ordinal << 27)
 
   /**
    * Outputs this year-month as a  {@code String}, such as  {@code 2007 -12}.
@@ -325,7 +325,7 @@ final case class YearMonth(year: Int, month: MonthOfYear) extends Calendrical wi
    */
   override def toString: String = {
     val yearValue: Int = year
-    val monthValue: Int = month.getValue
+    val monthValue: Int = month.ordinal
     val absYear: Int = math.abs(yearValue)
     val buf: StringBuilder = new StringBuilder(9)
     if (absYear < 1000) {
@@ -430,7 +430,7 @@ final case class YearMonth(year: Int, month: MonthOfYear) extends Calendrical wi
     if (months == 0) {
       return this
     }
-    val monthCount: Long = year * 12L + (month.getValue - 1)
+    val monthCount: Long = year * 12L + (month.ordinal - 1)
     val calcMonths: Long = monthCount + months
     val newYear: Int = ISOChronology.yearRule.checkValue(MathUtils.floorDiv(calcMonths, 12))
     val newMonth: MonthOfYear = MonthOfYear.of(MathUtils.floorMod(calcMonths, 12) + 1)
@@ -507,7 +507,7 @@ final case class YearMonth(year: Int, month: MonthOfYear) extends Calendrical wi
     if (months == 0) {
       return this
     }
-    val monthCount: Long = year * 12L + (month.getValue - 1)
+    val monthCount: Long = year * 12L + (month.ordinal - 1)
     val calcMonths: Long = monthCount - months
     val newYear: Int = ISOChronology.yearRule.checkValue(MathUtils.floorDiv(calcMonths, 12))
     val newMonth: MonthOfYear = MonthOfYear.of(MathUtils.floorMod(calcMonths, 12) + 1)

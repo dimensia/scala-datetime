@@ -112,7 +112,7 @@ object ISOChronology extends ISOChronology {
    * @param date  the date to use, not null
    * @return the day-of-year
    */
-  private[calendar] def getDayOfYearFromDate(date: LocalDate): Int = date.getMonthOfYear.getMonthStartDayOfYear(date.isLeapYear) + date.getDayOfMonth - 1
+  private[calendar] def getDayOfYearFromDate(date: LocalDate): Int = date.getMonthOfYear.monthStartDayOfYear(date.isLeapYear) + date.getDayOfMonth - 1
 
   /**
    * Calculates the date from a year and day-of-year.
@@ -128,11 +128,11 @@ object ISOChronology extends ISOChronology {
       throw new InvalidCalendarFieldException("DayOfYear 366 is invalid for year " + year, dayOfYearRule)
     }
     var moy: MonthOfYear = MonthOfYear.of((dayOfYear - 1) / 31 + 1)
-    val monthEnd: Int = moy.getMonthEndDayOfYear(leap)
+    val monthEnd: Int = moy.monthEndDayOfYear(leap)
     if (dayOfYear > monthEnd) {
       moy = moy.next
     }
-    val dom: Int = dayOfYear - moy.getMonthStartDayOfYear(leap) + 1
+    val dom: Int = dayOfYear - moy.monthStartDayOfYear(leap) + 1
     return LocalDate(year, moy, dom)
   }
 
@@ -147,7 +147,7 @@ object ISOChronology extends ISOChronology {
     if (date.getMonthOfYear == MonthOfYear.January) {
       val dom: Int = date.getDayOfMonth
       if (dom < 4) {
-        val dow: Int = date.getDayOfWeek.getValue
+        val dow: Int = date.getDayOfWeek.ordinal
         if (dow > dom + 3) {
           year = year.previous
         }
@@ -156,7 +156,7 @@ object ISOChronology extends ISOChronology {
     else if (date.getMonthOfYear == MonthOfYear.December) {
       val dom: Int = date.getDayOfMonth
       if (dom > 28) {
-        val dow: Int = date.getDayOfWeek.getValue
+        val dow: Int = date.getDayOfWeek.ordinal
         if (dow <= dom % 7) {
           year = year.next
         }
@@ -174,7 +174,7 @@ object ISOChronology extends ISOChronology {
   private[calendar] def getWeekOfWeekBasedYearFromDate(date: LocalDate): Int = {
     val wby: Int = getWeekBasedYearFromDate(date)
     val yearStart: LocalDate = LocalDate(wby, MonthOfYear.January, 4)
-    MathUtils.safeToInt((date.toModifiedJulianDays - yearStart.toModifiedJulianDays + yearStart.getDayOfWeek.getValue - 1) / 7 + 1)
+    MathUtils.safeToInt((date.toModifiedJulianDays - yearStart.toModifiedJulianDays + yearStart.getDayOfWeek.ordinal - 1) / 7 + 1)
   }
 
   /**
@@ -886,7 +886,7 @@ object ISOChronology extends ISOChronology {
 
     override def derive(calendrical: Calendrical): Option[MonthOfYear] = calendrical.get(LocalDate.rule).map(_.getMonthOfYear)
 
-    override def convertValueToInt(value: MonthOfYear): Int = value.getValue
+    override def convertValueToInt(value: MonthOfYear): Int = value.ordinal
 
     override def convertIntToValue(value: Int): MonthOfYear = MonthOfYear.of(value)
 
@@ -952,7 +952,7 @@ object ISOChronology extends ISOChronology {
 
     override def derive(calendrical: Calendrical): Option[DayOfWeek] = calendrical.get(LocalDate.rule).map(getDayOfWeekFromDate(_))
 
-    override def convertValueToInt(value: DayOfWeek): Int = value.getValue
+    override def convertValueToInt(value: DayOfWeek): Int = value.ordinal
 
     override def convertIntToValue(value: Int): DayOfWeek = DayOfWeek.of(value)
 
@@ -1029,7 +1029,7 @@ object ISOChronology extends ISOChronology {
       return Some(AmPmOfDay.of((hour % 24) / 12))
     }
 
-    override def convertValueToInt(value: AmPmOfDay): Int = value.getValue
+    override def convertValueToInt(value: AmPmOfDay): Int = value.ordinal
 
     override def convertIntToValue(value: Int): AmPmOfDay = AmPmOfDay.of(value)
 

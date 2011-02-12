@@ -132,7 +132,7 @@ sealed abstract case class AmPmOfDay(ordinal: Int) extends Calendrical {
    * @param locale the locale to use, not null
    * @return the short text value of the AM/PM, never null
    */
-  def getShortText(locale: Locale): String = ISOChronology.amPmOfDayRule.getText(getValue, locale, TextStyle.Short)
+  def shortText(locale: Locale): String = ISOChronology.amPmOfDayRule.getText(ordinal, locale, TextStyle.Short)
 
   /**
    * Gets the full textual representation of this AM/PM, such as 'AM' or 'PM'.
@@ -148,7 +148,7 @@ sealed abstract case class AmPmOfDay(ordinal: Int) extends Calendrical {
    * @param locale the locale to use, not null
    * @return the long text value of the AM/PM, never null
    */
-  def getText(locale: Locale): String = ISOChronology.amPmOfDayRule.getText(getValue, locale, TextStyle.Full)
+  def text(locale: Locale): String = ISOChronology.amPmOfDayRule.getText(ordinal, locale, TextStyle.Full)
 
   /**
    * Gets the AM/PM {@code int} value.
@@ -157,7 +157,7 @@ sealed abstract case class AmPmOfDay(ordinal: Int) extends Calendrical {
    *
    * @return the AM/PM value, from 0 (AM) to 1 (PM)
    */
-  def getValue: Int = ordinal
+//  def getValue: Int = ordinal
 
   /**
    * Is this instance representing PM (post-meridiem).

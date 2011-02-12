@@ -271,7 +271,7 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Ordered[MonthOfYear]
    *
    * @return the month-of-year, from 1 (January) to 12 (December)
    */
-  def getValue: Int = ordinal
+//  def getValue: Int = ordinal
 
   /**
    * Gets the next month-of-year.
@@ -309,7 +309,7 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Ordered[MonthOfYear]
   /**
    * Gets the value of the specified calendrical rule.
    * <p>
-   * This returns the one of the month values if the type of the rule
+ordinalordinal   * This returns the one of the month values if the type of the rule
    * is {@code MonthOfYear}. Other rules will return {@code null}.
    *
    * @param rule the rule to use, not null
@@ -388,7 +388,7 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Ordered[MonthOfYear]
    * @param locale the locale to use, not null
    * @return the full text value of the month-of-year, never null
    */
-  def getText(locale: Locale): String = ISOChronology.monthOfYearRule.getText(getValue, locale, TextStyle.Full)
+  def text(locale: Locale): String = ISOChronology.monthOfYearRule.getText(ordinal, locale, TextStyle.Full)
 
   /**
    * Gets the quarter that this month falls in.
@@ -398,7 +398,7 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Ordered[MonthOfYear]
    *
    * @return the quarter-of-year, never null
    */
-  def getQuarterOfYear: QuarterOfYear = {
+  def quarterOfYear: QuarterOfYear = {
     if (ordinal < 4) QuarterOfYear.Q1
     else if (ordinal < 7) QuarterOfYear.Q2
     else if (ordinal < 10) QuarterOfYear.Q3
@@ -414,7 +414,7 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Ordered[MonthOfYear]
    *
    * @return the month of season, from 1 to 3
    */
-  def getMonthOfQuarter: Int = {
+  def monthOfQuarter: Int = {
     val result = (ordinal % 3)
     if (result == 0) 3 else result
   }
@@ -433,7 +433,7 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Ordered[MonthOfYear]
    * @param locale the locale to use, not null
    * @return the short text value of the month-of-year, never null
    */
-  def getShortText(locale: Locale): String = ISOChronology.monthOfYearRule.getText(getValue, locale, TextStyle.Short)
+  def shortText(locale: Locale): String = ISOChronology.monthOfYearRule.getText(ordinal, locale, TextStyle.Short)
 
   /**
    * Gets the day-of-month for last day of this month.
@@ -444,7 +444,7 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Ordered[MonthOfYear]
    * @param leapYear true if the length is required for a leap year
    * @return the last day of this month, from 28 to 31
    */
-  def getLastDayOfMonth(leapYear: Boolean): Int = lengthInDays(leapYear)
+  def lastDayOfMonth(leapYear: Boolean): Int = lengthInDays(leapYear)
 
   val name = this.getClass.getName
 
@@ -459,7 +459,7 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Ordered[MonthOfYear]
    * @param leapYear  true if the length is required for a leap year
    * @return the last day of this month, from 1 to 335
    */
-  def getMonthStartDayOfYear(leapYear: Boolean): Int = {
+  def monthStartDayOfYear(leapYear: Boolean): Int = {
     val leap: Int = if (leapYear) 1 else 0
     this match {
       case January => 1
@@ -486,5 +486,5 @@ sealed abstract class MonthOfYear(val ordinal: Int) extends Ordered[MonthOfYear]
    * @param leapYear  true if the length is required for a leap year
    * @return the last day of this month, from 31 to 366
    */
-  def getMonthEndDayOfYear(leapYear: Boolean): Int = getMonthStartDayOfYear(leapYear) + lengthInDays(leapYear) - 1;
+  def monthEndDayOfYear(leapYear: Boolean): Int = monthStartDayOfYear(leapYear) + lengthInDays(leapYear) - 1;
 }

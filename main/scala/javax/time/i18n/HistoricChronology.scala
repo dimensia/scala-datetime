@@ -127,7 +127,7 @@ object HistoricChronology {
             date = HistoricDate.of(year, moy, domVal)
           }
           else {
-            date = HistoricDate.of(year, MonthOfYear.January, 1).plusMonths(moy.getValue - 1).plusMonths(-1).plusDays(domVal).plusDays(-1)
+            date = HistoricDate.of(year, MonthOfYear.January, 1).plusMonths(moy.ordinal - 1).plusMonths(-1).plusDays(domVal).plusDays(-1)
           }
           merger.storeMerged(LocalDate.rule, date.toLocalDate)
           merger.removeProcessed(this)

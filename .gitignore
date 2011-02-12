@@ -2,8 +2,6 @@
 **.iml
 **.java
 **._java_
-javax/time/i18n/JapaneseChronology.scala
-javax/time/i18n/JapaneseDate.scala
-javax/time/i18n/JapaneseEra.scala
 /out
+/test
 

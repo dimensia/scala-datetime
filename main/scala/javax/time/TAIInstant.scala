@@ -190,8 +190,8 @@ final case class TAIInstant(seconds: Long, nanos: Int) extends Ordered[TAIInstan
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   def minus(duration: Duration): TAIInstant = {
-    val secsToSubtract: Long = duration.getSeconds
-    val nanosToSubtract: Int = duration.getNanoOfSecond
+    val secsToSubtract: Long = duration.seconds
+    val nanosToSubtract: Int = duration.nanos
     if ((secsToSubtract | nanosToSubtract) == 0) {
       return this
     }
@@ -283,8 +283,8 @@ final case class TAIInstant(seconds: Long, nanos: Int) extends Ordered[TAIInstan
    * @throws ArithmeticException if the calculation exceeds the supported range
    */
   def plus(duration: Duration): TAIInstant = {
-    val secsToAdd: Long = duration.getSeconds
-    val nanosToAdd: Int = duration.getNanoOfSecond
+    val secsToAdd: Long = duration.seconds
+    val nanosToAdd: Int = duration.nanos
     if ((secsToAdd | nanosToAdd) == 0) return this
     val secs: Long = MathUtils.safeAdd(seconds, secsToAdd)
     val nanoAdjustment: Long = (nanos.toLong) + nanosToAdd

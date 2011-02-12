@@ -291,8 +291,8 @@ object OffsetDateTime {
   def ofInstant(instantProvider: InstantProvider, offset: ZoneOffset): OffsetDateTime = {
     val instant: Instant = Instant.of(instantProvider)
     ISOChronology.checkNotNull(offset, "ZoneOffset must not be null")
-    val localSeconds: Long = instant.getEpochSeconds + offset.getAmountSeconds
-    val ldt: LocalDateTime = LocalDateTime.create(localSeconds, instant.getNanoOfSecond)
+    val localSeconds: Long = instant.seconds + offset.getAmountSeconds
+    val ldt: LocalDateTime = LocalDateTime.create(localSeconds, instant.nanos)
     new OffsetDateTime(ldt, offset)
   }
 }

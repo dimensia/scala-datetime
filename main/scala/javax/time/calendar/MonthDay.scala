@@ -349,7 +349,7 @@ final case class MonthDay(month: MonthOfYear, day: Int) extends Calendrical with
    *
    * @return a suitable hash code
    */
-  override def hashCode: Int = (month.getValue << 6) + day
+  override def hashCode: Int = (month.ordinal << 6) + day
 
   /**
    * Checks if the year is valid for this month-day.
@@ -409,7 +409,7 @@ final case class MonthDay(month: MonthOfYear, day: Int) extends Calendrical with
    * @return the formatted month-day, never null
    */
   override def toString: String = {
-    val monthValue: Int = month.getValue
+    val monthValue: Int = month.ordinal
     val dayValue: Int = day
     new StringBuilder(10)
       .append("--")

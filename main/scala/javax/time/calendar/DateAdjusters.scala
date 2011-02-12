@@ -129,7 +129,7 @@ object DateAdjusters {
     object LastDayOfMonth extends DateAdjuster {
       /**{@inheritDoc}*/
       override def adjustDate(date: LocalDate): LocalDate = {
-        val dom: Int = date.getMonthOfYear.getLastDayOfMonth(ISOChronology.isLeapYear(date.getYear))
+        val dom: Int = date.getMonthOfYear.lastDayOfMonth(ISOChronology.isLeapYear(date.getYear))
         return date.copy(month = MonthOfYear(dom))
       }
     }

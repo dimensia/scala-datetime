@@ -196,8 +196,8 @@ object PeriodFields {
   def of(duration: Duration): PeriodFields = {
     checkNotNull(duration, "Duration must not be null")
     val internalMap: TreeMap[PeriodUnit, PeriodField] = createMap
-    internalMap.updated(ISOChronology.periodSeconds, PeriodField.of(duration.getSeconds, ISOChronology.periodSeconds))
-    internalMap.updated(ISOChronology.periodNanos, PeriodField.of(duration.getNanoOfSecond, ISOChronology.periodNanos))
+    internalMap.updated(ISOChronology.periodSeconds, PeriodField.of(duration.seconds, ISOChronology.periodSeconds))
+    internalMap.updated(ISOChronology.periodNanos, PeriodField.of(duration.nanos, ISOChronology.periodNanos))
     return create(internalMap)
   }
 

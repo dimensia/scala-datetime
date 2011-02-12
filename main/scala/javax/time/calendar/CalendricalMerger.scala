@@ -76,8 +76,10 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
    * Removes any field from the processing map that can be derived from another field.
    */
   private def removeDerivable: Unit = {
-    val derivableValues = processingMap.filter({case (k,v) => k.derive(this) != None})
-  //  processingMap = processingMap -- derivableValues        //FIXME
+    val derivableValues = processingMap.filter({
+      case (k, v) => k.derive(this) != None
+    })
+    //  processingMap = processingMap -- derivableValues        //FIXME
   }
 
   /**
@@ -227,7 +229,13 @@ final class CalendricalMerger(private var context: CalendricalContext) extends C
    * @param additionalOverflow the additional overflow to store, not null
    */
   def addToOverflow(additionalOverflow: Period): Unit = {
-    if ((overflow.getYears != 0 && additionalOverflow.getYears != 0) || (overflow.getMonths != 0 && additionalOverflow.getMonths != 0) || (overflow.getDays != 0 && additionalOverflow.getDays != 0) || (overflow.getHours != 0 && additionalOverflow.getHours != 0) || (overflow.getMinutes != 0 && additionalOverflow.getMinutes != 0) || (overflow.getSeconds != 0 && additionalOverflow.getSeconds != 0) || (overflow.getNanos != 0 && additionalOverflow.getNanos != 0)) {
+    if ((overflow.years != 0 && additionalOverflow.years != 0) ||
+      (overflow.months != 0 && additionalOverflow.months != 0) ||
+      (overflow.days != 0 && additionalOverflow.days != 0) ||
+      (overflow.hours != 0 && additionalOverflow.hours != 0) ||
+      (overflow.minutes != 0 && additionalOverflow.minutes != 0) ||
+      (overflow.seconds != 0 && additionalOverflow.seconds != 0) ||
+      (overflow.nanos != 0 && additionalOverflow.nanos != 0)) {
       throw new CalendricalException("Unable to complete merge as input contains two conflicting out of range values")
     }
     overflow = overflow.plus(additionalOverflow)
