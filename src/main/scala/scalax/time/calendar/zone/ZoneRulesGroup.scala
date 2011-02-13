@@ -144,7 +144,7 @@ object ZoneRulesGroup {
    *
    * @return an unsorted, independent, modifiable list of available groups, never null
    */
-  def getAvailableGroups: Buffer[ZoneRulesGroup] = ArrayBuffer[ZoneRulesGroup](Groups.values.toArray.asInstanceOf[Array[ZoneRulesGroup]]: _*)
+  def availableGroups: Buffer[ZoneRulesGroup] = ArrayBuffer[ZoneRulesGroup](Groups.values.toArray.asInstanceOf[Array[ZoneRulesGroup]]: _*)
 
   /**
    * Gets a group by ID, such as 'TZDB'.
@@ -159,7 +159,7 @@ object ZoneRulesGroup {
    * @return the zone rules group, never null
    * @throws CalendricalException if the group ID is not found
    */
-  def getGroup(groupID: String): ZoneRulesGroup = {
+  def group(groupID: String): ZoneRulesGroup = {
     ZoneRules.checkNotNull(groupID, "Group ID must not be null")
     var group: ZoneRulesGroup = Groups.get(groupID)
     if (group == null) {
@@ -195,7 +195,7 @@ object ZoneRulesGroup {
    *
    * @return an unmodifiable set of parsable group:region IDs, never null
    */
-  def getParsableIDs: Set[String] = Set(IDs.keySet.toArray.asInstanceOf[Array[String]]: _*)
+  def parsableIDs: Set[String] = Set(IDs.keySet.toArray.asInstanceOf[Array[String]]: _*)
 }
 
 /**
@@ -227,7 +227,7 @@ final class ZoneRulesGroup(val groupID: String) {
    * @return the latest version ID for the region, never null
    * @throws CalendricalException if the region ID is not found
    */
-  def getLatestVersionID(regionID: String): String = {
+  def latestVersionID(regionID: String): String = {
     ZoneRules.checkNotNull(regionID, "Region ID must not be null")
     for (version <- versions.get.values) {
       if (version.isRegionID(regionID)) return version.getVersionID
@@ -243,7 +243,7 @@ final class ZoneRulesGroup(val groupID: String) {
    * @return the matched zone rules, never null
    * @throws CalendricalException if the rules cannot be found
    */
-  def getRules(regionID: String, versionID: String): ZoneRules = {
+  def rules(regionID: String, versionID: String): ZoneRules = {
     ZoneRules.checkNotNull(regionID, "Region ID must not be null")
     ZoneRules.checkNotNull(versionID, "Version ID must not be null")
     val version: ZoneRulesVersion = versions.get.getOrElse(versionID, throw new CalendricalException("Unknown version for group: " + groupID + ':' + regionID + '#' + versionID))
@@ -267,7 +267,7 @@ final class ZoneRulesGroup(val groupID: String) {
    * @param versionID the time-zone version ID, empty means any version, not null
    * @return the region IDs, unmodifiable, never null
    */
-  def getRegionIDs(versionID: String): Set[String] = {
+  def regionIDs(versionID: String): Set[String] = {
     ZoneRules.checkNotNull(versionID, "Version ID must not be null")
     versions.get.get(versionID) match {
       case Some(version) => version.getRegionIDs
@@ -293,15 +293,15 @@ final class ZoneRulesGroup(val groupID: String) {
    * @return the matched zone rules, never null
    * @throws CalendricalException if the rules cannot be found
    */
-  def getRulesValidFor(regionID: String, versionID: String, dateTime: OffsetDateTime): ZoneRules = {
+  def rulesValidFor(regionID: String, versionID: String, dateTime: OffsetDateTime): ZoneRules = {
     ZoneRules.checkNotNull(regionID, "Region ID must not be null")
     ZoneRules.checkNotNull(versionID, "Version ID must not be null")
     ZoneRules.checkNotNull(dateTime, "Valid date-time must not be null")
-    val rules: ZoneRules = getRules(regionID, versionID)
-    if (rules.isValidDateTime(dateTime) == false) {
+    val _rules: ZoneRules = rules(regionID, versionID)
+    if (_rules.isValidDateTime(dateTime) == false) {
       throw new CalendricalException("Rules in time-zone " + groupID + ':' + regionID + '#' + versionID + " are invalid for date-time " + dateTime)
     }
-    rules
+    _rules
   }
 
   /**
@@ -372,14 +372,14 @@ final class ZoneRulesGroup(val groupID: String) {
    * @return the latest version ID for the group, never null
    * @throws CalendricalException if the region ID is not found
    */
-  def getLatestVersionID: String = versions.get.firstKey
+  def latestVersionID: String = versions.get.firstKey
 
   /**
    * Gets the ID of the group, such as 'TZDB'.
    *
    * @return the ID of the group, never null
    */
-  def getID: String = groupID
+  def id: String = groupID
 
   /**
    * Checks if the region#version ID combination is valid.
@@ -424,7 +424,7 @@ final class ZoneRulesGroup(val groupID: String) {
    * @throws CalendricalException if the region is unknown
    * @throws CalendricalException if the rules cannot be found
    */
-  def getLatestVersionIDValidFor(regionID: String, dateTime: OffsetDateTime): String = {
+  def latestVersionIDValidFor(regionID: String, dateTime: OffsetDateTime): String = {
     ZoneRules.checkNotNull(regionID, "Region ID must not be null")
     ZoneRules.checkNotNull(dateTime, "OffsetDateTime must not be null")
     var foundRegion: Boolean = false
@@ -456,7 +456,7 @@ final class ZoneRulesGroup(val groupID: String) {
    * @return the version IDs sorted from newest to oldest, unmodifiable, never null
    * @throws CalendricalException if the region ID is not found
    */
-  def getAvailableVersionIDs: Set[String] = versions.get.keySet.asInstanceOf[Set[String]]
+  def availableVersionIDs: Set[String] = versions.get.keySet.asInstanceOf[Set[String]]
 
   //FIXME remove cast
 

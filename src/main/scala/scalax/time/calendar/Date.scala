@@ -77,7 +77,7 @@ object Date {
   def now(implicit clock: Clock = Clock.systemDefaultZone): Date = {
     ISOChronology.checkNotNull(clock, "Clock must not be null")
     val instant: Instant = clock.instant
-    val offset: ZoneOffset = clock.getZone.getRules.getOffset(instant)
+    val offset: ZoneOffset = clock.getZone.rules.offset(instant)
     val epochSecs: Long = instant.seconds + offset.getAmountSeconds
     val yearZeroDays: Long = MathUtils.floorDiv(epochSecs, ISOChronology.SecondsPerDay) + ISOChronology.Days0000To1970
     Date.ofYearZeroDays(yearZeroDays)
@@ -401,7 +401,7 @@ final case class Date(year: Int, month: MonthOfYear, day: Int)
    * achieved using a {@link ZoneResolvers#postGapPreOverlap ( ) zone resolver}.
    * <p>
    * To convert to a specific time in a given time-zone call {@link #atTime ( Time ) }
-   * followed by {@link DateTime#atZone ( ZoneId )}. Note that the resolver used
+   * followed by {@link DateTime#atZone ( TimeZone )}. Note that the resolver used
    * by {@code atZone()} is different to that used here (it chooses the later
    * offset in an overlap, whereas this method chooses the earlier offset).
    * <p>
@@ -410,7 +410,7 @@ final case class Date(year: Int, month: MonthOfYear, day: Int)
    * @param zone the time-zone to use, not null
    * @return the zoned date-time formed from this date and the earliest valid time for the zone, never null
    */
-  def atStartOfDayInZone(zone: ZoneId): ZonedDateTime = {
+  def atStartOfDayInZone(zone: TimeZone): ZonedDateTime = {
     ZonedDateTime.of(this, Time.Midnight, zone, ZoneResolvers.postGapPreOverlap)
   }
 

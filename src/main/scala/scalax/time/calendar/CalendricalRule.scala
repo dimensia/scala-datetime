@@ -67,7 +67,7 @@ import scalax.time.CalendricalException
  * @param periodRange the period range, may be null
  */
 @SerialVersionUID(1L)
-abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chronology, name: String, periodUnit: PeriodUnit, periodRange: PeriodUnit)
+abstract class CalendricalRule[T] protected(reified: Class[T], val chronology: Chronology, val name: String, val periodUnit: PeriodUnit, val periodRange: PeriodUnit)
   extends Ordered[CalendricalRule[T]] with Comparator[Calendrical] with Serializable {
   if (reified == null) {
     throw new NullPointerException("Reified class must not be null")
@@ -155,7 +155,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    *
    * @return the ID of the rule, never null
    */
-  final def getID: String = id
+//  final def getID: String = id
 
   /**
    * Derives the value of this rule from a calendrical.
@@ -327,7 +327,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    *
    * @return the name of the rule, never null
    */
-  def getName: String = name
+//  def getName: String = name
 
   /**
    * Gets the unit that the rule is measured in.
@@ -343,7 +343,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    *
    * @return the unit defining the rule unit, null if this rule isn't based on a period
    */
-  def getPeriodUnit: PeriodUnit = periodUnit
+//  def getPeriodUnit: PeriodUnit = periodUnit
 
   /**
    * Gets the range that the rule is bound by.
@@ -361,7 +361,7 @@ abstract class CalendricalRule[T] protected(reified: Class[T], chronology: Chron
    * @return the unit defining the rule range, null if unbounded,
    *  or if this rule isn't based on a period
    */
-  def getPeriodRange: PeriodUnit = periodRange
+//  def getPeriodRange: PeriodUnit = periodRange
 
   /**
    * Returns a string representation of the rule.

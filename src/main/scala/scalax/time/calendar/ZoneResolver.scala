@@ -72,9 +72,9 @@ abstract class ZoneResolver protected {
    * @return the resolved values, returned as a (year,month,day) tuple, never null
    * @throws CalendricalException if the date-time cannot be resolved
    */
-  final def resolve(zone: ZoneId, newDateTime: DateTime, oldDateTime: ZonedDateTime): OffsetDateTime = {
-    var rules: ZoneRules = (if (oldDateTime != null) oldDateTime.getApplicableRules else zone.getRules)
-    var info: ZoneOffsetInfo = rules.getOffsetInfo(newDateTime)
+  final def resolve(zone: TimeZone, newDateTime: DateTime, oldDateTime: ZonedDateTime): OffsetDateTime = {
+    var rules: ZoneRules = (if (oldDateTime != null) oldDateTime.getApplicableRules else zone.rules)
+    var info: ZoneOffsetInfo = rules.offsetInfo(newDateTime)
     if (info.isTransition == false) {
       return OffsetDateTime.of(newDateTime, info.getOffset)
     }
@@ -120,7 +120,7 @@ abstract class ZoneResolver protected {
    * @return the resolved offset date-time, never null
    * @throws IllegalCalendarFieldValueException if the offset cannot be calculated
    */
-  protected[calendar] def handleGap(zone: ZoneId, rules: ZoneRules, gapInfo: ZoneOffsetTransition, newDateTime: DateTime, oldDateTime: OffsetDateTime): OffsetDateTime
+  protected[calendar] def handleGap(zone: TimeZone, rules: ZoneRules, gapInfo: ZoneOffsetTransition, newDateTime: DateTime, oldDateTime: OffsetDateTime): OffsetDateTime
 
   /**
    * Defines the strategy for selecting an offset to use for a local date-time
@@ -132,7 +132,7 @@ abstract class ZoneResolver protected {
    * <p>
    * Firstly, the discontinuity, which represents the discontinuity in the local
    * time-line that needs to be resolved. This is the result from
-   * {@code zone.getOffsetInfo ( newDateTime )} and is provided to improve
+   * {@code zone.offsetInfo ( newDateTime )} and is provided to improve
    * performance.
    * <p>
    * Secondly, the old date-time, which is the original offset date-time that
@@ -144,8 +144,8 @@ abstract class ZoneResolver protected {
    * <p>
    * A typical implementation might be:
    * <pre>
-   *  if (oldDateTime != null && discontinuity.containsOffset(oldDateTime.getOffset()))   {
-   *    return OffsetDateTime.dateTime(newDateTime, oldDateTime.getOffset());
+   *  if (oldDateTime != null && discontinuity.containsOffset(oldDateTime.offset()))   {
+   *    return OffsetDateTime.dateTime(newDateTime, oldDateTime.offset());
    * }
    *  return OffsetDateTime.dateTime(newDateTime, discontinuity.getOffsetBefore());
    * </pre>
@@ -161,5 +161,5 @@ abstract class ZoneResolver protected {
    * @return the resolved offset date-time, never null
    * @throws IllegalCalendarFieldValueException if the offset cannot be calculated
    */
-  protected[calendar] def handleOverlap(zone: ZoneId, rules: ZoneRules, overlapInfo: ZoneOffsetTransition, newDateTime: DateTime, oldDateTime: OffsetDateTime): OffsetDateTime
+  protected[calendar] def handleOverlap(zone: TimeZone, rules: ZoneRules, overlapInfo: ZoneOffsetTransition, newDateTime: DateTime, oldDateTime: OffsetDateTime): OffsetDateTime
 }

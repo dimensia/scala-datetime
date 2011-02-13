@@ -36,7 +36,7 @@ import collection.mutable.HashMap
 import collection.immutable.HashSet
 
 import scalax.time.calendar.Calendrical
-import scalax.time.calendar.ZoneId
+import scalax.time.calendar.TimeZone
 import scalax.time.calendar.ZoneOffset
 import scalax.time.calendar.format.DateTimeFormatterBuilder.TextStyle
 import scalax.time.calendar.zone.ZoneRulesGroup
@@ -154,21 +154,21 @@ final class ZoneIdPrinterParser private[format](textStyle: DateTimeFormatterBuil
 
   /**{@inheritDoc}*/
   override def print(calendrical: Calendrical, appendable: Appendable, symbols: DateTimeFormatSymbols): Unit = {
-    val zone: ZoneId = calendrical.get(ZoneId.rule).getOrElse(throw new CalendricalPrintException("Unable to print ZoneId"))
+    val zone: TimeZone = calendrical.get(TimeZone.rule).getOrElse(throw new CalendricalPrintException("Unable to print TimeZone"))
 
     if (textStyle == null) {
-      appendable.append(zone.getID)
+      appendable.append(zone.id)
     }
     else if (textStyle == TextStyle.Full) {
-      appendable.append(zone.getName)
+      appendable.append(zone.name)
     }
     else {
-      appendable.append(zone.getShortName)
+      appendable.append(zone.shortName)
     }
   }
 
   /**{@inheritDoc}*/
-  override def isPrintDataAvailable(calendrical: Calendrical): Boolean = (calendrical.get(ZoneId.rule) != null)
+  override def isPrintDataAvailable(calendrical: Calendrical): Boolean = (calendrical.get(TimeZone.rule) != null)
 
   /**
    * {@inheritDoc }
@@ -187,7 +187,7 @@ final class ZoneIdPrinterParser private[format](textStyle: DateTimeFormatterBuil
 //    if (position > length) {
 //      throw new IndexOutOfBoundsException
 //    }
-//    var ids: Set[String] = ZoneRulesGroup.getParsableIDs
+//    var ids: Set[String] = ZoneRulesGroup.parsableIDs
 //    if (ids.size == 0) {
 //      return ~position
 //    }
@@ -205,11 +205,11 @@ final class ZoneIdPrinterParser private[format](textStyle: DateTimeFormatterBuil
 //      val startPos: Int = position + 3
 //      val endPos: Int = new ZoneOffsetPrinterParser("", true, true).parse(newContext, parseText, startPos)
 //      if (endPos < 0) {
-//        context.setParsed(ZoneId.rule, ZoneId.UTC)
+//        context.setParsed(TimeZone.rule, TimeZone.UTC)
 //        return startPos
 //      }
-//      val zone: ZoneId = ZoneId.of(newContext.getParsed(ZoneOffset.rule).asInstanceOf[ZoneOffset])
-//      context.setParsed(ZoneId.rule, zone)
+//      val zone: TimeZone = TimeZone.of(newContext.getParsed(ZoneOffset.rule).asInstanceOf[ZoneOffset])
+//      context.setParsed(TimeZone.rule, zone)
 //      return endPos
 //    }
 //    var parsedZoneId: String = null
@@ -226,10 +226,10 @@ final class ZoneIdPrinterParser private[format](textStyle: DateTimeFormatterBuil
 //      }
 //    }
 //    if (parsedZoneId != null && preparedIDs.contains(parsedZoneId)) {
-//      var zone: ZoneId = ZoneId.of(parsedZoneId)
+//      var zone: TimeZone = TimeZone.of(parsedZoneId)
 //      var pos: Int = position + parsedZoneId.length
 //      if (pos + 1 < length && parseText.charAt(pos) == '#') {
-//        val versions: Set[String] = zone.getGroup.getAvailableVersionIDs
+//        val versions: Set[String] = zone.group.availableVersionIDs
 //        breakable{
 //          for (version <- versions) {
 //            if (parseText.regionMatches(pos + 1, version, 0, version.length)) {
@@ -240,7 +240,7 @@ final class ZoneIdPrinterParser private[format](textStyle: DateTimeFormatterBuil
 //          }
 //        }
 //      }
-//      context.setParsed(ZoneId.rule, zone)
+//      context.setParsed(TimeZone.rule, zone)
 //      return pos
 //    }
 //    else return ~position
@@ -248,5 +248,5 @@ final class ZoneIdPrinterParser private[format](textStyle: DateTimeFormatterBuil
   def parse(context: DateTimeParseContext, parseText: String, position: Int): Int = throw new Exception("Not implemented!") //FIXME
 
   /**{@inheritDoc}*/
-  override def toString: String = if (textStyle == null) "ZoneId()" else "ZoneText(" + textStyle + ")"
+  override def toString: String = if (textStyle == null) "TimeZone()" else "ZoneText(" + textStyle + ")"
 }

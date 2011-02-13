@@ -47,9 +47,9 @@ import scalax.time.calendar._
  * <li>Rules - A set of one or more rules describe how daylight savings changes during the window.</li>
  * </ul>
  * <p>
- * TransitionRulesBuilder is a mutable class used to create instances of ZoneId.
+ * TransitionRulesBuilder is a mutable class used to create instances of TimeZone.
  * It must only be used from a single thread.
- * The created ZoneId instances are immutable and thread-safe.
+ * The created TimeZone instances are immutable and thread-safe.
  *
  * @author Michael Nascimento Santos
  * @author Stephen Colebourne

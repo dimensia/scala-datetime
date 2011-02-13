@@ -38,7 +38,7 @@ object Main {
     val someDateTime = DateTime(someDate, someTime)
     val otherDateTime = DateTime.of(2011, 12, 13)(12, 12, 12)
 
-    val someZonedDateTime = ZonedDateTime(2010, 12, 1)(22, 10, 5)(ZoneId(ZoneOffset.UTC))
+    val someZonedDateTime = ZonedDateTime(2010, 12, 1)(22, 10, 5)(TimeZone(ZoneOffset.UTC))
 
     val someInstant = Instant.now
     val someDuration = Duration(10, MINUTES)

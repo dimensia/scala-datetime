@@ -141,7 +141,7 @@ object OffsetTime {
   def now(implicit clock: Clock = Clock.systemDefaultZone): OffsetTime = {
     ISOChronology.checkNotNull(clock, "Clock must not be null")
     val now: Instant = clock.instant
-    ofInstant(now, clock.getZone.getRules.getOffset(clock.instant))
+    ofInstant(now, clock.getZone.rules.offset(clock.instant))
   }
 
   /**

@@ -1379,7 +1379,7 @@ sealed class ISOChronology private
   //    var date: Date = merger.getValue(Date.rule).get
   //    val time: Time = merger.getValue(Time.rule).get
   //    val offset: ZoneOffset = merger.getValue(ZoneOffset.rule).get
-  //    val zone: ZoneId = merger.getValue(ZoneId.rule).get
+  //    val zone: TimeZone = merger.getValue(TimeZone.rule).get
   //    if (date != null && time != null) {
   //      merger.storeMerged(DateTime.rule, DateTime.of(date, time))
   //      merger.removeProcessed(Date.rule)
@@ -1405,15 +1405,15 @@ sealed class ISOChronology private
   //      val od: OffsetDate = merger.getValue(OffsetDate.rule).orNull
   //      var ot: OffsetTime = merger.getValue(OffsetTime.rule).orNull
   //      if (od != null && ot != null) {
-  //        if (od.getOffset.equals(ot.getOffset) == false) {
+  //        if (od.offset.equals(ot.offset) == false) {
   //          if (merger.getContext.isStrict) {
   //            throw new CalendricalRuleException("Unable to merge OffsetDate and OffsetTime as offsets differ", OffsetTime.rule)
   //          }
   //          else {
-  //            ot = ot.withOffsetSameInstant(od.getOffset)
+  //            ot = ot.withOffsetSameInstant(od.offset)
   //          }
   //        }
-  //        merger.storeMerged(OffsetDateTime.rule, OffsetDateTime.of(od, ot, od.getOffset))
+  //        merger.storeMerged(OffsetDateTime.rule, OffsetDateTime.of(od, ot, od.offset))
   //        merger.removeProcessed(OffsetDate.rule)
   //        merger.removeProcessed(OffsetTime.rule)
   //      }
@@ -1423,7 +1423,7 @@ sealed class ISOChronology private
   //      if (merger.getContext.isStrict) merger.storeMerged(ZonedDateTime.rule, ZonedDateTime.of(odt, zone))
   //      else merger.storeMerged(ZonedDateTime.rule, ZonedDateTime.ofInstant(odt, zone))
   //      merger.removeProcessed(OffsetDateTime.rule)
-  //      merger.removeProcessed(ZoneId.rule)
+  //      merger.removeProcessed(TimeZone.rule)
   //    }
   //  }
 }

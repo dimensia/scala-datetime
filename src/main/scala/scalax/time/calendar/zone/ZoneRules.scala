@@ -42,7 +42,7 @@ import scalax.time.calendar.ZoneOffset
  * The rules defining how the zone offset varies for a single time-zone.
  * <p>
  * The rules model all the historic and future transitions for a time-zone.
- * The rules are loaded via {@link ZoneId} and {@link ZoneRulesGroup} and
+ * The rules are loaded via {@link TimeZone} and {@link ZoneRulesGroup} and
  * are specific to a group, region and version. The same rules may be shared
  * between multiple versions, regions or even groups.
  * <p>
@@ -96,13 +96,13 @@ abstract class ZoneRules protected {
    * @param instantProvider the instant to find the offset information for, not null
    * @return the standard offset, never null
    */
-  def getStandardOffset(instantProvider: InstantProvider): ZoneOffset
+  def standardOffset(instantProvider: InstantProvider): ZoneOffset
 
   /**
    * Gets the list of transition rules for years beyond those defined in the transition list.
    * <p>
    * The complete set of transitions for this rules instance is defined by this method
-   * and {@link #getTransitions()}. This method returns instances of {@link ZoneOffsetTransitionRule }
+   * and {@link #transitions()}. This method returns instances of {@link ZoneOffsetTransitionRule }
    * that define an algorithm for when transitions will occur.
    * The list will be empty for fixed offset rules.
    * <p>
@@ -123,7 +123,7 @@ abstract class ZoneRules protected {
    * @throws UnsupportedOperationException if the implementation cannot return this information -
    *  the default 'TZDB' can return this information
    */
-  def getTransitionRules: Seq[ZoneOffsetTransitionRule]
+  def transitionRules: Seq[ZoneOffsetTransitionRule]
 
   /**
    * Gets the offset information for the specified instant in this zone.
@@ -144,10 +144,10 @@ abstract class ZoneRules protected {
    * @param instant the instant to find the offset information for, not null
    * @return the offset information, never null
    */
-  def getOffsetInfo(instant: Instant): ZoneOffsetInfo = {
-    val offset: ZoneOffset = getOffset(instant)
-    val odt: OffsetDateTime = OffsetDateTime.ofInstant(instant, offset)
-    getOffsetInfo(odt.toLocalDateTime)
+  def offsetInfo(instant: Instant): ZoneOffsetInfo = {
+    val _offset: ZoneOffset = offset(instant)
+    val odt: OffsetDateTime = OffsetDateTime.ofInstant(instant, _offset)
+    offsetInfo(odt.toLocalDateTime)
   }
 
   /**
@@ -168,13 +168,13 @@ abstract class ZoneRules protected {
    * <p>
    * For any given instant there can only ever be one valid offset, which
    * is returned by this method. To access more detailed information about
-   * the offset at and around the instant use {@link #getOffsetInfo ( Instant )}.
+   * the offset at and around the instant use {@link #offsetInfo ( Instant )}.
    *
    * @param instant the instant to find the offset for,
    *   ignored for fixed offset rules, otherwise not null
    * @return the offset, never null
    */
-  def getOffset(instant: InstantProvider): ZoneOffset
+  def offset(instant: InstantProvider): ZoneOffset
 
   /**
    * Gets the next transition after the specified transition.
@@ -202,7 +202,7 @@ abstract class ZoneRules protected {
    * @return true if the offset date-time is valid for these rules
    */
   def isValidDateTime(dateTime: OffsetDateTime): Boolean = {
-    val info: ZoneOffsetInfo = getOffsetInfo(dateTime.toLocalDateTime)
+    val info: ZoneOffsetInfo = offsetInfo(dateTime.toLocalDateTime)
     info.isValidOffset(dateTime.getOffset)
   }
 
@@ -210,7 +210,7 @@ abstract class ZoneRules protected {
    * Gets the complete list of fully defined transitions.
    * <p>
    * The complete set of transitions for this rules instance is defined by this method
-   * and {@link #getTransitionRules()}. This method returns those transitions that have
+   * and {@link #transitionRules()}. This method returns those transitions that have
    * been fully defined. These are typically historical, but may be in the future.
    * The list will be empty for fixed offset rules.
    * <p>
@@ -222,7 +222,7 @@ abstract class ZoneRules protected {
    * @throws UnsupportedOperationException if the implementation cannot return this information -
    *  the default 'TZDB' can return this information
    */
-  def getTransitions: Seq[ZoneOffsetTransition]
+  def transitions: Seq[ZoneOffsetTransition]
 
   /**
    * Gets the standard offset for the specified instant in this zone.
@@ -235,7 +235,7 @@ abstract class ZoneRules protected {
    * @param instant the instant to find the offset information for, not null
    * @return the standard offset, never null
    */
-  def isDaylightSavings(instant: InstantProvider): Boolean = (getStandardOffset(instant).equals(getOffset(instant)) == false)
+  def isDaylightSavings(instant: InstantProvider): Boolean = (standardOffset(instant).equals(offset(instant)) == false)
 
   /**
    * Gets the amount of daylight savings in use for the specified instant in this zone.
@@ -249,11 +249,11 @@ abstract class ZoneRules protected {
    * @param instantProvider the instant to find the offset information for, not null
    * @return the difference between the standard and actual offset, never null
    */
-  def getDaylightSavings(instantProvider: InstantProvider): Period = {
+  def daylightSavings(instantProvider: InstantProvider): Period = {
     val instant: Instant = Instant.of(instantProvider)
-    val standardOffset: ZoneOffset = getStandardOffset(instant)
-    val actualOffset: ZoneOffset = getOffset(instant)
-    actualOffset.toPeriod.minus(standardOffset.toPeriod).normalized
+    val _standardOffset: ZoneOffset = standardOffset(instant)
+    val actualOffset: ZoneOffset = offset(instant)
+    actualOffset.toPeriod.minus(_standardOffset.toPeriod).normalized
   }
 
   /**
@@ -312,5 +312,5 @@ abstract class ZoneRules protected {
    * @param dateTime the date-time to find the offset information for, not null
    * @return the offset information, never null
    */
-  def getOffsetInfo(dateTime: DateTime): ZoneOffsetInfo
+  def offsetInfo(dateTime: DateTime): ZoneOffsetInfo
 }

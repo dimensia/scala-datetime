@@ -271,7 +271,7 @@ object DateTime {
   def now(implicit clock: Clock = Clock.systemDefaultZone): DateTime = {
     ISOChronology.checkNotNull(clock, "Clock must not be null")
     val instant: Instant = clock.instant
-    val offset: ZoneOffset = clock.getZone.getRules.getOffset(instant)
+    val offset: ZoneOffset = clock.getZone.rules.offset(instant)
     val localSeconds: Long = instant.seconds + offset.getAmountSeconds
     create(localSeconds, instant.nanos)
   }
@@ -571,14 +571,14 @@ final class DateTime private(val date: Date, val time: Time)
    * Finer control over gaps and overlaps is available in two ways.
    * If you simply want to use the earlier offset at overlaps then call
    * {@link ZonedDateTime#withEarlierOffsetAtOverlap()} immediately after this method.
-   * Alternately, pass a specific resolver to {@link #atZone ( ZoneId, ZoneResolver )}.
+   * Alternately, pass a specific resolver to {@link #atZone ( TimeZone, ZoneResolver )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param zone the time-zone to use, not null
    * @return the zoned date-time formed from this date-time, never null
    */
-  def atZone(zone: ZoneId): ZonedDateTime = ZonedDateTime.of(this, zone, ZoneResolvers.postTransition)
+  def atZone(zone: TimeZone): ZonedDateTime = ZonedDateTime.of(this, zone, ZoneResolvers.postTransition)
 
   /**
    * Checks if this {@code DateTime} is before the specified date-time.
@@ -1287,7 +1287,7 @@ final class DateTime private(val date: Date, val time: Time)
    * @return the zoned date-time formed from this date-time, never null
    * @throws CalendricalException if the date-time cannot be resolved
    */
-  def atZone(zone: ZoneId, resolver: ZoneResolver): ZonedDateTime = ZonedDateTime.of(this, zone, resolver)
+  def atZone(zone: TimeZone, resolver: ZoneResolver): ZonedDateTime = ZonedDateTime.of(this, zone, resolver)
 
   /**
    * Converts this date-time to a {@code DateTime},

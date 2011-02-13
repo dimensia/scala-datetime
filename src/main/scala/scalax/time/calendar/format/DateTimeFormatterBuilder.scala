@@ -53,7 +53,7 @@ import scalax.time.calendar.ISOChronology
  * outputting fractions to ensure that the fraction is parsed correctly</li>
  * <li>Text - the textual equivalent for the value</li>
  * <li>OffsetId/Offset - the {@link ZoneOffset zone offset} </li>
- * <li>ZoneId - the {@link ZoneId time-zone} id</li>
+ * <li>TimeZone - the {@link TimeZone time-zone} id</li>
  * <li>ZoneText - the name of the time-zone</li>
  * <li>Literal - a text literal</li>
  * <li>Nested and Optional - formats can be nested or made optional</li>

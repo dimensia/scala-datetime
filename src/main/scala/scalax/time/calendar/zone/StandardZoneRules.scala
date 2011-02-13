@@ -186,10 +186,10 @@ final class StandardZoneRules private[zone](private val standardTransitions: Arr
    *
    * @return independent, modifiable copy of the list of transition rules, never null
    */
-  def getTransitionRules: List[ZoneOffsetTransitionRule] = lastRules.toList
+  def transitionRules: List[ZoneOffsetTransitionRule] = lastRules.toList
 
   /**{@inheritDoc}*/
-  def getOffset(instantProvider: InstantProvider): ZoneOffset = {
+  def offset(instantProvider: InstantProvider): ZoneOffset = {
     val instant: Instant = Instant.of(instantProvider)
     val epochSecs: Long = instant.seconds
     if (lastRules.length > 0 && epochSecs > savingsInstantTransitions(savingsInstantTransitions.length - 1)) {
@@ -403,7 +403,7 @@ final class StandardZoneRules private[zone](private val standardTransitions: Arr
   }
 
   /**{@inheritDoc findTransitionArray(Y}*/
-  def getOffsetInfo(dt: DateTime): ZoneOffsetInfo = {
+  def offsetInfo(dt: DateTime): ZoneOffsetInfo = {
     if (lastRules.length > 0 && dt.isAfter(savingsLocalTransitions(savingsLocalTransitions.length - 1))) {
       val transArray: Array[ZoneOffsetTransition] = findTransitionArray(dt.getYear)
       var info: ZoneOffsetInfo = null
@@ -443,7 +443,7 @@ final class StandardZoneRules private[zone](private val standardTransitions: Arr
   }
 
   /**{@inheritDoc}*/
-  def getStandardOffset(instantProvider: InstantProvider): ZoneOffset = {
+  def standardOffset(instantProvider: InstantProvider): ZoneOffset = {
     val instant: Instant = Instant.of(instantProvider)
     val epochSecs: Long = instant.seconds
     var index: Int = Arrays.binarySearch(standardTransitions, epochSecs)
@@ -462,7 +462,7 @@ final class StandardZoneRules private[zone](private val standardTransitions: Arr
    *
    * @return independent, modifiable copy of the list of transitions, never null
    */
-  def getTransitions: Buffer[ZoneOffsetTransition] = {
+  def transitions: Buffer[ZoneOffsetTransition] = {
     var list: Buffer[ZoneOffsetTransition] = Buffer[ZoneOffsetTransition]()
     for (i <- 0 until savingsInstantTransitions.length) {
       val instant: Instant = Instant.ofEpochSeconds(savingsInstantTransitions(i))

@@ -105,7 +105,7 @@ object Clock {
    * @return a clock that uses the system millisecond clock in the specified zone, never null
    */
   def systemDefaultZone: Clock = {
-    val zone: ZoneId = ZoneId.of(java.util.TimeZone.getDefault.getID)
+    val zone: TimeZone = TimeZone.of(java.util.TimeZone.getDefault.getID)
     new Clock.TimeSourceClock(TimeSource.system, zone)
   }
 
@@ -121,7 +121,7 @@ object Clock {
    */
   def clockDefaultZone(timeSource: TimeSource): Clock = {
     ISOChronology.checkNotNull(timeSource, "TimeSource must not be null")
-    val zone: ZoneId = ZoneId.of(java.util.TimeZone.getDefault.getID)
+    val zone: TimeZone = TimeZone.of(java.util.TimeZone.getDefault.getID)
     new Clock.TimeSourceClock(timeSource, zone)
   }
 
@@ -135,8 +135,8 @@ object Clock {
    * @param zone the time-zone to use to convert to date-times, not null
    * @return a clock that uses the system millisecond clock in the specified zone, never null
    */
-  def system(zone: ZoneId): Clock = {
-    ISOChronology.checkNotNull(zone, "ZoneId must not be null")
+  def system(zone: TimeZone): Clock = {
+    ISOChronology.checkNotNull(zone, "TimeZone must not be null")
     new Clock.TimeSourceClock(TimeSource.system, zone)
   }
 
@@ -147,10 +147,10 @@ object Clock {
    * The time-zone being used.
    */
   @SerialVersionUID(1L)
-  private[Clock] final class TimeSourceClock(val timeSource: TimeSource, val zone: ZoneId) extends Clock with Serializable {
+  private[Clock] final class TimeSourceClock(val timeSource: TimeSource, val zone: TimeZone) extends Clock with Serializable {
 
     /**{@inheritDoc}*/
-    override def getZone: ZoneId = zone
+    override def getZone: TimeZone = zone
 
     /**{@inheritDoc}*/
     override def toString: String = "TimeSourceClock[" + timeSource + ", " + zone + ']'
@@ -166,8 +166,8 @@ object Clock {
     override def getSource: TimeSource = timeSource
 
     /**{@inheritDoc}*/
-    override def withZone(zone: ZoneId): Clock = {
-      ISOChronology.checkNotNull(zone, "ZoneId must not be null")
+    override def withZone(zone: TimeZone): Clock = {
+      ISOChronology.checkNotNull(zone, "TimeZone must not be null")
       if (zone.equals(this.zone)) this
       else new Clock.TimeSourceClock(timeSource, zone)
     }
@@ -201,9 +201,9 @@ object Clock {
    * @param timeZone the time-zone to use to convert to date-times, not null
    * @return a clock that uses the system millisecond clock in the specified zone, never null
    */
-  def clock(timeSource: TimeSource, timeZone: ZoneId): Clock = {
+  def clock(timeSource: TimeSource, timeZone: TimeZone): Clock = {
     ISOChronology.checkNotNull(timeSource, "TimeSource must not be null")
-    ISOChronology.checkNotNull(timeZone, "ZoneId must not be null")
+    ISOChronology.checkNotNull(timeZone, "TimeZone must not be null")
     new Clock.TimeSourceClock(timeSource, timeZone)
   }
 }
@@ -252,7 +252,7 @@ abstract class Clock protected {
    * @return the new clock with the altered time-zone, never null
    * @throws UnsupportedOperationException if the implementation does not support changing the time-zone
    */
-  def withZone(zone: ZoneId): Clock = throw new UnsupportedOperationException("Clock.withZone is not supported")
+  def withZone(zone: TimeZone): Clock = throw new UnsupportedOperationException("Clock.withZone is not supported")
 
   /**
    * Gets the current zoned date-time.
@@ -281,7 +281,7 @@ abstract class Clock protected {
    * @return the time-zone being used to interpret instants, never null
    * @throws UnsupportedOperationException if the implementation does not support accessing the time-zone
    */
-  def getZone: ZoneId = throw new UnsupportedOperationException("Clock.getZone is not supported")
+  def getZone: TimeZone = throw new UnsupportedOperationException("Clock.getZone is not supported")
 
   /**
    * Gets the current zoned date-time with a resolution of minutes.
@@ -298,7 +298,7 @@ abstract class Clock protected {
    * Gets the current instant.
    * <p>
    * The instant returned by this method will vary according to the implementation.
-   * For example, the time-source returned by {@link #system ( ZoneId )} will return
+   * For example, the time-source returned by {@link #system ( TimeZone )} will return
    * an instant based on {@link System#currentTimeMillis()}.
    * <p>
    * Normally, this method will not throw an exception.

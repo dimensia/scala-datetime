@@ -98,7 +98,7 @@ object DateTimeFormatters {
    * '2007-12-03T10:15:30+01:00' or '2007-12-03T10:15:30+01:00[Europe/Paris]'.
    * <p>
    * This is the ISO-8601 extended format:<br />
-   * {@code yyyy -MM-dd'T'HH:mm[:ss[.S]][ZZ['['                { ZoneId} ']']] }
+   * {@code yyyy -MM-dd'T'HH:mm[:ss[.S]][ZZ['['                { TimeZone} ']']] }
    * <p>
    * The year will print 4 digits, unless this is insufficient, in which
    * case the full year will be printed together with a positive/negative sign.
@@ -314,7 +314,7 @@ object DateTimeFormatters {
    * or '10:15:30+01:00[Europe/Paris]'.
    * <p>
    * This is the ISO-8601 extended format:<br />
-   * {@code HH :mm[:ss[.S]][ZZ['['                { ZoneId} ']']] }
+   * {@code HH :mm[:ss[.S]][ZZ['['                { TimeZone} ']']] }
    * <p>
    * The seconds will be printed if present in the Calendrical, thus a Time
    * will always print the seconds.
@@ -542,7 +542,7 @@ object DateTimeFormatters {
    * or '2007-12-03+01:00[Europe/Paris]'.
    * <p>
    * This is the ISO-8601 extended format:<br />
-   * {@code yyyy -MM-dd[ZZ['['                { ZoneId} ']']] }
+   * {@code yyyy -MM-dd[ZZ['['                { TimeZone} ']']] }
    * <p>
    * The year will print 4 digits, unless this is insufficient, in which
    * case the full year will be printed together with a positive/negative sign.
@@ -813,7 +813,7 @@ object DateTimeFormatters {
    * such as '2007-12-03T10:15:30+01:00[Europe/Paris]'.
    * <p>
    * This is the ISO-8601 extended format:<br />
-   * {@code yyyy -MM-dd'T'HH:mm[:ss[.S]]ZZ[        { ZoneId} ] }
+   * {@code yyyy -MM-dd'T'HH:mm[:ss[.S]]ZZ[        { TimeZone} ] }
    * <p>
    * The year will print 4 digits, unless this is insufficient, in which
    * case the full year will be printed together with a positive/negative sign.

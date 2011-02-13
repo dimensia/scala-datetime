@@ -171,7 +171,7 @@ object OffsetDateTime {
   def now(implicit clock: Clock = Clock.systemDefaultZone): OffsetDateTime = {
     ISOChronology.checkNotNull(clock, "Clock must not be null")
     val now: Instant = clock.instant
-    ofInstant(now, clock.getZone.getRules.getOffset(clock.instant))
+    ofInstant(now, clock.getZone.rules.offset(clock.instant))
   }
 
   /**
@@ -475,14 +475,14 @@ final class OffsetDateTime private(val dateTime: DateTime, val offset: ZoneOffse
    * This avoids any problems with local time-line gaps or overlaps.
    * The result might have different values for fields such as hour, minute an even day.
    * <p>
-   * To attempt to retain the values of the fields, use {@link #atZoneSimilarLocal ( ZoneId )}.
+   * To attempt to retain the values of the fields, use {@link #atZoneSimilarLocal ( TimeZone )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param zone the time-zone to use, not null
    * @return the zoned date-time formed from this date-time, never null
    */
-  def atZoneSameInstant(zone: ZoneId): ZonedDateTime = ZonedDateTime.ofInstant(this, zone)
+  def atZoneSameInstant(zone: TimeZone): ZonedDateTime = ZonedDateTime.ofInstant(this, zone)
 
   /**
    * Returns a copy of this OffsetDateTime with a different local date-time.
@@ -759,17 +759,17 @@ final class OffsetDateTime private(val dateTime: DateTime, val offset: ZoneOffse
    * Finer control over gaps and overlaps is available in two ways.
    * If you simply want to use the earlier offset at overlaps then call
    * {@link ZonedDateTime#withEarlierOffsetAtOverlap()} immediately after this method.
-   * Alternately, pass a specific resolver to {@link #atZoneSimilarLocal ( ZoneId, ZoneResolver )}.
+   * Alternately, pass a specific resolver to {@link #atZoneSimilarLocal ( TimeZone, ZoneResolver )}.
    * <p>
    * To create a zoned date-time at the same instant irrespective of the local time-line,
-   * use {@link #atZoneSameInstant ( ZoneId )}.
+   * use {@link #atZoneSameInstant ( TimeZone )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
    * @param zone the time-zone to use, not null
    * @return the zoned date-time formed from this date and the earliest valid time for the zone, never null
    */
-  def atZoneSimilarLocal(zone: ZoneId): ZonedDateTime = ZonedDateTime.of(this, zone, ZoneResolvers.postTransition)
+  def atZoneSimilarLocal(zone: TimeZone): ZonedDateTime = ZonedDateTime.of(this, zone, ZoneResolvers.postTransition)
 
   /**
    * Gets the value of the specified calendrical rule.
@@ -1339,7 +1339,7 @@ final class OffsetDateTime private(val dateTime: DateTime, val offset: ZoneOffse
    * This method uses the specified resolver to determine what to do when a gap or overlap occurs.
    * <p>
    * To create a zoned date-time at the same instant irrespective of the local time-line,
-   * use {@link #atZoneSameInstant ( ZoneId )}.
+   * use {@link #atZoneSameInstant ( TimeZone )}.
    * <p>
    * This instance is immutable and unaffected by this method call.
    *
@@ -1348,7 +1348,7 @@ final class OffsetDateTime private(val dateTime: DateTime, val offset: ZoneOffse
    * @return the zoned date-time formed from this date and the earliest valid time for the zone, never null
    * @throws CalendricalException if the date-time cannot be resolved
    */
-  def atZoneSimilarLocal(zone: ZoneId, resolver: ZoneResolver): ZonedDateTime = ZonedDateTime.of(this, zone, resolver)
+  def atZoneSimilarLocal(zone: TimeZone, resolver: ZoneResolver): ZonedDateTime = ZonedDateTime.of(this, zone, resolver)
 
   /**
    * Gets the year field as a {@code Year}.

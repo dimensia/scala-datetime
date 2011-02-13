@@ -73,7 +73,7 @@ import collection.immutable.HashMap
  * Applications will probably choose to use the floating version, as it guarantees
  * usage of the latest rules.
  * <p>
- * In addition to the group:region#version combinations, {@code ZoneId }
+ * In addition to the group:region#version combinations, {@code TimeZone }
  * can represent a fixed offset. This has an empty group and version ID.
  * It is not possible to have an invalid instance of a fixed time-zone.
  * <p>
@@ -86,7 +86,7 @@ import collection.immutable.HashMap
  * By storing the version of the time-zone rules data together with the date, it is
  * possible to tell that the rules have changed and to process accordingly.
  * <p>
- * {@code ZoneId} merely represents the identifier of the zone.
+ * {@code TimeZone} merely represents the identifier of the zone.
  * The actual rules are provided by {@link ZoneRules}.
  * One difference is that serializing this class only stores the reference to the zone,
  * whereas serializing {@code ZoneRules} stores the entire set of rules.
@@ -98,13 +98,13 @@ import collection.immutable.HashMap
  * The application might also take appropriate corrective action.
  * For example, an application might choose to download missing rules from a central server.
  * <p>
- * ZoneId is immutable and thread-safe.
+ * TimeZone is immutable and thread-safe.
  *
  * @author Stephen Colebourne
  */
-object ZoneId {
+object TimeZone {
   /**
-   * Obtains an instance of {@code ZoneId} from an identifier without checking
+   * Obtains an instance of {@code TimeZone} from an identifier without checking
    * if the time-zone has available rules.
    * <p>
    * The identifier is parsed in a similar manner to {@link #of ( String )}.
@@ -114,17 +114,17 @@ object ZoneId {
    * <p>
    * This method is intended for advanced use cases.
    * One example might be a system that always retrieves time-zone rules from a remote server.
-   * Using this factory allows a {@code ZoneId}, and thus a {@code ZonedDateTime},
+   * Using this factory allows a {@code TimeZone}, and thus a {@code ZonedDateTime},
    * to be created without loading the rules from the remote server.
    *
    * @param zoneID the time-zone identifier, not null
    * @return the time-zone, never null
    * @throws CalendricalException if the time-zone cannot be found
    */
-  def ofUnchecked(zoneID: String): ZoneId = ofID(zoneID, false)
+  def ofUnchecked(zoneID: String): TimeZone = ofID(zoneID, false)
 
   /**
-   * Obtains an instance of {@code ZoneId} using its ID using a map
+   * Obtains an instance of {@code TimeZone} using its ID using a map
    * of aliases to supplement the standard zone IDs.
    * <p>
    * Many users of time-zones use short abbreviations, such as PST for
@@ -138,7 +138,7 @@ object ZoneId {
    * @return the time-zone, never null
    * @throws IllegalArgumentException if the time-zone cannot be found
    */
-  def of(timeZoneIdentifier: String, aliasMap: Map[String, String]): ZoneId = {
+  def of(timeZoneIdentifier: String, aliasMap: Map[String, String]): TimeZone = {
     ISOChronology.checkNotNull(timeZoneIdentifier, "Time Zone ID must not be null")
     ISOChronology.checkNotNull(aliasMap, "Alias map must not be null")
     val zoneId: String = aliasMap.getOrElse(timeZoneIdentifier, timeZoneIdentifier)
@@ -146,8 +146,10 @@ object ZoneId {
     of(zoneId)
   }
 
+  def apply(timeZoneIdentifier: String, aliasMap: Map[String, String]) = of(timeZoneIdentifier, aliasMap)
+
   /**
-   * Obtains an instance of {@code ZoneId} representing a fixed time-zone.
+   * Obtains an instance of {@code TimeZone} representing a fixed time-zone.
    * <p>
    * The time-zone returned from this factory has a fixed offset for all time.
    * The region ID will return an identifier formed from 'UTC' and the offset.
@@ -158,10 +160,10 @@ object ZoneId {
    * @param offset the zone offset to create a fixed zone for, not null
    * @return the time-zone for the offset, never null
    */
-  def of(offset: ZoneOffset): ZoneId = {
+  def of(offset: ZoneOffset): TimeZone = {
     ISOChronology.checkNotNull(offset, "ZoneOffset must not be null")
     if (offset == ZoneOffset.UTC) UTC
-    else new ZoneId.Fixed(offset)
+    else new TimeZone.Fixed(offset)
   }
 
   def apply(offset: ZoneOffset) = of(offset)
@@ -290,7 +292,7 @@ object ZoneId {
    * Note that it is intended that fixed offset time-zones like this are rarely used.
    * Applications should use {@link ZoneOffset} and {@link OffsetDateTime} in preference.
    */
-  val UTC: ZoneId = new ZoneId.Fixed(ZoneOffset.UTC)
+  val UTC: TimeZone = new TimeZone.Fixed(ZoneOffset.UTC)
 
   /**
    * Fixed time-zone.
@@ -300,29 +302,29 @@ object ZoneId {
    * @param offset the offset, not null
    */
   @SerialVersionUID(1L)
-  private[calendar] final class Fixed private[calendar](offset: ZoneOffset) extends ZoneId {
+  private[calendar] final class Fixed private[calendar](offset: ZoneOffset) extends TimeZone {
 
-    def getRulesValidFor(dateTime: OffsetDateTime): ZoneRules = {
+    def rulesValidFor(dateTime: OffsetDateTime): ZoneRules = {
       ISOChronology.checkNotNull(dateTime, "OffsetDateTime must not be null")
-      if (rules.getOffset(dateTime).equals(dateTime.getOffset) == false) {
-        throw new CalendricalException("Fixed time-zone " + getID + " is invalid for date-time " + dateTime)
+      if (rules.offset(dateTime).equals(dateTime.getOffset) == false) {
+        throw new CalendricalException("Fixed time-zone " + id + " is invalid for date-time " + dateTime)
       }
       return rules
     }
 
-    def getRegionID: String = return id
+    def regionID: String = id
 
     def isValid: Boolean = true
 
     /**The zone id. */
-    private lazy val id: String = rules.toString
+    val id: String = rules.toString
 
-    def getVersionID: String = return ""
+    def versionID: String = return ""
 
-    def withLatestVersionValidFor(dateTime: OffsetDateTime): ZoneId = {
+    def withLatestVersionValidFor(dateTime: OffsetDateTime): TimeZone = {
       ISOChronology.checkNotNull(dateTime, "OffsetDateTime must not be null")
-      if (getRules.getOffset(dateTime).equals(dateTime.getOffset) == false) {
-        throw new CalendricalException("Fixed time-zone " + getID + " is invalid for date-time " + dateTime)
+      if (rules.offset(dateTime).equals(dateTime.getOffset) == false) {
+        throw new CalendricalException("Fixed time-zone " + id + " is invalid for date-time " + dateTime)
       }
       return this
     }
@@ -331,26 +333,26 @@ object ZoneId {
 
     def isFixed: Boolean = true
 
-    def withFloatingVersion: ZoneId = this
+    def withFloatingVersion: TimeZone = this
 
     def isFloatingVersion: Boolean = true
 
     def isValidFor(dateTime: OffsetDateTime): Boolean = {
       if (dateTime == null) false
-      else rules.getOffset(dateTime).equals(dateTime.getOffset)
+      else rules.offset(dateTime).equals(dateTime.getOffset)
     }
 
-    def getGroupID: String = return ""
+    def groupID: String = ""
 
-    def withLatestVersion: ZoneId = this
+    def withLatestVersion: TimeZone = this
 
-    def getRules: ZoneRules = rules
+//    def rules: ZoneRules = rules
 
     /**The zone rules. */
     @transient
-    private lazy val rules: ZoneRules = ZoneRules.ofFixed(offset)
+    lazy val rules: ZoneRules = ZoneRules.ofFixed(offset)
 
-    def withVersion(versionID: String): ZoneId = {
+    def withVersion(versionID: String): TimeZone = {
       ISOChronology.checkNotNull(versionID, "Version ID must not be null")
       if (versionID.length > 0) {
         throw new CalendricalException("Fixed time-zone does not provide versions")
@@ -358,7 +360,7 @@ object ZoneId {
       return this
     }
 
-    def getID: String = id
+//    def id: String = id
 
     /**
      * Handle deserialization.
@@ -367,10 +369,10 @@ object ZoneId {
      */
     private def readResolve: AnyRef = {
       if (id == null || id.startsWith("UTC") == false) throw new StreamCorruptedException
-      else ZoneId.of(id)
+      else TimeZone.of(id)
     }
 
-    def getGroup: ZoneRulesGroup = throw new CalendricalException("Fixed time-zone is not provided by a group")
+    def group: ZoneRulesGroup = throw new CalendricalException("Fixed time-zone is not provided by a group")
   }
 
   /**
@@ -378,7 +380,7 @@ object ZoneId {
    *
    * @return the field rule for the time-zone, never null
    */
-  def rule: CalendricalRule[ZoneId] = Rule
+  def rule: CalendricalRule[TimeZone] = Rule
 
   /**
    * ID based time-zone.
@@ -391,16 +393,16 @@ object ZoneId {
    * @param versionID the time-zone rules version ID, not null
    */
   @SerialVersionUID(1L)
-  private[calendar] final class ID private[calendar](groupID: String, regionID: String, versionID: String) extends ZoneId {
+  private[calendar] final class ID private[calendar](val groupID: String, val regionID: String, val versionID: String) extends TimeZone {
 
-    def withFloatingVersion: ZoneId = {
+    def withFloatingVersion: TimeZone = {
       if (isFloatingVersion) this
-      else new ZoneId.ID(groupID, regionID, "")
+      else new TimeZone.ID(groupID, regionID, "")
     }
 
-    def getGroupID: String = groupID
+//    def groupID: String = groupID
 
-    def getRegionID: String = regionID
+//    def regionID: String = regionID
 
 
     /**
@@ -415,56 +417,56 @@ object ZoneId {
       }
     }
 
-    def isLatestVersion: Boolean = isFloatingVersion || versionID.equals(getGroup.getLatestVersionID(regionID))
+    def isLatestVersion: Boolean = isFloatingVersion || versionID.equals(group.latestVersionID(regionID))
 
-    def getGroup: ZoneRulesGroup = ZoneRulesGroup.getGroup(groupID)
+    def group: ZoneRulesGroup = ZoneRulesGroup.group(groupID)
 
     def isFixed: Boolean = false
 
     def isValid: Boolean = {
-      if (isFloatingVersion) ZoneRulesGroup.isValidGroupID(groupID) && getGroup.isValidRegionID(regionID)
-      else ZoneRulesGroup.isValidGroupID(groupID) && getGroup.isValidRules(regionID, versionID)
+      if (isFloatingVersion) ZoneRulesGroup.isValidGroupID(groupID) && group.isValidRegionID(regionID)
+      else ZoneRulesGroup.isValidGroupID(groupID) && group.isValidRules(regionID, versionID)
     }
 
     def isFloatingVersion: Boolean = versionID.length == 0
 
-    def getRulesValidFor(dateTime: OffsetDateTime): ZoneRules = {
+    def rulesValidFor(dateTime: OffsetDateTime): ZoneRules = {
       ISOChronology.checkNotNull(dateTime, "OffsetDateTime must not be null")
-      val group: ZoneRulesGroup = getGroup
-      if (isFloatingVersion) group.getRules(regionID, group.getLatestVersionIDValidFor(regionID, dateTime))
-      else group.getRulesValidFor(regionID, versionID, dateTime)
+      val _group: ZoneRulesGroup = group
+      if (isFloatingVersion) _group.rules(regionID, _group.latestVersionIDValidFor(regionID, dateTime))
+      else _group.rulesValidFor(regionID, versionID, dateTime)
     }
 
-    def getID: String = {
+    def id: String = {
       if (groupID.equals("TZDB")) regionID + (if (versionID.length == 0) "" else '#' + versionID)
       else groupID + ':' + regionID + (if (versionID.length == 0) "" else '#' + versionID)
     }
 
-    def getRules: ZoneRules = {
-      val group: ZoneRulesGroup = getGroup
-      if (isFloatingVersion) group.getRules(regionID, group.getLatestVersionID(regionID))
-      else group.getRules(regionID, versionID)
+    def rules: ZoneRules = {
+      val _group: ZoneRulesGroup = group
+      if (isFloatingVersion) _group.rules(regionID, _group.latestVersionID(regionID))
+      else _group.rules(regionID, versionID)
     }
 
-    def getVersionID: String = versionID
+//    def versionID: String = versionID
 
-    def withLatestVersionValidFor(dateTime: OffsetDateTime): ZoneId = {
+    def withLatestVersionValidFor(dateTime: OffsetDateTime): TimeZone = {
       ISOChronology.checkNotNull(dateTime, "OffsetDateTime must not be null")
-      return withVersion(getGroup.getLatestVersionIDValidFor(regionID, dateTime))
+      return withVersion(group.latestVersionIDValidFor(regionID, dateTime))
     }
 
-    def withVersion(versionID: String): ZoneId = {
+    def withVersion(versionID: String): TimeZone = {
       ISOChronology.checkNotNull(versionID, "Version ID must not be null")
       if (versionID.length == 0) {
         return withFloatingVersion
       }
-      if (getGroup.isValidRules(regionID, versionID) == false) {
+      if (group.isValidRules(regionID, versionID) == false) {
         throw new CalendricalException("Unknown version: " + groupID + ":" + regionID + '#' + versionID)
       }
       if (versionID.equals(this.versionID)) {
         return this
       }
-      return new ZoneId.ID(groupID, regionID, versionID)
+      return new TimeZone.ID(groupID, regionID, versionID)
     }
 
     def isValidFor(dateTime: OffsetDateTime): Boolean = {
@@ -472,7 +474,7 @@ object ZoneId {
         return false
       }
       try {
-        getRulesValidFor(dateTime)
+        rulesValidFor(dateTime)
         return true
       }
       catch {
@@ -482,10 +484,10 @@ object ZoneId {
       }
     }
 
-    def withLatestVersion: ZoneId = {
-      val versionID: String = getGroup.getLatestVersionID(regionID)
+    def withLatestVersion: TimeZone = {
+      val versionID: String = group.latestVersionID(regionID)
       if (versionID.equals(this.versionID)) this
-      else new ZoneId.ID(groupID, regionID, versionID)
+      else new TimeZone.ID(groupID, regionID, versionID)
     }
   }
 
@@ -496,23 +498,23 @@ object ZoneId {
 
   @SerialVersionUID(1L)
   private[calendar] sealed class Rule
-    extends CalendricalRule[ZoneId](classOf[ZoneId], ISOChronology, "ZoneId", null, null)
+    extends CalendricalRule[TimeZone](classOf[TimeZone], ISOChronology, "TimeZone", null, null)
     with Serializable {
 
-    override def derive(calendrical: Calendrical): Option[ZoneId] = calendrical.get(ZonedDateTime.rule).map(_.getZone)
+    override def derive(calendrical: Calendrical): Option[TimeZone] = calendrical.get(ZonedDateTime.rule).map(_.getZone)
 
     private def readResolve: AnyRef = Rule
   }
 
   /**
-   * Obtains an instance of {@code ZoneId} from an identifier.
+   * Obtains an instance of {@code TimeZone} from an identifier.
    *
    * @param zoneID the time-zone identifier, not null
    * @param checkAvailable whether to check if the time-zone ID is available
    * @return the time-zone, never null
    * @throws CalendricalException if the time-zone cannot be found
    */
-  private def ofID(zoneID: String, checkAvailable: Boolean): ZoneId = {
+  private def ofID(zoneID: String, checkAvailable: Boolean): TimeZone = {
     ISOChronology.checkNotNull(zoneID, "Time zone ID must not be null")
     if (zoneID.equals("UTC") || zoneID.equals("GMT")) {
       return UTC
@@ -538,7 +540,7 @@ object ZoneId {
     groupID = (if (groupID != null) groupID else "TZDB")
     versionID = (if (versionID != null) versionID else "")
     if (checkAvailable) {
-      val group: ZoneRulesGroup = ZoneRulesGroup.getGroup(groupID)
+      val group: ZoneRulesGroup = ZoneRulesGroup.group(groupID)
       if (versionID.length == 0) {
         if (group.isValidRegionID(regionID) == false) {
           throw new CalendricalException("Unknown time-zone region: " + groupID + ':' + regionID)
@@ -550,11 +552,11 @@ object ZoneId {
         }
       }
     }
-    return new ZoneId.ID(groupID, regionID, versionID)
+    return new TimeZone.ID(groupID, regionID, versionID)
   }
 
   /**
-   * Obtains an instance of {@code ZoneId} from an identifier ensuring that the
+   * Obtains an instance of {@code TimeZone} from an identifier ensuring that the
    * identifier is valid and available for use.
    * <p>
    * Six forms of identifier are recognized:
@@ -575,7 +577,7 @@ object ZoneId {
    * <p>
    * The default group is 'TZDB' which has versions of the form {year}{letter}, such as '2009b'.
    * The region ID for the 'TZDB' group is generally of the form '{area}/{city}', such as 'Europe/Paris'.
-   * This is compatible with most IDs from {@link java.util.ZoneId}.
+   * This is compatible with most IDs from {@link java.util.TimeZone}.
    * <p>
    * For example, if a provider is loaded with the ID 'MyProvider' containing a zone ID of
    * 'France', then the unique key for version 2.1 would be 'MyProvider:France#2.1'.
@@ -596,14 +598,16 @@ object ZoneId {
    * @return the time-zone, never null
    * @throws CalendricalException if the time-zone cannot be found
    */
-  def of(zoneID: String): ZoneId = ofID(zoneID, true)
+  def of(zoneID: String): TimeZone = ofID(zoneID, true)
+
+  def apply(zoneID: String): TimeZone = of(zoneID)
 }
 
 /**
  * Constructor only accessible within the package.
  */
 @SerialVersionUID(1L)
-abstract class ZoneId private[calendar] extends Calendrical with Serializable {
+abstract class TimeZone private[calendar] extends Calendrical with Serializable {
   /**
    * Gets the unique time-zone ID.
    * <p>
@@ -615,7 +619,7 @@ abstract class ZoneId private[calendar] extends Calendrical with Serializable {
    *
    * @return the time-zone unique ID, never null
    */
-  def getID: String
+  def id: String
 
   /**
    * Is this instance equal to that specified by comparing the ID.
@@ -625,9 +629,9 @@ abstract class ZoneId private[calendar] extends Calendrical with Serializable {
    */
   override def equals(otherZone: Any): Boolean = {
     if (this == otherZone) true
-    else if (otherZone.isInstanceOf[ZoneId]) {
-      val zone: ZoneId = otherZone.asInstanceOf[ZoneId]
-      getRegionID.equals(zone.getRegionID) && getVersionID.equals(zone.getVersionID) && getGroupID.equals(zone.getGroupID)
+    else if (otherZone.isInstanceOf[TimeZone]) {
+      val zone: TimeZone = otherZone.asInstanceOf[TimeZone]
+      regionID.equals(zone.regionID) && versionID.equals(zone.versionID) && groupID.equals(zone.groupID)
     }
     else false
   }
@@ -641,10 +645,10 @@ abstract class ZoneId private[calendar] extends Calendrical with Serializable {
    * an exception if the time-zone is fixed.
    * <p>
    * Callers of this method need to be aware of an unusual scenario.
-   * It is possible to obtain a {@code ZoneId} instance even when the
-   * rules are not available. This typically occurs when a {@code ZoneId }
+   * It is possible to obtain a {@code TimeZone} instance even when the
+   * rules are not available. This typically occurs when a {@code TimeZone }
    * is loaded from a previously stored version but the rules are not available.
-   * In this case, the {@code ZoneId} instance is still valid, as is
+   * In this case, the {@code TimeZone} instance is still valid, as is
    * any associated object, such as {@link ZonedDateTime}. It is impossible to
    * perform any calculations that require the rules however, and this method
    * will throw an exception.
@@ -653,12 +657,12 @@ abstract class ZoneId private[calendar] extends Calendrical with Serializable {
    * @throws CalendricalException if the time-zone is fixed
    * @throws CalendricalException if the group ID cannot be found
    */
-  def getGroup: ZoneRulesGroup
+  def group: ZoneRulesGroup
 
   /**
    * Returns a copy of this time-zone with the specified version ID.
    * <p>
-   * For group based time-zones, this returns a {@code ZoneId} with the
+   * For group based time-zones, this returns a {@code TimeZone} with the
    * same group and region, but a floating version.
    * The group and region IDs are not validated.
    * <p>
@@ -667,7 +671,7 @@ abstract class ZoneId private[calendar] extends Calendrical with Serializable {
    * @return the new updated time-zone, never null
    * @throws CalendricalException if the time-zone is fixed
    */
-  def withFloatingVersion: ZoneId
+  def withFloatingVersion: TimeZone
 
   /**
    * Gets the time-zone rules group ID, such as 'TZDB'.
@@ -678,7 +682,7 @@ abstract class ZoneId private[calendar] extends Calendrical with Serializable {
    *
    * @return the time-zone rules group ID, never null
    */
-  def getGroupID: String
+  def groupID: String
 
   /**
    * Checks of the time-zone is fixed, such that the offset never varies.
@@ -712,14 +716,14 @@ abstract class ZoneId private[calendar] extends Calendrical with Serializable {
    *
    * @return the time-zone name, never null
    */
-  def getName: String = getRegionID
+  def name: String = regionID
 
   /**
    * A hash code for this time-zone ID.
    *
    * @return a suitable hash code
    */
-  override def hashCode: Int = getGroupID.hashCode ^ getRegionID.hashCode ^ getVersionID.hashCode
+  override def hashCode: Int = groupID.hashCode ^ regionID.hashCode ^ versionID.hashCode
 
   /**
    * Checks if the version is floating.
@@ -740,7 +744,7 @@ abstract class ZoneId private[calendar] extends Calendrical with Serializable {
    * <p>
    * This will return true if the rules are available for the group, region
    * and version ID combination. If this method returns true, then
-   * {@link #getRules()} will return a valid rules instance.
+   * {@link #rules()} will return a valid rules instance.
    * <p>
    * A time-zone can be invalid if it is deserialized in a JVM which does not
    * have the same rules loaded as the JVM that stored it.
@@ -783,7 +787,7 @@ abstract class ZoneId private[calendar] extends Calendrical with Serializable {
    * @throws CalendricalException if the zone ID cannot be found
    * @throws CalendricalException if no rules match the zone ID and date-time
    */
-  def getRulesValidFor(dateTime: OffsetDateTime): ZoneRules
+  def rulesValidFor(dateTime: OffsetDateTime): ZoneRules
 
   /**
    * Gets the value of the specified calendrical rule.
@@ -796,7 +800,7 @@ abstract class ZoneId private[calendar] extends Calendrical with Serializable {
    * @return the value for the rule, null if the value cannot be returned
    */
   def get[T](rule: CalendricalRule[T]): Option[T] = {
-    if (rule.equals(ZoneOffset.rule) && isFixed) rule.reify(getRules.getOffset(Instant.Epoch))
+    if (rule.equals(ZoneOffset.rule) && isFixed) rule.reify(rules.offset(Instant.Epoch))
     //    else Some(rule.deriveValueFor(rule, this, this))   //FIMXE
     else None
   }
@@ -813,7 +817,7 @@ abstract class ZoneId private[calendar] extends Calendrical with Serializable {
    * @return the new updated time-zone, never null
    * @throws CalendricalException if the version is non-floating and the group or region ID is not found
    */
-  def withLatestVersion: ZoneId
+  def withLatestVersion: TimeZone
 
   /**
    * Gets the time-zone region identifier, such as 'Europe/London'.
@@ -823,7 +827,7 @@ abstract class ZoneId private[calendar] extends Calendrical with Serializable {
    *
    * @return the time-zone rules region ID, never null
    */
-  def getRegionID: String
+  def regionID: String
 
   /**
    * Returns a copy of this time-zone with the latest version that is valid
@@ -836,12 +840,12 @@ abstract class ZoneId private[calendar] extends Calendrical with Serializable {
    * @throws CalendricalException if the group or region ID is not found
    * @throws CalendricalException if there are no valid rules for the date-time
    */
-  def withLatestVersionValidFor(dateTime: OffsetDateTime): ZoneId
+  def withLatestVersionValidFor(dateTime: OffsetDateTime): TimeZone
 
   /**
    * Returns a copy of this time-zone with the specified version ID.
    * <p>
-   * For group based time-zones, this returns a {@code ZoneId }
+   * For group based time-zones, this returns a {@code TimeZone }
    * with the same group and region, but the specified version.
    * The group and region IDs are validated to ensure that the version is valid.
    * <p>
@@ -853,7 +857,7 @@ abstract class ZoneId private[calendar] extends Calendrical with Serializable {
    * @throws CalendricalException if the time-zone is fixed and the version is not empty
    * @throws CalendricalException if the group, region or version ID is not found
    */
-  def withVersion(versionID: String): ZoneId
+  def withVersion(versionID: String): TimeZone
 
   /**
    * Gets the time-zone rules allowing calculations to be performed.
@@ -878,14 +882,14 @@ abstract class ZoneId private[calendar] extends Calendrical with Serializable {
    * @return the rules, never null
    * @throws CalendricalException if the group, region or version ID cannot be found
    */
-  def getRules: ZoneRules
+  def rules: ZoneRules
 
   /**
    * Gets the short textual name of this zone.
    *
    * @return the time-zone short name, never null
    */
-  def getShortName: String = getRegionID
+  def shortName: String = regionID
 
   /**
    * Checks if this time-zone is valid such that rules can be obtained for it
@@ -893,7 +897,7 @@ abstract class ZoneId private[calendar] extends Calendrical with Serializable {
    * <p>
    * This will return true if the rules are available for the group, region
    * and version ID combination that are valid for the specified date-time.
-   * If this method returns true, then {@link #getRulesValidFor ( OffsetDateTime ) }
+   * If this method returns true, then {@link #rulesValidFor(OffsetDateTime)}
    * will return a valid rules instance.
    * <p>
    * A time-zone can be invalid if it is deserialized in a JVM which does not
@@ -927,14 +931,14 @@ abstract class ZoneId private[calendar] extends Calendrical with Serializable {
    *
    * @return the time-zone rules version ID, empty if the version is floating, never null
    */
-  def getVersionID: String
+  def versionID: String
 
   /**
    * Returns a string representation of the time-zone.
    * <p>
-   * This returns {@link #getID()}.
+   * This returns {@link #id}.
    *
    * @return the time-zone ID, never null
    */
-  override def toString: String = getID
+  override def toString: String = id
 }

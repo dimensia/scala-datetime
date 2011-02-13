@@ -134,7 +134,7 @@ object Time {
   def now(implicit clock: Clock = Clock.systemDefaultZone): Time = {
     ISOChronology.checkNotNull(clock, "Clock must not be null")
     val instant: Instant = clock.instant
-    val offset: ZoneOffset = clock.getZone.getRules.getOffset(instant)
+    val offset: ZoneOffset = clock.getZone.rules.offset(instant)
     var secsOfDay: Long = instant.seconds % ISOChronology.SecondsPerDay
     secsOfDay = (secsOfDay + offset.getAmountSeconds) % ISOChronology.SecondsPerDay
     if (secsOfDay < 0) {

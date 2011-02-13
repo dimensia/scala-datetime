@@ -73,7 +73,7 @@ object OffsetDate {
   def now(implicit clock: Clock = Clock.systemDefaultZone): OffsetDate = {
     ISOChronology.checkNotNull(clock, "Clock must not be null")
     val now: Instant = clock.instant
-    ofInstant(now, clock.getZone.getRules.getOffset(now))
+    ofInstant(now, clock.getZone.rules.offset(now))
   }
 
   /**
@@ -935,7 +935,7 @@ final class OffsetDate private(val date: Date, val offset: ZoneOffset) extends C
    * achieved using the {@link ZoneResolvers#postGapPreOverlap() zone resolver}.
    * <p>
    * To convert to a specific time in a given time-zone call {@link #atTime(Time)}
-   * followed by {@link OffsetDateTime#atZoneSimilarLocal(ZoneId)}. Note that the resolver
+   * followed by {@link OffsetDateTime#atZoneSimilarLocal(TimeZone)}. Note that the resolver
    * used by {@code atZoneSimilarLocal()} is different to that used here (it chooses
    * the later offset in an overlap, whereas this method chooses the earlier offset).
    * <p>
@@ -947,7 +947,7 @@ final class OffsetDate private(val date: Date, val offset: ZoneOffset) extends C
    * @param zone  the time-zone to use, not null
    * @return the zoned date-time formed from this date and the earliest valid time for the zone, never null
    */
-  def atStartOfDayInZone(zone: ZoneId): ZonedDateTime =
+  def atStartOfDayInZone(zone: TimeZone): ZonedDateTime =
     ZonedDateTime.of(this, Time.Midnight, zone, ZoneResolvers.postGapPreOverlap)
 
   /**
