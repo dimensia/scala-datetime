@@ -1,23 +1,23 @@
-package javax.time
+package scalax.time
 
 import calendar._
 import java.util.concurrent.TimeUnit._
-import javax.time.calendar.MonthOfYear._
+import scalax.time.calendar.MonthOfYear._
 
 object Main {
   def main(arg: Array[String]) {
 
-    val someDate = LocalDate(2000, January, 31)
-    val otherDate = LocalDate(2001, 4, 1)
+    val someDate = Date(2000, January, 31)
+    val otherDate = Date(2001, 4, 1)
     /* Exception in thread "main" javax.time.calendar.InvalidCalendarFieldException:
        Illegal value for DayOfMonth field, value 31 is not valid for month javax.time.calendar.MonthOfYear$February$ */
-    //val someInvalidDate = LocalDate(2000, February, 31)
+    //val someInvalidDate = Date(2000, February, 31)
 
 
-    val someTime = LocalTime(11, 22, 33)
+    val someTime = Time(11, 22, 33)
     /* Exception in thread "main" javax.time.calendar.IllegalCalendarFieldValueException:
        Illegal value for ISO.HourOfDay field, value 25 is not in the range 0 to 23 */
-    //val someInvalidTime = LocalTime.of(25, 26, 17)
+    //val someInvalidTime = Time.of(25, 26, 17)
 
     val someDay = DayOfWeek.Friday
 
@@ -32,11 +32,11 @@ object Main {
     val someYearMonth = YearMonth(2000, December)
     val otherYearMonth = someYearMonth.copy(month = August)
 
-    val someLocalDate = LocalDate(2010, January, 20)
+    val someLocalDate = Date(2010, January, 20)
     val otherLocalDate = someLocalDate.copy(day = 21)
 
-    val someDateTime = LocalDateTime(someDate, someTime)
-    val otherDateTime = LocalDateTime.of(2011, 12, 13)(12, 12, 12)
+    val someDateTime = DateTime(someDate, someTime)
+    val otherDateTime = DateTime.of(2011, 12, 13)(12, 12, 12)
 
     val someZonedDateTime = ZonedDateTime(2010, 12, 1)(22, 10, 5)(ZoneId(ZoneOffset.UTC))
 
